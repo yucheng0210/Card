@@ -3,7 +3,7 @@
   "Assemblies": [
     {
       "FullName": "Unity.Burst, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
-      "LastWriteTime": "2023-02-01T15:47:54.4568109Z"
+      "LastWriteTime": "2023-02-02T10:22:18.2822902Z"
     },
     {
       "FullName": "netstandard, Version=2.1.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51",
@@ -19,31 +19,23 @@
     },
     {
       "FullName": "Unity.2D.SpriteShape.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
-      "LastWriteTime": "2023-02-01T15:47:55.0493529Z"
+      "LastWriteTime": "2023-02-02T10:22:19.6654931Z"
+    },
+    {
+      "FullName": "Unity.Mathematics, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "LastWriteTime": "2023-02-02T10:22:19.6674919Z"
     },
     {
       "FullName": "UnityEngine.SpriteShapeModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
       "LastWriteTime": "2022-06-30T02:30:34Z"
     },
     {
-      "FullName": "Unity.Mathematics, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-      "LastWriteTime": "2023-02-01T15:47:54.4242942Z"
-    },
-    {
       "FullName": "Unity.2D.Common.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
-      "LastWriteTime": "2023-02-01T15:47:53.9506311Z"
-    },
-    {
-      "FullName": "mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
-      "LastWriteTime": "2022-06-30T02:10:04Z"
+      "LastWriteTime": "2023-02-02T10:22:18.9014338Z"
     },
     {
       "FullName": "Unity.2D.Animation.Editor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
-      "LastWriteTime": "2023-02-01T15:47:56.2739827Z"
-    },
-    {
-      "FullName": "mscorlib, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
-      "LastWriteTime": "2022-06-30T02:10:04Z"
+      "LastWriteTime": "2023-02-02T10:22:20.2775984Z"
     },
     {
       "FullName": "UnityEditor.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
@@ -70,12 +62,11 @@
       "AssemblyDependencyIndices": [
         3,
         4,
-        5,
         2,
         1,
+        5,
         6,
-        7,
-        8
+        7
       ]
     },
     {
@@ -84,14 +75,13 @@
       "ModuleHash": "f263723412b6b8b6f77d2e4b32a3721b",
       "LinkName": "7F9BDFAB3718C423",
       "AssemblyDependencyIndices": [
-        9,
-        10,
+        8,
         2,
-        6,
-        11,
+        5,
         0,
         1,
-        3
+        3,
+        9
       ]
     },
     {
@@ -100,15 +90,14 @@
       "ModuleHash": "0d4264e37f246ec7bcf35e3c4216e4b2",
       "LinkName": "7D2E04AB7759F565",
       "AssemblyDependencyIndices": [
-        9,
+        8,
         2,
         3,
-        6,
+        5,
         1,
         0,
         7,
-        11,
-        8
+        9
       ]
     },
     {
@@ -117,15 +106,14 @@
       "ModuleHash": "4305810b3f0b5ea1a9f830d7eff719c4",
       "LinkName": "4E9252389FAD9FEE",
       "AssemblyDependencyIndices": [
-        9,
-        7,
+        8,
         2,
         3,
-        6,
+        5,
         0,
         1,
-        11,
-        8
+        7,
+        9
       ]
     },
     {
