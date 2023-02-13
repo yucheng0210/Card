@@ -13,9 +13,4 @@ public abstract class UIBase : MonoBehaviour
     {
         gameObject.SetActive(false);
     }
-
-    public virtual void Close()
-    {
-        UIManager.Instance.CloseUI(gameObject.name);
-    }
 }

@@ -381,7 +381,6 @@
 "Assets/MyAssets/Script/Tool/Singleton.cs"
 "Assets/MyAssets/Script/UI/CardCreater.cs"
 "Assets/MyAssets/Script/UI/UIBase.cs"
-"Assets/MyAssets/Script/UI/UIEventTrigger.cs"
 "Assets/MyAssets/Script/UI/UIManager.cs"
 -langversion:9.0
 

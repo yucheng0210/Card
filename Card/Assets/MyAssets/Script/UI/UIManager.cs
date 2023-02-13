@@ -10,60 +10,21 @@ public class UIManager : Singleton<UIManager>
     protected override void Awake()
     {
         base.Awake();
-        canvasTrans = GameObject.Find("MainCanvas").transform;
-        uiList = new List<UIBase>();
     }
 
-    public UIBase ShowUI<T>(string uiName)
-        where T : UIBase
+    public IEnumerator FadeOutIn(CanvasGroup canvasGroup, float fadeTime, float waitTime)
     {
-        UIBase ui = Find(uiName);
-        if (ui == null)
+        while (canvasGroup.alpha < 1)
         {
-            GameObject obj =
-                Instantiate(Resources.Load("MyAssets/UI/" + uiName), canvasTrans) as GameObject;
-            obj.name = uiName;
-            ui = obj.AddComponent<UIBase>();
-            uiList.Add(ui);
+            canvasGroup.alpha += Time.unscaledDeltaTime / fadeTime;
+            yield return null;
         }
-        else
-            ui.Show();
-        return ui;
-    }
-
-    public void HideUI(string uiName)
-    {
-        UIBase ui = Find(uiName);
-        if (ui != null)
-            ui.Hide();
-    }
-
-    public void CloseUI(string uiName)
-    {
-        UIBase ui = Find(uiName);
-        if (ui != null)
+        yield return new WaitForSecondsRealtime(waitTime);
+        while (canvasGroup.alpha != 0)
         {
-            uiList.Remove(ui);
-            Destroy(ui.gameObject);
+            canvasGroup.alpha -= Time.unscaledDeltaTime / fadeTime;
+            yield return null;
         }
-    }
-
-    public void CloseAllUI()
-    {
-        for (int i = 0; i < uiList.Count - 1; i++)
-        {
-            Destroy(uiList[i].gameObject);
-        }
-        uiList.Clear();
-    }
-
-    public UIBase Find(string uiName)
-    {
-        for (int i = 0; i < uiList.Count; i++)
-        {
-            if (uiList[i].name == uiName)
-                return uiList[i];
-        }
-        return null;
+        Destroy(canvasGroup.gameObject);
     }
 }

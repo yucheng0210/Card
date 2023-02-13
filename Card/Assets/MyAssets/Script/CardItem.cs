@@ -4,7 +4,13 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using DG.Tweening;
 
-public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class CardItem
+    : MonoBehaviour,
+        IPointerEnterHandler,
+        IPointerExitHandler,
+        IBeginDragHandler,
+        IDragHandler,
+        IEndDragHandler
 {
     private int index;
 
@@ -13,10 +19,16 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     private RectTransform rightCard,
         leftCard;
+    private Quaternion initialRotation;
+    private Vector2 initialPosition;
 
     public void OnPointerEnter(PointerEventData eventData)
     {
+        Quaternion zeroRotation = Quaternion.Euler(0, 0, 0);
+        initialRotation = transform.rotation;
         transform.DOScale(2.5f, 0.25f);
+        transform.DORotateQuaternion(zeroRotation, 0.25f);
+        transform.rotation = Quaternion.Euler(0, 0, 0);
         index = transform.GetSiblingIndex();
         transform.SetAsLastSibling();
         /* for (int i = index + 1; i < transform.parent.childCount; i++)
@@ -34,6 +46,7 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public void OnPointerExit(PointerEventData eventData)
     {
         transform.DOScale(1.5f, 0.25f);
+        transform.DORotateQuaternion(initialRotation, 0.25f);
         transform.SetSiblingIndex(index);
         /* for (int i = index + 1; i < transform.parent.childCount; i++)
          {
@@ -45,5 +58,30 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
              leftCard = transform.parent.GetChild(index - i).GetComponent<RectTransform>();
              leftCard.DOAnchorPosX(leftCard.anchoredPosition.x + pointerEnterSpacing, 0.25f);
          }*/
+    }
+
+    public void OnBeginDrag(PointerEventData eventData)
+    {
+        initialPosition = transform.GetComponent<RectTransform>().anchoredPosition;
+    }
+
+    public void OnDrag(PointerEventData eventData)
+    {
+        Vector2 dragPosition;
+        if (
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                transform.parent.GetComponent<RectTransform>(),
+                eventData.position,
+                eventData.pressEventCamera,
+                out dragPosition
+            )
+        )
+            transform.GetComponent<RectTransform>().anchoredPosition = dragPosition;
+    }
+
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        transform.GetComponent<RectTransform>().anchoredPosition = initialPosition;
+        transform.SetSiblingIndex(index);
     }
 }

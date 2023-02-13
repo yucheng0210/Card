@@ -29,6 +29,9 @@ public class CardCreater : MonoBehaviour
     [SerializeField]
     private float minCardAngle;
 
+    [SerializeField]
+    private GameObject roundTip;
+
     private List<GameObject> cardList = new List<GameObject>();
 
     private void Start()
@@ -49,6 +52,8 @@ public class CardCreater : MonoBehaviour
 
     private IEnumerator CardPositionAdjustment()
     {
+        StartCoroutine(UIManager.Instance.FadeOutIn(roundTip.GetComponent<CanvasGroup>(), 0.5f, 1));
+        yield return new WaitForSecondsRealtime(1.5f);
         Vector2 startPosition = new Vector2(878, -50);
         int odd = cardList.Count % 2 != 0 ? 0 : 1;
         float startAngle = (cardList.Count / 2 - odd) * minCardAngle;
