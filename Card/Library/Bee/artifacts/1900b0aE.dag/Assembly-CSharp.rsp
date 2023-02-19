@@ -377,11 +377,14 @@
 -r:"Library/Bee/artifacts/1900b0aE.dag/Unity.VSCode.Editor.ref.dll"
 -r:"Library/Bee/artifacts/1900b0aE.dag/UnityEditor.UI.ref.dll"
 -r:"Library/Bee/artifacts/1900b0aE.dag/UnityEngine.UI.ref.dll"
-"Assets/MyAssets/Script/CardItem.cs"
-"Assets/MyAssets/Script/Tool/Singleton.cs"
-"Assets/MyAssets/Script/UI/CardCreater.cs"
-"Assets/MyAssets/Script/UI/UIBase.cs"
-"Assets/MyAssets/Script/UI/UIManager.cs"
+"Assets/MyAssets/BattleSystem/Script/BattleManager.cs"
+"Assets/MyAssets/CardSystem/Script/CardItem.cs"
+"Assets/MyAssets/CardSystem/Script/SO/Card_SO.cs"
+"Assets/MyAssets/CardSystem/Script/SO/Inventory_SO.cs"
+"Assets/MyAssets/CardSystem/Script/Tool/Singleton.cs"
+"Assets/MyAssets/UI/Script/CardCreater.cs"
+"Assets/MyAssets/UI/Script/UIBase.cs"
+"Assets/MyAssets/UI/Script/UIManager.cs"
 -langversion:9.0
 
 /deterministic
