@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 using DG.Tweening;
 
 public class CardItem
@@ -22,6 +23,30 @@ public class CardItem
         cardRectTransform;
     private Quaternion initialRotation;
     private Vector2 initialPosition;
+
+    [SerializeField]
+    private Text cardName;
+
+    [SerializeField]
+    private Text cardCost;
+
+    [SerializeField]
+    private Text cardDescription;
+    public Text CardName
+    {
+        get { return cardName; }
+        set { cardName = value; }
+    }
+    public Text CardCost
+    {
+        get { return cardCost; }
+        set { cardCost = value; }
+    }
+    public Text CardDescription
+    {
+        get { return cardDescription; }
+        set { cardDescription = value; }
+    }
 
     private void Start()
     {
