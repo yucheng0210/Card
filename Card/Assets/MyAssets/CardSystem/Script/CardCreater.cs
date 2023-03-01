@@ -33,20 +33,46 @@ public class CardCreater : MonoBehaviour
     [SerializeField]
     private GameObject roundTip;
 
-    public List<Card> CardList { get; private set; }
+    public List<CardData> CardList { get; private set; }
 
     [SerializeField]
     private TextAsset textAsset;
 
     private List<GameObject> cardBag = new List<GameObject>();
-    private Card cardData;
 
     private void Start()
     {
-        GetTextFromFile(textAsset);
+        GetExcelData(textAsset);
         CreateCard();
         StartCoroutine(CardPositionAdjustment());
     }
+
+    private void GetExcelData(TextAsset file)
+    {
+        CardList = new List<CardData>();
+        CardList.Clear();
+        //index = 0;
+        string[] lineData = file.text.Split(new char[] { '\n' });
+        for (int i = 1; i < lineData.Length - 1; i++)
+        {
+            string[] row = lineData[i].Split(new char[] { ',' });
+            if (row[1] == "")
+                break;
+            CardData cardData = new CardData();
+            cardData.CardID = int.Parse(row[0]);
+            cardData.CardName = row[1];
+            cardData.CardType = row[2];
+            cardData.CardImagePath = row[3];
+            cardData.CardCost = int.Parse(row[4]);
+            cardData.CardAttribute = row[5];
+            cardData.CardEffect = row[6];
+            cardData.CardDescription = row[7];
+            cardData.cardHeld = int.Parse(row[8]);
+            CardList.Add(cardData);
+        }
+    }
+
+    private void ReviseExcelData(TextAsset file) { }
 
     private void CreateCard()
     {
@@ -72,31 +98,6 @@ public class CardCreater : MonoBehaviour
             GameObject temp = cardBag[randomIndex];
             cardBag[randomIndex] = cardBag[i];
             cardBag[i] = temp;
-        }
-    }
-
-    private void GetTextFromFile(TextAsset file)
-    {
-        CardList = new List<Card>();
-        CardList.Clear();
-        //index = 0;
-        string[] lineData = file.text.Split(new char[] { '\n' });
-        for (int i = 1; i < lineData.Length - 1; i++)
-        {
-            string[] row = lineData[i].Split(new char[] { ',' });
-            if (row[1] == "")
-                break;
-            cardData = new Card();
-            cardData.CardID = int.Parse(row[0]);
-            cardData.CardName = row[1];
-            cardData.CardType = row[2];
-            cardData.CardImagePath = row[3];
-            cardData.CardCost = int.Parse(row[4]);
-            cardData.CardAttribute = row[5];
-            cardData.CardEffect = row[6];
-            cardData.CardDescription = row[7];
-            cardData.cardHeld = int.Parse(row[8]);
-            CardList.Add(cardData);
         }
     }
 

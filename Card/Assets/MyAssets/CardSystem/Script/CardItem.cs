@@ -113,7 +113,16 @@ public class CardItem
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        cardRectTransform.anchoredPosition = initialPosition;
-        transform.SetSiblingIndex(index);
+        if (transform.position.y >= 540)
+           UseCard();
+        else
+        {
+            cardRectTransform.anchoredPosition = initialPosition;
+            transform.SetSiblingIndex(index);
+        }
+    }
+    private void UseCard()
+    {
+      Destroy(gameObject);
     }
 }

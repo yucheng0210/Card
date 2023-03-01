@@ -380,9 +380,9 @@
 "Assets/MyAssets/BattleSystem/Script/BattleManager.cs"
 "Assets/MyAssets/CardSystem/Script/CardCreater.cs"
 "Assets/MyAssets/CardSystem/Script/CardItem.cs"
-"Assets/MyAssets/CardSystem/Script/Data/Card.cs"
-"Assets/MyAssets/CardSystem/Script/Data/Inventory.cs"
+"Assets/MyAssets/CardSystem/Script/Data/CardData.cs"
 "Assets/MyAssets/CardSystem/Script/Tool/Singleton.cs"
+"Assets/MyAssets/CharacterSystem/Script/Data/CharacterData.cs"
 "Assets/MyAssets/UI/Script/UIBase.cs"
 "Assets/MyAssets/UI/Script/UIManager.cs"
 -langversion:9.0
