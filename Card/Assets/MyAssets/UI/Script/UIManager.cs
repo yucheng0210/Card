@@ -1,15 +1,36 @@
+using System.Net.Mime;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIManager : Singleton<UIManager>
 {
     private Transform canvasTrans;
-    private List<UIBase> uiList;
+    public List<UIBase> UIList { get; set; }
 
     protected override void Awake()
     {
         base.Awake();
+        UIList = new List<UIBase>();
+    }
+
+    public UIBase FindUI(string uIName)
+    {
+        for (int i = 0; i < UIList.Count; i++)
+        {
+            if (UIList[i].GetType().Name == uIName)
+                return UIList[i];
+        }
+        return null;
+    }
+
+    public void CloseAllUI()
+    {
+        for (int i = 0; i < UIList.Count; i++)
+        {
+            UIList[i].gameObject.SetActive(false);
+        }
     }
 
     public IEnumerator FadeOutIn(CanvasGroup canvasGroup, float fadeTime, float waitTime)
@@ -26,5 +47,11 @@ public class UIManager : Singleton<UIManager>
             yield return null;
         }
         Destroy(canvasGroup.gameObject);
+    }
+
+    public void ChangeActionPointText(int actionPoint)
+    {
+        Text actionPointText = ((UIBattle)FindUI("UIBattle")).ActionPointText;
+        actionPointText.text = actionPoint.ToString() + "/" + "3";
     }
 }

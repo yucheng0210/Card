@@ -33,8 +33,6 @@ public class CardCreater : MonoBehaviour
     [SerializeField]
     private GameObject roundTip;
 
-    public List<CardData> CardList { get; private set; }
-
     [SerializeField]
     private TextAsset textAsset;
 
@@ -49,8 +47,8 @@ public class CardCreater : MonoBehaviour
 
     private void GetExcelData(TextAsset file)
     {
-        CardList = new List<CardData>();
-        CardList.Clear();
+        BattleManager.Instance.CardList = new List<CardData_So>();
+        BattleManager.Instance.CardList.Clear();
         //index = 0;
         string[] lineData = file.text.Split(new char[] { '\n' });
         for (int i = 1; i < lineData.Length - 1; i++)
@@ -58,7 +56,7 @@ public class CardCreater : MonoBehaviour
             string[] row = lineData[i].Split(new char[] { ',' });
             if (row[1] == "")
                 break;
-            CardData cardData = new CardData();
+            CardData_So cardData = ScriptableObject.CreateInstance<CardData_So>();
             cardData.CardID = int.Parse(row[0]);
             cardData.CardName = row[1];
             cardData.CardType = row[2];
@@ -68,7 +66,7 @@ public class CardCreater : MonoBehaviour
             cardData.CardEffect = row[6];
             cardData.CardDescription = row[7];
             cardData.cardHeld = int.Parse(row[8]);
-            CardList.Add(cardData);
+            BattleManager.Instance.CardList.Add(cardData);
         }
     }
 
@@ -76,14 +74,15 @@ public class CardCreater : MonoBehaviour
 
     private void CreateCard()
     {
-        for (int i = 0; i < CardList.Count; i++)
+        for (int i = 0; i < BattleManager.Instance.CardList.Count; i++)
         {
-            for (int j = CardList[i].cardHeld; j > 0; j--)
+            for (int j = BattleManager.Instance.CardList[i].cardHeld; j > 0; j--)
             {
                 CardItem card = Instantiate(cardPrefab, transform);
-                card.CardName.text = CardList[i].CardName;
-                card.CardDescription.text = CardList[i].CardDescription;
-                card.CardCost.text = CardList[i].CardCost.ToString();
+                card.CardIndex = i;
+                card.CardName.text = BattleManager.Instance.CardList[i].CardName;
+                card.CardDescription.text = BattleManager.Instance.CardList[i].CardDescription;
+                card.CardCost.text = BattleManager.Instance.CardList[i].CardCost.ToString();
                 card.gameObject.SetActive(false);
                 cardBag.Add(card.gameObject);
             }

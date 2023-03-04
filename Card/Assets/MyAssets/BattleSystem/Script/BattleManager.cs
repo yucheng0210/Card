@@ -1,9 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BattleManager : Singleton<BattleManager>
 {
+    [SerializeField]
+    private int actionPoint = 3;
+
+    [SerializeField]
+    private Text actionPointText;
+    public List<CardData_So> CardList { get; set; }
+
     public enum BattleType
     {
         None,
@@ -12,6 +20,12 @@ public class BattleManager : Singleton<BattleManager>
         Enemy,
         Win,
         Loss
+    }
+
+    public void ConsumeActionPoint(int point)
+    {
+        actionPoint -= point;
+        UIManager.Instance.ChangeActionPointText(actionPoint);
     }
 
     public void ChangeType(BattleType battleType)

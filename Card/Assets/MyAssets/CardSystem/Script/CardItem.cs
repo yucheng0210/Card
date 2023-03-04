@@ -13,6 +13,7 @@ public class CardItem
         IDragHandler,
         IEndDragHandler
 {
+    public int CardIndex { get; set; }
     private int index;
 
     [SerializeField]
@@ -114,15 +115,18 @@ public class CardItem
     public void OnEndDrag(PointerEventData eventData)
     {
         if (transform.position.y >= 540)
-           UseCard();
+            UseCard();
         else
         {
             cardRectTransform.anchoredPosition = initialPosition;
             transform.SetSiblingIndex(index);
         }
     }
+
     private void UseCard()
     {
-      Destroy(gameObject);
+        int cost = BattleManager.Instance.CardList[CardIndex].CardCost;
+        BattleManager.Instance.ConsumeActionPoint(cost);
+        Destroy(gameObject);
     }
 }

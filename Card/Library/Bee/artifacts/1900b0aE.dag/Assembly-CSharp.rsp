@@ -380,11 +380,14 @@
 "Assets/MyAssets/BattleSystem/Script/BattleManager.cs"
 "Assets/MyAssets/CardSystem/Script/CardCreater.cs"
 "Assets/MyAssets/CardSystem/Script/CardItem.cs"
-"Assets/MyAssets/CardSystem/Script/Data/CardData.cs"
+"Assets/MyAssets/CardSystem/Script/So/CardData_So.cs"
 "Assets/MyAssets/CardSystem/Script/Tool/Singleton.cs"
 "Assets/MyAssets/CharacterSystem/Script/Data/CharacterData.cs"
 "Assets/MyAssets/UI/Script/UIBase.cs"
+"Assets/MyAssets/UI/Script/UIBattle.cs"
 "Assets/MyAssets/UI/Script/UIManager.cs"
+"Assets/Wizard - 2D Character/Demo/SimplePlayerController.cs"
+"Assets/Wizard - 2D Character/Demo/WizDemo1.cs"
 -langversion:9.0
 
 /deterministic

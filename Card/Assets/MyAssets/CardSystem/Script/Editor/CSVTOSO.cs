@@ -4,43 +4,35 @@ using UnityEngine;
 using UnityEditor;
 using System.IO;
 
-public class CSVToSO
+public class CsvToSo
 {
-    //private static string path = "Assets/MyAssets//QuestData/QUESTMANAGER.csv";
-    //private static QuestList_SO questList = new QuestList_SO();
+    /*private static string cardListPath = "Assets/MyAssets/CardSystem/Data/Excel/CARDLIST.csv";
 
-  //  [MenuItem("CSVToSO/CreateCardListSO")]
-    /*public static void CreateSO()
+    [MenuItem("CsvToSo/ReadExcel/CreateCardSO")]
+    public static void CreateCardSO()
     {
-        string[] allLineData = File.ReadAllLines(path);
-        foreach (string s in allLineData)
+        //BattleManager.Instance.CardList = new List<CardData_So>();
+        //BattleManager.Instance.CardList.Clear();
+        string[] allLineData = File.ReadAllLines(cardListPath);
+        for (int i = 1; i < allLineData.Length; i++)
         {
-            string[] row = s.Split(',');
-            if (row[0] == "ID")
-                continue;
-            if (row.Length != 8)
-                break;
-            Quest_SO quest = ScriptableObject.CreateInstance<Quest_SO>();
-            quest.ID = int.Parse(row[0]);
-            quest.TheName = row[1];
-            quest.NPC = row[2];
-            quest.Des = row[3];
-            quest.Status = int.Parse(row[4]);
-            quest.Rewards = row[5];
-            quest.Task = row[6];
-            quest.Parent = int.Parse(row[7]);
-            questList.QuestList.Add(quest);
+            string[] row = allLineData[i].Split(new char[] { ',' });
+            CardData_So cardData = ScriptableObject.CreateInstance<CardData_So>();
+            cardData.CardID = int.Parse(row[0]);
+            cardData.CardName = row[1];
+            cardData.CardType = row[2];
+            cardData.CardImagePath = row[3];
+            cardData.CardCost = int.Parse(row[4]);
+            cardData.CardAttribute = row[5];
+            cardData.CardEffect = row[6];
+            cardData.CardDescription = row[7];
+            cardData.cardHeld = int.Parse(row[8]);
+            //BattleManager.Instance.CardList.Add(cardData);
             AssetDatabase.CreateAsset(
-                quest,
-                $"Assets/MyAssets/QuestSystem/QuestData/Quest/{quest.TheName}.asset"
+                cardData,
+                $"Assets/MyAssets/CardSystem/Data/So/{cardData.CardName}.asset"
             );
         }
-
-        AssetDatabase.CreateAsset(
-            questList,
-            "Assets/MyAssets/QuestSystem/QuestData/QuestList/QuestList.asset"
-        );
         AssetDatabase.SaveAssets();
     }*/
 }
-

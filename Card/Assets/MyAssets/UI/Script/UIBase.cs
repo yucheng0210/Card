@@ -4,13 +4,21 @@ using UnityEngine;
 
 public abstract class UIBase : MonoBehaviour
 {
-    public virtual void Show()
+    [SerializeField]
+    private GameObject menu;
+
+    protected virtual void Start()
     {
-        gameObject.SetActive(true);
+        UIManager.Instance.UIList.Add(this);
     }
 
-    public virtual void Hide()
+    protected virtual void Open()
     {
-        gameObject.SetActive(false);
+        menu.gameObject.SetActive(true);
+    }
+
+    protected virtual void Close()
+    {
+        menu.gameObject.SetActive(false);
     }
 }
