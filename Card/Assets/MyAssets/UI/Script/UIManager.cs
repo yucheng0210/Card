@@ -49,9 +49,23 @@ public class UIManager : Singleton<UIManager>
         Destroy(canvasGroup.gameObject);
     }
 
-    public void ChangeActionPointText(int actionPoint)
+    public void ShowActionPointUI(int currentActionPoint, int maxActionPoint)
     {
         Text actionPointText = ((UIBattle)FindUI("UIBattle")).ActionPointText;
-        actionPointText.text = actionPoint.ToString() + "/" + "3";
+        actionPointText.text = currentActionPoint.ToString() + "/" + maxActionPoint.ToString();
+    }
+
+    public void ShowHealthUI(int maxHealth, int currentHealth)
+    {
+        Slider healthSlider = ((UIBattle)FindUI("UIBattle")).HealthSlider;
+        Text healthText = ((UIBattle)FindUI("UIBattle")).HealthText;
+        healthSlider.value = currentHealth / maxHealth;
+        healthText.text = currentHealth.ToString() + "/" + maxHealth.ToString();
+    }
+
+    public void ShowShieldUI(int shieldPoint)
+    {
+        Text shieldText = ((UIBattle)FindUI("UIBattle")).ShieldText;
+        shieldText.text = shieldPoint.ToString();
     }
 }

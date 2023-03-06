@@ -114,7 +114,7 @@ public class CardItem
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        if (transform.position.y >= 540)
+        if (cardRectTransform.anchoredPosition.y >= 540)
             UseCard();
         else
         {
@@ -126,7 +126,9 @@ public class CardItem
     private void UseCard()
     {
         int cost = BattleManager.Instance.CardList[CardIndex].CardCost;
+        //EventManager.Instance.DispatchEvent(EventDefinition.eventUseCard);
         BattleManager.Instance.ConsumeActionPoint(cost);
+        BattleManager.Instance.GetShield(BattleManager.Instance.CardList[CardIndex].CardDefend);
         Destroy(gameObject);
     }
 }

@@ -65,7 +65,9 @@ public class CardCreater : MonoBehaviour
             cardData.CardAttribute = row[5];
             cardData.CardEffect = row[6];
             cardData.CardDescription = row[7];
-            cardData.cardHeld = int.Parse(row[8]);
+            cardData.CardAttack = int.Parse(row[8]);
+            cardData.CardDefend = int.Parse(row[9]);
+            cardData.CardHeld = int.Parse(row[10]);
             BattleManager.Instance.CardList.Add(cardData);
         }
     }
@@ -76,7 +78,7 @@ public class CardCreater : MonoBehaviour
     {
         for (int i = 0; i < BattleManager.Instance.CardList.Count; i++)
         {
-            for (int j = BattleManager.Instance.CardList[i].cardHeld; j > 0; j--)
+            for (int j = BattleManager.Instance.CardList[i].CardHeld; j > 0; j--)
             {
                 CardItem card = Instantiate(cardPrefab, transform);
                 card.CardIndex = i;

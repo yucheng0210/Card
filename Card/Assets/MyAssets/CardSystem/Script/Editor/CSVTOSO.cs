@@ -4,15 +4,16 @@ using UnityEngine;
 using UnityEditor;
 using System.IO;
 
-public class CsvToSo
-{
-    /*private static string cardListPath = "Assets/MyAssets/CardSystem/Data/Excel/CARDLIST.csv";
+public class CsvToSO<T>
+{/*
+    public static Dictionary<string, List<T>> allData = new Dictionary<string, List<T>>();
+    private static string cardListPath = "Assets/MyAssets/CardSystem/Data/Excel/CARDLIST.csv";
 
     [MenuItem("CsvToSo/ReadExcel/CreateCardSO")]
     public static void CreateCardSO()
     {
-        //BattleManager.Instance.CardList = new List<CardData_So>();
-        //BattleManager.Instance.CardList.Clear();
+        List<T> cardList = new List<T>();
+        cardList.Clear();
         string[] allLineData = File.ReadAllLines(cardListPath);
         for (int i = 1; i < allLineData.Length; i++)
         {
@@ -27,12 +28,13 @@ public class CsvToSo
             cardData.CardEffect = row[6];
             cardData.CardDescription = row[7];
             cardData.cardHeld = int.Parse(row[8]);
-            //BattleManager.Instance.CardList.Add(cardData);
+            cardList.Add((T)cardData);
             AssetDatabase.CreateAsset(
                 cardData,
-                $"Assets/MyAssets/CardSystem/Data/So/{cardData.CardName}.asset"
+                $"Assets/MyAssets/CardSystem/Data/SO/{cardData.CardName}.asset"
             );
         }
+        allData.Add("CardList", cardList);
         AssetDatabase.SaveAssets();
     }*/
 }
