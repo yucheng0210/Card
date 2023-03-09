@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -63,7 +64,7 @@ public class CardItem
         transform.DORotateQuaternion(zeroRotation, 0.25f);
         transform.rotation = Quaternion.Euler(0, 0, 0);
         index = transform.GetSiblingIndex();
-        transform.SetAsLastSibling();
+        // transform.SetAsLastSibling();
         /*for (int i = index + 1; i < transform.parent.childCount; i++)
         {
             rightCard = transform.parent.GetChild(i).GetComponent<RectTransform>();
@@ -80,7 +81,7 @@ public class CardItem
     {
         transform.DOScale(1.5f, 0.25f);
         transform.DORotateQuaternion(initialRotation, 0.25f);
-        transform.SetSiblingIndex(index);
+        //transform.SetSiblingIndex(index);
         /*for (int i = index + 1; i < transform.parent.childCount; i++)
         {
             rightCard = transform.parent.GetChild(i).GetComponent<RectTransform>();
@@ -96,6 +97,7 @@ public class CardItem
     public void OnBeginDrag(PointerEventData eventData)
     {
         initialPosition = cardRectTransform.anchoredPosition;
+        initialRotation = transform.rotation;
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -126,7 +128,13 @@ public class CardItem
     private void UseCard()
     {
         int cost = BattleManager.Instance.CardList[CardIndex].CardCost;
-        //EventManager.Instance.DispatchEvent(EventDefinition.eventUseCard);
+        int index = BattleManager.Instance.HandCard.IndexOf(this);
+        EventManager.Instance.DispatchEvent(
+            EventDefinition.eventUseCard,
+            index,
+            initialPosition,
+            initialRotation
+        );
         BattleManager.Instance.ConsumeActionPoint(cost);
         BattleManager.Instance.GetShield(BattleManager.Instance.CardList[CardIndex].CardDefend);
         Destroy(gameObject);

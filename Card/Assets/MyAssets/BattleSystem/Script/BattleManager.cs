@@ -2,13 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class BattleManager : Singleton<BattleManager>
 {
     private int currentActionPoint;
     private int currentShield;
     public List<CardData_So> CardList { get; set; }
+    public List<CardItem> HandCard { get; set; }
     public List<PlayerData_SO> PlayerList { get; set; }
+    public List<CardItem> CardBag { get; set; }
 
     public enum BattleType
     {
@@ -18,6 +21,21 @@ public class BattleManager : Singleton<BattleManager>
         Enemy,
         Win,
         Loss
+    }
+
+    protected override void Awake()
+    {
+        base.Awake();
+        CardBag = new List<CardItem>();
+        HandCard = new List<CardItem>();
+    }
+
+    private void Start()
+    {
+        EventManager.Instance.AddEventRegister(
+            EventDefinition.eventUseCard,
+            EventCardAdjustmentPoisition
+        );
     }
 
     public void TakeDamage() { }
@@ -59,5 +77,59 @@ public class BattleManager : Singleton<BattleManager>
     {
         currentActionPoint = PlayerList[0].MaxActionPoint;
         ConsumeActionPoint(0);
+    }
+
+    public void Shuffle()
+    {
+        for (int i = CardBag.Count - 1; i >= 0; i--)
+        {
+            int randomIndex = UnityEngine.Random.Range(0, CardBag.Count);
+            CardItem temp = CardBag[randomIndex];
+            CardBag[randomIndex] = CardBag[i];
+            CardBag[i] = temp;
+        }
+    }
+
+    public void AddHandCard(int drawCardCount)
+    {
+        for (int i = 0; i < drawCardCount; i++)
+        {
+            HandCard.Add(CardBag[i]);
+        }
+        /*for (int i = 0; i < drawCardCount; i++)
+        {
+            CardBag.Remove(CardBag[i]);
+        }*/
+    }
+
+    private void EventCardAdjustmentPoisition(params object[] args)
+    {
+        List<Vector2> handCardPositionList = new List<Vector2>();
+        List<float> handCardAngleList = new List<float>();
+        int index = (int)args[0];
+        Vector2 moveCardPosition = (Vector2)args[1];
+        Quaternion moveCardAngle = (Quaternion)args[2];
+        handCardPositionList.Add(moveCardPosition);
+        handCardAngleList.Add(moveCardAngle.z);
+        for (int i = index + 1; i < HandCard.Count; i++)
+        {
+            RectTransform rectTransform = HandCard[i].GetComponent<RectTransform>();
+            handCardPositionList.Add(rectTransform.anchoredPosition);
+            handCardAngleList.Add(rectTransform.rotation.z);
+        }
+        int posAngleIndex = 0;
+        for (int i = index + 1; i < HandCard.Count; i++)
+        {
+            HandCard[i]
+                .GetComponent<RectTransform>()
+                .DOAnchorPos(handCardPositionList[posAngleIndex], 0.5f);
+            HandCard[i].GetComponent<RectTransform>().rotation = Quaternion.Euler(
+                0,
+                0,
+                handCardAngleList[posAngleIndex]
+            );
+            posAngleIndex++;
+        }
+        HandCard.RemoveAt(index);
     }
 }
