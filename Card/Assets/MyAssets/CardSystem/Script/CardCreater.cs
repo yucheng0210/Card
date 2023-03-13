@@ -35,12 +35,18 @@ public class CardCreater : MonoBehaviour
 
     [SerializeField]
     private TextAsset textAsset;
+    private List<Vector2> cardPositionList = new List<Vector2>();
+    private List<float> cardAngleList = new List<float>();
 
     private void Start()
     {
         GetExcelData(textAsset);
         CreateCard();
-        StartCoroutine(StartDrawCard());
+        StartCoroutine(DrawCard());
+        EventManager.Instance.AddEventRegister(
+            EventDefinition.eventUseCard,
+            EventCardAdjustmentPosition
+        );
     }
 
     private void GetExcelData(TextAsset file)
@@ -90,7 +96,30 @@ public class CardCreater : MonoBehaviour
         }
     }
 
-    private IEnumerator StartDrawCard()
+    private void CalculatePositionAngle(int cardCount)
+    {
+        Vector2 startPosition = new Vector2(878, -50);
+        int odd = cardCount % 2 != 0 ? 0 : 1;
+        float startAngle = (cardCount / 2 - odd) * minCardAngle;
+        for (int i = 0; i < cardCount; i++)
+        {
+            cardPositionList.Add(startPosition);
+            cardAngleList.Add(startAngle);
+            for (int j = i; j > 0; j--)
+            {
+                float adjustmentPosX = startPosition.x;
+                adjustmentPosX -= (i - j + 1) * cardXSpacing * 2;
+                cardPositionList[j - 1] = new Vector2(adjustmentPosX, cardPositionList[j - 1].y);
+            }
+            startPosition.x += cardXSpacing;
+            if (odd != 0 && i == cardCount / 2 - 1)
+                continue;
+            startAngle -= minCardAngle;
+            startPosition.y += cardYSpacing * (cardCount / 2 - odd - i);
+        }
+    }
+
+    private IEnumerator DrawCard()
     {
         BattleManager.Instance.Shuffle();
         StartCoroutine(UIManager.Instance.FadeOutIn(roundTip.GetComponent<CanvasGroup>(), 0.5f, 1));
@@ -102,6 +131,7 @@ public class CardCreater : MonoBehaviour
         List<CardItem> handCard = BattleManager.Instance.HandCard;
         for (int i = 0; i < handCard.Count; i++)
         {
+            yield return new WaitForSecondsRealtime(coolDown);
             handCard[i].transform.SetParent(handCardTrans);
             handCard[i].gameObject.SetActive(true);
             handCard[i].GetComponent<RectTransform>().DOAnchorPos(startPosition, 0.5f);
@@ -114,13 +144,26 @@ public class CardCreater : MonoBehaviour
             }
             startPosition.x += cardXSpacing;
             if (odd != 0 && i == drawCardCount / 2 - 1)
-            {
-                yield return new WaitForSecondsRealtime(coolDown);
                 continue;
-            }
             startAngle -= minCardAngle;
             startPosition.y += cardYSpacing * (drawCardCount / 2 - odd - i);
-            yield return new WaitForSecondsRealtime(coolDown);
+        }
+    }
+
+    private void EventCardAdjustmentPosition(params object[] args)
+    {
+        cardPositionList.Clear();
+        cardAngleList.Clear();
+        List<CardItem> handCard = BattleManager.Instance.HandCard;
+        CalculatePositionAngle(handCard.Count);
+        for (int i = 0; i < handCard.Count; i++)
+        {
+            handCard[i].GetComponent<RectTransform>().DOAnchorPos(cardPositionList[i], 0.5f);
+            handCard[i].GetComponent<RectTransform>().rotation = Quaternion.Euler(
+                0,
+                0,
+                cardAngleList[i]
+            );
         }
     }
 }

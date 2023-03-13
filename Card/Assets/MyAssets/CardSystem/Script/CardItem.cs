@@ -129,12 +129,8 @@ public class CardItem
     {
         int cost = BattleManager.Instance.CardList[CardIndex].CardCost;
         int index = BattleManager.Instance.HandCard.IndexOf(this);
-        EventManager.Instance.DispatchEvent(
-            EventDefinition.eventUseCard,
-            index,
-            initialPosition,
-            initialRotation
-        );
+        BattleManager.Instance.HandCard.RemoveAt(index);
+        EventManager.Instance.DispatchEvent(EventDefinition.eventUseCard);
         BattleManager.Instance.ConsumeActionPoint(cost);
         BattleManager.Instance.GetShield(BattleManager.Instance.CardList[CardIndex].CardDefend);
         Destroy(gameObject);

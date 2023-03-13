@@ -30,14 +30,6 @@ public class BattleManager : Singleton<BattleManager>
         HandCard = new List<CardItem>();
     }
 
-    private void Start()
-    {
-        EventManager.Instance.AddEventRegister(
-            EventDefinition.eventUseCard,
-            EventCardAdjustmentPoisition
-        );
-    }
-
     public void TakeDamage() { }
 
     public void GetShield(int point)
@@ -102,7 +94,7 @@ public class BattleManager : Singleton<BattleManager>
         }*/
     }
 
-    private void EventCardAdjustmentPoisition(params object[] args)
+    /*private void EventCardAdjustmentPoisition(params object[] args)
     {
         List<Vector2> handCardPositionList = new List<Vector2>();
         List<float> handCardAngleList = new List<float>();
@@ -131,5 +123,5 @@ public class BattleManager : Singleton<BattleManager>
             posAngleIndex++;
         }
         HandCard.RemoveAt(index);
-    }
+    }*/
 }
