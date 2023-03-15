@@ -387,6 +387,7 @@
 "Assets/MyAssets/CharacterSystem/Script/SO/PlayerData_SO.cs"
 "Assets/MyAssets/EventSystem/Script/EventDefinition.cs"
 "Assets/MyAssets/EventSystem/Script/EventManager.cs"
+"Assets/MyAssets/UI/Script/UIAttackLine.cs"
 "Assets/MyAssets/UI/Script/UIBase.cs"
 "Assets/MyAssets/UI/Script/UIBattle.cs"
 "Assets/MyAssets/UI/Script/UIManager.cs"

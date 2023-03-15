@@ -7,13 +7,17 @@ public class Player : MonoBehaviour
 {
     [SerializeField]
     private TextAsset textAsset;
-
     private int currentHealth;
 
     private void Start()
     {
         GetExcelData(textAsset);
         currentHealth = BattleManager.Instance.PlayerList[0].MaxHealth;
+        BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Player);
+        UIManager.Instance.ShowHealthUI(
+            BattleManager.Instance.PlayerList[0].MaxHealth,
+            currentHealth
+        );
     }
 
     private void GetExcelData(TextAsset file)

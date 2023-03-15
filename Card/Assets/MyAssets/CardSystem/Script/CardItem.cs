@@ -20,12 +20,6 @@ public class CardItem
     [SerializeField]
     private float pointerEnterSpacing;
 
-    private RectTransform rightCard,
-        leftCard,
-        cardRectTransform;
-    private Quaternion initialRotation;
-    private Vector2 initialPosition;
-
     [SerializeField]
     private Text cardName;
 
@@ -34,6 +28,16 @@ public class CardItem
 
     [SerializeField]
     private Text cardDescription;
+
+    [SerializeField]
+    private GameObject attackLine;
+    private RectTransform rightCard,
+        leftCard,
+        cardRectTransform;
+    private Quaternion initialRotation;
+    private Vector2 initialPosition;
+    private bool isAttackCard;
+
     public Text CardName
     {
         get { return cardName; }
@@ -58,12 +62,17 @@ public class CardItem
 
     public void OnPointerEnter(PointerEventData eventData)
     {
+        index = BattleManager.Instance.HandCard.IndexOf(this);
+        if (BattleManager.Instance.CardList[CardIndex].CardType == "攻擊")
+            isAttackCard = true;
+        else
+            isAttackCard = false;
         Quaternion zeroRotation = Quaternion.Euler(0, 0, 0);
         initialRotation = transform.rotation;
         transform.DOScale(2.5f, 0.25f);
         transform.DORotateQuaternion(zeroRotation, 0.25f);
         transform.rotation = Quaternion.Euler(0, 0, 0);
-        index = transform.GetSiblingIndex();
+        //index = transform.GetSiblingIndex();
         // transform.SetAsLastSibling();
         /*for (int i = index + 1; i < transform.parent.childCount; i++)
         {
@@ -96,6 +105,8 @@ public class CardItem
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        if (isAttackCard)
+            return;
         initialPosition = cardRectTransform.anchoredPosition;
         initialRotation = transform.rotation;
     }
@@ -111,11 +122,18 @@ public class CardItem
                 out dragPosition
             )
         )
-            cardRectTransform.anchoredPosition = dragPosition;
+        {
+            if (isAttackCard)
+                UIManager.Instance.ShowAttackLine(dragPosition);
+            else
+                cardRectTransform.anchoredPosition = dragPosition;
+        }
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        if (isAttackCard)
+            return;
         if (cardRectTransform.anchoredPosition.y >= 540)
             UseCard();
         else
@@ -128,7 +146,6 @@ public class CardItem
     private void UseCard()
     {
         int cost = BattleManager.Instance.CardList[CardIndex].CardCost;
-        int index = BattleManager.Instance.HandCard.IndexOf(this);
         BattleManager.Instance.HandCard.RemoveAt(index);
         EventManager.Instance.DispatchEvent(EventDefinition.eventUseCard);
         BattleManager.Instance.ConsumeActionPoint(cost);

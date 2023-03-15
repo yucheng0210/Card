@@ -5,7 +5,11 @@ using UnityEngine;
 public abstract class UIBase : MonoBehaviour
 {
     [SerializeField]
-    private GameObject menu;
+    private GameObject ui;
+    public GameObject UI
+    {
+        get { return ui; }
+    }
 
     protected virtual void Start()
     {
@@ -14,11 +18,11 @@ public abstract class UIBase : MonoBehaviour
 
     protected virtual void Open()
     {
-        menu.gameObject.SetActive(true);
+        ui.gameObject.SetActive(true);
     }
 
     protected virtual void Close()
     {
-        menu.gameObject.SetActive(false);
+        ui.gameObject.SetActive(false);
     }
 }

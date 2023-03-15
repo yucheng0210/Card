@@ -17,7 +17,6 @@ public class UIBattle : UIBase
 
     [SerializeField]
     private Text healthText;
-    private int currentHealth;
 
     public Text ActionPointText
     {
@@ -40,14 +39,4 @@ public class UIBattle : UIBase
         set { healthText = value; }
     }
 
-    protected override void Start()
-    {
-        base.Start();
-        currentHealth = BattleManager.Instance.PlayerList[0].MaxHealth;
-        BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Player);
-        UIManager.Instance.ShowHealthUI(
-            BattleManager.Instance.PlayerList[0].MaxHealth,
-            currentHealth
-        );
-    }
 }

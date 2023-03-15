@@ -1,0 +1,1319 @@
+Using pre-set license
+Built from '2021.3/staging' branch; Version is '2021.3.6f1 (7da38d85baf6) revision 8233869'; Using compiler version '192829333'; Build Type 'Release'
+OS: 'Windows 10  (10.0.19044) 64bit Core' Language: 'zh' Physical Memory: 15716 MB
+BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1, IsPro: 1
+
+COMMAND LINE ARGUMENTS:
+C:\Program Files\Unity2D\2021.3.6f1\Editor\Unity.exe
+-adb2
+-batchMode
+-noUpm
+-name
+AssetImportWorker6
+-projectPath
+D:/Unity/Card/Card
+-logFile
+Logs/AssetImportWorker6.log
+-srvPort
+51650
+Successfully changed project path to: D:/Unity/Card/Card
+D:/Unity/Card/Card
+[UnityMemory] Configuration Parameters - Can be set up in boot.config
+    "memorysetup-bucket-allocator-granularity=16"
+    "memorysetup-bucket-allocator-bucket-count=8"
+    "memorysetup-bucket-allocator-block-size=33554432"
+    "memorysetup-bucket-allocator-block-count=8"
+    "memorysetup-main-allocator-block-size=16777216"
+    "memorysetup-thread-allocator-block-size=16777216"
+    "memorysetup-gfx-main-allocator-block-size=16777216"
+    "memorysetup-gfx-thread-allocator-block-size=16777216"
+    "memorysetup-cache-allocator-block-size=4194304"
+    "memorysetup-typetree-allocator-block-size=2097152"
+    "memorysetup-profiler-bucket-allocator-granularity=16"
+    "memorysetup-profiler-bucket-allocator-bucket-count=8"
+    "memorysetup-profiler-bucket-allocator-block-size=33554432"
+    "memorysetup-profiler-bucket-allocator-block-count=8"
+    "memorysetup-profiler-allocator-block-size=16777216"
+    "memorysetup-profiler-editor-allocator-block-size=1048576"
+    "memorysetup-temp-allocator-size-main=16777216"
+    "memorysetup-job-temp-allocator-block-size=2097152"
+    "memorysetup-job-temp-allocator-block-size-background=1048576"
+    "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
+    "memorysetup-temp-allocator-size-background-worker=32768"
+    "memorysetup-temp-allocator-size-job-worker=262144"
+    "memorysetup-temp-allocator-size-preload-manager=33554432"
+    "memorysetup-temp-allocator-size-nav-mesh-worker=65536"
+    "memorysetup-temp-allocator-size-audio-worker=65536"
+    "memorysetup-temp-allocator-size-cloud-worker=32768"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gfx=262144"
+Refreshing native plugins compatible for Editor in 142.78 ms, found 4 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Initialize engine version: 2021.3.6f1 (7da38d85baf6)
+[Subsystems] Discovering subsystems at path C:/Program Files/Unity2D/2021.3.6f1/Editor/Data/Resources/UnitySubsystems
+[Subsystems] Discovering subsystems at path D:/Unity/Card/Card/Assets
+GfxDevice: creating device client; threaded=0; jobified=0
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.1]
+    Renderer: NVIDIA GeForce RTX 3050 Laptop GPU (ID=0x25a5)
+    Vendor:   NVIDIA
+    VRAM:     3977 MB
+    Driver:   31.0.15.2656
+Initialize mono
+Mono path[0] = 'C:/Program Files/Unity2D/2021.3.6f1/Editor/Data/Managed'
+Mono path[1] = 'C:/Program Files/Unity2D/2021.3.6f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit-win32'
+Mono config path = 'C:/Program Files/Unity2D/2021.3.6f1/Editor/Data/MonoBleedingEdge/etc'
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56456
+Begin MonoManager ReloadAssembly
+Registering precompiled unity dll's ...
+Register platform support module: C:/Program Files/Unity2D/2021.3.6f1/Editor/Data/PlaybackEngines/AndroidPlayer/UnityEditor.Android.Extensions.dll
+Register platform support module: C:/Program Files/Unity2D/2021.3.6f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
+Registered in 0.007708 seconds.
+Native extension for WindowsStandalone target not found
+Native extension for Android target not found
+Refreshing native plugins compatible for Editor in 105.81 ms, found 4 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  0.697 seconds
+Domain Reload Profiling:
+	ReloadAssembly (698ms)
+		BeginReloadAssembly (80ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (0ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (1ms)
+		EndReloadAssembly (508ms)
+			LoadAssemblies (77ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (108ms)
+			ReleaseScriptCaches (0ms)
+			RebuildScriptCaches (29ms)
+			SetupLoadedEditorAssemblies (310ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (59ms)
+				SetLoadedEditorAssemblies (0ms)
+				RefreshPlugins (106ms)
+				BeforeProcessingInitializeOnLoad (1ms)
+				ProcessInitializeOnLoadAttributes (99ms)
+				ProcessInitializeOnLoadMethodAttributes (45ms)
+				AfterProcessingInitializeOnLoad (0ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (0ms)
+Platform modules already initialized, skipping
+Registering precompiled user dll's ...
+Registered in 0.010563 seconds.
+Begin MonoManager ReloadAssembly
+Symbol file LoadedFromMemory doesn't match image D:\Unity\Card\Card\Library\PackageCache\com.unity.visualscripting@1.7.8\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll
+Symbol file LoadedFromMemory doesn't match image D:\Unity\Card\Card\Library\PackageCache\com.unity.visualscripting@1.7.8\Editor\VisualScripting.Core\Dependencies\DotNetZip\Unity.VisualScripting.IonicZip.dll
+Native extension for WindowsStandalone target not found
+Native extension for Android target not found
+Refreshing native plugins compatible for Editor in 104.28 ms, found 4 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.391 seconds
+Domain Reload Profiling:
+	ReloadAssembly (1392ms)
+		BeginReloadAssembly (253ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (5ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (125ms)
+		EndReloadAssembly (1009ms)
+			LoadAssemblies (125ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (244ms)
+			ReleaseScriptCaches (1ms)
+			RebuildScriptCaches (56ms)
+			SetupLoadedEditorAssemblies (569ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (13ms)
+				SetLoadedEditorAssemblies (1ms)
+				RefreshPlugins (104ms)
+				BeforeProcessingInitializeOnLoad (100ms)
+				ProcessInitializeOnLoadAttributes (296ms)
+				ProcessInitializeOnLoadMethodAttributes (44ms)
+				AfterProcessingInitializeOnLoad (9ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (6ms)
+Platform modules already initialized, skipping
+========================================================================
+Worker process is ready to serve import requests
+Launched and connected shader compiler UnityShaderCompiler.exe after 0.06 seconds
+Refreshing native plugins compatible for Editor in 1.68 ms, found 4 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 4099 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 53 unused Assets / (0.6 MB). Loaded Objects now: 4558.
+Memory consumption went from 158.0 MB to 157.4 MB.
+Total: 4.379700 ms (FindLiveObjects: 0.653500 ms CreateObjectMapping: 0.350300 ms MarkObjects: 3.054500 ms  DeleteObjects: 0.320600 ms)
+
+AssetImportParameters requested are different than current active one (requested -> active):
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
+  custom:video-codec-MediaFoundation-h265: 746d11721c4dcdbdad8f713fa42b33f4 -> 
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 -> 
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+========================================================================
+Received Import Request.
+  Time since last request: 2036430.653248 seconds.
+  path: Assets/Font/_TitleButton.ttf
+  artifactKey: Guid(473d1a8520cacb348b5b1d5c64184bac) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Font/_TitleButton.ttf using Guid(473d1a8520cacb348b5b1d5c64184bac) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '4deffcff16a0847c5e8cb86d15689670') in 0.152870 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 8.042693 seconds.
+  path: Assets/Arts/Mini Legion Rock Golem PBR HP Polyart/Meshes/GolemPolyart.fbx
+  artifactKey: Guid(0f2c5202b918687408ac5bc7429a03ea) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Mini Legion Rock Golem PBR HP Polyart/Meshes/GolemPolyart.fbx using Guid(0f2c5202b918687408ac5bc7429a03ea) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '68b7bd532070c541b7aebc90f1a0b9da') in 0.096822 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.766576 seconds.
+  path: Assets/Arts/Mini Legion Rock Golem PBR HP Polyart/Materials/PBR_Golem.mat
+  artifactKey: Guid(63d68c3ba5d7b90418069b96d9c35a4a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Mini Legion Rock Golem PBR HP Polyart/Materials/PBR_Golem.mat using Guid(63d68c3ba5d7b90418069b96d9c35a4a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '506cf644ea0c9b5c810c408be73d7dd6') in 0.218560 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 1.875397 seconds.
+  path: Assets/Arts/Mini Legion Rock Golem PBR HP Polyart/Prefabs/HP_Rock.prefab
+  artifactKey: Guid(4bf449b1b6e781140a548b42020600f6) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Mini Legion Rock Golem PBR HP Polyart/Prefabs/HP_Rock.prefab using Guid(4bf449b1b6e781140a548b42020600f6) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '2e83f09a53c9dc00d2888d3dd688f94b') in 0.264270 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 1.587116 seconds.
+  path: Assets/Arts/Mini Legion Rock Golem PBR HP Polyart/Textures/AOGolem.png
+  artifactKey: Guid(d124a198778d8ab489c40a2def2dbe78) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Mini Legion Rock Golem PBR HP Polyart/Textures/AOGolem.png using Guid(d124a198778d8ab489c40a2def2dbe78) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'fbad4801617e9162965b63266258b768') in 0.042648 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 32.778042 seconds.
+  path: Assets/Arts/Epic Toon FX/Sound/etfx_explosion_fireball.wav
+  artifactKey: Guid(64fb9477894fa2e4a997518fbb1c2f15) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Sound/etfx_explosion_fireball.wav using Guid(64fb9477894fa2e4a997518fbb1c2f15) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '6ed51fe36c6c5333614c5aa21305452a') in 0.068686 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000056 seconds.
+  path: Assets/Arts/Epic Toon FX/Sound/etfx_explosion_mystic.wav
+  artifactKey: Guid(2d99c166c2da2b14f835eb0d6d418369) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Sound/etfx_explosion_mystic.wav using Guid(2d99c166c2da2b14f835eb0d6d418369) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '0f244278ef58e911ca3fefebfbadb7a0') in 0.025868 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000037 seconds.
+  path: Assets/Arts/Epic Toon FX/Sound/etfx_explosion_rocket.wav
+  artifactKey: Guid(8dfcae34791b3a447b81d6653208f596) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Sound/etfx_explosion_rocket.wav using Guid(8dfcae34791b3a447b81d6653208f596) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'c2f126807b3d5ac26953f47e0403a6bb') in 0.024106 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.522260 seconds.
+  path: Assets/Arts/Epic Toon FX/Textures/aura_slam.png
+  artifactKey: Guid(f49e22d051dd27a429c90269e9bdf852) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Textures/aura_slam.png using Guid(f49e22d051dd27a429c90269e9bdf852) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'ea335ab3456ead2f93d94dfee2de3de6') in 0.105135 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000034 seconds.
+  path: Assets/Arts/Epic Toon FX/Textures/candle_soft.png
+  artifactKey: Guid(27219c4af3e561e41bc297224110e7ba) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Textures/candle_soft.png using Guid(27219c4af3e561e41bc297224110e7ba) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'd03cd6d84b36e6e32985e7436c77a77f') in 0.052375 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000061 seconds.
+  path: Assets/Arts/Epic Toon FX/Textures/candle_soft2.png
+  artifactKey: Guid(842df994cbd81dd4cbaecf511216000a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Textures/candle_soft2.png using Guid(842df994cbd81dd4cbaecf511216000a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'b9873dc2d41bcbd5a98d2da482f18f1a') in 0.022788 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 7.748641 seconds.
+  path: Assets/Arts/Epic Toon FX/Materials/Confetti/confetti_blur.mat
+  artifactKey: Guid(fc4293af39df9df4ca4f1aab29b95913) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Materials/Confetti/confetti_blur.mat using Guid(fc4293af39df9df4ca4f1aab29b95913) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'bbdba3e0aa24fe4c49879fcafeed0895') in 0.021647 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.501292 seconds.
+  path: Assets/Arts/Epic Toon FX/Materials/Bubbles/bubble2.mat
+  artifactKey: Guid(631ae8263369c8f488b47ca935f1e486) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Materials/Bubbles/bubble2.mat using Guid(631ae8263369c8f488b47ca935f1e486) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'a251dddf38b40518e248c7c9dc7bda85') in 0.021315 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 1.443739 seconds.
+  path: Assets/Arts/Epic Toon FX/Materials/Clouds/cloud_2x2_hard.mat
+  artifactKey: Guid(d386c5d9fb941e845b73fe6da5491ef2) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Materials/Clouds/cloud_2x2_hard.mat using Guid(d386c5d9fb941e845b73fe6da5491ef2) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '783eb441398cd72140f11ee095c80cd5') in 0.023283 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000029 seconds.
+  path: Assets/Arts/Epic Toon FX/Materials/Clouds/cloud_soft.mat
+  artifactKey: Guid(c1254d407233159489f0bfdd68ac2975) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Materials/Clouds/cloud_soft.mat using Guid(c1254d407233159489f0bfdd68ac2975) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'b60fab05902e7f3b15bf475c07239d6c') in 0.023245 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.862617 seconds.
+  path: Assets/Arts/Epic Toon FX/Materials/Emoticons/bigsmile.mat
+  artifactKey: Guid(5691aad654871084bb7f84be6dc98391) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Materials/Emoticons/bigsmile.mat using Guid(5691aad654871084bb7f84be6dc98391) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'f3d4d2a161e72404f291d446a0119869') in 0.032831 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000044 seconds.
+  path: Assets/Arts/Epic Toon FX/Materials/Emoticons/drool.mat
+  artifactKey: Guid(d7f8f80b5b5817244a09e7fbf657da56) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Materials/Emoticons/drool.mat using Guid(d7f8f80b5b5817244a09e7fbf657da56) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '06f2d65d35f1b2a080eb376578fc8d15') in 0.027924 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000040 seconds.
+  path: Assets/Arts/Epic Toon FX/Materials/Emoticons/disappoint.mat
+  artifactKey: Guid(b0345d6b496b88744a4fe169db3b58c0) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Materials/Emoticons/disappoint.mat using Guid(b0345d6b496b88744a4fe169db3b58c0) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'c30480ac1f1b435c32080f84bd6eba5d') in 0.032792 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.064166 seconds.
+  path: Assets/Arts/Epic Toon FX/Materials/Fire/candle_soft.mat
+  artifactKey: Guid(fa8a93d50e2f83b428d329d3aea4da8b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Materials/Fire/candle_soft.mat using Guid(fa8a93d50e2f83b428d329d3aea4da8b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '1df5b28df7c39e2e53f3b178d1be8d5b') in 0.084139 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000027 seconds.
+  path: Assets/Arts/Epic Toon FX/Materials/Fire/fire_soft.mat
+  artifactKey: Guid(f527801e80dd0814a9d5d318dbd03d69) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Materials/Fire/fire_soft.mat using Guid(f527801e80dd0814a9d5d318dbd03d69) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '98774f6248d15deb52b8223619279d33') in 0.042123 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000034 seconds.
+  path: Assets/Arts/Epic Toon FX/Materials/Fire/fire_ground_soft3x3.mat
+  artifactKey: Guid(de48d840badcfea4cac095f9ad2e92f2) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Materials/Fire/fire_ground_soft3x3.mat using Guid(de48d840badcfea4cac095f9ad2e92f2) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '9e4261ee168781165d57351ba86b7ec3') in 0.019341 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.039978 seconds.
+  path: Assets/Arts/Epic Toon FX/Materials/Geometric/circle_additive.mat
+  artifactKey: Guid(4bf10d94145fd6c4187c18de0af92e43) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Materials/Geometric/circle_additive.mat using Guid(4bf10d94145fd6c4187c18de0af92e43) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '87f9ee448dfc61826d54d65b3d71258a') in 0.080173 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000034 seconds.
+  path: Assets/Arts/Epic Toon FX/Materials/Geometric/rectangle.mat
+  artifactKey: Guid(71bb95a2098a9734eaf005aa7b6dc400) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Materials/Geometric/rectangle.mat using Guid(71bb95a2098a9734eaf005aa7b6dc400) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '7286b62e735c8eca50d567bcf8b7aee6') in 0.028259 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000029 seconds.
+  path: Assets/Arts/Epic Toon FX/Materials/Geometric/triangle.mat
+  artifactKey: Guid(6f795a8b392db5d4aa0bb026020ed093) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Materials/Geometric/triangle.mat using Guid(6f795a8b392db5d4aa0bb026020ed093) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'cb893f8ea771cd3eceb5d940dc335656') in 0.025121 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.598149 seconds.
+  path: Assets/Arts/Epic Toon FX/Materials/Glows/glow2.mat
+  artifactKey: Guid(b29e688b444288148ad46d4aae66cffc) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Materials/Glows/glow2.mat using Guid(b29e688b444288148ad46d4aae66cffc) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '5d8073a58dc1d8b406f114cac866c9b1') in 0.051622 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.274276 seconds.
+  path: Assets/Arts/Epic Toon FX/Materials/Hearts/heart2.mat
+  artifactKey: Guid(4e47fdfe66dd2a046986da0de1ef7495) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Materials/Hearts/heart2.mat using Guid(4e47fdfe66dd2a046986da0de1ef7495) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '689dabe728a3d8ea8253c7085dc82f52') in 0.025104 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.860330 seconds.
+  path: Assets/Arts/Epic Toon FX/Materials/Magic/aura_vertical.mat
+  artifactKey: Guid(a3706764c40746746934f5d22917b0a1) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Materials/Magic/aura_vertical.mat using Guid(a3706764c40746746934f5d22917b0a1) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '194b9fd68ce6efe72ce7eddecef577a2') in 0.089986 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000030 seconds.
+  path: Assets/Arts/Epic Toon FX/Materials/Magic/orb.mat
+  artifactKey: Guid(072ade2f5404113439ad723bd09909d2) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Materials/Magic/orb.mat using Guid(072ade2f5404113439ad723bd09909d2) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'e425c7120bb9639e41cace1f24e96bd9') in 0.057465 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.245466 seconds.
+  path: Assets/Arts/Epic Toon FX/Materials/Misc/aura_vertical_soft.mat
+  artifactKey: Guid(9d5f3d715091cd34e97ba2941c6fb73f) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Materials/Misc/aura_vertical_soft.mat using Guid(9d5f3d715091cd34e97ba2941c6fb73f) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '0cf213d8108594dddf5d591803d9723f') in 0.020133 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000054 seconds.
+  path: Assets/Arts/Epic Toon FX/Materials/Misc/ice_spikes.mat
+  artifactKey: Guid(df49654d9efe3fa4d8511bd148caabf4) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Materials/Misc/ice_spikes.mat using Guid(df49654d9efe3fa4d8511bd148caabf4) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '41a1cde0d579c49061f9cb4c2b1a69c0') in 0.026540 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000032 seconds.
+  path: Assets/Arts/Epic Toon FX/Materials/Misc/explosion_spritesheet_2x2.mat
+  artifactKey: Guid(4c750fbc95c4cde4fa7c0d3bf1d74e73) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Materials/Misc/explosion_spritesheet_2x2.mat using Guid(4c750fbc95c4cde4fa7c0d3bf1d74e73) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'd382e88700d1a7e69178f6eaf83d1102') in 0.027791 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000031 seconds.
+  path: Assets/Arts/Epic Toon FX/Materials/Misc/feather.mat
+  artifactKey: Guid(9c06f7d2bce03ad45b125b8af7a59cc7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Materials/Misc/feather.mat using Guid(9c06f7d2bce03ad45b125b8af7a59cc7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '44a2bedb5e826f398bfb07f7b7527fb3') in 0.020174 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.070216 seconds.
+  path: Assets/Arts/Epic Toon FX/Materials/money/moneybills.mat
+  artifactKey: Guid(07a259e5fa4bd6e45849d6b5a3c13127) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Materials/money/moneybills.mat using Guid(07a259e5fa4bd6e45849d6b5a3c13127) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '4e34fc130e1eaa5aaceb2723d51e5ddd') in 0.019334 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 17.910155 seconds.
+  path: Assets/Arts/Epic Toon FX/Textures/feather_outlined.png
+  artifactKey: Guid(e8337489bbd231946bf2a72e8bfb8064) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Textures/feather_outlined.png using Guid(e8337489bbd231946bf2a72e8bfb8064) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'b3f697943032a59137c70657028a2cdb') in 0.027552 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000079 seconds.
+  path: Assets/Arts/Epic Toon FX/Textures/magic_line.png
+  artifactKey: Guid(64f13eb4d14d52f45a75c9e741dbbf8e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Textures/magic_line.png using Guid(64f13eb4d14d52f45a75c9e741dbbf8e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '3aad8b4e281a314e3f2cd7e18675a99f') in 0.020325 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 3.465492 seconds.
+  path: Assets/Arts/Epic Toon FX/Textures/star_outlined_colored.png
+  artifactKey: Guid(a4e52c23f174acd4fbf8b0b3b6042219) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Textures/star_outlined_colored.png using Guid(a4e52c23f174acd4fbf8b0b3b6042219) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '7a034311e6d2cf4bb436aa5307ea71ff') in 0.019436 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 20.152020 seconds.
+  path: Assets/Arts/AurynSky/Dungeon Pack/Models/BannerHolderLD.fbx
+  artifactKey: Guid(ad681b436b88f0744ac5f3f69bd025bd) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/AurynSky/Dungeon Pack/Models/BannerHolderLD.fbx using Guid(ad681b436b88f0744ac5f3f69bd025bd) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '7eb49a79a6bb0e57566583e5a12f3926') in 0.047638 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000052 seconds.
+  path: Assets/Arts/AurynSky/Dungeon Pack/Models/BlockSpike02D.fbx
+  artifactKey: Guid(b9097d52891570045adcbab7d591a13c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/AurynSky/Dungeon Pack/Models/BlockSpike02D.fbx using Guid(b9097d52891570045adcbab7d591a13c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'ecb2493717d107c5890e072dacf36779') in 0.049178 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000032 seconds.
+  path: Assets/Arts/AurynSky/Dungeon Pack/Models/BlockS02D.fbx
+  artifactKey: Guid(671aeeba71c544e488f76999081d53f0) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/AurynSky/Dungeon Pack/Models/BlockS02D.fbx using Guid(671aeeba71c544e488f76999081d53f0) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '424fd6b21da6f5e8b27a8d4e4b0fc51b') in 0.044745 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.770792 seconds.
+  path: Assets/Arts/AurynSky/Dungeon Pack/Models/CastleD.fbx
+  artifactKey: Guid(586694c0d46cd474f94fc417543a4bff) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/AurynSky/Dungeon Pack/Models/CastleD.fbx using Guid(586694c0d46cd474f94fc417543a4bff) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '7dbb710ed7c4a80c33fe0a357ed70747') in 0.046473 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.228926 seconds.
+  path: Assets/Arts/AurynSky/Dungeon Pack/Models/ChestTD.fbx
+  artifactKey: Guid(d3af6dd385346e0478acf3f18e360140) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/AurynSky/Dungeon Pack/Models/ChestTD.fbx using Guid(d3af6dd385346e0478acf3f18e360140) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '4f42f99014f9e4d686d99f9d1d0297d0') in 0.042633 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000027 seconds.
+  path: Assets/Arts/AurynSky/Dungeon Pack/Models/DoorRD.fbx
+  artifactKey: Guid(5f60ab843df9230469f4c9c278fa44fe) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/AurynSky/Dungeon Pack/Models/DoorRD.fbx using Guid(5f60ab843df9230469f4c9c278fa44fe) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '6ecbe881a75aee65de2cad88c76ff332') in 0.050772 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.031079 seconds.
+  path: Assets/Arts/AurynSky/Dungeon Pack/Models/GrateD.fbx
+  artifactKey: Guid(5a6ea104e6b590c45b6878cce65aa633) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/AurynSky/Dungeon Pack/Models/GrateD.fbx using Guid(5a6ea104e6b590c45b6878cce65aa633) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '79a6a763a8bd91d8f60473c10c07a2d2') in 0.038935 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.102463 seconds.
+  path: Assets/Arts/AurynSky/Dungeon Pack/Models/LadderD.fbx
+  artifactKey: Guid(807ebce0ec93c9544ab0b281fff1cdab) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/AurynSky/Dungeon Pack/Models/LadderD.fbx using Guid(807ebce0ec93c9544ab0b281fff1cdab) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '6bde2b5307cd8331c5d63fac1b7ee949') in 0.041159 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000052 seconds.
+  path: Assets/Arts/AurynSky/Dungeon Pack/Models/Pole01D.fbx
+  artifactKey: Guid(b44d9254a0fef834ab376d3bb2ff70c6) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/AurynSky/Dungeon Pack/Models/Pole01D.fbx using Guid(b44d9254a0fef834ab376d3bb2ff70c6) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '9853b67db6b41844fcdf301e67e3b6dc') in 0.119496 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000033 seconds.
+  path: Assets/Arts/AurynSky/Dungeon Pack/Models/StatueD.fbx
+  artifactKey: Guid(cb5f60e0ab71db040bc7971ccc94e995) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/AurynSky/Dungeon Pack/Models/StatueD.fbx using Guid(cb5f60e0ab71db040bc7971ccc94e995) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '0e219dcddcf25c1577a94b347ebeb340') in 0.048846 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.103015 seconds.
+  path: Assets/Arts/AurynSky/Dungeon Pack/Models/TowerD.fbx
+  artifactKey: Guid(20384cd36806a14409fad6ab78b9efed) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/AurynSky/Dungeon Pack/Models/TowerD.fbx using Guid(20384cd36806a14409fad6ab78b9efed) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '0e636c73961243a574e2b1a1c6bac34d') in 0.051152 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.750581 seconds.
+  path: Assets/Arts/AurynSky/Dungeon Pack/Particles/SmokeD.prefab
+  artifactKey: Guid(9352e285c4b7fc74682fcb287430f681) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/AurynSky/Dungeon Pack/Particles/SmokeD.prefab using Guid(9352e285c4b7fc74682fcb287430f681) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'bdc30b1f75a2e3eddd17324c6625726a') in 0.027401 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 1.610474 seconds.
+  path: Assets/Arts/AurynSky/Dungeon Pack/Textures/ColorPaletteRED.png
+  artifactKey: Guid(df91319b80fe8544fa0763ae437d8b79) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/AurynSky/Dungeon Pack/Textures/ColorPaletteRED.png using Guid(df91319b80fe8544fa0763ae437d8b79) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '8688ec326b335fee671373ce0510c2f5') in 0.030131 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 2.641180 seconds.
+  path: Assets/Arts/AurynSky/Dungeon Pack/Prefabs/Blue/BannerStandingBlue.prefab
+  artifactKey: Guid(4b403a38653c14e42bf3b31c0b7af879) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/AurynSky/Dungeon Pack/Prefabs/Blue/BannerStandingBlue.prefab using Guid(4b403a38653c14e42bf3b31c0b7af879) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '74f6fc34585ef589c146168cb268f78e') in 0.048641 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 1.473976 seconds.
+  path: Assets/Arts/AurynSky/Dungeon Pack/Prefabs/Blue/BluePieces/DoorLBlue.prefab
+  artifactKey: Guid(a18162285d90d504392dd8ce42dd07c1) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/AurynSky/Dungeon Pack/Prefabs/Blue/BluePieces/DoorLBlue.prefab using Guid(a18162285d90d504392dd8ce42dd07c1) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'eac84c081cab79d04caeabb6277db82b') in 0.020658 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.550139 seconds.
+  path: Assets/Arts/AurynSky/Dungeon Pack/Prefabs/General/BannerHolderSD.prefab
+  artifactKey: Guid(72f4d9ce894021048b78fa5504c55393) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/AurynSky/Dungeon Pack/Prefabs/General/BannerHolderSD.prefab using Guid(72f4d9ce894021048b78fa5504c55393) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '7e0ba930dc78fc5d6f13aa81665f144d') in 0.029612 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000021 seconds.
+  path: Assets/Arts/AurynSky/Dungeon Pack/Prefabs/General/ChainD.prefab
+  artifactKey: Guid(64825d6cefec54e4cb33751b82e00e74) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/AurynSky/Dungeon Pack/Prefabs/General/ChainD.prefab using Guid(64825d6cefec54e4cb33751b82e00e74) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '7449d21a0eaa9b3d1c8c340fdeda1f27') in 0.025051 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000078 seconds.
+  path: Assets/Arts/AurynSky/Dungeon Pack/Prefabs/General/BlockSpike02D.prefab
+  artifactKey: Guid(ebd40ddc8b7a7d04ca07ec48b1c54d3e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/AurynSky/Dungeon Pack/Prefabs/General/BlockSpike02D.prefab using Guid(ebd40ddc8b7a7d04ca07ec48b1c54d3e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'aa55ac0e0d0967f4822b56846c5102a3') in 0.020540 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 2.402620 seconds.
+  path: Assets/Arts/AurynSky/Dungeon Pack/Prefabs/Traps/SpearD.prefab
+  artifactKey: Guid(52885593799113a428a7ed330ad57782) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/AurynSky/Dungeon Pack/Prefabs/Traps/SpearD.prefab using Guid(52885593799113a428a7ed330ad57782) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '5b9c2bf29d8896684e45051d6e0cc800') in 0.020056 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000045 seconds.
+  path: Assets/Arts/AurynSky/Dungeon Pack/Prefabs/Traps/TrapDoor.prefab
+  artifactKey: Guid(a1644dd8880d0594d970514153034e86) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/AurynSky/Dungeon Pack/Prefabs/Traps/TrapDoor.prefab using Guid(a1644dd8880d0594d970514153034e86) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '8c930f4aae42747784b7075490561530') in 0.029582 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 9.732813 seconds.
+  path: Assets/Arts/Epic Toon FX/Materials/Stars/star_ADD.mat
+  artifactKey: Guid(f977d103ddb4f804f84d689a9f2d20ec) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Materials/Stars/star_ADD.mat using Guid(f977d103ddb4f804f84d689a9f2d20ec) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '18b1cc382a1fc94dab843f34b5c3c68e') in 0.023824 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 1.033022 seconds.
+  path: Assets/Arts/Epic Toon FX/Materials/Water/wave.mat
+  artifactKey: Guid(e6d52e4717c76be42877f6e62fa49238) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Materials/Water/wave.mat using Guid(e6d52e4717c76be42877f6e62fa49238) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '3cf4202bdc3b0d57f4efefc7c6a1f846') in 0.023071 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.914435 seconds.
+  path: Assets/Arts/Epic Toon FX/Materials/Splat/splat02.mat
+  artifactKey: Guid(3ba60631b79b3164c9c63be162da8201) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Materials/Splat/splat02.mat using Guid(3ba60631b79b3164c9c63be162da8201) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '727c75f45506fd5f031ff15819f42c5e') in 0.027062 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.176730 seconds.
+  path: Assets/Arts/Epic Toon FX/Materials/Sparkle/sparkle_AB.mat
+  artifactKey: Guid(4408abb7a30b61a4a9a19dbb5f761d2b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Materials/Sparkle/sparkle_AB.mat using Guid(4408abb7a30b61a4a9a19dbb5f761d2b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '62ae3e8b20b380169a9bef56727bedbe') in 0.026323 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 2.306658 seconds.
+  path: Assets/Arts/Epic Toon FX/Materials/Skulls/skull2.mat
+  artifactKey: Guid(bab1fe4217d50234dad4b94da5a2227a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Materials/Skulls/skull2.mat using Guid(bab1fe4217d50234dad4b94da5a2227a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '50b2711e63efa1c82408cb4c6f4a44b1') in 0.026097 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000064 seconds.
+  path: Assets/Arts/Epic Toon FX/Materials/Skulls/skull_love.mat
+  artifactKey: Guid(9508913321a683748b47ef37ee8cd11b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Materials/Skulls/skull_love.mat using Guid(9508913321a683748b47ef37ee8cd11b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'f5b75369a920008d0d49133da8f1a2b6') in 0.016922 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 1.231655 seconds.
+  path: Assets/Arts/Epic Toon FX/Materials/Shield/shield_magic.mat
+  artifactKey: Guid(f83446c15cfd0264f8a503a4de365cc1) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Materials/Shield/shield_magic.mat using Guid(f83446c15cfd0264f8a503a4de365cc1) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'e1e1cffa17101da4b50ac07ee32d72f5') in 0.030124 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.875920 seconds.
+  path: Assets/Arts/Epic Toon FX/Materials/Portals/portal_glow_add.mat
+  artifactKey: Guid(b2e8acd4ba642d74a939033f33df790c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Materials/Portals/portal_glow_add.mat using Guid(b2e8acd4ba642d74a939033f33df790c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '43a86fdfea5bb563a12bb1e1037fe5a7') in 0.026131 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000032 seconds.
+  path: Assets/Arts/Epic Toon FX/Materials/Portals/portal_stripes3.mat
+  artifactKey: Guid(1375e13c1d3ea904a940ee9ca3efb692) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Materials/Portals/portal_stripes3.mat using Guid(1375e13c1d3ea904a940ee9ca3efb692) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'd74bfb7306c0b2129e45d2c25440d513') in 0.025149 seconds 
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.011055 seconds.
+Begin MonoManager ReloadAssembly
+Symbol file LoadedFromMemory doesn't match image D:\Unity\Card\Card\Library\PackageCache\com.unity.visualscripting@1.7.8\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll
+Symbol file LoadedFromMemory doesn't match image D:\Unity\Card\Card\Library\PackageCache\com.unity.visualscripting@1.7.8\Editor\VisualScripting.Core\Dependencies\DotNetZip\Unity.VisualScripting.IonicZip.dll
+Native extension for WindowsStandalone target not found
+Native extension for Android target not found
+Refreshing native plugins compatible for Editor in 2.12 ms, found 4 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.239 seconds
+Domain Reload Profiling:
+	ReloadAssembly (1240ms)
+		BeginReloadAssembly (165ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (6ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (1ms)
+			CreateAndSetChildDomain (53ms)
+		EndReloadAssembly (965ms)
+			LoadAssemblies (108ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (256ms)
+			ReleaseScriptCaches (3ms)
+			RebuildScriptCaches (58ms)
+			SetupLoadedEditorAssemblies (463ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (26ms)
+				SetLoadedEditorAssemblies (1ms)
+				RefreshPlugins (2ms)
+				BeforeProcessingInitializeOnLoad (96ms)
+				ProcessInitializeOnLoadAttributes (270ms)
+				ProcessInitializeOnLoadMethodAttributes (56ms)
+				AfterProcessingInitializeOnLoad (11ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (11ms)
+Platform modules already initialized, skipping
+Refreshing native plugins compatible for Editor in 5.18 ms, found 4 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 4093 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 40 unused Assets / (0.6 MB). Loaded Objects now: 4618.
+Memory consumption went from 163.7 MB to 163.1 MB.
+Total: 6.693600 ms (FindLiveObjects: 0.613500 ms CreateObjectMapping: 0.383300 ms MarkObjects: 5.196800 ms  DeleteObjects: 0.498700 ms)
+
+AssetImportParameters requested are different than current active one (requested -> active):
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
+  custom:video-codec-MediaFoundation-h265: 746d11721c4dcdbdad8f713fa42b33f4 -> 
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 -> 
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+========================================================================
+Received Import Request.
+  Time since last request: 1386.493908 seconds.
+  path: Assets/MyAssets/CardSystem/Script/CardCreater.cs
+  artifactKey: Guid(a6d521adc7da3cf48b98cb210b3f95e2) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/MyAssets/CardSystem/Script/CardCreater.cs using Guid(a6d521adc7da3cf48b98cb210b3f95e2) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '345f3835f1fbbb926f3f67e87a49d648') in 0.065399 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 104.320358 seconds.
+  path: Assets/MyAssets/BattleSystem/Script/BattleManager.cs
+  artifactKey: Guid(b777d4807bbe97a4297e5cd23afd0ed7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/MyAssets/BattleSystem/Script/BattleManager.cs using Guid(b777d4807bbe97a4297e5cd23afd0ed7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '482cc32fafa202302fb03a0e6e88d594') in 0.041791 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 552.869821 seconds.
+  path: Assets/MyAssets/CardSystem/Data/Excel/CARDLIST.csv
+  artifactKey: Guid(e1f9f1fef5c6c8f40871aac5a502defa) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/MyAssets/CardSystem/Data/Excel/CARDLIST.csv using Guid(e1f9f1fef5c6c8f40871aac5a502defa) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '1a21dc131412c72eff05cd3bed01d389') in 0.033072 seconds 
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.008874 seconds.
+Begin MonoManager ReloadAssembly
+Symbol file LoadedFromMemory doesn't match image D:\Unity\Card\Card\Library\PackageCache\com.unity.visualscripting@1.7.8\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll
+Symbol file LoadedFromMemory doesn't match image D:\Unity\Card\Card\Library\PackageCache\com.unity.visualscripting@1.7.8\Editor\VisualScripting.Core\Dependencies\DotNetZip\Unity.VisualScripting.IonicZip.dll
+Native extension for WindowsStandalone target not found
+Native extension for Android target not found
+Refreshing native plugins compatible for Editor in 1.03 ms, found 4 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  0.924 seconds
+Domain Reload Profiling:
+	ReloadAssembly (924ms)
+		BeginReloadAssembly (130ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (6ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (41ms)
+		EndReloadAssembly (698ms)
+			LoadAssemblies (89ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (224ms)
+			ReleaseScriptCaches (1ms)
+			RebuildScriptCaches (39ms)
+			SetupLoadedEditorAssemblies (312ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (19ms)
+				SetLoadedEditorAssemblies (0ms)
+				RefreshPlugins (1ms)
+				BeforeProcessingInitializeOnLoad (67ms)
+				ProcessInitializeOnLoadAttributes (185ms)
+				ProcessInitializeOnLoadMethodAttributes (32ms)
+				AfterProcessingInitializeOnLoad (8ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (7ms)
+Platform modules already initialized, skipping
+Refreshing native plugins compatible for Editor in 2.68 ms, found 4 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 4093 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 40 unused Assets / (0.6 MB). Loaded Objects now: 4621.
+Memory consumption went from 163.7 MB to 163.2 MB.
+Total: 4.179000 ms (FindLiveObjects: 0.290900 ms CreateObjectMapping: 0.250400 ms MarkObjects: 3.319700 ms  DeleteObjects: 0.316700 ms)
+
+AssetImportParameters requested are different than current active one (requested -> active):
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
+  custom:video-codec-MediaFoundation-h265: 746d11721c4dcdbdad8f713fa42b33f4 -> 
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 -> 
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.010168 seconds.
+Begin MonoManager ReloadAssembly
+Symbol file LoadedFromMemory doesn't match image D:\Unity\Card\Card\Library\PackageCache\com.unity.visualscripting@1.7.8\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll
+Symbol file LoadedFromMemory doesn't match image D:\Unity\Card\Card\Library\PackageCache\com.unity.visualscripting@1.7.8\Editor\VisualScripting.Core\Dependencies\DotNetZip\Unity.VisualScripting.IonicZip.dll
+Native extension for WindowsStandalone target not found
+Native extension for Android target not found
+Refreshing native plugins compatible for Editor in 1.28 ms, found 4 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.050 seconds
+Domain Reload Profiling:
+	ReloadAssembly (1050ms)
+		BeginReloadAssembly (129ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (6ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (40ms)
+		EndReloadAssembly (835ms)
+			LoadAssemblies (88ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (250ms)
+			ReleaseScriptCaches (2ms)
+			RebuildScriptCaches (49ms)
+			SetupLoadedEditorAssemblies (390ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (23ms)
+				SetLoadedEditorAssemblies (0ms)
+				RefreshPlugins (1ms)
+				BeforeProcessingInitializeOnLoad (80ms)
+				ProcessInitializeOnLoadAttributes (232ms)
+				ProcessInitializeOnLoadMethodAttributes (42ms)
+				AfterProcessingInitializeOnLoad (9ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (9ms)
+Platform modules already initialized, skipping
+Refreshing native plugins compatible for Editor in 3.16 ms, found 4 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 4093 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 40 unused Assets / (0.6 MB). Loaded Objects now: 4624.
+Memory consumption went from 163.7 MB to 163.2 MB.
+Total: 4.475400 ms (FindLiveObjects: 0.278000 ms CreateObjectMapping: 0.244500 ms MarkObjects: 3.505100 ms  DeleteObjects: 0.447000 ms)
+
+AssetImportParameters requested are different than current active one (requested -> active):
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
+  custom:video-codec-MediaFoundation-h265: 746d11721c4dcdbdad8f713fa42b33f4 -> 
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 -> 
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.009473 seconds.
+Begin MonoManager ReloadAssembly
+Symbol file LoadedFromMemory doesn't match image D:\Unity\Card\Card\Library\PackageCache\com.unity.visualscripting@1.7.8\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll
+Symbol file LoadedFromMemory doesn't match image D:\Unity\Card\Card\Library\PackageCache\com.unity.visualscripting@1.7.8\Editor\VisualScripting.Core\Dependencies\DotNetZip\Unity.VisualScripting.IonicZip.dll
+Native extension for WindowsStandalone target not found
+Native extension for Android target not found
+Refreshing native plugins compatible for Editor in 1.08 ms, found 4 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.022 seconds
+Domain Reload Profiling:
+	ReloadAssembly (1022ms)
+		BeginReloadAssembly (121ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (7ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (36ms)
+		EndReloadAssembly (810ms)
+			LoadAssemblies (80ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (217ms)
+			ReleaseScriptCaches (2ms)
+			RebuildScriptCaches (47ms)
+			SetupLoadedEditorAssemblies (407ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (23ms)
+				SetLoadedEditorAssemblies (0ms)
+				RefreshPlugins (1ms)
+				BeforeProcessingInitializeOnLoad (82ms)
+				ProcessInitializeOnLoadAttributes (245ms)
+				ProcessInitializeOnLoadMethodAttributes (45ms)
+				AfterProcessingInitializeOnLoad (10ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (10ms)
+Platform modules already initialized, skipping
+Refreshing native plugins compatible for Editor in 3.06 ms, found 4 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 4093 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 40 unused Assets / (0.6 MB). Loaded Objects now: 4627.
+Memory consumption went from 163.7 MB to 163.2 MB.
+Total: 4.158300 ms (FindLiveObjects: 0.467100 ms CreateObjectMapping: 0.110100 ms MarkObjects: 3.243500 ms  DeleteObjects: 0.336500 ms)
+
+AssetImportParameters requested are different than current active one (requested -> active):
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
+  custom:video-codec-MediaFoundation-h265: 746d11721c4dcdbdad8f713fa42b33f4 -> 
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 -> 
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.010911 seconds.
+Begin MonoManager ReloadAssembly
+Symbol file LoadedFromMemory doesn't match image D:\Unity\Card\Card\Library\PackageCache\com.unity.visualscripting@1.7.8\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll
+Symbol file LoadedFromMemory doesn't match image D:\Unity\Card\Card\Library\PackageCache\com.unity.visualscripting@1.7.8\Editor\VisualScripting.Core\Dependencies\DotNetZip\Unity.VisualScripting.IonicZip.dll
+Native extension for WindowsStandalone target not found
+Native extension for Android target not found
+Refreshing native plugins compatible for Editor in 1.84 ms, found 4 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.183 seconds
+Domain Reload Profiling:
+	ReloadAssembly (1184ms)
+		BeginReloadAssembly (146ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (8ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (44ms)
+		EndReloadAssembly (887ms)
+			LoadAssemblies (128ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (279ms)
+			ReleaseScriptCaches (3ms)
+			RebuildScriptCaches (67ms)
+			SetupLoadedEditorAssemblies (360ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (27ms)
+				SetLoadedEditorAssemblies (1ms)
+				RefreshPlugins (2ms)
+				BeforeProcessingInitializeOnLoad (79ms)
+				ProcessInitializeOnLoadAttributes (200ms)
+				ProcessInitializeOnLoadMethodAttributes (43ms)
+				AfterProcessingInitializeOnLoad (8ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (7ms)
+Platform modules already initialized, skipping
+Refreshing native plugins compatible for Editor in 3.12 ms, found 4 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 4093 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 40 unused Assets / (0.6 MB). Loaded Objects now: 4630.
+Memory consumption went from 163.7 MB to 163.2 MB.
+Total: 3.621000 ms (FindLiveObjects: 0.316800 ms CreateObjectMapping: 0.106500 ms MarkObjects: 2.887100 ms  DeleteObjects: 0.309700 ms)
+
+AssetImportParameters requested are different than current active one (requested -> active):
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
+  custom:video-codec-MediaFoundation-h265: 746d11721c4dcdbdad8f713fa42b33f4 -> 
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 -> 
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.009675 seconds.
+Begin MonoManager ReloadAssembly
+Symbol file LoadedFromMemory doesn't match image D:\Unity\Card\Card\Library\PackageCache\com.unity.visualscripting@1.7.8\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll
+Symbol file LoadedFromMemory doesn't match image D:\Unity\Card\Card\Library\PackageCache\com.unity.visualscripting@1.7.8\Editor\VisualScripting.Core\Dependencies\DotNetZip\Unity.VisualScripting.IonicZip.dll
+Native extension for WindowsStandalone target not found
+Native extension for Android target not found
+Refreshing native plugins compatible for Editor in 1.14 ms, found 4 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  0.961 seconds
+Domain Reload Profiling:
+	ReloadAssembly (961ms)
+		BeginReloadAssembly (119ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (6ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (34ms)
+		EndReloadAssembly (759ms)
+			LoadAssemblies (83ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (201ms)
+			ReleaseScriptCaches (2ms)
+			RebuildScriptCaches (45ms)
+			SetupLoadedEditorAssemblies (374ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (24ms)
+				SetLoadedEditorAssemblies (1ms)
+				RefreshPlugins (1ms)
+				BeforeProcessingInitializeOnLoad (78ms)
+				ProcessInitializeOnLoadAttributes (216ms)
+				ProcessInitializeOnLoadMethodAttributes (44ms)
+				AfterProcessingInitializeOnLoad (10ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (10ms)
+Platform modules already initialized, skipping
+Refreshing native plugins compatible for Editor in 3.06 ms, found 4 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 4093 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 40 unused Assets / (0.6 MB). Loaded Objects now: 4633.
+Memory consumption went from 163.7 MB to 163.2 MB.
+Total: 4.041400 ms (FindLiveObjects: 0.342300 ms CreateObjectMapping: 0.308800 ms MarkObjects: 3.039700 ms  DeleteObjects: 0.348700 ms)
+
+AssetImportParameters requested are different than current active one (requested -> active):
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
+  custom:video-codec-MediaFoundation-h265: 746d11721c4dcdbdad8f713fa42b33f4 -> 
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 -> 
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+========================================================================
+Received Import Request.
+  Time since last request: 577.852884 seconds.
+  path: Assets/MyAssets/UI/Script/UIBase.cs
+  artifactKey: Guid(9b951ab9bc5f8ef4a9e66f94cb1df828) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/MyAssets/UI/Script/UIBase.cs using Guid(9b951ab9bc5f8ef4a9e66f94cb1df828) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'e316dec59249123573ef444910f7af36') in 0.025373 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 22.129791 seconds.
+  path: Assets/MyAssets/UI/Script/UIManager.cs
+  artifactKey: Guid(345a1c0262b21bd4aa84111c3f7d9456) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/MyAssets/UI/Script/UIManager.cs using Guid(345a1c0262b21bd4aa84111c3f7d9456) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '8be3657ed5dee80946bb89e6a3043e82') in 0.010371 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 249.374427 seconds.
+  path: Assets/MyAssets/UI/Script/UIAttackLine.cs
+  artifactKey: Guid(b9129515b85357847bcb0dd7386c4a9a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/MyAssets/UI/Script/UIAttackLine.cs using Guid(b9129515b85357847bcb0dd7386c4a9a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'e481fe79ffe7d0084d66d61775da17ec') in 0.017556 seconds 
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.008789 seconds.
+Begin MonoManager ReloadAssembly
+Symbol file LoadedFromMemory doesn't match image D:\Unity\Card\Card\Library\PackageCache\com.unity.visualscripting@1.7.8\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll
+Symbol file LoadedFromMemory doesn't match image D:\Unity\Card\Card\Library\PackageCache\com.unity.visualscripting@1.7.8\Editor\VisualScripting.Core\Dependencies\DotNetZip\Unity.VisualScripting.IonicZip.dll
+Native extension for WindowsStandalone target not found
+Native extension for Android target not found
+Refreshing native plugins compatible for Editor in 1.02 ms, found 4 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  0.865 seconds
+Domain Reload Profiling:
+	ReloadAssembly (866ms)
+		BeginReloadAssembly (131ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (6ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (40ms)
+		EndReloadAssembly (645ms)
+			LoadAssemblies (91ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (190ms)
+			ReleaseScriptCaches (1ms)
+			RebuildScriptCaches (34ms)
+			SetupLoadedEditorAssemblies (298ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (18ms)
+				SetLoadedEditorAssemblies (0ms)
+				RefreshPlugins (1ms)
+				BeforeProcessingInitializeOnLoad (65ms)
+				ProcessInitializeOnLoadAttributes (172ms)
+				ProcessInitializeOnLoadMethodAttributes (33ms)
+				AfterProcessingInitializeOnLoad (8ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (7ms)
+Platform modules already initialized, skipping
+Refreshing native plugins compatible for Editor in 2.52 ms, found 4 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 4094 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 40 unused Assets / (0.6 MB). Loaded Objects now: 4637.
+Memory consumption went from 163.8 MB to 163.2 MB.
+Total: 3.697400 ms (FindLiveObjects: 0.257800 ms CreateObjectMapping: 0.191300 ms MarkObjects: 2.859100 ms  DeleteObjects: 0.388600 ms)
+
+AssetImportParameters requested are different than current active one (requested -> active):
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
+  custom:video-codec-MediaFoundation-h265: 746d11721c4dcdbdad8f713fa42b33f4 -> 
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 -> 
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.009366 seconds.
+Begin MonoManager ReloadAssembly
+Symbol file LoadedFromMemory doesn't match image D:\Unity\Card\Card\Library\PackageCache\com.unity.visualscripting@1.7.8\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll
+Symbol file LoadedFromMemory doesn't match image D:\Unity\Card\Card\Library\PackageCache\com.unity.visualscripting@1.7.8\Editor\VisualScripting.Core\Dependencies\DotNetZip\Unity.VisualScripting.IonicZip.dll
+Native extension for WindowsStandalone target not found
+Native extension for Android target not found
+Refreshing native plugins compatible for Editor in 1.06 ms, found 4 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  0.846 seconds
+Domain Reload Profiling:
+	ReloadAssembly (846ms)
+		BeginReloadAssembly (122ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (6ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (35ms)
+		EndReloadAssembly (635ms)
+			LoadAssemblies (85ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (190ms)
+			ReleaseScriptCaches (1ms)
+			RebuildScriptCaches (34ms)
+			SetupLoadedEditorAssemblies (293ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (18ms)
+				SetLoadedEditorAssemblies (0ms)
+				RefreshPlugins (1ms)
+				BeforeProcessingInitializeOnLoad (64ms)
+				ProcessInitializeOnLoadAttributes (169ms)
+				ProcessInitializeOnLoadMethodAttributes (32ms)
+				AfterProcessingInitializeOnLoad (8ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (6ms)
+Platform modules already initialized, skipping
+Refreshing native plugins compatible for Editor in 2.69 ms, found 4 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 4094 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 40 unused Assets / (0.6 MB). Loaded Objects now: 4640.
+Memory consumption went from 163.8 MB to 163.2 MB.
+Total: 3.470300 ms (FindLiveObjects: 0.288100 ms CreateObjectMapping: 0.100200 ms MarkObjects: 2.716900 ms  DeleteObjects: 0.364100 ms)
+
+AssetImportParameters requested are different than current active one (requested -> active):
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
+  custom:video-codec-MediaFoundation-h265: 746d11721c4dcdbdad8f713fa42b33f4 -> 
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 -> 
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+========================================================================
+Received Import Request.
+  Time since last request: 664.140015 seconds.
+  path: Assets/MyAssets/UI/Script/UIAttackLine.cs
+  artifactKey: Guid(b9129515b85357847bcb0dd7386c4a9a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/MyAssets/UI/Script/UIAttackLine.cs using Guid(b9129515b85357847bcb0dd7386c4a9a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '9a30d3a2b812c6b737dcfcfc506baa18') in 0.009175 seconds 
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.009321 seconds.
+Begin MonoManager ReloadAssembly
+Symbol file LoadedFromMemory doesn't match image D:\Unity\Card\Card\Library\PackageCache\com.unity.visualscripting@1.7.8\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll
+Symbol file LoadedFromMemory doesn't match image D:\Unity\Card\Card\Library\PackageCache\com.unity.visualscripting@1.7.8\Editor\VisualScripting.Core\Dependencies\DotNetZip\Unity.VisualScripting.IonicZip.dll
+Native extension for WindowsStandalone target not found
+Native extension for Android target not found
+Refreshing native plugins compatible for Editor in 0.88 ms, found 4 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  0.829 seconds
+Domain Reload Profiling:
+	ReloadAssembly (829ms)
+		BeginReloadAssembly (118ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (6ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (33ms)
+		EndReloadAssembly (623ms)
+			LoadAssemblies (82ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (180ms)
+			ReleaseScriptCaches (1ms)
+			RebuildScriptCaches (35ms)
+			SetupLoadedEditorAssemblies (291ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (18ms)
+				SetLoadedEditorAssemblies (0ms)
+				RefreshPlugins (1ms)
+				BeforeProcessingInitializeOnLoad (63ms)
+				ProcessInitializeOnLoadAttributes (168ms)
+				ProcessInitializeOnLoadMethodAttributes (33ms)
+				AfterProcessingInitializeOnLoad (8ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (7ms)
+Platform modules already initialized, skipping
+Refreshing native plugins compatible for Editor in 2.59 ms, found 4 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 4094 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 40 unused Assets / (0.6 MB). Loaded Objects now: 4643.
+Memory consumption went from 163.8 MB to 163.2 MB.
+Total: 3.353800 ms (FindLiveObjects: 0.276900 ms CreateObjectMapping: 0.106000 ms MarkObjects: 2.586700 ms  DeleteObjects: 0.383300 ms)
+
+AssetImportParameters requested are different than current active one (requested -> active):
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
+  custom:video-codec-MediaFoundation-h265: 746d11721c4dcdbdad8f713fa42b33f4 -> 
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 -> 
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+========================================================================
+Received Import Request.
+  Time since last request: 168.648215 seconds.
+  path: Assets/Arts/RPG Monster Duo PBR Polyart/Promotion.jpg
+  artifactKey: Guid(2a5a5f4f146cce3499cfcc7ee45b9b1a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/RPG Monster Duo PBR Polyart/Promotion.jpg using Guid(2a5a5f4f146cce3499cfcc7ee45b9b1a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '114d4dd222af47d2ea86850213508969') in 0.063114 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 2.347784 seconds.
+  path: Assets/Arts/Simple Toon/Shaders/STCore.cginc
+  artifactKey: Guid(69d7471035c7c40f695a9199c7916a3e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Simple Toon/Shaders/STCore.cginc using Guid(69d7471035c7c40f695a9199c7916a3e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '3c7bb892934e38d9681020933d3e2d1d') in 0.011608 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 10.342228 seconds.
+  path: Assets/Arts/Epic Toon FX/Prefabs/Misc/CurvySmoke.prefab
+  artifactKey: Guid(3b85a9e16cc798c4ca3ce98b38fbb8a0) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Prefabs/Misc/CurvySmoke.prefab using Guid(3b85a9e16cc798c4ca3ce98b38fbb8a0) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '8043be0af9917f4b90f497d575d074bb') in 0.037720 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000031 seconds.
+  path: Assets/Arts/Epic Toon FX/Prefabs/Misc/TypingMessage.prefab
+  artifactKey: Guid(cf43a7dd258b42b41a217fc2f452aeda) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Prefabs/Misc/TypingMessage.prefab using Guid(cf43a7dd258b42b41a217fc2f452aeda) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '7984c49081484a0204ba2ac384cf3358') in 0.019031 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 2.043023 seconds.
+  path: Assets/Arts/Epic Toon FX/Prefabs/Interactive/Emojis/EmojiAngry.prefab
+  artifactKey: Guid(f276f55eadaf0e34ba03d5b43bfbfae0) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Prefabs/Interactive/Emojis/EmojiAngry.prefab using Guid(f276f55eadaf0e34ba03d5b43bfbfae0) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '5dc7c4d79ecda72a6fa9ecc8914dd398') in 0.024664 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000024 seconds.
+  path: Assets/Arts/Epic Toon FX/Prefabs/Interactive/Emojis/EmojiDerp.prefab
+  artifactKey: Guid(3b40e7ceb76425d4892cc33dffffffed) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Prefabs/Interactive/Emojis/EmojiDerp.prefab using Guid(3b40e7ceb76425d4892cc33dffffffed) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '2d2e6df484c33e19f547247ab376e40f') in 0.022542 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000053 seconds.
+  path: Assets/Arts/Epic Toon FX/Prefabs/Interactive/Emojis/EmojiCute.prefab
+  artifactKey: Guid(4f1ebd70022acf5478ef1322469c7ca8) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Prefabs/Interactive/Emojis/EmojiCute.prefab using Guid(4f1ebd70022acf5478ef1322469c7ca8) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '6552a3ee13b7a6dc82e5186bfc4746dc') in 0.023030 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000029 seconds.
+  path: Assets/Arts/Epic Toon FX/Prefabs/Interactive/Emojis/EmojiDrool.prefab
+  artifactKey: Guid(9e3b6489a85bfa04e844964c8c1e12ed) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Prefabs/Interactive/Emojis/EmojiDrool.prefab using Guid(9e3b6489a85bfa04e844964c8c1e12ed) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '508cae5650acd50f6be9d5ac93d93673') in 0.026542 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000033 seconds.
+  path: Assets/Arts/Epic Toon FX/Prefabs/Interactive/Emojis/EmojiKiss.prefab
+  artifactKey: Guid(3a1dd40f2c911e541afb98fc9829ec06) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Prefabs/Interactive/Emojis/EmojiKiss.prefab using Guid(3a1dd40f2c911e541afb98fc9829ec06) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '48c58c9cf5b55f8b92d7eb08a7421598') in 0.064794 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000030 seconds.
+  path: Assets/Arts/Epic Toon FX/Prefabs/Interactive/Emojis/EmojiCry.prefab
+  artifactKey: Guid(93a7485b7f1564c4aae6a739c3edc50e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Prefabs/Interactive/Emojis/EmojiCry.prefab using Guid(93a7485b7f1564c4aae6a739c3edc50e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'f3c1973e0ca97acabd47de326ba185bb') in 0.027580 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000039 seconds.
+  path: Assets/Arts/Epic Toon FX/Prefabs/Interactive/Emojis/EmojiDisappointed.prefab
+  artifactKey: Guid(f3a078e53333c434e93d5282b3c524c6) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Prefabs/Interactive/Emojis/EmojiDisappointed.prefab using Guid(f3a078e53333c434e93d5282b3c524c6) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '98ea57cd7e673137c528eabc6769df28') in 0.024520 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 2.413298 seconds.
+  path: Assets/Arts/Epic Toon FX/Prefabs/Interactive/Feathers/FeatherExplosion.prefab
+  artifactKey: Guid(4924b9135249e0d448901a81875768c6) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Prefabs/Interactive/Feathers/FeatherExplosion.prefab using Guid(4924b9135249e0d448901a81875768c6) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'd4d80c4548fcd21e9a90c7f5a2b2a819') in 0.021704 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.287110 seconds.
+  path: Assets/Arts/Epic Toon FX/Prefabs/Interactive/Flares/FlareBlue.prefab
+  artifactKey: Guid(583747229c17d7d47b9a05fa71e1d6f9) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Prefabs/Interactive/Flares/FlareBlue.prefab using Guid(583747229c17d7d47b9a05fa71e1d6f9) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '69ac509333f2f03a2f2304a9e5a14b1a') in 0.022060 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000029 seconds.
+  path: Assets/Arts/Epic Toon FX/Prefabs/Interactive/Flares/FlareRed.prefab
+  artifactKey: Guid(0b3290bbf8a12354887e608a61e4f86a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Prefabs/Interactive/Flares/FlareRed.prefab using Guid(0b3290bbf8a12354887e608a61e4f86a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '1fb6e9fc2fe110a6966637fc9d0fc940') in 0.029563 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.230530 seconds.
+  path: Assets/Arts/Epic Toon FX/Prefabs/Interactive/Healing/HealBig.prefab
+  artifactKey: Guid(0e4a7fa9fd28f154b91c98ee6fe8ebea) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Prefabs/Interactive/Healing/HealBig.prefab using Guid(0e4a7fa9fd28f154b91c98ee6fe8ebea) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '8d5eaa6813131318886d868d9debd641') in 0.042097 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000022 seconds.
+  path: Assets/Arts/Epic Toon FX/Prefabs/Interactive/Healing/HealStream2.prefab
+  artifactKey: Guid(de625fbb023d44d45ad5ff7c646e9dae) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Prefabs/Interactive/Healing/HealStream2.prefab using Guid(de625fbb023d44d45ad5ff7c646e9dae) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '1766b62fbe48a8607b05dd11f7725f3d') in 0.023297 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000053 seconds.
+  path: Assets/Arts/Epic Toon FX/Prefabs/Interactive/Healing/HealStream.prefab
+  artifactKey: Guid(88fdae94c8d9f23439038e9e33b18681) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Prefabs/Interactive/Healing/HealStream.prefab using Guid(88fdae94c8d9f23439038e9e33b18681) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '1e7a535cd5d88e1e7e8125db314bf611') in 0.022720 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000025 seconds.
+  path: Assets/Arts/Epic Toon FX/Prefabs/Interactive/Healing/HealNova.prefab
+  artifactKey: Guid(b88a52d0de3924c4db6011de30ecccd0) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Prefabs/Interactive/Healing/HealNova.prefab using Guid(b88a52d0de3924c4db6011de30ecccd0) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '622999a490a5c69d75418b01ab275291') in 0.025102 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.135455 seconds.
+  path: Assets/Arts/Epic Toon FX/Prefabs/Interactive/Hearts/HeartBreak.prefab
+  artifactKey: Guid(e518b4ac4faac2246965b820629da9f4) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Prefabs/Interactive/Hearts/HeartBreak.prefab using Guid(e518b4ac4faac2246965b820629da9f4) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '1325040e57ba8de6d3082e6e0c192a4d') in 0.034910 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000077 seconds.
+  path: Assets/Arts/Epic Toon FX/Prefabs/Interactive/Hearts/HeartPoof.prefab
+  artifactKey: Guid(836a6e787e3b11941b38b8fff2af4e5b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Prefabs/Interactive/Hearts/HeartPoof.prefab using Guid(836a6e787e3b11941b38b8fff2af4e5b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '83f751852b472b7f3699ef231ab00d93') in 0.034182 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.340663 seconds.
+  path: Assets/Arts/Epic Toon FX/Prefabs/Interactive/Loot/TreasureVerticalGlowRays.prefab
+  artifactKey: Guid(a1f601f8073d04c4986963b2dee4bfb6) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Prefabs/Interactive/Loot/TreasureVerticalGlowRays.prefab using Guid(a1f601f8073d04c4986963b2dee4bfb6) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'd6a4e6b19097027768eb637a203ccd7c') in 0.017181 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 4.816549 seconds.
+  path: Assets/Arts/Epic Toon FX/Prefabs/Interactive/Trails/IceFloorTrail.prefab
+  artifactKey: Guid(88cf0884542d69c48a0f59e0f17ade92) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Prefabs/Interactive/Trails/IceFloorTrail.prefab using Guid(88cf0884542d69c48a0f59e0f17ade92) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '04558ec7c591e8102c75bc265db63b12') in 0.024625 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 5.533418 seconds.
+  path: Assets/Arts/Epic Toon FX/Prefabs/Interactive/Zone/BasicZone/BasicZoneGreen.prefab
+  artifactKey: Guid(087da436576d35542825d392925d79c4) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Prefabs/Interactive/Zone/BasicZone/BasicZoneGreen.prefab using Guid(087da436576d35542825d392925d79c4) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '72bbc3c46ebec4ae9da0a5e9de2754a3') in 0.026612 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.413573 seconds.
+  path: Assets/Arts/Epic Toon FX/Prefabs/Interactive/Zone/MagicZone/MagicZoneGreen.prefab
+  artifactKey: Guid(47a210ee634dacf4fb58161669eac2b4) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Prefabs/Interactive/Zone/MagicZone/MagicZoneGreen.prefab using Guid(47a210ee634dacf4fb58161669eac2b4) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'b22dd139b1562039b4828a520209b3a7') in 0.023817 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.499555 seconds.
+  path: Assets/Arts/Epic Toon FX/Prefabs/Interactive/Zone/SpinZone/SpinZoneOrange.prefab
+  artifactKey: Guid(31bea997407d42b4c815aff8926295bb) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Prefabs/Interactive/Zone/SpinZone/SpinZoneOrange.prefab using Guid(31bea997407d42b4c815aff8926295bb) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'ab07d6798a53397054fdc303682da92d') in 0.019511 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 1.929370 seconds.
+  path: Assets/Arts/Epic Toon FX/Prefabs/Interactive/Loot/ChestAppear/ChestAppearPurple.prefab
+  artifactKey: Guid(5201335ef7c4efb4b8ee21ccc008d90b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Prefabs/Interactive/Loot/ChestAppear/ChestAppearPurple.prefab using Guid(5201335ef7c4efb4b8ee21ccc008d90b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'cff01263e40d14109d9175079f0b67fe') in 0.024204 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.473137 seconds.
+  path: Assets/Arts/Epic Toon FX/Prefabs/Interactive/Loot/GlowOrb/GlowOrbGreen.prefab
+  artifactKey: Guid(87009d6220cf83e4d83a95436b7baadf) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Prefabs/Interactive/Loot/GlowOrb/GlowOrbGreen.prefab using Guid(87009d6220cf83e4d83a95436b7baadf) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'feac4b85b7a92dcf2e9dba66ca318501') in 0.023015 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.414008 seconds.
+  path: Assets/Arts/Epic Toon FX/Prefabs/Interactive/Loot/ItemSparkle/ItemSparkleGreen.prefab
+  artifactKey: Guid(0bb1d6b9d39bcbf4785d00557d53e9e3) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Prefabs/Interactive/Loot/ItemSparkle/ItemSparkleGreen.prefab using Guid(0bb1d6b9d39bcbf4785d00557d53e9e3) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '595b18fc7ff43dafb457c0fbde472d0f') in 0.069292 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 1.554204 seconds.
+  path: Assets/Arts/Epic Toon FX/Prefabs/Interactive/Portals/SimplePortal/SimplePortalGold.prefab
+  artifactKey: Guid(11943dcb81a97804fbd4b58ce063f22b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Prefabs/Interactive/Portals/SimplePortal/SimplePortalGold.prefab using Guid(11943dcb81a97804fbd4b58ce063f22b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '92a9e5d085a557908f63addcf10ff5f1') in 0.022042 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.620938 seconds.
+  path: Assets/Arts/Epic Toon FX/Prefabs/Interactive/Portals/SpinPortal/SpinPortalGold.prefab
+  artifactKey: Guid(8ade55bc7f33dcc46947f3bc7d22bc3b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Prefabs/Interactive/Portals/SpinPortal/SpinPortalGold.prefab using Guid(8ade55bc7f33dcc46947f3bc7d22bc3b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '9c8075941944f6e60a42816e2ea1b554') in 0.030669 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 1.475767 seconds.
+  path: Assets/Arts/Epic Toon FX/Prefabs/Interactive/Powerups/PowerOrb/PowerOrbGreen.prefab
+  artifactKey: Guid(315050d378b700943aff76df62626fe5) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Prefabs/Interactive/Powerups/PowerOrb/PowerOrbGreen.prefab using Guid(315050d378b700943aff76df62626fe5) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'd8d15414f0d5c9ad839414752a308255') in 0.025435 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000018 seconds.
+  path: Assets/Arts/Epic Toon FX/Prefabs/Interactive/Powerups/PowerOrb/PowerOrbYellow.prefab
+  artifactKey: Guid(ef5a7269b1cf9dc4ca6e2bb959e8ec9b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Prefabs/Interactive/Powerups/PowerOrb/PowerOrbYellow.prefab using Guid(ef5a7269b1cf9dc4ca6e2bb959e8ec9b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '010cc0e9fb97955dfd791ce4a6ad40d0') in 0.035634 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 2.128670 seconds.
+  path: Assets/Arts/Epic Toon FX/Prefabs/Interactive/Powerups/PowerOrbElemental/PowerOrbFrostElemental.prefab
+  artifactKey: Guid(16378541428887043a2d2ba231613bb9) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Arts/Epic Toon FX/Prefabs/Interactive/Powerups/PowerOrbElemental/PowerOrbFrostElemental.prefab using Guid(16378541428887043a2d2ba231613bb9) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '97c8974701e46960887521cc70b3dffd') in 0.027824 seconds 
+Editor requested this worker to shutdown with reason: Scaling down because of idle timeout
+AssetImportWorker is now disconnected from the server
+Process exiting
+Exiting without the bug reporter. Application will terminate with return code 0
