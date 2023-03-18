@@ -69,11 +69,12 @@ public class UIManager : Singleton<UIManager>
         shieldText.text = shieldPoint.ToString();
     }
 
-    public void ShowAttackLine(Vector2 dragPosition)
+    public void ShowAttackLine(bool switchBool)
     {
         GameObject attackLine = ((UIAttackLine)FindUI("UIAttackLine")).UI;
-        RectTransform rectTransform = attackLine.GetComponent<RectTransform>();
-        attackLine.SetActive(true);
-        rectTransform.anchoredPosition = dragPosition;
+        if (switchBool)
+            attackLine.SetActive(true);
+        else
+            attackLine.SetActive(false);
     }
 }

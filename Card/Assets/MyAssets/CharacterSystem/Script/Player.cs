@@ -13,7 +13,6 @@ public class Player : MonoBehaviour
     {
         GetExcelData(textAsset);
         currentHealth = BattleManager.Instance.PlayerList[0].MaxHealth;
-        BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Player);
         UIManager.Instance.ShowHealthUI(
             BattleManager.Instance.PlayerList[0].MaxHealth,
             currentHealth
@@ -22,7 +21,6 @@ public class Player : MonoBehaviour
 
     private void GetExcelData(TextAsset file)
     {
-        BattleManager.Instance.PlayerList = new List<PlayerData_SO>();
         BattleManager.Instance.PlayerList.Clear();
         //index = 0;
         string[] lineData = file.text.Split(new char[] { '\n' });
@@ -38,5 +36,6 @@ public class Player : MonoBehaviour
             playerData_SO.MaxActionPoint = int.Parse(row[3]);
             BattleManager.Instance.PlayerList.Add(playerData_SO);
         }
+        BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Player);
     }
 }

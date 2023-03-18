@@ -12,7 +12,8 @@ public class CardItem
         IPointerExitHandler,
         IBeginDragHandler,
         IDragHandler,
-        IEndDragHandler
+        IEndDragHandler,
+        IPointerDownHandler
 {
     public int CardIndex { get; set; }
     private int index;
@@ -37,6 +38,7 @@ public class CardItem
     private Quaternion initialRotation;
     private Vector2 initialPosition;
     private bool isAttackCard;
+    private bool isUseLine;
 
     public Text CardName
     {
@@ -63,10 +65,6 @@ public class CardItem
     public void OnPointerEnter(PointerEventData eventData)
     {
         index = BattleManager.Instance.HandCard.IndexOf(this);
-        if (BattleManager.Instance.CardList[CardIndex].CardType == "攻擊")
-            isAttackCard = true;
-        else
-            isAttackCard = false;
         Quaternion zeroRotation = Quaternion.Euler(0, 0, 0);
         initialRotation = transform.rotation;
         transform.DOScale(2.5f, 0.25f);
@@ -103,6 +101,19 @@ public class CardItem
         }*/
     }
 
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        isAttackCard = BattleManager.Instance.CardList[CardIndex].CardType == "攻擊" ? true : false;
+        if (isAttackCard)
+        {
+            ((UIAttackLine)UIManager.Instance.FindUI("UIAttackLine")).SetStartPos(
+                cardRectTransform.anchoredPosition
+            );
+            UIManager.Instance.ShowAttackLine(true);
+            return;
+        }
+    }
+
     public void OnBeginDrag(PointerEventData eventData)
     {
         if (isAttackCard)
@@ -115,25 +126,30 @@ public class CardItem
     {
         Vector2 dragPosition;
         if (
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            !RectTransformUtility.ScreenPointToLocalPointInRectangle(
                 transform.parent.GetComponent<RectTransform>(),
                 eventData.position,
                 eventData.pressEventCamera,
                 out dragPosition
             )
         )
+            return;
+        if (isAttackCard)
         {
-            if (isAttackCard)
-                UIManager.Instance.ShowAttackLine(dragPosition);
-            else
-                cardRectTransform.anchoredPosition = dragPosition;
+            ((UIAttackLine)UIManager.Instance.FindUI("UIAttackLine")).SetEndPos(dragPosition);
+            return;
         }
+        cardRectTransform.anchoredPosition = dragPosition;
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
         if (isAttackCard)
+        {
+            isAttackCard = false;
+            UIManager.Instance.ShowAttackLine(false);
             return;
+        }
         if (cardRectTransform.anchoredPosition.y >= 540)
             UseCard();
         else
