@@ -109,7 +109,6 @@ public class CardItem
             ((UIAttackLine)UIManager.Instance.FindUI("UIAttackLine")).SetStartPos(
                 cardRectTransform.anchoredPosition
             );
-            UIManager.Instance.ShowAttackLine(true);
             return;
         }
     }
@@ -124,6 +123,7 @@ public class CardItem
 
     public void OnDrag(PointerEventData eventData)
     {
+        Cursor.visible = false;
         Vector2 dragPosition;
         if (
             !RectTransformUtility.ScreenPointToLocalPointInRectangle(
@@ -137,6 +137,7 @@ public class CardItem
         if (isAttackCard)
         {
             ((UIAttackLine)UIManager.Instance.FindUI("UIAttackLine")).SetEndPos(dragPosition);
+            UIManager.Instance.ShowAttackLine(true);
             return;
         }
         cardRectTransform.anchoredPosition = dragPosition;
@@ -144,10 +145,12 @@ public class CardItem
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        Cursor.visible = true;
         if (isAttackCard)
         {
             isAttackCard = false;
             UIManager.Instance.ShowAttackLine(false);
+            CheckRayToEnemy();
             return;
         }
         if (cardRectTransform.anchoredPosition.y >= 540)
@@ -155,8 +158,16 @@ public class CardItem
         else
         {
             cardRectTransform.anchoredPosition = initialPosition;
-            transform.SetSiblingIndex(index);
+            cardRectTransform.SetSiblingIndex(index);
         }
+    }
+
+    private void CheckRayToEnemy()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit, 10000, LayerMask.GetMask("Enemy")))
+            UseCard();
     }
 
     private void UseCard()
@@ -165,6 +176,10 @@ public class CardItem
         BattleManager.Instance.HandCard.RemoveAt(index);
         EventManager.Instance.DispatchEvent(EventDefinition.eventUseCard);
         BattleManager.Instance.ConsumeActionPoint(cost);
+        BattleManager.Instance.TakeDamage(
+            BattleManager.Instance.EnemyList[0],
+            BattleManager.Instance.CardList[CardIndex].CardAttack
+        );
         BattleManager.Instance.GetShield(BattleManager.Instance.CardList[CardIndex].CardDefend);
         Destroy(gameObject);
     }

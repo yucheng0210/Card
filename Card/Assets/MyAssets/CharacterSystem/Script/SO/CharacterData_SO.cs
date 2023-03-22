@@ -5,8 +5,7 @@ using UnityEngine;
 public abstract class CharacterData_SO : ScriptableObject
 {
     private int maxHealth;
-
-    //private int currentHealth;
+    private int currentHealth;
     private int currentShield;
     public string CharacterName { get; set; }
     public int MaxHealth
@@ -21,8 +20,7 @@ public abstract class CharacterData_SO : ScriptableObject
                 maxHealth = 999;
         }
     }
-
-    /*public int CurrentHealth
+    public int CurrentHealth
     {
         get { return currentHealth; }
         set
@@ -30,10 +28,10 @@ public abstract class CharacterData_SO : ScriptableObject
             currentHealth = value;
             if (currentHealth < 0)
                 currentHealth = 0;
-            if (currentHealth > maxHealth)
-                currentHealth = maxHealth;
+            if (currentHealth > MaxHealth)
+                currentHealth = 999;
         }
-    }*/
+    }
     public int CurrentShield
     {
         get { return currentShield; }

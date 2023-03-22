@@ -32,8 +32,7 @@ public class Player : MonoBehaviour
             PlayerData_SO playerData_SO = ScriptableObject.CreateInstance<PlayerData_SO>();
             playerData_SO.CharacterName = row[0];
             playerData_SO.MaxHealth = int.Parse(row[1]);
-            playerData_SO.CurrentShield = int.Parse(row[2]);
-            playerData_SO.MaxActionPoint = int.Parse(row[3]);
+            playerData_SO.MaxActionPoint = int.Parse(row[2]);
             BattleManager.Instance.PlayerList.Add(playerData_SO);
         }
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Player);

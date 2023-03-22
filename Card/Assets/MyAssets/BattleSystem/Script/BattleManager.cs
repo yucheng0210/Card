@@ -11,6 +11,7 @@ public class BattleManager : Singleton<BattleManager>
     public List<CardData_So> CardList { get; set; }
     public List<CardItem> HandCard { get; set; }
     public List<PlayerData_SO> PlayerList { get; set; }
+    public List<EnemyData_SO> EnemyList { get; set; }
     public List<CardItem> CardBag { get; set; }
 
     public enum BattleType
@@ -29,9 +30,17 @@ public class BattleManager : Singleton<BattleManager>
         CardBag = new List<CardItem>();
         HandCard = new List<CardItem>();
         PlayerList = new List<PlayerData_SO>();
+        EnemyList = new List<EnemyData_SO>();
     }
 
-    public void TakeDamage() { }
+    public void TakeDamage(CharacterData_SO defender, int damage)
+    {
+        defender.CurrentHealth -= (damage - defender.CurrentShield);
+        ((UIBattle)UIManager.Instance.FindUI("UIBattle")).ShowEnemyHealth(
+            defender.MaxHealth,
+            defender.CurrentHealth
+        );
+    }
 
     public void GetShield(int point)
     {
@@ -71,7 +80,10 @@ public class BattleManager : Singleton<BattleManager>
         currentActionPoint = PlayerList[0].MaxActionPoint;
         ConsumeActionPoint(0);
     }
-
+private void EnemyTurn()
+{
+    
+}
     public void Shuffle()
     {
         for (int i = CardBag.Count - 1; i >= 0; i--)

@@ -5,10 +5,6 @@ using UnityEngine.EventSystems;
 
 public class UIAttackLine : UIBase
 {
-    [SerializeField]
-    private new Camera camera;
-    private Vector2 dragPosition;
-
     public void SetStartPos(Vector2 pos)
     {
         UI.transform.GetChild(0).GetComponent<RectTransform>().anchoredPosition = pos;

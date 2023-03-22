@@ -59,7 +59,7 @@ public class UIManager : Singleton<UIManager>
     {
         Slider healthSlider = ((UIBattle)FindUI("UIBattle")).HealthSlider;
         Text healthText = ((UIBattle)FindUI("UIBattle")).HealthText;
-        healthSlider.value = currentHealth / maxHealth;
+        healthSlider.value = (float)(currentHealth / maxHealth);
         healthText.text = currentHealth.ToString() + "/" + maxHealth.ToString();
     }
 

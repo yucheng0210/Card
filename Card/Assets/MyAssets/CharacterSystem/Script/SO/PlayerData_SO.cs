@@ -5,7 +5,6 @@ using UnityEngine;
 public class PlayerData_SO : CharacterData_SO
 {
     private int maxActionPoint;
-    private int currentActionPoint;
     public int MaxActionPoint
     {
         get { return maxActionPoint; }

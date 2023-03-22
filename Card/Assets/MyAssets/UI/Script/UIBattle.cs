@@ -18,6 +18,18 @@ public class UIBattle : UIBase
     [SerializeField]
     private Text healthText;
 
+    [SerializeField]
+    private Slider enemyHealthSlider;
+
+    [SerializeField]
+    private Text enemyHealthText;
+
+    [SerializeField]
+    private RectTransform enemyHealthRect;
+
+    [SerializeField]
+    private RectTransform enemyHurtRect;
+
     public Text ActionPointText
     {
         get { return actionPointText; }
@@ -39,4 +51,17 @@ public class UIBattle : UIBase
         set { healthText = value; }
     }
 
+    private void Update()
+    {
+        enemyHurtRect.anchorMax = new Vector2(
+            Mathf.Lerp(enemyHurtRect.anchorMax.x, enemyHealthRect.anchorMax.x, Time.deltaTime * 5),
+            enemyHurtRect.anchorMax.y
+        );
+    }
+
+    public void ShowEnemyHealth(int maxHealth, int currentHealth)
+    {
+        enemyHealthSlider.value = (currentHealth / (float)maxHealth);
+        enemyHealthText.text = currentHealth.ToString() + "/" + maxHealth.ToString();
+    }
 }
