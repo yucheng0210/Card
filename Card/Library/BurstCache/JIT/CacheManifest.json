@@ -3,7 +3,7 @@
   "Assemblies": [
     {
       "FullName": "Unity.Burst, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
-      "LastWriteTime": "2023-03-21T08:57:13.9994151Z"
+      "LastWriteTime": "2023-03-23T15:05:17.1301265Z"
     },
     {
       "FullName": "netstandard, Version=2.1.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51",
@@ -19,7 +19,7 @@
     },
     {
       "FullName": "Unity.2D.SpriteShape.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
-      "LastWriteTime": "2023-03-21T08:57:13.3643835Z"
+      "LastWriteTime": "2023-03-23T15:05:20.8518355Z"
     },
     {
       "FullName": "UnityEngine.SpriteShapeModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
@@ -27,15 +27,15 @@
     },
     {
       "FullName": "Unity.Mathematics, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-      "LastWriteTime": "2023-03-21T08:57:13.9994151Z"
+      "LastWriteTime": "2023-03-23T15:05:17.8632921Z"
     },
     {
       "FullName": "Unity.2D.Common.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
-      "LastWriteTime": "2023-03-21T08:57:14.7073461Z"
+      "LastWriteTime": "2023-03-23T15:05:16.7808746Z"
     },
     {
       "FullName": "Unity.2D.Animation.Editor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
-      "LastWriteTime": "2023-03-21T08:57:13.9994151Z"
+      "LastWriteTime": "2023-03-23T15:05:22.48488Z"
     },
     {
       "FullName": "UnityEditor.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
@@ -80,9 +80,9 @@
       "LinkName": "7F9BDFAB3718C423",
       "AssemblyDependencyIndices": [
         8,
+        2,
         6,
         9,
-        2,
         0,
         1,
         3
@@ -111,9 +111,8 @@
       "LinkName": "4E9252389FAD9FEE",
       "AssemblyDependencyIndices": [
         8,
-        10,
-        2,
         7,
+        2,
         3,
         6,
         0,
@@ -128,6 +127,7 @@
       "LinkName": "CDCA4A5193BE5947",
       "AssemblyDependencyIndices": [
         0,
+        10,
         1,
         2
       ]

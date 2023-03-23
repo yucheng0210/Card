@@ -38,7 +38,7 @@ public class CardItem
     private Quaternion initialRotation;
     private Vector2 initialPosition;
     private bool isAttackCard;
-    private bool isUseLine;
+    private Enemy enemy;
 
     public Text CardName
     {
@@ -138,6 +138,7 @@ public class CardItem
         {
             ((UIAttackLine)UIManager.Instance.FindUI("UIAttackLine")).SetEndPos(dragPosition);
             UIManager.Instance.ShowAttackLine(true);
+            CheckRayToEnemy(false);
             return;
         }
         cardRectTransform.anchoredPosition = dragPosition;
@@ -148,9 +149,8 @@ public class CardItem
         Cursor.visible = true;
         if (isAttackCard)
         {
-            isAttackCard = false;
             UIManager.Instance.ShowAttackLine(false);
-            CheckRayToEnemy();
+            CheckRayToEnemy(true);
             return;
         }
         if (cardRectTransform.anchoredPosition.y >= 540)
@@ -162,12 +162,22 @@ public class CardItem
         }
     }
 
-    private void CheckRayToEnemy()
+    private void CheckRayToEnemy(bool onEnd)
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit, 10000, LayerMask.GetMask("Enemy")))
-            UseCard();
+        {
+            enemy = hit.transform.GetComponent<Enemy>();
+            enemy.OnSelect();
+            if (onEnd)
+            {
+                enemy.OnUnSelect();
+                UseCard();
+            }
+        }
+        else if (enemy != null)
+            enemy.OnUnSelect();
     }
 
     private void UseCard()

@@ -7,6 +7,8 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     private TextAsset textAsset;
     private EnemyData_SO enemy;
+    private SkinnedMeshRenderer skinMesh;
+
     public enum AttackType
     {
         Attack,
@@ -18,6 +20,7 @@ public class Enemy : MonoBehaviour
     {
         GetExcelData(textAsset);
         enemy = BattleManager.Instance.EnemyList[0];
+        skinMesh = GetComponentInChildren<SkinnedMeshRenderer>();
         ((UIBattle)UIManager.Instance.FindUI("UIBattle")).ShowEnemyHealth(
             enemy.MaxHealth,
             enemy.CurrentHealth
@@ -39,5 +42,15 @@ public class Enemy : MonoBehaviour
             enemyData_SO.CurrentHealth = enemyData_SO.MaxHealth;
             BattleManager.Instance.EnemyList.Add(enemyData_SO);
         }
+    }
+
+    public void OnSelect()
+    {
+        skinMesh.material.SetColor("_OtlColor", Color.red);
+    }
+
+    public void OnUnSelect()
+    {
+        skinMesh.material.SetColor("_OtlColor", Color.black);
     }
 }
