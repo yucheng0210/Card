@@ -8,7 +8,7 @@ public class BattleManager : Singleton<BattleManager>
 {
     private int currentActionPoint;
     private int currentShield;
-    public List<CardData_So> CardList { get; set; }
+    public List<CardData> CardList { get; set; }
     public List<CardItem> HandCard { get; set; }
     public List<PlayerData_SO> PlayerList { get; set; }
     public List<EnemyData_SO> EnemyList { get; set; }
@@ -67,6 +67,7 @@ public class BattleManager : Singleton<BattleManager>
                 PlayerTurn();
                 break;
             case BattleType.Enemy:
+                EnemyTurn();
                 break;
             case BattleType.Win:
                 break;
@@ -80,18 +81,17 @@ public class BattleManager : Singleton<BattleManager>
         currentActionPoint = PlayerList[0].MaxActionPoint;
         ConsumeActionPoint(0);
     }
-private void EnemyTurn()
-{
-    
-}
+
+    private void EnemyTurn() { }
+
     public void Shuffle()
     {
-        for (int i = CardBag.Count - 1; i >= 0; i--)
+        for (int i = 0; i < DataManager.Instance.CardBag.Count; i++)
         {
             int randomIndex = UnityEngine.Random.Range(0, CardBag.Count);
-            CardItem temp = CardBag[randomIndex];
-            CardBag[randomIndex] = CardBag[i];
-            CardBag[i] = temp;
+            CardItem temp = DataManager.Instance.CardBag[randomIndex];
+            DataManager.Instance.CardBag[randomIndex] = DataManager.Instance.CardBag[i];
+            DataManager.Instance.CardBag[i] = temp;
         }
     }
 
@@ -99,7 +99,7 @@ private void EnemyTurn()
     {
         for (int i = 0; i < drawCardCount; i++)
         {
-            HandCard.Add(CardBag[i]);
+            DataManager.Instance.HandCard.Add(HandCard.Count + 1, CardBag[i]);
         }
         /*for (int i = 0; i < drawCardCount; i++)
         {

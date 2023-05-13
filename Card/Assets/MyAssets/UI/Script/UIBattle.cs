@@ -29,6 +29,8 @@ public class UIBattle : UIBase
 
     [SerializeField]
     private RectTransform enemyHurtRect;
+    [SerializeField]
+    private Button changeTurnButton;
 
     public Text ActionPointText
     {
@@ -50,7 +52,10 @@ public class UIBattle : UIBase
         get { return healthText; }
         set { healthText = value; }
     }
-
+private void Start()
+{
+    changeTurnButton.onClick.AddListener(ChangeTurn);
+}
     private void Update()
     {
         enemyHurtRect.anchorMax = new Vector2(
@@ -63,5 +68,11 @@ public class UIBattle : UIBase
     {
         enemyHealthSlider.value = (currentHealth / (float)maxHealth);
         enemyHealthText.text = currentHealth.ToString() + "/" + maxHealth.ToString();
+    }
+    public void ChangeTurn()
+    {
+Text buttonText=changeTurnButton.GetComponentInChildren<Text>();
+buttonText.text="敵方回合";
+BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Enemy);
     }
 }

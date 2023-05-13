@@ -51,7 +51,7 @@ public class CardCreater : MonoBehaviour
 
     private void GetExcelData(TextAsset file)
     {
-        BattleManager.Instance.CardList = new List<CardData_So>();
+        BattleManager.Instance.CardList = new List<CardData>();
         BattleManager.Instance.CardList.Clear();
         //index = 0;
         string[] lineData = file.text.Split(new char[] { '\n' });
@@ -60,7 +60,7 @@ public class CardCreater : MonoBehaviour
             string[] row = lineData[i].Split(new char[] { ',' });
             if (row[1] == "")
                 break;
-            CardData_So cardData = ScriptableObject.CreateInstance<CardData_So>();
+            CardData cardData = new CardData();
             cardData.CardID = int.Parse(row[0]);
             cardData.CardName = row[1];
             cardData.CardType = row[2];
@@ -76,22 +76,20 @@ public class CardCreater : MonoBehaviour
         }
     }
 
-    private void ReviseExcelData(TextAsset file) { }
-
     private void CreateCard()
     {
-        for (int i = 0; i < BattleManager.Instance.CardList.Count; i++)
+        for (int i = 0; i < DataManager.Instance.CardList.Count; i++)
         {
-            for (int j = BattleManager.Instance.CardList[i].CardHeld; j > 0; j--)
+            for (int j = DataManager.Instance.CardList[i].CardHeld; j > 0; j--)
             {
                 CardItem card = Instantiate(cardPrefab, transform);
-                List<CardData_So> cardList = BattleManager.Instance.CardList;
+                Dictionary<int, CardData> cardList = DataManager.Instance.CardList;
                 card.CardIndex = i;
                 card.CardName.text = cardList[i].CardName;
                 card.CardDescription.text = cardList[i].CardDescription;
                 card.CardCost.text = cardList[i].CardCost.ToString();
                 card.gameObject.SetActive(false);
-                BattleManager.Instance.CardBag.Add(card);
+                DataManager.Instance.CardBag.Add(card.CardIndex, card);
             }
         }
     }
@@ -128,7 +126,7 @@ public class CardCreater : MonoBehaviour
         int odd = drawCardCount % 2 != 0 ? 0 : 1;
         float startAngle = (drawCardCount / 2 - odd) * minCardAngle;
         BattleManager.Instance.AddHandCard(drawCardCount);
-        List<CardItem> handCard = BattleManager.Instance.HandCard;
+        Dictionary<int, CardItem> handCard = DataManager.Instance.HandCard;
         for (int i = 0; i < handCard.Count; i++)
         {
             yield return new WaitForSecondsRealtime(coolDown);
@@ -154,7 +152,7 @@ public class CardCreater : MonoBehaviour
     {
         cardPositionList.Clear();
         cardAngleList.Clear();
-        List<CardItem> handCard = BattleManager.Instance.HandCard;
+        Dictionary<int,CardItem> handCard = DataManager.Instance.HandCard;
         CalculatePositionAngle(handCard.Count);
         for (int i = 0; i < handCard.Count; i++)
         {
