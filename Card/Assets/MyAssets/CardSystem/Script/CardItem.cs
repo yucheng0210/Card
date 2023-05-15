@@ -29,9 +29,6 @@ public class CardItem
 
     [SerializeField]
     private Text cardDescription;
-
-    [SerializeField]
-    private GameObject attackLine;
     private RectTransform rightCard,
         leftCard,
         cardRectTransform;
@@ -64,7 +61,7 @@ public class CardItem
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        index = BattleManager.Instance.HandCard.IndexOf(this);
+        //index = BattleManager.Instance.HandCard.IndexOf(this);
         Quaternion zeroRotation = Quaternion.Euler(0, 0, 0);
         initialRotation = transform.rotation;
         transform.DOScale(2.5f, 0.25f);
@@ -103,7 +100,7 @@ public class CardItem
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        isAttackCard = BattleManager.Instance.CardList[CardIndex].CardType == "攻擊" ? true : false;
+        isAttackCard = DataManager.Instance.CardList[CardIndex].CardType == "攻擊" ? true : false;
         if (isAttackCard)
         {
             ((UIAttackLine)UIManager.Instance.FindUI("UIAttackLine")).SetStartPos(
@@ -182,15 +179,15 @@ public class CardItem
 
     private void UseCard()
     {
-        int cost = BattleManager.Instance.CardList[CardIndex].CardCost;
-        BattleManager.Instance.HandCard.RemoveAt(index);
-        EventManager.Instance.DispatchEvent(EventDefinition.eventUseCard);
+        int cost = DataManager.Instance.CardList[CardIndex].CardCost;
+        DataManager.Instance.HandCard.Remove(this);
+        EventManager.Instance.DispatchEvent(EventDefinition.eventUseCard, this);
         BattleManager.Instance.ConsumeActionPoint(cost);
         BattleManager.Instance.TakeDamage(
-            BattleManager.Instance.EnemyList[0],
-            BattleManager.Instance.CardList[CardIndex].CardAttack
+            DataManager.Instance.EnemyList[0],
+            DataManager.Instance.CardList[CardIndex].CardAttack
         );
-        BattleManager.Instance.GetShield(BattleManager.Instance.CardList[CardIndex].CardDefend);
+        BattleManager.Instance.GetShield(DataManager.Instance.CardList[CardIndex].CardDefend);
         Destroy(gameObject);
     }
 }

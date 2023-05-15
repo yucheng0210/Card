@@ -8,11 +8,6 @@ public class BattleManager : Singleton<BattleManager>
 {
     private int currentActionPoint;
     private int currentShield;
-    public List<CardData> CardList { get; set; }
-    public List<CardItem> HandCard { get; set; }
-    public List<PlayerData_SO> PlayerList { get; set; }
-    public List<EnemyData_SO> EnemyList { get; set; }
-    public List<CardItem> CardBag { get; set; }
 
     public enum BattleType
     {
@@ -24,16 +19,7 @@ public class BattleManager : Singleton<BattleManager>
         Loss
     }
 
-    protected override void Awake()
-    {
-        base.Awake();
-        CardBag = new List<CardItem>();
-        HandCard = new List<CardItem>();
-        PlayerList = new List<PlayerData_SO>();
-        EnemyList = new List<EnemyData_SO>();
-    }
-
-    public void TakeDamage(CharacterData_SO defender, int damage)
+    public void TakeDamage(CharacterData defender, int damage)
     {
         defender.CurrentHealth -= (damage - defender.CurrentShield);
         ((UIBattle)UIManager.Instance.FindUI("UIBattle")).ShowEnemyHealth(
@@ -52,7 +38,10 @@ public class BattleManager : Singleton<BattleManager>
     {
         if (currentActionPoint >= point)
             currentActionPoint -= point;
-        UIManager.Instance.ShowActionPointUI(currentActionPoint, PlayerList[0].MaxActionPoint);
+        UIManager.Instance.ShowActionPointUI(
+            currentActionPoint,
+            DataManager.Instance.PlayerList[1].MaxActionPoint
+        );
     }
 
     public void ChangeTurn(BattleType battleType)
@@ -78,7 +67,7 @@ public class BattleManager : Singleton<BattleManager>
 
     private void PlayerTurn()
     {
-        currentActionPoint = PlayerList[0].MaxActionPoint;
+        currentActionPoint = DataManager.Instance.PlayerList[0].MaxActionPoint;
         ConsumeActionPoint(0);
     }
 
@@ -88,22 +77,19 @@ public class BattleManager : Singleton<BattleManager>
     {
         for (int i = 0; i < DataManager.Instance.CardBag.Count; i++)
         {
-            int randomIndex = UnityEngine.Random.Range(0, CardBag.Count);
-            CardItem temp = DataManager.Instance.CardBag[randomIndex];
+            int randomIndex = UnityEngine.Random.Range(0, DataManager.Instance.CardBag.Count);
+            CardData temp = DataManager.Instance.CardBag[randomIndex];
             DataManager.Instance.CardBag[randomIndex] = DataManager.Instance.CardBag[i];
             DataManager.Instance.CardBag[i] = temp;
         }
     }
 
-    public void AddHandCard(int drawCardCount)
+    public void AddHandCard(int drawCardCount, List<CardItem> cardItems)
     {
         for (int i = 0; i < drawCardCount; i++)
         {
-            DataManager.Instance.HandCard.Add(HandCard.Count + 1, CardBag[i]);
+            DataManager.Instance.HandCard.Add(cardItems[i]);
         }
-        /*for (int i = 0; i < drawCardCount; i++)
-        {
-            CardBag.Remove(CardBag[i]);
-        }*/
+        DataManager.Instance.CardBag.RemoveRange(0, drawCardCount);
     }
 }

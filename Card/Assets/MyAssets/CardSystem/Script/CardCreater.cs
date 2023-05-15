@@ -1,3 +1,4 @@
+using System.Linq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -33,14 +34,12 @@ public class CardCreater : MonoBehaviour
     [SerializeField]
     private GameObject roundTip;
 
-    [SerializeField]
-    private TextAsset textAsset;
     private List<Vector2> cardPositionList = new List<Vector2>();
     private List<float> cardAngleList = new List<float>();
+    private List<CardItem> cardItemList = new List<CardItem>();
 
     private void Start()
     {
-        GetExcelData(textAsset);
         CreateCard();
         StartCoroutine(DrawCard());
         EventManager.Instance.AddEventRegister(
@@ -49,48 +48,18 @@ public class CardCreater : MonoBehaviour
         );
     }
 
-    private void GetExcelData(TextAsset file)
-    {
-        BattleManager.Instance.CardList = new List<CardData>();
-        BattleManager.Instance.CardList.Clear();
-        //index = 0;
-        string[] lineData = file.text.Split(new char[] { '\n' });
-        for (int i = 1; i < lineData.Length - 1; i++)
-        {
-            string[] row = lineData[i].Split(new char[] { ',' });
-            if (row[1] == "")
-                break;
-            CardData cardData = new CardData();
-            cardData.CardID = int.Parse(row[0]);
-            cardData.CardName = row[1];
-            cardData.CardType = row[2];
-            cardData.CardImagePath = row[3];
-            cardData.CardCost = int.Parse(row[4]);
-            cardData.CardAttribute = row[5];
-            cardData.CardEffect = row[6];
-            cardData.CardDescription = row[7];
-            cardData.CardAttack = int.Parse(row[8]);
-            cardData.CardDefend = int.Parse(row[9]);
-            cardData.CardHeld = int.Parse(row[10]);
-            BattleManager.Instance.CardList.Add(cardData);
-        }
-    }
-
     private void CreateCard()
     {
-        for (int i = 0; i < DataManager.Instance.CardList.Count; i++)
+        List<CardData> cardBag = DataManager.Instance.CardBag;
+        for (int i = 0; i < cardBag.Count; i++)
         {
-            for (int j = DataManager.Instance.CardList[i].CardHeld; j > 0; j--)
-            {
-                CardItem card = Instantiate(cardPrefab, transform);
-                Dictionary<int, CardData> cardList = DataManager.Instance.CardList;
-                card.CardIndex = i;
-                card.CardName.text = cardList[i].CardName;
-                card.CardDescription.text = cardList[i].CardDescription;
-                card.CardCost.text = cardList[i].CardCost.ToString();
-                card.gameObject.SetActive(false);
-                DataManager.Instance.CardBag.Add(card.CardIndex, card);
-            }
+            CardItem cardItem = Instantiate(cardPrefab, transform);
+            cardItem.CardIndex = cardBag[i].CardID;
+            cardItem.CardName.text = cardBag[i].CardName;
+            cardItem.CardDescription.text = cardBag[i].CardDescription;
+            cardItem.CardCost.text = cardBag[i].CardCost.ToString();
+            cardItem.gameObject.SetActive(false);
+            cardItemList.Add(cardItem);
         }
     }
 
@@ -125,8 +94,8 @@ public class CardCreater : MonoBehaviour
         Vector2 startPosition = new Vector2(878, -50);
         int odd = drawCardCount % 2 != 0 ? 0 : 1;
         float startAngle = (drawCardCount / 2 - odd) * minCardAngle;
-        BattleManager.Instance.AddHandCard(drawCardCount);
-        Dictionary<int, CardItem> handCard = DataManager.Instance.HandCard;
+        BattleManager.Instance.AddHandCard(drawCardCount, cardItemList);
+        List<CardItem> handCard = DataManager.Instance.HandCard;
         for (int i = 0; i < handCard.Count; i++)
         {
             yield return new WaitForSecondsRealtime(coolDown);
@@ -152,7 +121,8 @@ public class CardCreater : MonoBehaviour
     {
         cardPositionList.Clear();
         cardAngleList.Clear();
-        Dictionary<int,CardItem> handCard = DataManager.Instance.HandCard;
+        cardItemList.Remove((CardItem)args[0]);
+        List<CardItem> handCard = DataManager.Instance.HandCard;
         CalculatePositionAngle(handCard.Count);
         for (int i = 0; i < handCard.Count; i++)
         {

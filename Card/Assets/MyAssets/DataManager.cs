@@ -6,15 +6,24 @@ using System.IO;
 public class DataManager : Singleton<DataManager>
 {
     private const string cardListPath = "Assets/MyAssets/Data/CARDLIST.csv";
+    private const string playerListPath = "Assets/MyAssets/Data/PLAYERLIST.csv";
+    private const string enemyListPath = "Assets/MyAssets/Data/ENEMYLIST.csv";
     public Dictionary<int, CardData> CardList { get; set; }
-    public Dictionary<int, CardItem> CardBag { get; set; }
-    public Dictionary<int, CardItem> HandCard { get; set; }
+    public List<CardData> CardBag { get; set; }
+    public List<CardItem> HandCard { get; set; }
+    public Dictionary<int, PlayerData> PlayerList { get; set; }
+    public Dictionary<int, EnemyData> EnemyList { get; set; }
 
     protected override void Awake()
     {
         base.Awake();
         CardList = new Dictionary<int, CardData>();
+        CardBag = new List<CardData>();
+        HandCard = new List<CardItem>();
+        PlayerList = new Dictionary<int, PlayerData>();
+        EnemyList = new Dictionary<int, EnemyData>();
         LoadData();
+        GameStart();
     }
 
     private void LoadData()
@@ -36,5 +45,43 @@ public class DataManager : Singleton<DataManager>
             CardList.Add(cardData.CardID, cardData);
         }
         #endregion
+        #region 角色列表
+        lineData = File.ReadAllLines(playerListPath);
+        for (int i = 1; i < lineData.Length; i++)
+        {
+            string[] row = lineData[i].Split(',');
+            PlayerData playerData = new PlayerData();
+            playerData.CharacterID = int.Parse(row[0]);
+            playerData.CharacterName = row[1];
+            playerData.MaxHealth = int.Parse(row[2]);
+            playerData.MaxActionPoint = int.Parse(row[3]);
+            PlayerList.Add(playerData.CharacterID, playerData);
+        }
+        #endregion
+        #region 敵人列表
+        lineData = File.ReadAllLines(enemyListPath);
+        for (int i = 1; i < lineData.Length; i++)
+        {
+            string[] row = lineData[i].Split(',');
+            EnemyData enemyData = new EnemyData();
+            enemyData.CharacterID = int.Parse(row[0]);
+            enemyData.CharacterName = row[1];
+            enemyData.MaxHealth = int.Parse(row[2]);
+            EnemyList.Add(enemyData.CharacterID, enemyData);
+        }
+
+        #endregion
+    }
+
+    private void GameStart()
+    {
+        CardData cardData = new CardData();
+        for (int i = 0; i < 5; i++)
+        {
+            cardData = CardList[1001];
+            CardBag.Add(cardData);
+            cardData = CardList[2001];
+            CardBag.Add(cardData);
+        }
     }
 }

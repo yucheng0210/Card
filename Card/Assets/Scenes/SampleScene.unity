@@ -959,7 +959,6 @@ MonoBehaviour:
   reduceValue: 5
   minCardAngle: 4
   roundTip: {fileID: 286452091}
-  textAsset: {fileID: 4900000, guid: e1f9f1fef5c6c8f40871aac5a502defa, type: 3}
 --- !u!1 &458273081
 GameObject:
   m_ObjectHideFlags: 0
@@ -1794,7 +1793,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 546e5a6297b920c40adf911498d7bdf2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  textAsset: {fileID: 4900000, guid: 86eb78c496948564ab32c0b51d60b57f, type: 3}
+  enemyID: 1001
 --- !u!65 &836417174
 BoxCollider:
   m_ObjectHideFlags: 0
