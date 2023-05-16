@@ -7,29 +7,29 @@ using UnityEngine.UI;
 public class UIManager : Singleton<UIManager>
 {
     private Transform canvasTrans;
-    public List<UIBase> UIList { get; set; }
+    public Dictionary<string, UIBase> UIDict { get; set; }
 
     protected override void Awake()
     {
         base.Awake();
-        UIList = new List<UIBase>();
+        UIDict = new Dictionary<string, UIBase>();
     }
 
-    public UIBase FindUI(string uIName)
+    public void ShowUI(string uiName)
     {
-        for (int i = 0; i < UIList.Count; i++)
-        {
-            if (UIList[i].GetType().Name == uIName)
-                return UIList[i];
-        }
-        return null;
+        UIDict[uiName].Show();
     }
 
-    public void CloseAllUI()
+    public void HideUI(string uiName)
     {
-        for (int i = 0; i < UIList.Count; i++)
+        UIDict[uiName].Hide();
+    }
+
+    public void HideAllUI()
+    {
+        foreach (var i in UIDict)
         {
-            UIList[i].gameObject.SetActive(false);
+            HideUI(i.Key);
         }
     }
 
@@ -46,35 +46,6 @@ public class UIManager : Singleton<UIManager>
             canvasGroup.alpha -= Time.unscaledDeltaTime / fadeTime;
             yield return null;
         }
-        Destroy(canvasGroup.gameObject);
-    }
-
-    public void ShowActionPointUI(int currentActionPoint, int maxActionPoint)
-    {
-        Text actionPointText = ((UIBattle)FindUI("UIBattle")).ActionPointText;
-        actionPointText.text = currentActionPoint.ToString() + "/" + maxActionPoint.ToString();
-    }
-
-    public void ShowHealthUI(int maxHealth, int currentHealth)
-    {
-        Slider healthSlider = ((UIBattle)FindUI("UIBattle")).HealthSlider;
-        Text healthText = ((UIBattle)FindUI("UIBattle")).HealthText;
-        healthSlider.value = (float)(currentHealth / maxHealth);
-        healthText.text = currentHealth.ToString() + "/" + maxHealth.ToString();
-    }
-
-    public void ShowShieldUI(int shieldPoint)
-    {
-        Text shieldText = ((UIBattle)FindUI("UIBattle")).ShieldText;
-        shieldText.text = shieldPoint.ToString();
-    }
-
-    public void ShowAttackLine(bool switchBool)
-    {
-        GameObject attackLine = ((UIAttackLine)FindUI("UIAttackLine")).UI;
-        if (switchBool)
-            attackLine.SetActive(true);
-        else
-            attackLine.SetActive(false);
+        canvasGroup.gameObject.SetActive(false);
     }
 }

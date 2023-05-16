@@ -13,15 +13,15 @@ public abstract class UIBase : MonoBehaviour
 
     protected virtual void Awake()
     {
-        UIManager.Instance.UIList.Add(this);
+        UIManager.Instance.UIDict.Add(this.GetType().Name, this);
     }
 
-    protected virtual void Open()
+    public virtual void Show()
     {
         ui.gameObject.SetActive(true);
     }
 
-    protected virtual void Close()
+    public virtual void Hide()
     {
         ui.gameObject.SetActive(false);
     }

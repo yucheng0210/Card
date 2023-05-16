@@ -5,6 +5,11 @@ using UnityEngine.EventSystems;
 
 public class UIAttackLine : UIBase
 {
+    private void Start()
+    {
+        EventManager.Instance.AddEventRegister(EventDefinition.eventAttackLine, EventAttackLine);
+    }
+
     public void SetStartPos(Vector2 pos)
     {
         UI.transform.GetChild(0).GetComponent<RectTransform>().anchoredPosition = pos;
@@ -49,5 +54,15 @@ public class UIAttackLine : UIBase
         return Mathf.Pow((1.0f - t), 2) * start
             + 2.0f * t * (1.0f - t) * mid
             + Mathf.Pow(t, 2) * end;
+    }
+
+    public void EventAttackLine(params object[] args)
+    {
+        if ((bool)args[0])
+            UI.SetActive(true);
+        else
+            UI.SetActive(false);
+        SetStartPos((Vector2)args[1]);
+        SetEndPos((Vector2)args[2]);
     }
 }

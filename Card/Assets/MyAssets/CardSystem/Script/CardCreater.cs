@@ -14,6 +14,9 @@ public class CardCreater : MonoBehaviour
     private Transform handCardTrans;
 
     [SerializeField]
+    private Transform usedCardTrans;
+
+    [SerializeField]
     private int drawCardCount;
 
     [SerializeField]
@@ -46,6 +49,7 @@ public class CardCreater : MonoBehaviour
             EventDefinition.eventUseCard,
             EventCardAdjustmentPosition
         );
+        EventManager.Instance.AddEventRegister(EventDefinition.eventEnemyTurn, EventEnemyTurn);
     }
 
     private void CreateCard()
@@ -121,6 +125,10 @@ public class CardCreater : MonoBehaviour
     {
         cardPositionList.Clear();
         cardAngleList.Clear();
+        DataManager.Instance.UsedCardBag.Add(
+            DataManager.Instance.CardList[((CardItem)args[0]).CardIndex]
+        );
+        ((CardItem)args[0]).transform.SetParent(usedCardTrans);
         cardItemList.Remove((CardItem)args[0]);
         List<CardItem> handCard = DataManager.Instance.HandCard;
         CalculatePositionAngle(handCard.Count);
@@ -133,5 +141,16 @@ public class CardCreater : MonoBehaviour
                 cardAngleList[i]
             );
         }
+    }
+
+    private void EventEnemyTurn(params object[] args)
+    {
+        for (int i = 0; i < DataManager.Instance.HandCard.Count; i++)
+        {
+            DataManager.Instance.UsedCardBag.Add(
+                DataManager.Instance.CardList[DataManager.Instance.HandCard[i].CardIndex]
+            );
+        }
+        DataManager.Instance.HandCard.Clear();
     }
 }

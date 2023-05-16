@@ -14,4 +14,5 @@ public class PlayerData : CharacterData
                 maxActionPoint = value;
         }
     }
+    public int CurrentActionPoint { get; set; }
 }

@@ -272,7 +272,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9aa590902af92a54eacaec60b0b976a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  textAsset: {fileID: 4900000, guid: bbbd1f7343d81434e9a53819ef51bb96, type: 3}
+  currentPlayerID: 1001
 --- !u!1 &86245240
 GameObject:
   m_ObjectHideFlags: 0
@@ -305,7 +305,7 @@ RectTransform:
   m_Children:
   - {fileID: 1350361429}
   m_Father: {fileID: 1546350080}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -691,7 +691,7 @@ RectTransform:
   m_Children:
   - {fileID: 1562088816}
   m_Father: {fileID: 1546350080}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -952,6 +952,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardPrefab: {fileID: 524259916357414313, guid: 0b5874506f49ccf47b373a2dd736234d, type: 3}
   handCardTrans: {fileID: 2008770234}
+  usedCardTrans: {fileID: 1296570504}
   drawCardCount: 5
   coolDown: 0.5
   cardXSpacing: 70
@@ -1308,7 +1309,7 @@ RectTransform:
   - {fileID: 796704792}
   - {fileID: 1973744174}
   m_Father: {fileID: 1546350080}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -1484,7 +1485,7 @@ RectTransform:
   - {fileID: 1792778218}
   - {fileID: 895738525}
   m_Father: {fileID: 1546350080}
-  m_RootOrder: 9
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -1601,7 +1602,7 @@ RectTransform:
   - {fileID: 1139660880}
   - {fileID: 1849955459}
   m_Father: {fileID: 1546350080}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -2069,7 +2070,7 @@ RectTransform:
   - {fileID: 297448565}
   - {fileID: 194825216}
   m_Father: {fileID: 1546350080}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -2441,6 +2442,43 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b777d4807bbe97a4297e5cd23afd0ed7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  battleType: 0
+--- !u!1 &1296570503
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1296570504}
+  m_Layer: 5
+  m_Name: UsedCardBag
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1296570504
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1296570503}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1546350080}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 741, y: -391}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1300342469
 GameObject:
   m_ObjectHideFlags: 0
@@ -2749,6 +2787,7 @@ RectTransform:
   - {fileID: 2063283167}
   - {fileID: 2008770234}
   - {fileID: 403588568}
+  - {fileID: 1296570504}
   - {fileID: 286452092}
   - {fileID: 86245241}
   - {fileID: 1095981752}

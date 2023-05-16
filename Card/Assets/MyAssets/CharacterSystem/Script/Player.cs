@@ -5,14 +5,13 @@ using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
-    private int currentHealth;
+    [SerializeField]
+    private int currentPlayerID;
 
     private void Start()
     {
-        currentHealth = DataManager.Instance.PlayerList[1].MaxHealth;
-        UIManager.Instance.ShowHealthUI(
-            DataManager.Instance.PlayerList[1].MaxHealth,
-            currentHealth
-        );
+        DataManager.Instance.PlayerList[currentPlayerID].CurrentHealth = DataManager
+            .Instance
+            .PlayerList[currentPlayerID].MaxHealth;
     }
 }

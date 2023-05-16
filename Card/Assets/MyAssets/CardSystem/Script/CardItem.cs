@@ -36,6 +36,7 @@ public class CardItem
     private Vector2 initialPosition;
     private bool isAttackCard;
     private Enemy enemy;
+    private int cost;
 
     public Text CardName
     {
@@ -61,6 +62,7 @@ public class CardItem
 
     public void OnPointerEnter(PointerEventData eventData)
     {
+        cost = DataManager.Instance.CardList[CardIndex].CardCost;
         //index = BattleManager.Instance.HandCard.IndexOf(this);
         Quaternion zeroRotation = Quaternion.Euler(0, 0, 0);
         initialRotation = transform.rotation;
@@ -103,7 +105,10 @@ public class CardItem
         isAttackCard = DataManager.Instance.CardList[CardIndex].CardType == "攻擊" ? true : false;
         if (isAttackCard)
         {
-            ((UIAttackLine)UIManager.Instance.FindUI("UIAttackLine")).SetStartPos(
+            EventManager.Instance.DispatchEvent(
+                EventDefinition.eventAttackLine,
+                true,
+                cardRectTransform.anchoredPosition,
                 cardRectTransform.anchoredPosition
             );
             return;
@@ -133,8 +138,12 @@ public class CardItem
             return;
         if (isAttackCard)
         {
-            ((UIAttackLine)UIManager.Instance.FindUI("UIAttackLine")).SetEndPos(dragPosition);
-            UIManager.Instance.ShowAttackLine(true);
+            EventManager.Instance.DispatchEvent(
+                EventDefinition.eventAttackLine,
+                true,
+                cardRectTransform.anchoredPosition,
+                dragPosition
+            );
             CheckRayToEnemy(false);
             return;
         }
@@ -146,11 +155,20 @@ public class CardItem
         Cursor.visible = true;
         if (isAttackCard)
         {
-            UIManager.Instance.ShowAttackLine(false);
+            EventManager.Instance.DispatchEvent(
+                EventDefinition.eventAttackLine,
+                false,
+                cardRectTransform.anchoredPosition,
+                cardRectTransform.anchoredPosition
+            );
             CheckRayToEnemy(true);
             return;
         }
-        if (cardRectTransform.anchoredPosition.y >= 540)
+        if (
+            cardRectTransform.anchoredPosition.y >= 540
+            && DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].CurrentActionPoint
+                >= cost
+        )
             UseCard();
         else
         {
@@ -167,7 +185,11 @@ public class CardItem
         {
             enemy = hit.transform.GetComponent<Enemy>();
             enemy.OnSelect();
-            if (onEnd)
+            if (
+                onEnd
+                && DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].CurrentActionPoint
+                    >= cost
+            )
             {
                 enemy.OnUnSelect();
                 UseCard();
@@ -179,15 +201,17 @@ public class CardItem
 
     private void UseCard()
     {
-        int cost = DataManager.Instance.CardList[CardIndex].CardCost;
         DataManager.Instance.HandCard.Remove(this);
         EventManager.Instance.DispatchEvent(EventDefinition.eventUseCard, this);
         BattleManager.Instance.ConsumeActionPoint(cost);
         BattleManager.Instance.TakeDamage(
-            DataManager.Instance.EnemyList[0],
+            DataManager.Instance.EnemyList[1001],
             DataManager.Instance.CardList[CardIndex].CardAttack
         );
-        BattleManager.Instance.GetShield(DataManager.Instance.CardList[CardIndex].CardDefend);
-        Destroy(gameObject);
+        BattleManager.Instance.GetShield(
+            DataManager.Instance.PlayerList[DataManager.Instance.PlayerID],
+            DataManager.Instance.CardList[CardIndex].CardShield
+        );
+        gameObject.SetActive(false);
     }
 }

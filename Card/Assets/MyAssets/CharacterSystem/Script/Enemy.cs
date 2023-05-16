@@ -21,10 +21,6 @@ public class Enemy : MonoBehaviour
         enemy = DataManager.Instance.EnemyList[enemyID];
         enemy.CurrentHealth = enemy.MaxHealth;
         skinMesh = GetComponentInChildren<SkinnedMeshRenderer>();
-        ((UIBattle)UIManager.Instance.FindUI("UIBattle")).ShowEnemyHealth(
-            enemy.MaxHealth,
-            enemy.CurrentHealth
-        );
     }
 
     public void OnSelect()

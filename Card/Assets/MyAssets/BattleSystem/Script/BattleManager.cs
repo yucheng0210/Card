@@ -6,9 +6,6 @@ using DG.Tweening;
 
 public class BattleManager : Singleton<BattleManager>
 {
-    private int currentActionPoint;
-    private int currentShield;
-
     public enum BattleType
     {
         None,
@@ -19,38 +16,51 @@ public class BattleManager : Singleton<BattleManager>
         Loss
     }
 
+    public BattleType battleType;
+
+    private void Start()
+    {
+        ChangeTurn(BattleType.None);
+    }
+
+    private void Update()
+    {
+        if (battleType == BattleType.None)
+            ChangeTurn(BattleType.Initial);
+    }
+
     public void TakeDamage(CharacterData defender, int damage)
     {
         defender.CurrentHealth -= (damage - defender.CurrentShield);
-        ((UIBattle)UIManager.Instance.FindUI("UIBattle")).ShowEnemyHealth(
-            defender.MaxHealth,
-            defender.CurrentHealth
-        );
+        EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
 
-    public void GetShield(int point)
+    public void GetShield(CharacterData defender, int point)
     {
-        currentShield += point;
-        UIManager.Instance.ShowShieldUI(currentShield);
+        defender.CurrentShield += point;
+        EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
 
     public void ConsumeActionPoint(int point)
     {
-        if (currentActionPoint >= point)
-            currentActionPoint -= point;
-        UIManager.Instance.ShowActionPointUI(
-            currentActionPoint,
-            DataManager.Instance.PlayerList[1].MaxActionPoint
-        );
+        if (
+            DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].CurrentActionPoint
+            >= point
+        )
+            DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].CurrentActionPoint -=
+                point;
+        EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
 
-    public void ChangeTurn(BattleType battleType)
+    public void ChangeTurn(BattleType type)
     {
+        battleType = type;
         switch (battleType)
         {
             case BattleType.None:
                 break;
             case BattleType.Initial:
+                Initial();
                 break;
             case BattleType.Player:
                 PlayerTurn();
@@ -65,13 +75,23 @@ public class BattleManager : Singleton<BattleManager>
         }
     }
 
-    private void PlayerTurn()
+    private void Initial()
     {
-        currentActionPoint = DataManager.Instance.PlayerList[0].MaxActionPoint;
-        ConsumeActionPoint(0);
+        EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
+        ChangeTurn(BattleType.Player);
     }
 
-    private void EnemyTurn() { }
+    private void PlayerTurn()
+    {
+        DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].CurrentActionPoint =
+            DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].MaxActionPoint;
+        EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
+    }
+
+    private void EnemyTurn()
+    {
+        EventManager.Instance.DispatchEvent(EventDefinition.eventEnemyTurn);
+    }
 
     public void Shuffle()
     {
