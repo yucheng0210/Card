@@ -13,7 +13,7 @@ public class DataManager : Singleton<DataManager>
     private const string levelListPath = "Assets/MyAssets/Data/LEVELLIST.csv";
     public Dictionary<int, CardData> CardList { get; set; }
     public List<CardData> CardBag { get; set; }
-    public List<CardData> UsedCardBag { get; set; }
+    public List<CardItem> UsedCardBag { get; set; }
     public List<CardItem> HandCard { get; set; }
     public Dictionary<int, PlayerData> PlayerList { get; set; }
     public Dictionary<int, EnemyData> EnemyList { get; set; }
@@ -30,7 +30,7 @@ public class DataManager : Singleton<DataManager>
         PlayerList = new Dictionary<int, PlayerData>();
         EnemyList = new Dictionary<int, EnemyData>();
         LevelList = new Dictionary<int, Level>();
-        UsedCardBag = new List<CardData>();
+        UsedCardBag = new List<CardItem>();
         LoadData();
         GameStart();
     }

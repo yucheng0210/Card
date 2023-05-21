@@ -149,12 +149,20 @@ public class CardCreater : MonoBehaviour
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Player);
     }
 
+    private void HideAllCards()
+    {
+        for (int i = 0; i < DataManager.Instance.UsedCardBag.Count; i++)
+        {
+            DataManager.Instance.UsedCardBag[i].gameObject.SetActive(false);
+        }
+    }
+
     private void EventCardAdjustmentPosition(params object[] args)
     {
         BattleManager.Instance.CardPositionList.Clear();
         BattleManager.Instance.CardAngleList.Clear();
         CardItem cardItem = (CardItem)args[0];
-        DataManager.Instance.UsedCardBag.Add(DataManager.Instance.CardList[cardItem.CardIndex]);
+        DataManager.Instance.UsedCardBag.Add(cardItem);
         cardItem.transform.SetParent(usedCardTrans);
         cardItemList.Remove(cardItem);
         List<CardItem> handCard = DataManager.Instance.HandCard;
@@ -177,10 +185,16 @@ public class CardCreater : MonoBehaviour
     {
         for (int i = 0; i < DataManager.Instance.HandCard.Count; i++)
         {
-            DataManager.Instance.UsedCardBag.Add(
-                DataManager.Instance.CardList[DataManager.Instance.HandCard[i].CardIndex]
-            );
+            DataManager.Instance.HandCard[i].transform.SetParent(usedCardTrans);
+            DataManager.Instance.HandCard[i]
+                .GetComponent<RectTransform>()
+                .DOAnchorPos(
+                    usedCardTrans.GetComponent<RectTransform>().anchoredPosition,
+                    moveTime
+                );
+            DataManager.Instance.UsedCardBag.Add(DataManager.Instance.HandCard[i]);
         }
         DataManager.Instance.HandCard.Clear();
+        Invoke("HideAllCards", moveTime);
     }
 }
