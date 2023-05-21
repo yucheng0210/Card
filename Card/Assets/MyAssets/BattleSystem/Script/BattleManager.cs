@@ -17,6 +17,17 @@ public class BattleManager : Singleton<BattleManager>
     }
 
     public BattleType battleType;
+    public List<Vector2> CardPositionList { get; set; }
+    public List<float> CardAngleList { get; set; }
+    public bool IsDrag { get; set; }
+
+    protected override void Awake()
+    {
+        base.Awake();
+        IsDrag = false;
+        CardPositionList = new List<Vector2>();
+        CardAngleList = new List<float>();
+    }
 
     private void Start()
     {
@@ -77,8 +88,9 @@ public class BattleManager : Singleton<BattleManager>
 
     private void Initial()
     {
+        DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].CurrentActionPoint =
+            DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].MaxActionPoint;
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
-        ChangeTurn(BattleType.Player);
     }
 
     private void PlayerTurn()

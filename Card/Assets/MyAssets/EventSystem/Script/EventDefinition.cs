@@ -8,4 +8,5 @@ public class EventDefinition
     public const string eventRefreshUI = "EVENT_REFRESH_UI";
     public const string eventEnemyTurn = "EVENT_ENEMY_TURN";
     public const string eventAttackLine = "EVENT_ATTACKLINE";
+    public const string eventPlayerTurn = "EVENT_PLAYER_TURN";
 }

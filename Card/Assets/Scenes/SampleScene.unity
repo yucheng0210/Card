@@ -935,7 +935,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -838, y: -431}
+  m_AnchoredPosition: {x: -838, y: -365}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &403588569
@@ -950,15 +950,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6d521adc7da3cf48b98cb210b3f95e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startPosY: -20
   cardPrefab: {fileID: 524259916357414313, guid: 0b5874506f49ccf47b373a2dd736234d, type: 3}
   handCardTrans: {fileID: 2008770234}
   usedCardTrans: {fileID: 1296570504}
-  drawCardCount: 5
+  drawCardCount: 6
   coolDown: 0.5
   cardXSpacing: 70
   cardYSpacing: 15
   reduceValue: 5
   minCardAngle: 4
+  moveTime: 0.5
   roundTip: {fileID: 286452091}
 --- !u!1 &458273081
 GameObject:

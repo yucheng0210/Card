@@ -10,16 +10,12 @@ public class CardItem
     : MonoBehaviour,
         IPointerEnterHandler,
         IPointerExitHandler,
-        IBeginDragHandler,
         IDragHandler,
         IEndDragHandler,
         IPointerDownHandler
 {
     public int CardIndex { get; set; }
     private int index;
-
-    [SerializeField]
-    private float pointerEnterSpacing;
 
     [SerializeField]
     private Text cardName;
@@ -29,15 +25,21 @@ public class CardItem
 
     [SerializeField]
     private Text cardDescription;
-    private RectTransform rightCard,
-        leftCard,
-        cardRectTransform;
-    private Quaternion initialRotation;
-    private Vector2 initialPosition;
+
+    [SerializeField]
+    private float onPointerEnterUp;
+
+    [SerializeField]
+    private float pointerEnterSpacing;
+
+    [SerializeField]
+    private float moveTime;
+    private RectTransform cardRectTransform;
+    private CardItem rightCard,
+        leftCard;
     private bool isAttackCard;
     private Enemy enemy;
     private int cost;
-
     public Text CardName
     {
         get { return cardName; }
@@ -56,48 +58,74 @@ public class CardItem
 
     private void Start()
     {
-        initialPosition = transform.GetComponent<RectTransform>().anchoredPosition;
         cardRectTransform = transform.GetComponent<RectTransform>();
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
+        if (BattleManager.Instance.IsDrag)
+            return;
+        index = transform.GetSiblingIndex();
         cost = DataManager.Instance.CardList[CardIndex].CardCost;
-        //index = BattleManager.Instance.HandCard.IndexOf(this);
         Quaternion zeroRotation = Quaternion.Euler(0, 0, 0);
-        initialRotation = transform.rotation;
-        transform.DOScale(2.5f, 0.25f);
-        transform.DORotateQuaternion(zeroRotation, 0.25f);
-        transform.rotation = Quaternion.Euler(0, 0, 0);
-        //index = transform.GetSiblingIndex();
-        // transform.SetAsLastSibling();
-        /*for (int i = index + 1; i < transform.parent.childCount; i++)
+        transform.DOScale(2.5f, moveTime);
+        transform.DORotateQuaternion(zeroRotation, moveTime);
+        cardRectTransform.DOAnchorPosY(
+            BattleManager.Instance.CardPositionList[index].y + onPointerEnterUp,
+            moveTime
+        );
+        for (int i = index + 1; i < transform.parent.childCount; i++)
         {
-            rightCard = transform.parent.GetChild(i).GetComponent<RectTransform>();
-            rightCard.DOAnchorPosX(rightCard.anchoredPosition.x + pointerEnterSpacing, 0.25f);
+            rightCard = transform.parent.GetChild(i).GetComponent<CardItem>();
+
+            rightCard
+                .GetComponent<RectTransform>()
+                .DOAnchorPosX(
+                    BattleManager.Instance.CardPositionList[i].x + pointerEnterSpacing,
+                    moveTime
+                );
         }
         for (int i = index - 1; i >= 0; i--)
         {
-            leftCard = transform.parent.GetChild(i).GetComponent<RectTransform>();
-            leftCard.DOAnchorPosX(leftCard.anchoredPosition.x - pointerEnterSpacing, 0.25f);
-        }*/
+            leftCard = transform.parent.GetChild(i).GetComponent<CardItem>();
+
+            leftCard
+                .GetComponent<RectTransform>()
+                .DOAnchorPosX(
+                    BattleManager.Instance.CardPositionList[i].x - pointerEnterSpacing,
+                    moveTime
+                );
+        }
+        transform.SetAsLastSibling();
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        transform.DOScale(1.5f, 0.25f);
-        transform.DORotateQuaternion(initialRotation, 0.25f);
-        //transform.SetSiblingIndex(index);
-        /*for (int i = index + 1; i < transform.parent.childCount; i++)
+        if (BattleManager.Instance.IsDrag && !isAttackCard)
+            return;
+        transform.DOScale(1.5f, moveTime);
+        transform.DORotateQuaternion(
+            Quaternion.Euler(0, 0, BattleManager.Instance.CardAngleList[index]),
+            moveTime
+        );
+        cardRectTransform.DOAnchorPos(BattleManager.Instance.CardPositionList[index], moveTime);
+        transform.SetSiblingIndex(index);
+        for (int i = index + 1; i < transform.parent.childCount; i++)
         {
-            rightCard = transform.parent.GetChild(i).GetComponent<RectTransform>();
-            rightCard.DOAnchorPosX(rightCard.anchoredPosition.x - pointerEnterSpacing, 0.25f);
+            rightCard = transform.parent.GetChild(i).GetComponent<CardItem>();
+
+            rightCard
+                .GetComponent<RectTransform>()
+                .DOAnchorPosX(BattleManager.Instance.CardPositionList[i].x, moveTime);
         }
         for (int i = index - 1; i >= 0; i--)
         {
-            leftCard = transform.parent.GetChild(i).GetComponent<RectTransform>();
-            leftCard.DOAnchorPosX(leftCard.anchoredPosition.x + pointerEnterSpacing, 0.25f);
-        }*/
+            leftCard = transform.parent.GetChild(i).GetComponent<CardItem>();
+
+            leftCard
+                .GetComponent<RectTransform>()
+                .DOAnchorPosX(BattleManager.Instance.CardPositionList[i].x, moveTime);
+        }
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -115,16 +143,9 @@ public class CardItem
         }
     }
 
-    public void OnBeginDrag(PointerEventData eventData)
-    {
-        if (isAttackCard)
-            return;
-        initialPosition = cardRectTransform.anchoredPosition;
-        initialRotation = transform.rotation;
-    }
-
     public void OnDrag(PointerEventData eventData)
     {
+        BattleManager.Instance.IsDrag = true;
         Cursor.visible = false;
         Vector2 dragPosition;
         if (
@@ -152,6 +173,7 @@ public class CardItem
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        BattleManager.Instance.IsDrag = false;
         Cursor.visible = true;
         if (isAttackCard)
         {
@@ -172,7 +194,7 @@ public class CardItem
             UseCard();
         else
         {
-            cardRectTransform.anchoredPosition = initialPosition;
+            cardRectTransform.anchoredPosition = BattleManager.Instance.CardPositionList[index];
             cardRectTransform.SetSiblingIndex(index);
         }
     }

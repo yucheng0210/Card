@@ -8,6 +8,9 @@ using DG.Tweening;
 public class CardCreater : MonoBehaviour
 {
     [SerializeField]
+    private float startPosY;
+
+    [SerializeField]
     private CardItem cardPrefab;
 
     [SerializeField]
@@ -35,10 +38,10 @@ public class CardCreater : MonoBehaviour
     private float minCardAngle;
 
     [SerializeField]
-    private GameObject roundTip;
+    private float moveTime;
 
-    private List<Vector2> cardPositionList = new List<Vector2>();
-    private List<float> cardAngleList = new List<float>();
+    [SerializeField]
+    private GameObject roundTip;
     private List<CardItem> cardItemList = new List<CardItem>();
 
     private void Start()
@@ -69,77 +72,104 @@ public class CardCreater : MonoBehaviour
 
     private void CalculatePositionAngle(int cardCount)
     {
-        Vector2 startPosition = new Vector2(878, -50);
+        Vector2 startPosition = new Vector2(878, startPosY);
         int odd = cardCount % 2 != 0 ? 0 : 1;
         float startAngle = (cardCount / 2 - odd) * minCardAngle;
         for (int i = 0; i < cardCount; i++)
         {
-            cardPositionList.Add(startPosition);
-            cardAngleList.Add(startAngle);
+            BattleManager.Instance.CardPositionList.Add(startPosition);
+            BattleManager.Instance.CardAngleList.Add(startAngle);
             for (int j = i; j > 0; j--)
             {
                 float adjustmentPosX = startPosition.x;
                 adjustmentPosX -= (i - j + 1) * cardXSpacing * 2;
-                cardPositionList[j - 1] = new Vector2(adjustmentPosX, cardPositionList[j - 1].y);
+                BattleManager.Instance.CardPositionList[j - 1] = new Vector2(
+                    adjustmentPosX,
+                    BattleManager.Instance.CardPositionList[j - 1].y
+                );
             }
             startPosition.x += cardXSpacing;
-            if (odd != 0 && i == cardCount / 2 - 1)
+            if (odd != 0 && i == (cardCount / 2 - 1))
                 continue;
-            startAngle -= minCardAngle;
-            startPosition.y += cardYSpacing * (cardCount / 2 - odd - i);
+            startAngle -= minCardAngle; // 更新下一張卡片的旋轉角度
+            startPosition.y +=
+                cardYSpacing
+                * ((cardCount / 2 - odd - i) - (cardCount / 2 - odd <= i && odd == 0 ? 1 : 0)); // 更新下一張卡片的起始位置
         }
     }
 
     private IEnumerator DrawCard()
     {
-        BattleManager.Instance.Shuffle();
-        StartCoroutine(UIManager.Instance.FadeOutIn(roundTip.GetComponent<CanvasGroup>(), 0.5f, 1));
-        yield return new WaitForSecondsRealtime(1.5f);
-        Vector2 startPosition = new Vector2(878, -50);
+        BattleManager.Instance.Shuffle(); // 在這之前將卡片順序洗牌
+        StartCoroutine(UIManager.Instance.FadeOutIn(roundTip.GetComponent<CanvasGroup>(), 0.5f, 1)); // 執行 UI 淡入淡出效果
+        yield return new WaitForSecondsRealtime(1.5f); // 等待 1.5 秒
+        CalculatePositionAngle(drawCardCount);
+        // 設定初始卡片位置
+        Vector2 startPosition = new Vector2(878, startPosY);
+
+        // 檢查卡片數量是否為奇數
         int odd = drawCardCount % 2 != 0 ? 0 : 1;
+
+        // 計算初始旋轉角度
         float startAngle = (drawCardCount / 2 - odd) * minCardAngle;
+
+        // 根據抽卡數量將卡片添加到手牌中
         BattleManager.Instance.AddHandCard(drawCardCount, cardItemList);
+
         List<CardItem> handCard = DataManager.Instance.HandCard;
+
+        // 逐個處理每張手牌卡片
         for (int i = 0; i < handCard.Count; i++)
         {
-            yield return new WaitForSecondsRealtime(coolDown);
-            handCard[i].transform.SetParent(handCardTrans);
-            handCard[i].gameObject.SetActive(true);
-            handCard[i].GetComponent<RectTransform>().DOAnchorPos(startPosition, 0.5f);
-            handCard[i].GetComponent<RectTransform>().rotation = Quaternion.Euler(0, 0, startAngle);
+            yield return new WaitForSecondsRealtime(coolDown); // 等待冷卻時間
+
+            handCard[i].transform.SetParent(handCardTrans); // 將卡片設定為手牌的子物件
+            handCard[i].gameObject.SetActive(true); // 啟用卡片物件
+            handCard[i].GetComponent<RectTransform>().DOAnchorPos(startPosition, moveTime); // 使用 DOTween 動畫設定卡片位置
+            handCard[i].GetComponent<RectTransform>().rotation = Quaternion.Euler(0, 0, startAngle); // 設定卡片旋轉角度
+
+            // 將前面的卡片向左偏移以創造重疊效果
             for (int j = i; j > 0; j--)
             {
                 handCard[j - 1]
                     .GetComponent<RectTransform>()
-                    .DOAnchorPosX(startPosition.x - (i - j + 1) * cardXSpacing * 2, 0.5f);
+                    .DOAnchorPosX(startPosition.x - (i - j + 1) * cardXSpacing * 2, moveTime);
             }
-            startPosition.x += cardXSpacing;
-            if (odd != 0 && i == drawCardCount / 2 - 1)
+            startPosition.x += cardXSpacing; // 更新下一張卡片的起始位置
+            if (odd != 0 && i == (drawCardCount / 2 - 1))
                 continue;
-            startAngle -= minCardAngle;
-            startPosition.y += cardYSpacing * (drawCardCount / 2 - odd - i);
+            startAngle -= minCardAngle; // 更新下一張卡片的旋轉角度
+            startPosition.y +=
+                cardYSpacing
+                * (
+                    (drawCardCount / 2 - odd - i)
+                    - (drawCardCount / 2 - odd <= i && odd == 0 ? 1 : 0)
+                ); // 更新下一張卡片的起始位置
         }
+        BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Player);
     }
 
     private void EventCardAdjustmentPosition(params object[] args)
     {
-        cardPositionList.Clear();
-        cardAngleList.Clear();
-        DataManager.Instance.UsedCardBag.Add(
-            DataManager.Instance.CardList[((CardItem)args[0]).CardIndex]
-        );
-        ((CardItem)args[0]).transform.SetParent(usedCardTrans);
-        cardItemList.Remove((CardItem)args[0]);
+        BattleManager.Instance.CardPositionList.Clear();
+        BattleManager.Instance.CardAngleList.Clear();
+        CardItem cardItem = (CardItem)args[0];
+        DataManager.Instance.UsedCardBag.Add(DataManager.Instance.CardList[cardItem.CardIndex]);
+        cardItem.transform.SetParent(usedCardTrans);
+        cardItemList.Remove(cardItem);
         List<CardItem> handCard = DataManager.Instance.HandCard;
         CalculatePositionAngle(handCard.Count);
         for (int i = 0; i < handCard.Count; i++)
         {
-            handCard[i].GetComponent<RectTransform>().DOAnchorPos(cardPositionList[i], 0.5f);
-            handCard[i].GetComponent<RectTransform>().rotation = Quaternion.Euler(
-                0,
-                0,
-                cardAngleList[i]
-            );
+            handCard[i]
+                .GetComponent<RectTransform>()
+                .DOAnchorPos(BattleManager.Instance.CardPositionList[i], moveTime);
+            handCard[i]
+                .GetComponent<RectTransform>()
+                .DORotateQuaternion(
+                    Quaternion.Euler(0, 0, BattleManager.Instance.CardAngleList[i]),
+                    moveTime
+                );
         }
     }
 
