@@ -20,6 +20,7 @@ public class DataManager : Singleton<DataManager>
     public Dictionary<int, Effect> EffectList { get; set; }
     public Dictionary<int, Level> LevelList { get; set; }
     public int PlayerID { get; set; }
+    public int LevelID { get; set; }
 
     protected override void Awake()
     {
@@ -80,6 +81,8 @@ public class DataManager : Singleton<DataManager>
             enemyData.CharacterID = int.Parse(row[0]);
             enemyData.CharacterName = row[1];
             enemyData.MaxHealth = int.Parse(row[2]);
+            enemyData.MinAttack = int.Parse(row[3]);
+            enemyData.MaxAttack = int.Parse(row[4]);
             enemyData.CurrentHealth = enemyData.MaxHealth;
             EnemyList.Add(enemyData.CharacterID, enemyData);
         }
@@ -124,6 +127,7 @@ public class DataManager : Singleton<DataManager>
     private void GameStart()
     {
         PlayerID = 1001;
+        LevelID = 1001;
         CardData cardData = new CardData();
         for (int i = 0; i < 5; i++)
         {

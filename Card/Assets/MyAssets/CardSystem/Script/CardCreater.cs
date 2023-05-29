@@ -1,9 +1,11 @@
+using System.Net.Mime;
 using System.Linq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.UI;
 
 public class CardCreater : MonoBehaviour
 {
@@ -42,17 +44,23 @@ public class CardCreater : MonoBehaviour
 
     [SerializeField]
     private GameObject roundTip;
+
+    [SerializeField]
+    private int cardID;
+
+    [SerializeField]
     private List<CardItem> cardItemList = new List<CardItem>();
 
     private void Start()
     {
         CreateCard();
-        StartCoroutine(DrawCard());
+        //StartCoroutine(DrawCard());
         EventManager.Instance.AddEventRegister(
             EventDefinition.eventUseCard,
             EventCardAdjustmentPosition
         );
         EventManager.Instance.AddEventRegister(EventDefinition.eventEnemyTurn, EventEnemyTurn);
+        EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
     }
 
     private void CreateCard()
@@ -68,6 +76,7 @@ public class CardCreater : MonoBehaviour
             cardItem.gameObject.SetActive(false);
             cardItemList.Add(cardItem);
         }
+        BattleManager.Instance.Shuffle(); // 在這之前將卡片順序洗牌
     }
 
     private void CalculatePositionAngle(int cardCount)
@@ -100,8 +109,9 @@ public class CardCreater : MonoBehaviour
 
     private IEnumerator DrawCard()
     {
-        BattleManager.Instance.Shuffle(); // 在這之前將卡片順序洗牌
-        StartCoroutine(UIManager.Instance.FadeOutIn(roundTip.GetComponent<CanvasGroup>(), 0.5f, 1)); // 執行 UI 淡入淡出效果
+        StartCoroutine(
+            UIManager.Instance.FadeOutIn(roundTip.GetComponent<CanvasGroup>(), 0.5f, 1, false)
+        ); // 執行 UI 淡入淡出效果
         yield return new WaitForSecondsRealtime(1.5f); // 等待 1.5 秒
         CalculatePositionAngle(drawCardCount);
         // 設定初始卡片位置
@@ -112,10 +122,20 @@ public class CardCreater : MonoBehaviour
 
         // 計算初始旋轉角度
         float startAngle = (drawCardCount / 2 - odd) * minCardAngle;
-
+        if (cardItemList.Count < drawCardCount)
+        {
+            for (int i = 0; i < DataManager.Instance.UsedCardBag.Count; i++)
+            {
+                cardItemList.Add(DataManager.Instance.UsedCardBag[i]);
+                int index = DataManager.Instance.UsedCardBag[i].CardIndex;
+                DataManager.Instance.CardBag.Add(DataManager.Instance.CardList[index]);
+            }
+            DataManager.Instance.UsedCardBag.Clear();
+        }
         // 根據抽卡數量將卡片添加到手牌中
         BattleManager.Instance.AddHandCard(drawCardCount, cardItemList);
-
+        cardID += drawCardCount;
+        cardItemList.RemoveRange(0, drawCardCount);
         List<CardItem> handCard = DataManager.Instance.HandCard;
 
         // 逐個處理每張手牌卡片
@@ -127,7 +147,6 @@ public class CardCreater : MonoBehaviour
             handCard[i].gameObject.SetActive(true); // 啟用卡片物件
             handCard[i].GetComponent<RectTransform>().DOAnchorPos(startPosition, moveTime); // 使用 DOTween 動畫設定卡片位置
             handCard[i].GetComponent<RectTransform>().rotation = Quaternion.Euler(0, 0, startAngle); // 設定卡片旋轉角度
-
             // 將前面的卡片向左偏移以創造重疊效果
             for (int j = i; j > 0; j--)
             {
@@ -146,7 +165,6 @@ public class CardCreater : MonoBehaviour
                     - (drawCardCount / 2 - odd <= i && odd == 0 ? 1 : 0)
                 ); // 更新下一張卡片的起始位置
         }
-        BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Player);
     }
 
     private void HideAllCards()
@@ -155,6 +173,36 @@ public class CardCreater : MonoBehaviour
         {
             DataManager.Instance.UsedCardBag[i].gameObject.SetActive(false);
         }
+    }
+
+    private IEnumerator EnemyAttack()
+    {
+        yield return (
+            StartCoroutine(
+                UIManager.Instance.FadeOutIn(roundTip.GetComponent<CanvasGroup>(), 0.5f, 1, false)
+            )
+        );
+        yield return new WaitForSecondsRealtime(1);
+        for (
+            int i = 0;
+            i < DataManager.Instance.LevelList[DataManager.Instance.LevelID].EnemyIDList.Count;
+            i++
+        )
+        {
+            int enemyID = DataManager.Instance.LevelList[DataManager.Instance.LevelID].EnemyIDList[
+                i
+            ].Item1;
+            int randomAttack = UnityEngine.Random.Range(
+                DataManager.Instance.EnemyList[enemyID].MinAttack,
+                DataManager.Instance.EnemyList[enemyID].MaxAttack + 1
+            );
+            BattleManager.Instance.TakeDamage(
+                DataManager.Instance.PlayerList[DataManager.Instance.PlayerID],
+                randomAttack
+            );
+            yield return new WaitForSecondsRealtime(1);
+        }
+        BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Player);
     }
 
     private void EventCardAdjustmentPosition(params object[] args)
@@ -181,6 +229,12 @@ public class CardCreater : MonoBehaviour
         }
     }
 
+    private void EventPlayerTurn(params object[] args)
+    {
+        roundTip.GetComponentInChildren<Text>().text = "我方回合";
+        StartCoroutine(DrawCard());
+    }
+
     private void EventEnemyTurn(params object[] args)
     {
         for (int i = 0; i < DataManager.Instance.HandCard.Count; i++)
@@ -196,5 +250,7 @@ public class CardCreater : MonoBehaviour
         }
         DataManager.Instance.HandCard.Clear();
         Invoke("HideAllCards", moveTime);
+        roundTip.GetComponentInChildren<Text>().text = "敵方回合";
+        StartCoroutine(EnemyAttack());
     }
 }

@@ -33,7 +33,12 @@ public class UIManager : Singleton<UIManager>
         }
     }
 
-    public IEnumerator FadeOutIn(CanvasGroup canvasGroup, float fadeTime, float waitTime)
+    public IEnumerator FadeOutIn(
+        CanvasGroup canvasGroup,
+        float fadeTime,
+        float waitTime,
+        bool canDestroy
+    )
     {
         while (canvasGroup.alpha < 1)
         {
@@ -46,6 +51,7 @@ public class UIManager : Singleton<UIManager>
             canvasGroup.alpha -= Time.unscaledDeltaTime / fadeTime;
             yield return null;
         }
-        canvasGroup.gameObject.SetActive(false);
+        if (canDestroy)
+            Destroy(canvasGroup.gameObject);
     }
 }

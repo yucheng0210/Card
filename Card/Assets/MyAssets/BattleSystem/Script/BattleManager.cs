@@ -16,7 +16,7 @@ public class BattleManager : Singleton<BattleManager>
         Loss
     }
 
-    public BattleType battleType;
+    public BattleType MyBattleType { get; set; }
     public List<Vector2> CardPositionList { get; set; }
     public List<float> CardAngleList { get; set; }
     public bool IsDrag { get; set; }
@@ -29,14 +29,9 @@ public class BattleManager : Singleton<BattleManager>
         CardAngleList = new List<float>();
     }
 
-    private void Start()
-    {
-        ChangeTurn(BattleType.None);
-    }
-
     private void Update()
     {
-        if (battleType == BattleType.None)
+        if (MyBattleType == BattleType.None)
             ChangeTurn(BattleType.Initial);
     }
 
@@ -65,8 +60,8 @@ public class BattleManager : Singleton<BattleManager>
 
     public void ChangeTurn(BattleType type)
     {
-        battleType = type;
-        switch (battleType)
+        MyBattleType = type;
+        switch (MyBattleType)
         {
             case BattleType.None:
                 break;
@@ -91,12 +86,14 @@ public class BattleManager : Singleton<BattleManager>
         DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].CurrentActionPoint =
             DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].MaxActionPoint;
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
+        ChangeTurn(BattleType.Player);
     }
 
     private void PlayerTurn()
     {
         DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].CurrentActionPoint =
             DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].MaxActionPoint;
+        EventManager.Instance.DispatchEvent(EventDefinition.eventPlayerTurn);
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
 

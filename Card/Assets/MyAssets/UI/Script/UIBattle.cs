@@ -58,6 +58,7 @@ public class UIBattle : UIBase
     {
         changeTurnButton.onClick.AddListener(ChangeTurn);
         EventManager.Instance.AddEventRegister(EventDefinition.eventRefreshUI, EventRefreshUI);
+        EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
     }
 
     private void Update()
@@ -77,11 +78,20 @@ public class UIBattle : UIBase
     public void ChangeTurn()
     {
         Text buttonText = changeTurnButton.GetComponentInChildren<Text>();
-        buttonText.text = "敵方回合";
-        BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Enemy);
+        if (BattleManager.Instance.MyBattleType == BattleManager.BattleType.Player)
+        {
+            buttonText.text = "敵方回合";
+            BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Enemy);
+        }
     }
 
-    public void EventRefreshUI(params object[] args)
+    private void EventPlayerTurn(params object[] args)
+    {
+        Text buttonText = changeTurnButton.GetComponentInChildren<Text>();
+        buttonText.text = "我方回合";
+    }
+
+    private void EventRefreshUI(params object[] args)
     {
         actionPointText.text =
             DataManager.Instance.PlayerList[
