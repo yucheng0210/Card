@@ -66,6 +66,7 @@ public class CardCreater : MonoBehaviour
     private void CreateCard()
     {
         List<CardData> cardBag = DataManager.Instance.CardBag;
+        BattleManager.Instance.Shuffle(); // 在這之前將卡片順序洗牌
         for (int i = 0; i < cardBag.Count; i++)
         {
             CardItem cardItem = Instantiate(cardPrefab, transform);
@@ -76,7 +77,6 @@ public class CardCreater : MonoBehaviour
             cardItem.gameObject.SetActive(false);
             cardItemList.Add(cardItem);
         }
-        BattleManager.Instance.Shuffle(); // 在這之前將卡片順序洗牌
     }
 
     private void CalculatePositionAngle(int cardCount)
@@ -129,6 +129,11 @@ public class CardCreater : MonoBehaviour
                 cardItemList.Add(DataManager.Instance.UsedCardBag[i]);
                 int index = DataManager.Instance.UsedCardBag[i].CardIndex;
                 DataManager.Instance.CardBag.Add(DataManager.Instance.CardList[index]);
+            }
+            for (int i = 0; i < cardItemList.Count; i++)
+            {
+                cardItemList[i].transform.SetParent(transform);
+                cardItemList[i].GetComponent<RectTransform>().anchoredPosition = transform.position;
             }
             DataManager.Instance.UsedCardBag.Clear();
         }

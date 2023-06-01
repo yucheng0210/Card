@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class UIBattle : UIBase
 {
@@ -33,6 +34,13 @@ public class UIBattle : UIBase
     [SerializeField]
     private Button changeTurnButton;
 
+    [Header("傷害數字")]
+    [SerializeField]
+    private GameObject damageNumPrefab;
+
+    [SerializeField]
+    private float curveHeight;
+
     public Text ActionPointText
     {
         get { return actionPointText; }
@@ -59,6 +67,7 @@ public class UIBattle : UIBase
         changeTurnButton.onClick.AddListener(ChangeTurn);
         EventManager.Instance.AddEventRegister(EventDefinition.eventRefreshUI, EventRefreshUI);
         EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
+        EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
     }
 
     private void Update()
@@ -85,10 +94,43 @@ public class UIBattle : UIBase
         }
     }
 
+    private void EventTakeDamage(params object[] args)
+    {
+        GameObject damageNum = Instantiate(damageNumPrefab, UI.transform);
+        damageNum.transform.SetParent(UI.transform);
+        RectTransform damageRect = damageNum.GetComponent<RectTransform>();
+        float xOffset = UnityEngine.Random.Range(200, -200);
+        Vector2 startPoint = new Vector2(474, 31);
+        Vector2 endPoint = new Vector2(startPoint.x + xOffset, -540);
+        Vector2 midPoint = new Vector2(startPoint.x + xOffset / 2, startPoint.y + curveHeight);
+        Vector2 endScale = new Vector2(0.5f, 0.5f);
+        DOTween
+            .To(
+                (t) =>
+                {
+                    Vector2 position = UIManager.Instance.GetBezierCurve(
+                        startPoint,
+                        midPoint,
+                        endPoint,
+                        t
+                    );
+                    damageRect.anchoredPosition = position;
+                },
+                0,
+                1,
+                1
+            )
+            .SetEase(Ease.OutQuad);
+        damageRect.DOScale(endScale, 1);
+        StartCoroutine(
+            UIManager.Instance.FadeOutIn(damageNum.GetComponent<CanvasGroup>(), 1f, 0, true)
+        );
+    }
+
     private void EventPlayerTurn(params object[] args)
     {
         Text buttonText = changeTurnButton.GetComponentInChildren<Text>();
-        buttonText.text = "我方回合";
+        buttonText.text = "結束回合";
     }
 
     private void EventRefreshUI(params object[] args)

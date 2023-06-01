@@ -9,4 +9,5 @@ public class EventDefinition
     public const string eventEnemyTurn = "EVENT_ENEMY_TURN";
     public const string eventAttackLine = "EVENT_ATTACKLINE";
     public const string eventPlayerTurn = "EVENT_PLAYER_TURN";
+    public const string eventTakeDamage = "EVENT_TAKE_DAMAGE";
 }

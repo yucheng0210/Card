@@ -36,7 +36,12 @@ public class UIAttackLine : UIBase
         for (int i = UI.transform.childCount - 1; i >= 0; i--)
         {
             UI.transform.GetChild(i).GetComponent<RectTransform>().anchoredPosition =
-                GetBezierCurve(startPos, midPos, endPos, i / (float)UI.transform.childCount);
+                UIManager.Instance.GetBezierCurve(
+                    startPos,
+                    midPos,
+                    endPos,
+                    i / (float)UI.transform.childCount
+                );
             if (i != UI.transform.childCount - 1)
             {
                 dir = (
@@ -47,13 +52,6 @@ public class UIAttackLine : UIBase
                 UI.transform.GetChild(i).eulerAngles = new Vector3(0, 0, angle - 90);
             }
         }
-    }
-
-    private Vector2 GetBezierCurve(Vector2 start, Vector2 mid, Vector2 end, float t)
-    {
-        return Mathf.Pow((1.0f - t), 2) * start
-            + 2.0f * t * (1.0f - t) * mid
-            + Mathf.Pow(t, 2) * end;
     }
 
     public void EventAttackLine(params object[] args)

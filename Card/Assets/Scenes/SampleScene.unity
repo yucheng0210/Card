@@ -954,7 +954,7 @@ MonoBehaviour:
   cardPrefab: {fileID: 524259916357414313, guid: 0b5874506f49ccf47b373a2dd736234d, type: 3}
   handCardTrans: {fileID: 2008770234}
   usedCardTrans: {fileID: 1296570504}
-  drawCardCount: 3
+  drawCardCount: 5
   coolDown: 0.5
   cardXSpacing: 70
   cardYSpacing: 15
@@ -962,6 +962,8 @@ MonoBehaviour:
   minCardAngle: 4
   moveTime: 0.5
   roundTip: {fileID: 286452091}
+  cardID: 0
+  cardItemList: []
 --- !u!1 &458273081
 GameObject:
   m_ObjectHideFlags: 0
@@ -1739,7 +1741,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4023215848608658, guid: 55776efecb0cd134ea5f418c2f97a705, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 4.24
+      value: 4.25
       objectReference: {fileID: 0}
     - target: {fileID: 4023215848608658, guid: 55776efecb0cd134ea5f418c2f97a705, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1747,7 +1749,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4023215848608658, guid: 55776efecb0cd134ea5f418c2f97a705, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.000015258789
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4023215848608658, guid: 55776efecb0cd134ea5f418c2f97a705, type: 3}
       propertyPath: m_LocalRotation.w
@@ -2444,7 +2446,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b777d4807bbe97a4297e5cd23afd0ed7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  battleType: 0
 --- !u!1 &1296570503
 GameObject:
   m_ObjectHideFlags: 0
@@ -3028,6 +3029,8 @@ MonoBehaviour:
   enemyHealthRect: {fileID: 1307254987}
   enemyHurtRect: {fileID: 912675677}
   changeTurnButton: {fileID: 703492576}
+  damageNumPrefab: {fileID: 544663525799068465, guid: b7cd9a2ef55cef54488dcd8bd9aa0488, type: 3}
+  curveHeight: 500
 --- !u!114 &1642177153
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3570,7 +3573,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8853461538655865707, guid: 904d0b8c28276a64c8101ddedd894d57, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -4.28
+      value: -4.3
       objectReference: {fileID: 0}
     - target: {fileID: 8853461538655865707, guid: 904d0b8c28276a64c8101ddedd894d57, type: 3}
       propertyPath: m_LocalPosition.y

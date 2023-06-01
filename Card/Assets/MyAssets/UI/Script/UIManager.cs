@@ -54,4 +54,11 @@ public class UIManager : Singleton<UIManager>
         if (canDestroy)
             Destroy(canvasGroup.gameObject);
     }
+
+    public Vector2 GetBezierCurve(Vector2 start, Vector2 mid, Vector2 end, float t)
+    {
+        return Mathf.Pow((1.0f - t), 2) * start
+            + 2.0f * t * (1.0f - t) * mid
+            + Mathf.Pow(t, 2) * end;
+    }
 }
