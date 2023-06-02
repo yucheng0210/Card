@@ -42,7 +42,11 @@ public class BattleManager : Singleton<BattleManager>
             currentDamage = 0;
         defender.CurrentShield -= damage;
         defender.CurrentHealth -= currentDamage;
-        EventManager.Instance.DispatchEvent(EventDefinition.eventTakeDamage, defender.CharacterPos);
+        EventManager.Instance.DispatchEvent(
+            EventDefinition.eventTakeDamage,
+            defender.CharacterPos,
+            damage
+        );
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
 

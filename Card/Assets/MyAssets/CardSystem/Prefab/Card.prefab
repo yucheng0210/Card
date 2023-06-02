@@ -667,7 +667,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -13.4, y: 34}
+  m_AnchoredPosition: {x: -0.000015259, y: 37}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2980233893529845003
@@ -925,8 +925,10 @@ MonoBehaviour:
   cardName: {fileID: 7679750332678290009}
   cardCost: {fileID: 2528097721429737143}
   cardDescription: {fileID: 824966239830101744}
+  cardImage: {fileID: 483824088468915850}
   onPointerEnterUp: 100
   pointerEnterSpacing: 150
+  pointerEnterReduceCount: 50
   moveTime: 0.35
 --- !u!222 &3561320526990298476
 CanvasRenderer:

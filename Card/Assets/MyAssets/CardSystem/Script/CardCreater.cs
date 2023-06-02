@@ -46,9 +46,6 @@ public class CardCreater : MonoBehaviour
     private GameObject roundTip;
 
     [SerializeField]
-    private int cardID;
-
-    [SerializeField]
     private List<CardItem> cardItemList = new List<CardItem>();
 
     private void Start()
@@ -139,7 +136,6 @@ public class CardCreater : MonoBehaviour
         }
         // 根據抽卡數量將卡片添加到手牌中
         BattleManager.Instance.AddHandCard(drawCardCount, cardItemList);
-        cardID += drawCardCount;
         cardItemList.RemoveRange(0, drawCardCount);
         List<CardItem> handCard = DataManager.Instance.HandCard;
 
@@ -254,6 +250,8 @@ public class CardCreater : MonoBehaviour
             DataManager.Instance.UsedCardBag.Add(DataManager.Instance.HandCard[i]);
         }
         DataManager.Instance.HandCard.Clear();
+        BattleManager.Instance.CardPositionList.Clear();
+        BattleManager.Instance.CardAngleList.Clear();
         Invoke("HideAllCards", moveTime);
         roundTip.GetComponentInChildren<Text>().text = "敵方回合";
         StartCoroutine(EnemyAttack());

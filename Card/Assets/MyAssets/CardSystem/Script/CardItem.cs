@@ -27,10 +27,16 @@ public class CardItem
     private Text cardDescription;
 
     [SerializeField]
+    private Image cardImage;
+
+    [SerializeField]
     private float onPointerEnterUp;
 
     [SerializeField]
     private float pointerEnterSpacing;
+
+    [SerializeField]
+    private float pointerEnterReduceCount;
 
     [SerializeField]
     private float moveTime;
@@ -59,6 +65,9 @@ public class CardItem
     private void Start()
     {
         cardRectTransform = transform.GetComponent<RectTransform>();
+        cardImage.sprite = Resources.Load<Sprite>(
+            DataManager.Instance.CardList[CardIndex].CardImagePath
+        );
     }
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -74,27 +83,27 @@ public class CardItem
             BattleManager.Instance.CardPositionList[index].y + onPointerEnterUp,
             moveTime
         );
+        float space = pointerEnterSpacing;
         for (int i = index + 1; i < transform.parent.childCount; i++)
         {
             rightCard = transform.parent.GetChild(i).GetComponent<CardItem>();
-
             rightCard
                 .GetComponent<RectTransform>()
-                .DOAnchorPosX(
-                    BattleManager.Instance.CardPositionList[i].x + pointerEnterSpacing,
-                    moveTime
-                );
+                .DOAnchorPosX(BattleManager.Instance.CardPositionList[i].x + space, moveTime);
+            space -= pointerEnterReduceCount;
+            if (space <= 0)
+                space = pointerEnterReduceCount;
         }
+        space = pointerEnterSpacing;
         for (int i = index - 1; i >= 0; i--)
         {
             leftCard = transform.parent.GetChild(i).GetComponent<CardItem>();
-
             leftCard
                 .GetComponent<RectTransform>()
-                .DOAnchorPosX(
-                    BattleManager.Instance.CardPositionList[i].x - pointerEnterSpacing,
-                    moveTime
-                );
+                .DOAnchorPosX(BattleManager.Instance.CardPositionList[i].x - space, moveTime);
+            space -= pointerEnterReduceCount;
+            if (space <= 0)
+                space = pointerEnterReduceCount;
         }
         transform.SetAsLastSibling();
     }
@@ -113,7 +122,6 @@ public class CardItem
         for (int i = index + 1; i < transform.parent.childCount; i++)
         {
             rightCard = transform.parent.GetChild(i).GetComponent<CardItem>();
-
             rightCard
                 .GetComponent<RectTransform>()
                 .DOAnchorPosX(BattleManager.Instance.CardPositionList[i].x, moveTime);
@@ -121,7 +129,6 @@ public class CardItem
         for (int i = index - 1; i >= 0; i--)
         {
             leftCard = transform.parent.GetChild(i).GetComponent<CardItem>();
-
             leftCard
                 .GetComponent<RectTransform>()
                 .DOAnchorPosX(BattleManager.Instance.CardPositionList[i].x, moveTime);
@@ -131,16 +138,6 @@ public class CardItem
     public void OnPointerDown(PointerEventData eventData)
     {
         isAttackCard = DataManager.Instance.CardList[CardIndex].CardType == "攻擊" ? true : false;
-        if (isAttackCard)
-        {
-            EventManager.Instance.DispatchEvent(
-                EventDefinition.eventAttackLine,
-                true,
-                cardRectTransform.anchoredPosition,
-                cardRectTransform.anchoredPosition
-            );
-            return;
-        }
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -223,13 +220,15 @@ public class CardItem
 
     private void UseCard()
     {
+        cardRectTransform.DOScale(1.5f, 0);
         DataManager.Instance.HandCard.Remove(this);
         EventManager.Instance.DispatchEvent(EventDefinition.eventUseCard, this);
         BattleManager.Instance.ConsumeActionPoint(cost);
-        BattleManager.Instance.TakeDamage(
-            DataManager.Instance.EnemyList[1001],
-            DataManager.Instance.CardList[CardIndex].CardAttack
-        );
+        if (isAttackCard)
+            BattleManager.Instance.TakeDamage(
+                DataManager.Instance.EnemyList[1001],
+                DataManager.Instance.CardList[CardIndex].CardAttack
+            );
         BattleManager.Instance.GetShield(
             DataManager.Instance.PlayerList[DataManager.Instance.PlayerID],
             DataManager.Instance.CardList[CardIndex].CardShield

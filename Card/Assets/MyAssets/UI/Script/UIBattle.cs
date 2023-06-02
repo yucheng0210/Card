@@ -34,9 +34,15 @@ public class UIBattle : UIBase
     [SerializeField]
     private Button changeTurnButton;
 
-    [Header("傷害數字")]
+    [Header("傷害特效")]
     [SerializeField]
     private GameObject damageNumPrefab;
+
+    [SerializeField]
+    private GameObject hitPrefab;
+
+    [SerializeField]
+    private float xOffset;
 
     [SerializeField]
     private float curveHeight;
@@ -97,10 +103,13 @@ public class UIBattle : UIBase
     private void EventTakeDamage(params object[] args)
     {
         GameObject damageNum = Instantiate(damageNumPrefab, UI.transform);
-        damageNum.transform.SetParent(UI.transform);
         RectTransform damageRect = damageNum.GetComponent<RectTransform>();
-        float xOffset = UnityEngine.Random.Range(200, -200);
-        Vector2 startPoint = new Vector2(474, 31);
+        Text damageText = damageNum.GetComponentInChildren<Text>();
+        damageText.text = args[1].ToString();
+        int direction = UnityEngine.Random.Range(0, 2);
+        if (direction == 0)
+            xOffset *= -1;
+        Vector2 startPoint = (Vector2)args[0];
         Vector2 endPoint = new Vector2(startPoint.x + xOffset, -540);
         Vector2 midPoint = new Vector2(startPoint.x + xOffset / 2, startPoint.y + curveHeight);
         Vector2 endScale = new Vector2(0.5f, 0.5f);

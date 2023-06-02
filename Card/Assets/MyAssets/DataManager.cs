@@ -69,7 +69,7 @@ public class DataManager : Singleton<DataManager>
             playerData.MaxActionPoint = int.Parse(row[3]);
             playerData.CurrentHealth = playerData.MaxActionPoint;
             playerData.CurrentActionPoint = playerData.MaxActionPoint;
-            playerData.CharacterPos = new Vector2(-4.3f, -0.5f);
+            playerData.CharacterPos = new Vector2(-447f, 121f);
             PlayerList.Add(playerData.CharacterID, playerData);
         }
         #endregion
@@ -85,7 +85,7 @@ public class DataManager : Singleton<DataManager>
             enemyData.MinAttack = int.Parse(row[3]);
             enemyData.MaxAttack = int.Parse(row[4]);
             enemyData.CurrentHealth = enemyData.MaxHealth;
-            enemyData.CharacterPos = new Vector2(4.25f, -0.5f);
+            enemyData.CharacterPos = new Vector2(474f, 121f);
             EnemyList.Add(enemyData.CharacterID, enemyData);
         }
 
