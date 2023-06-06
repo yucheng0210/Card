@@ -234,5 +234,15 @@ public class CardItem
             DataManager.Instance.CardList[CardIndex].CardShield
         );
         gameObject.SetActive(false);
+        for (int i = 0; i < DataManager.Instance.CardList[CardIndex].CardEffectList.Count; i++)
+        {
+            string effectID;
+            int effectCount;
+            effectID = DataManager.Instance.CardList[CardIndex].CardEffectList[i].Item1;
+            effectCount = DataManager.Instance.CardList[CardIndex].CardEffectList[i].Item2;
+            BattleManager.Instance.CardEffectFactory
+                .CreateEffect(effectID, effectCount)
+                .ApplyEffect();
+        }
     }
 }

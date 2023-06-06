@@ -50,10 +50,25 @@ public class DataManager : Singleton<DataManager>
             cardData.CardImagePath = row[3];
             cardData.CardCost = int.Parse(row[4]);
             cardData.CardAttribute = row[5];
-            cardData.CardEffect = row[6];
+            cardData.CardSpecialEffect = row[6];
             cardData.CardDescription = row[7];
             cardData.CardAttack = int.Parse(row[8]);
             cardData.CardShield = int.Parse(row[9]);
+            if (row[10] != "")
+            {
+                cardData.CardEffectList = new List<(string, int)>();
+                Debug.Log(row[10]);
+                string[] cardEffects = row[10].Split(';');
+                for (int j = 0; j < cardEffects.Length; j++)
+                {
+                    string[] cardEffect = cardEffects[j].Split('=');
+                    string id;
+                    int count;
+                    id = cardEffect[0];
+                    if (int.TryParse(cardEffect[1], out count))
+                        cardData.CardEffectList.Add(new ValueTuple<string, int>(id, count));
+                }
+            }
             CardList.Add(cardData.CardID, cardData);
         }
         #endregion
@@ -135,8 +150,13 @@ public class DataManager : Singleton<DataManager>
         {
             cardData = CardList[1001];
             CardBag.Add(cardData);
-            cardData = CardList[2001];
+            cardData = CardList[1002];
             CardBag.Add(cardData);
         }
+        cardData = CardList[1003];
+        CardBag.Add(cardData);
+        CardBag.Add(cardData);
+        cardData = CardList[1004];
+        CardBag.Add(cardData);
     }
 }

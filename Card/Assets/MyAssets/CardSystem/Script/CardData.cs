@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,7 +25,7 @@ public class CardData
         }
     }
     public string CardAttribute { get; set; }
-    public string CardEffect { get; set; }
+    public string CardSpecialEffect { get; set; }
     public string CardDescription { get; set; }
     public int CardHeld { get; set; }
     public int CardAttack
@@ -47,5 +48,5 @@ public class CardData
                 cardShield = 0;
         }
     }
-    public string CardScript { get; set; }
+    public List<ValueTuple<string, int>> CardEffectList { get; set; }
 }

@@ -20,6 +20,7 @@ public class BattleManager : Singleton<BattleManager>
     public List<Vector2> CardPositionList { get; set; }
     public List<float> CardAngleList { get; set; }
     public bool IsDrag { get; set; }
+    public IEffectFactory CardEffectFactory { get; set; }
 
     protected override void Awake()
     {
@@ -27,12 +28,15 @@ public class BattleManager : Singleton<BattleManager>
         IsDrag = false;
         CardPositionList = new List<Vector2>();
         CardAngleList = new List<float>();
+        CardEffectFactory = new EffectFactory();
     }
 
     private void Update()
     {
         if (MyBattleType == BattleType.None)
             ChangeTurn(BattleType.Initial);
+        if (Input.GetKeyDown(KeyCode.Space))
+            Debug.Log(DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].Mana);
     }
 
     public void TakeDamage(CharacterData defender, int damage)

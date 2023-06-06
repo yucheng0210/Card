@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface IEffectFactory
 {
-    IEffect CreateEffect(string effectType);
+    IEffect CreateEffect(string effectType, int value);
 }
