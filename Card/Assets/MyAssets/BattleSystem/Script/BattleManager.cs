@@ -35,8 +35,6 @@ public class BattleManager : Singleton<BattleManager>
     {
         if (MyBattleType == BattleType.None)
             ChangeTurn(BattleType.Initial);
-        if (Input.GetKeyDown(KeyCode.Space))
-            Debug.Log(DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].Mana);
     }
 
     public void TakeDamage(CharacterData defender, int damage)

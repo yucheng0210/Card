@@ -224,7 +224,7 @@ public class CardItem
         DataManager.Instance.HandCard.Remove(this);
         EventManager.Instance.DispatchEvent(EventDefinition.eventUseCard, this);
         BattleManager.Instance.ConsumeActionPoint(cost);
-        if (isAttackCard)
+        if (isAttackCard && DataManager.Instance.CardList[CardIndex].CardAttack != 0)
             BattleManager.Instance.TakeDamage(
                 DataManager.Instance.EnemyList[1001],
                 DataManager.Instance.CardList[CardIndex].CardAttack
@@ -244,5 +244,6 @@ public class CardItem
                 .CreateEffect(effectID, effectCount)
                 .ApplyEffect();
         }
+        EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
 }

@@ -11,6 +11,9 @@ public class UIBattle : UIBase
     private Text actionPointText;
 
     [SerializeField]
+    private Text manaPointText;
+
+    [SerializeField]
     private Text shieldText;
 
     [SerializeField]
@@ -144,22 +147,20 @@ public class UIBattle : UIBase
 
     private void EventRefreshUI(params object[] args)
     {
+        int id = DataManager.Instance.PlayerID;
         actionPointText.text =
-            DataManager.Instance.PlayerList[
-                DataManager.Instance.PlayerID
-            ].CurrentActionPoint.ToString()
+            DataManager.Instance.PlayerList[id].CurrentActionPoint.ToString()
             + "/"
-            + DataManager.Instance.PlayerList[
-                DataManager.Instance.PlayerID
-            ].MaxActionPoint.ToString();
+            + DataManager.Instance.PlayerList[id].MaxActionPoint.ToString();
+        manaPointText.text = DataManager.Instance.PlayerList[id].Mana.ToString();
         healthSlider.value = (float)(
-            (float)DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].CurrentHealth
-            / DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].MaxHealth
+            (float)DataManager.Instance.PlayerList[id].CurrentHealth
+            / DataManager.Instance.PlayerList[id].MaxHealth
         );
         healthText.text =
-            DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].CurrentHealth.ToString()
+            DataManager.Instance.PlayerList[id].CurrentHealth.ToString()
             + "/"
-            + DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].MaxHealth.ToString();
+            + DataManager.Instance.PlayerList[id].MaxHealth.ToString();
         enemyHealthSlider.value = (float)(
             (float)DataManager.Instance.EnemyList[1001].CurrentHealth
             / DataManager.Instance.EnemyList[1001].MaxHealth
@@ -168,8 +169,6 @@ public class UIBattle : UIBase
             DataManager.Instance.EnemyList[1001].CurrentHealth.ToString()
             + "/"
             + DataManager.Instance.EnemyList[1001].MaxHealth.ToString();
-        shieldText.text = DataManager.Instance.PlayerList[
-            DataManager.Instance.PlayerID
-        ].CurrentShield.ToString();
+        shieldText.text = DataManager.Instance.PlayerList[id].CurrentShield.ToString();
     }
 }

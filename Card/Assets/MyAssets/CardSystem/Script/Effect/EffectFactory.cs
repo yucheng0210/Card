@@ -10,6 +10,8 @@ public class EffectFactory : IEffectFactory
         {
             case "IncreaseManaEffect":
                 return new IncreaseManaEffect(value);
+            case "FireBallEffect":
+                return new FireBallEffect();
             default:
                 return null;
         }

@@ -54,10 +54,9 @@ public class DataManager : Singleton<DataManager>
             cardData.CardDescription = row[7];
             cardData.CardAttack = int.Parse(row[8]);
             cardData.CardShield = int.Parse(row[9]);
+            cardData.CardEffectList = new List<(string, int)>();
             if (row[10] != "")
             {
-                cardData.CardEffectList = new List<(string, int)>();
-                Debug.Log(row[10]);
                 string[] cardEffects = row[10].Split(';');
                 for (int j = 0; j < cardEffects.Length; j++)
                 {
@@ -158,5 +157,6 @@ public class DataManager : Singleton<DataManager>
         CardBag.Add(cardData);
         cardData = CardList[1004];
         CardBag.Add(cardData);
+        DataManager.Instance.PlayerList[PlayerID].Mana = 0;
     }
 }

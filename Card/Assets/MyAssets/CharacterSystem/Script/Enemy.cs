@@ -21,6 +21,7 @@ public class Enemy : MonoBehaviour
         enemy = DataManager.Instance.EnemyList[enemyID];
         enemy.CurrentHealth = enemy.MaxHealth;
         skinMesh = GetComponentInChildren<SkinnedMeshRenderer>();
+        EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
     }
 
     public void OnSelect()
@@ -31,5 +32,11 @@ public class Enemy : MonoBehaviour
     public void OnUnSelect()
     {
         skinMesh.material.SetColor("_OtlColor", Color.black);
+    }
+
+    private void EventTakeDamage(params object[] args)
+    {
+        if (enemy.CurrentHealth <= 0)
+            Destroy(gameObject);
     }
 }

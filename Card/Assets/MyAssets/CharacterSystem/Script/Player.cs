@@ -13,5 +13,12 @@ public class Player : MonoBehaviour
         DataManager.Instance.PlayerList[currentPlayerID].CurrentHealth = DataManager
             .Instance
             .PlayerList[currentPlayerID].MaxHealth;
+        EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
+    }
+
+    private void EventTakeDamage(params object[] args)
+    {
+        if (DataManager.Instance.PlayerList[currentPlayerID].CurrentHealth <= 0)
+            Destroy(gameObject);
     }
 }

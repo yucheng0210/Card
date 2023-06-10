@@ -2,4 +2,4 @@
 1001,法爺至尊平A,攻擊,CardImage/NormalAttack,1,無,null,造成敵人6點傷害。,6,0,
 1002,防禦防禦防禦,防禦,CardImage/NormalShield,1,無,null,產生5點護盾。,0,5,
 1003,聚魔,增益,null,1,無,null,產生3點MP。,0,0,IncreaseManaEffect=3
-1004,火球,攻擊,null,0,火,null,造成敵人MP*2點，加上額外1點火屬性傷害，每5點MP額外傷害翻倍，有機會燃燒。,0,0,
+1004,火球,攻擊,null,0,火,null,造成敵人MP*2點，額外2點火屬性傷害，每5點MP額外傷害翻倍。,0,0,FireBallEffect=0

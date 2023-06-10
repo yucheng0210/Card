@@ -400,6 +400,7 @@
 "Assets/MyAssets/CardSystem/Script/CardItem.cs"
 "Assets/MyAssets/CardSystem/Script/Effect/Effect.cs"
 "Assets/MyAssets/CardSystem/Script/Effect/EffectFactory.cs"
+"Assets/MyAssets/CardSystem/Script/Effect/FireBallEffect.cs"
 "Assets/MyAssets/CardSystem/Script/Effect/IEffect.cs"
 "Assets/MyAssets/CardSystem/Script/Effect/IEffectFactory.cs"
 "Assets/MyAssets/CardSystem/Script/Effect/IncreaseManaEffect.cs"
