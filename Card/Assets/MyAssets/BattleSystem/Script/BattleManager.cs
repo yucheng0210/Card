@@ -86,6 +86,7 @@ public class BattleManager : Singleton<BattleManager>
                 EnemyTurn();
                 break;
             case BattleType.Win:
+                Win();
                 break;
             case BattleType.Loss:
                 break;
@@ -112,6 +113,8 @@ public class BattleManager : Singleton<BattleManager>
     {
         EventManager.Instance.DispatchEvent(EventDefinition.eventEnemyTurn);
     }
+
+    private void Win() { }
 
     public void Shuffle()
     {

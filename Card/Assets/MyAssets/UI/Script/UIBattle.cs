@@ -71,8 +71,9 @@ public class UIBattle : UIBase
         set { healthText = value; }
     }
 
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
         changeTurnButton.onClick.AddListener(ChangeTurn);
         EventManager.Instance.AddEventRegister(EventDefinition.eventRefreshUI, EventRefreshUI);
         EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);

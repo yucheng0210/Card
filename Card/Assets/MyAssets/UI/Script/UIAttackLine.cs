@@ -5,8 +5,9 @@ using UnityEngine.EventSystems;
 
 public class UIAttackLine : UIBase
 {
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
         EventManager.Instance.AddEventRegister(EventDefinition.eventAttackLine, EventAttackLine);
     }
 

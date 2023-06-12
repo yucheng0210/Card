@@ -55,6 +55,26 @@ public class UIManager : Singleton<UIManager>
             Destroy(canvasGroup.gameObject);
     }
 
+    public IEnumerator FadeOut(CanvasGroup canvasGroup, float fadeTime)
+    {
+        while (canvasGroup.alpha < 1)
+        {
+            canvasGroup.alpha += Time.unscaledDeltaTime / fadeTime;
+            yield return null;
+        }
+    }
+
+    public IEnumerator FadeIn(CanvasGroup canvasGroup, float fadeTime, bool canDestroy)
+    {
+        while (canvasGroup.alpha != 0)
+        {
+            canvasGroup.alpha -= Time.unscaledDeltaTime / fadeTime;
+            yield return null;
+        }
+        if (canDestroy)
+            Destroy(canvasGroup.gameObject);
+    }
+
     public Vector2 GetBezierCurve(Vector2 start, Vector2 mid, Vector2 end, float t)
     {
         return Mathf.Pow((1.0f - t), 2) * start

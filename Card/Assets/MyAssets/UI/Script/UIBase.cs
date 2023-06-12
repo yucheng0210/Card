@@ -11,7 +11,7 @@ public abstract class UIBase : MonoBehaviour
         get { return ui; }
     }
 
-    protected virtual void Awake()
+    protected virtual void Start()
     {
         UIManager.Instance.UIDict.Add(this.GetType().Name, this);
     }
