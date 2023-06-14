@@ -19,6 +19,7 @@ public class BattleManager : Singleton<BattleManager>
     public BattleType MyBattleType { get; set; }
     public List<Vector2> CardPositionList { get; set; }
     public List<float> CardAngleList { get; set; }
+    public List<int> LevelEnemyList { get; private set; }
     public bool IsDrag { get; set; }
     public IEffectFactory CardEffectFactory { get; set; }
 
@@ -29,6 +30,7 @@ public class BattleManager : Singleton<BattleManager>
         CardPositionList = new List<Vector2>();
         CardAngleList = new List<float>();
         CardEffectFactory = new EffectFactory();
+        LevelEnemyList = new List<int>();
     }
 
     private void Update()
@@ -93,11 +95,23 @@ public class BattleManager : Singleton<BattleManager>
         }
     }
 
+    public void RemoveEnemy(int id)
+    {
+        LevelEnemyList.Remove(id);
+        if (LevelEnemyList.Count <= 0)
+            ChangeTurn(BattleType.Win);
+    }
+
     private void Initial()
     {
         DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].CurrentActionPoint =
             DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].MaxActionPoint;
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
+        int id = DataManager.Instance.LevelID;
+        for (int i = 0; i < DataManager.Instance.LevelList[id].EnemyIDList.Count; i++)
+        {
+            LevelEnemyList.Add(DataManager.Instance.LevelList[id].LevelID);
+        }
         ChangeTurn(BattleType.Player);
     }
 
@@ -114,7 +128,10 @@ public class BattleManager : Singleton<BattleManager>
         EventManager.Instance.DispatchEvent(EventDefinition.eventEnemyTurn);
     }
 
-    private void Win() { }
+    private void Win()
+    {
+        EventManager.Instance.DispatchEvent(EventDefinition.eventBattleWin);
+    }
 
     public void Shuffle()
     {

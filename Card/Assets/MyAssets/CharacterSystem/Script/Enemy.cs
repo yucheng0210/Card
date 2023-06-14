@@ -37,6 +37,9 @@ public class Enemy : MonoBehaviour
     private void EventTakeDamage(params object[] args)
     {
         if (enemy.CurrentHealth <= 0)
+        {
+            BattleManager.Instance.RemoveEnemy(enemyID);
             Destroy(gameObject);
+        }
     }
 }

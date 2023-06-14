@@ -9,17 +9,16 @@ public class DataManager : Singleton<DataManager>
     private const string cardListPath = "Assets/MyAssets/Data/CARDLIST.csv";
     private const string playerListPath = "Assets/MyAssets/Data/PLAYERLIST.csv";
     private const string enemyListPath = "Assets/MyAssets/Data/ENEMYLIST.csv";
-    private const string effectListPath = "Assets/MyAssets/Data/EFFECTLIST.csv";
     private const string levelListPath = "Assets/MyAssets/Data/LEVELLIST.csv";
+    private const string itemListPath = "Assets/MyAssets/Data/ITEMLIST.csv";
     public Dictionary<int, CardData> CardList { get; set; }
     public List<CardData> CardBag { get; set; }
     public List<CardItem> UsedCardBag { get; set; }
     public List<CardItem> HandCard { get; set; }
     public Dictionary<int, PlayerData> PlayerList { get; set; }
     public Dictionary<int, EnemyData> EnemyList { get; set; }
-
-    //public Dictionary<int, Effect> EffectList { get; set; }
     public Dictionary<int, Level> LevelList { get; set; }
+    public Dictionary<int, Item> ItemList { get; set; }
     public int PlayerID { get; set; }
     public int LevelID { get; set; }
 
@@ -33,6 +32,7 @@ public class DataManager : Singleton<DataManager>
         EnemyList = new Dictionary<int, EnemyData>();
         LevelList = new Dictionary<int, Level>();
         UsedCardBag = new List<CardItem>();
+        ItemList = new Dictionary<int, Item>();
         LoadData();
         GameStart();
     }
@@ -110,19 +110,6 @@ public class DataManager : Singleton<DataManager>
         }
 
         #endregion
-        #region 效果列表
-        /* lineData = File.ReadAllLines(effectListPath);
-         for (int i = 1; i < lineData.Length; i++)
-         {
-             string[] row = lineData[i].Split(',');
-             Effect effect = new Effect();
-             effect.EffectID = int.Parse(row[0]);
-             effect.EffectName = row[1];
-             effect.EffectValue = int.Parse(row[2]);
-             effect.EffectTarget = int.Parse(row[3]);
-             EffectList.Add(effect.EffectID, effect);
-         }*/
-        #endregion
         #region 關卡列表
         lineData = File.ReadAllLines(levelListPath);
         for (int i = 1; i < lineData.Length; i++)
@@ -141,15 +128,40 @@ public class DataManager : Singleton<DataManager>
                 if (int.TryParse(enemyID[0], out id) && int.TryParse(enemyID[1], out count))
                     level.EnemyIDList.Add(new ValueTuple<int, int>(id, count));
             }
+            string[] rewardIDs = row[3].Split(';');
+            for (int j = 0; j < rewardIDs.Length; j++)
+            {
+                string[] rewardID = rewardIDs[j].Split('=');
+                int id,
+                    count;
+                level.RewardIDList = new List<(int, int)>();
+                if (int.TryParse(rewardID[0], out id) && int.TryParse(rewardID[1], out count))
+                    level.RewardIDList.Add(new ValueTuple<int, int>(id, count));
+            }
             LevelList.Add(level.LevelID, level);
+        }
+        #endregion
+        #region 物品列表
+        lineData = File.ReadAllLines(itemListPath);
+        for (int i = 1; i < lineData.Length; i++)
+        {
+            string[] row = lineData[i].Split(',');
+            Item item = new Item();
+            item.ItemID = int.Parse(row[0]);
+            item.ItemName = row[1];
+            item.ItemImagePath = row[2];
+            item.ItemInfo = row[3];
+            item.ItemBuyPrice = int.Parse(row[4]);
+            item.ItemSellPrice = int.Parse(row[5]);
+            item.ItemEffectName = row[6];
+            item.ItemRarity = row[7];
+            item.ItemType = row[8];
+            ItemList.Add(item.ItemID, item);
         }
         #endregion
     }
 
-    public void LoadLevel() 
-    { 
-        
-    }
+    public void LoadLevel() { }
 
     private void GameStart(params object[] args)
     {
