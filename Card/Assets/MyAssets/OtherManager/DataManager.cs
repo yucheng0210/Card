@@ -11,6 +11,7 @@ public class DataManager : Singleton<DataManager>
     private const string enemyListPath = "Assets/MyAssets/Data/ENEMYLIST.csv";
     private const string levelListPath = "Assets/MyAssets/Data/LEVELLIST.csv";
     private const string itemListPath = "Assets/MyAssets/Data/ITEMLIST.csv";
+    private string dialogDataListPath = "Assets/MyAssets/Data/DialogData";
     public Dictionary<int, CardData> CardList { get; set; }
     public List<CardData> CardBag { get; set; }
     public List<CardItem> UsedCardBag { get; set; }
@@ -19,6 +20,8 @@ public class DataManager : Singleton<DataManager>
     public Dictionary<int, EnemyData> EnemyList { get; set; }
     public Dictionary<int, Level> LevelList { get; set; }
     public Dictionary<int, Item> ItemList { get; set; }
+    public Dictionary<int, Item> Backpack { get; set; }
+    public Dictionary<string, List<Dialog>> DialogList { get; set; }
     public int PlayerID { get; set; }
     public int LevelID { get; set; }
 
@@ -33,6 +36,8 @@ public class DataManager : Singleton<DataManager>
         LevelList = new Dictionary<int, Level>();
         UsedCardBag = new List<CardItem>();
         ItemList = new Dictionary<int, Item>();
+        Backpack = new Dictionary<int, Item>();
+        DialogList = new Dictionary<string, List<Dialog>>();
         LoadData();
         GameStart();
     }
@@ -157,6 +162,26 @@ public class DataManager : Singleton<DataManager>
             item.ItemRarity = row[7];
             item.ItemType = row[8];
             ItemList.Add(item.ItemID, item);
+        }
+        #endregion
+        #region 對話列表
+        foreach (string file in Directory.GetFiles(dialogDataListPath, "*.csv"))
+        {
+            lineData = File.ReadAllLines(file);
+            List<Dialog> dialogs = new List<Dialog>();
+            for (int i = 1; i < lineData.Length; i++)
+            {
+                string[] row = lineData[i].Split(',');
+                Dialog dialog = new Dialog();
+                dialog.Branch = row[0];
+                dialog.Type = row[1];
+                dialog.TheName = row[2];
+                dialog.Order = row[3];
+                dialog.Content = row[4];
+                dialogs.Add(dialog);
+            }
+            string fileName = Path.GetFileNameWithoutExtension(file);
+            DialogList.Add(fileName, dialogs);
         }
         #endregion
     }

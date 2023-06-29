@@ -1,0 +1,9 @@
+﻿分支,類型,名稱,指令,內容
+DEFAULT,TALK,周書淳,0,好無聊啊。
+DEFAULT,TALK,NPC,0,你可以閉嘴嗎？
+DEFAULT,TALK,PLAYER,0,我今天心情不好可以聊聊嗎？
+DEFAULT,TALK,NPC,0,我今天心情很好，別煩我。
+DEFAULT,CHOICE,A,A,...............................................
+DEFAULT,CHOICE,B,B,去死吧！
+A,TALK,NPC,0,...............................................
+B,TALK,NPC,0,呵呵。

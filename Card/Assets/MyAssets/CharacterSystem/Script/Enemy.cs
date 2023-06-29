@@ -39,7 +39,7 @@ public class Enemy : MonoBehaviour
         if (enemy.CurrentHealth <= 0)
         {
             BattleManager.Instance.RemoveEnemy(enemyID);
-            Destroy(gameObject);
+            Destroy(gameObject, 1);
         }
     }
 }

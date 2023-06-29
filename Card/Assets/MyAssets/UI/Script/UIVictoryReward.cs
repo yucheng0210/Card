@@ -11,13 +11,35 @@ public class UIVictoryReward : UIBase
 
     [SerializeField]
     private GameObject rewardPrefab;
+
+    [SerializeField]
+    private Button skipButton;
     private Text rewardName,
         rewardCount;
+
+    private void Awake()
+    {
+        skipButton.onClick.AddListener(NextLevel);
+    }
 
     protected override void Start()
     {
         base.Start();
         EventManager.Instance.AddEventRegister(EventDefinition.eventBattleWin, EventBattleWin);
+    }
+
+    private void NextLevel()
+    {
+        UIManager.Instance.UIDict["UIBattle"].UI.SetActive(false);
+        UIManager.Instance.UIDict["UIMap"].UI.SetActive(true);
+    }
+
+    private void GetReward(int count)
+    {
+        count--;
+        if (count == 0)
+            NextLevel();
+        gameObject.SetActive(false);
     }
 
     private void EventBattleWin(params object[] args)
@@ -33,6 +55,12 @@ public class UIVictoryReward : UIBase
             rewardName.text = DataManager.Instance.ItemList[rewardID].ItemName;
             rewardCount.text =
                 "X" + DataManager.Instance.LevelList[id].RewardIDList[i].Item2.ToString();
+            DataManager.Instance.Backpack.Add(rewardID, DataManager.Instance.ItemList[rewardID]);
+            reward
+                .GetComponent<Button>()
+                .onClick.AddListener(
+                    () => GetReward(DataManager.Instance.LevelList[id].RewardIDList.Count)
+                );
         }
     }
 }

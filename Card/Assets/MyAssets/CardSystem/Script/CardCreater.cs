@@ -193,13 +193,9 @@ public class CardCreater : MonoBehaviour
             int enemyID = DataManager.Instance.LevelList[DataManager.Instance.LevelID].EnemyIDList[
                 i
             ].Item1;
-            int randomAttack = UnityEngine.Random.Range(
-                DataManager.Instance.EnemyList[enemyID].MinAttack,
-                DataManager.Instance.EnemyList[enemyID].MaxAttack + 1
-            );
             BattleManager.Instance.TakeDamage(
                 DataManager.Instance.PlayerList[DataManager.Instance.PlayerID],
-                randomAttack
+                DataManager.Instance.EnemyList[enemyID].CurrentAttack
             );
             yield return new WaitForSecondsRealtime(1);
         }

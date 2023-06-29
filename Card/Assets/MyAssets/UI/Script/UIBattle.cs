@@ -7,6 +7,13 @@ using DG.Tweening;
 
 public class UIBattle : UIBase
 {
+    [Header("玩家UI")]
+    [SerializeField]
+    private RectTransform playerHealthRect;
+
+    [SerializeField]
+    private RectTransform playerHurtRect;
+
     [SerializeField]
     private Text actionPointText;
 
@@ -23,10 +30,17 @@ public class UIBattle : UIBase
     private Text healthText;
 
     [SerializeField]
+    private Button changeTurnButton;
+
+    [Header("敵人UI")]
+    [SerializeField]
     private Slider enemyHealthSlider;
 
     [SerializeField]
     private Text enemyHealthText;
+
+    [SerializeField]
+    private Text enemyAttackIntentText;
 
     [SerializeField]
     private RectTransform enemyHealthRect;
@@ -34,15 +48,9 @@ public class UIBattle : UIBase
     [SerializeField]
     private RectTransform enemyHurtRect;
 
-    [SerializeField]
-    private Button changeTurnButton;
-
     [Header("傷害特效")]
     [SerializeField]
     private GameObject damageNumPrefab;
-
-    [SerializeField]
-    private GameObject hitPrefab;
 
     [SerializeField]
     private float xOffset;
@@ -82,9 +90,19 @@ public class UIBattle : UIBase
 
     private void Update()
     {
+        if (enemyHealthRect == null || playerHurtRect == null)
+            return;
         enemyHurtRect.anchorMax = new Vector2(
             Mathf.Lerp(enemyHurtRect.anchorMax.x, enemyHealthRect.anchorMax.x, Time.deltaTime * 5),
             enemyHurtRect.anchorMax.y
+        );
+        playerHurtRect.anchorMax = new Vector2(
+            Mathf.Lerp(
+                playerHurtRect.anchorMax.x,
+                playerHealthRect.anchorMax.x,
+                Time.deltaTime * 5
+            ),
+            playerHurtRect.anchorMax.y
         );
     }
 
@@ -144,6 +162,22 @@ public class UIBattle : UIBase
     {
         Text buttonText = changeTurnButton.GetComponentInChildren<Text>();
         buttonText.text = "結束回合";
+        for (
+            int i = 0;
+            i < DataManager.Instance.LevelList[DataManager.Instance.LevelID].EnemyIDList.Count;
+            i++
+        )
+        {
+            int enemyID = DataManager.Instance.LevelList[DataManager.Instance.LevelID].EnemyIDList[
+                i
+            ].Item1;
+            int randomAttack = UnityEngine.Random.Range(
+                DataManager.Instance.EnemyList[enemyID].MinAttack,
+                DataManager.Instance.EnemyList[enemyID].MaxAttack + 1
+            );
+            DataManager.Instance.EnemyList[enemyID].CurrentAttack = randomAttack;
+            enemyAttackIntentText.text = randomAttack.ToString();
+        }
     }
 
     private void EventRefreshUI(params object[] args)
