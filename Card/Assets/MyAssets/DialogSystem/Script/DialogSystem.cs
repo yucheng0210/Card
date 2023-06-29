@@ -226,7 +226,7 @@ public class DialogSystem : MonoBehaviour
             (
                 Input.GetKeyDown(KeyCode.KeypadEnter)
                 || Input.GetMouseButtonDown(0)
-                || Input.GetButtonDown("A")
+               // || Input.GetButtonDown("A")
             ) && !BlockContinue
         )
             continueBool = true;
