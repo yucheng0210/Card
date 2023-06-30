@@ -10,6 +10,7 @@ public class BattleManager : Singleton<BattleManager>
     {
         None,
         Initial,
+        Dialog,
         Player,
         Enemy,
         Win,
@@ -81,6 +82,9 @@ public class BattleManager : Singleton<BattleManager>
             case BattleType.Initial:
                 Initial();
                 break;
+            case BattleType.Dialog:
+                Dialog();
+                break;
             case BattleType.Player:
                 PlayerTurn();
                 break;
@@ -112,7 +116,12 @@ public class BattleManager : Singleton<BattleManager>
         {
             LevelEnemyList.Add(DataManager.Instance.LevelList[id].LevelID);
         }
-        ChangeTurn(BattleType.Player);
+        ChangeTurn(BattleType.Dialog);
+    }
+
+    private void Dialog()
+    {
+        EventManager.Instance.DispatchEvent(EventDefinition.eventDialog);
     }
 
     private void PlayerTurn()

@@ -9,4 +9,5 @@ public class Level
     public string LevelName { get; set; }
     public List<ValueTuple<int, int>> EnemyIDList { get; set; }
     public List<ValueTuple<int, int>> RewardIDList { get; set; }
+    public string dialogName { get; set; }
 }

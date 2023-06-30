@@ -12,4 +12,5 @@ public class EventDefinition
     public const string eventTakeDamage = "EVENT_TAKE_DAMAGE";
     public const string eventStartGame = "EVENT_START_GAME";
     public const string eventBattleWin = "EVENT_BATTLE_WIN";
+    public const string eventDialog = "EVENT_DIALOG";
 }

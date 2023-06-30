@@ -6,6 +6,9 @@ using UnityEngine.UI;
 public class DialogSystem : MonoBehaviour
 {
     [SerializeField]
+    private GameObject dialog;
+
+    [SerializeField]
     private Text textLabel;
 
     /*[SerializeField]
@@ -27,7 +30,7 @@ public class DialogSystem : MonoBehaviour
     private float currentTextWaitTime;
     private bool textFinished;
     private bool openMenu;
-    public static bool isTalking;
+    private bool isTalking;
 
     [SerializeField]
     private GameObject choiceButton;
@@ -54,19 +57,6 @@ public class DialogSystem : MonoBehaviour
     }
     public bool BlockContinue { get; set; }
 
-    private void OnEnable()
-    {
-        textFinished = false;
-        textLabel.text = "";
-        currentTextWaitTime = maxTextWaitTime;
-        continueBool = true;
-        index = 0;
-        isTalking = true;
-        textFinished = true;
-        SetCharacterInfo();
-        Initialize();
-    }
-
     private void Start()
     {
         /*EventManager.Instance.AddEventRegister(
@@ -77,17 +67,12 @@ public class DialogSystem : MonoBehaviour
             EventDefinition.eventQuestCompleted,
             EventQuestCompleted
         );*/
-    }
-
-    private void OnDisable()
-    {
-        isTalking = false;
-        DestroyChoice();
+        EventManager.Instance.AddEventRegister(EventDefinition.eventDialog, EventDialog);
     }
 
     private void Update()
     {
-        if (Time.timeScale == 0)
+        if (Time.timeScale == 0 || !isTalking)
             return;
         SetType();
         ContinueDialog();
@@ -109,7 +94,7 @@ public class DialogSystem : MonoBehaviour
             if (inSelection)
                 return;
             if (continueBool)
-                gameObject.SetActive(false);
+                CloseDialog();
             return;
         }
         if (DataManager.Instance.DialogList[dialogName][index].Branch != currentBranchID)
@@ -151,10 +136,18 @@ public class DialogSystem : MonoBehaviour
                 currentBranchID = DataManager.Instance.DialogList[dialogName][index].Order;
                 if (currentBranchID == "REWARDED")
                     //QuestManager.Instance.GetRewards(questID);
-                if (continueBool)
-                    gameObject.SetActive(false);
+                    if (continueBool)
+                        CloseDialog();
                 break;
         }
+    }
+
+    private void CloseDialog()
+    {
+        DestroyChoice();
+        dialog.SetActive(false);
+        isTalking = false;
+        BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Player);
     }
 
     private IEnumerator SetText()
@@ -208,7 +201,7 @@ public class DialogSystem : MonoBehaviour
     {
         if (buttonBranchID == "ACTIVATE")
             //QuestManager.Instance.ActivateQuest(questID);
-        currentBranchID = buttonBranchID;
+            currentBranchID = buttonBranchID;
         DestroyChoice();
         inSelection = false;
         continueBool = true;
@@ -224,9 +217,8 @@ public class DialogSystem : MonoBehaviour
     {
         if (
             (
-                Input.GetKeyDown(KeyCode.KeypadEnter)
-                || Input.GetMouseButtonDown(0)
-               // || Input.GetButtonDown("A")
+                Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetMouseButtonDown(0)
+            // || Input.GetButtonDown("A")
             ) && !BlockContinue
         )
             continueBool = true;
@@ -240,5 +232,19 @@ public class DialogSystem : MonoBehaviour
     private void EventQuestCompleted(params object[] args)
     {
         currentBranchID = "COMPLETED";
+    }
+
+    private void EventDialog(params object[] args)
+    {
+        textFinished = false;
+        textLabel.text = "";
+        currentTextWaitTime = maxTextWaitTime;
+        continueBool = true;
+        index = 0;
+        textFinished = true;
+        SetCharacterInfo();
+        Initialize();
+        dialog.SetActive(true);
+        isTalking = true;
     }
 }

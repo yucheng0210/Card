@@ -3976,6 +3976,10 @@ PrefabInstance:
       value: 0.000015258789
       objectReference: {fileID: 0}
     - target: {fileID: 6263267822707516963, guid: 14674524c0a3f0240a5d13c4d347ef55, type: 3}
+      propertyPath: dialog
+      value: 
+      objectReference: {fileID: 1977227239}
+    - target: {fileID: 6263267822707516963, guid: 14674524c0a3f0240a5d13c4d347ef55, type: 3}
       propertyPath: dialogName
       value: CHAPTER0_1
       objectReference: {fileID: 0}
@@ -3989,7 +3993,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8601234739825376854, guid: 14674524c0a3f0240a5d13c4d347ef55, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8601234740617411116, guid: 14674524c0a3f0240a5d13c4d347ef55, type: 3}
       propertyPath: m_FontData.m_Font
@@ -4101,7 +4105,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8601234741132718550, guid: 14674524c0a3f0240a5d13c4d347ef55, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8729052446690367520, guid: 14674524c0a3f0240a5d13c4d347ef55, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -5456,6 +5460,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1973744173}
   m_CullTransparentMesh: 1
+--- !u!1 &1977227239 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8601234739825376854, guid: 14674524c0a3f0240a5d13c4d347ef55, type: 3}
+  m_PrefabInstance: {fileID: 1365617749}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2008770233
 GameObject:
   m_ObjectHideFlags: 0
