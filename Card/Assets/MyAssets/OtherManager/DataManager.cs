@@ -143,6 +143,17 @@ public class DataManager : Singleton<DataManager>
                 if (int.TryParse(rewardID[0], out id) && int.TryParse(rewardID[1], out count))
                     level.RewardIDList.Add(new ValueTuple<int, int>(id, count));
             }
+            string[] cardIDLists = row[3].Split(';');
+            for (int j = 0; j < cardIDLists.Length; j++)
+            {
+                string[] cardID = cardIDLists[j].Split('=');
+                int id,
+                    count;
+                level.CardIDList = new List<(int, int)>();
+                if (int.TryParse(cardID[0], out id) && int.TryParse(cardID[1], out count))
+                    level.CardIDList.Add(new ValueTuple<int, int>(id, count));
+            }
+            level.dialogName = row[5];
             LevelList.Add(level.LevelID, level);
         }
         #endregion

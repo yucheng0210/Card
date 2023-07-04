@@ -12,6 +12,7 @@ public class BattleManager : Singleton<BattleManager>
         Initial,
         Dialog,
         Player,
+        Attack,
         Enemy,
         Win,
         Loss
@@ -159,6 +160,5 @@ public class BattleManager : Singleton<BattleManager>
         {
             DataManager.Instance.HandCard.Add(cardItems[i]);
         }
-        DataManager.Instance.CardBag.RemoveRange(0, drawCardCount);
     }
 }

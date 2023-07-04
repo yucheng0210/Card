@@ -30,6 +30,12 @@ public class UIBattle : UIBase
     private Text healthText;
 
     [SerializeField]
+    private Text cardBagCountText;
+
+    [SerializeField]
+    private Text usedCardBagCountText;
+
+    [SerializeField]
     private Button changeTurnButton;
 
     [Header("敵人UI")]
@@ -114,11 +120,14 @@ public class UIBattle : UIBase
 
     public void ChangeTurn()
     {
+        if (BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack)
+            return;
         Text buttonText = changeTurnButton.GetComponentInChildren<Text>();
-        if (BattleManager.Instance.MyBattleType == BattleManager.BattleType.Player)
+        if (BattleManager.Instance.MyBattleType == BattleManager.BattleType.Attack)
         {
             buttonText.text = "敵方回合";
             BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Enemy);
+            EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
         }
     }
 
@@ -205,5 +214,7 @@ public class UIBattle : UIBase
             + "/"
             + DataManager.Instance.EnemyList[1001].MaxHealth.ToString();
         shieldText.text = DataManager.Instance.PlayerList[id].CurrentShield.ToString();
+        cardBagCountText.text = DataManager.Instance.CardBag.Count.ToString();
+        usedCardBagCountText.text = DataManager.Instance.UsedCardBag.Count.ToString();
     }
 }

@@ -3,3 +3,4 @@
 1002,防禦防禦防禦,防禦,CardImage/NormalShield,1,無,null,產生5點護盾。,0,5,
 1003,聚魔,增益,null,1,無,null,產生3點MP。,0,0,IncreaseManaEffect=3
 1004,火球,攻擊,null,0,火,null,造成敵人MP*2點，額外2點火屬性傷害，每5點MP額外傷害翻倍。,0,0,FireBallEffect=0
+1005,湧泉,能力,null,1,無,null,每回合生成兩點魔力。,0,0,

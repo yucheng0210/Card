@@ -30,6 +30,9 @@ public class CardItem
     private Image cardImage;
 
     [SerializeField]
+    private GameObject collision;
+
+    [SerializeField]
     private float onPointerEnterUp;
 
     [SerializeField]
@@ -46,6 +49,11 @@ public class CardItem
     private bool isAttackCard;
     private Enemy enemy;
     private int cost;
+    public GameObject Collision
+    {
+        get { return collision; }
+        set { collision = value; }
+    }
     public Text CardName
     {
         get { return cardName; }

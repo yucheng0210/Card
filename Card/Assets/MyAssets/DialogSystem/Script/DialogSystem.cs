@@ -67,6 +67,7 @@ public class DialogSystem : MonoBehaviour
             EventDefinition.eventQuestCompleted,
             EventQuestCompleted
         );*/
+        dialogName = DataManager.Instance.LevelList[DataManager.Instance.LevelID].dialogName;
         EventManager.Instance.AddEventRegister(EventDefinition.eventDialog, EventDialog);
     }
 
