@@ -2378,7 +2378,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &771160225
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2398,7 +2398,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1200, y: 1000}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &771160226
@@ -3554,13 +3554,14 @@ GameObject:
   - component: {fileID: 941450818}
   - component: {fileID: 941450817}
   - component: {fileID: 941450819}
+  - component: {fileID: 941450820}
   m_Layer: 5
   m_Name: VictoryReward
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &941450816
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3644,6 +3645,23 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 17
   m_TargetDisplay: 0
+--- !u!114 &941450820
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 941450815}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 0
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!1 &957118023
 GameObject:
   m_ObjectHideFlags: 0
@@ -5627,6 +5645,9 @@ MonoBehaviour:
   rewardGroupTrans: {fileID: 1764554846}
   rewardPrefab: {fileID: 1345386215471289017, guid: 366c543d4cd540b4e876bd466b93d823, type: 3}
   skipButton: {fileID: 144148504}
+  cardPrefab: {fileID: 5759197841695073801, guid: ce55cc0c320fb8b42bcd672b842e0b90, type: 3}
+  cardRewardMenu: {fileID: 771160224}
+  cardRewardGroupTrans: {fileID: 758109998}
 --- !u!114 &1642177155
 MonoBehaviour:
   m_ObjectHideFlags: 0

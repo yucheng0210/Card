@@ -49,4 +49,5 @@ public class CardData
         }
     }
     public List<ValueTuple<string, int>> CardEffectList { get; set; }
+    public string CardRarity { get; set; }
 }

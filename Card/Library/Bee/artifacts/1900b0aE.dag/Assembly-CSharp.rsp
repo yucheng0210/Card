@@ -400,7 +400,7 @@
 "Assets/MyAssets/DialogSystem/Script/TalkButton.cs"
 "Assets/MyAssets/EventManageSystem/Script/EventDefinition.cs"
 "Assets/MyAssets/EventManageSystem/Script/EventManager.cs"
-"Assets/MyAssets/InventorySystem/Item.cs"
+"Assets/MyAssets/InventorySystem/Script/Item.cs"
 "Assets/MyAssets/OtherManager/DataManager.cs"
 "Assets/MyAssets/OtherManager/GameManager.cs"
 "Assets/MyAssets/SceneSystem/Script/SceneController.cs"

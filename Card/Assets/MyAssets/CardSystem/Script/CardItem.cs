@@ -43,6 +43,9 @@ public class CardItem
 
     [SerializeField]
     private float moveTime;
+
+    [SerializeField]
+    private bool cantMove;
     private RectTransform cardRectTransform;
     private CardItem rightCard,
         leftCard;
@@ -80,7 +83,7 @@ public class CardItem
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (BattleManager.Instance.IsDrag)
+        if (BattleManager.Instance.IsDrag || cantMove)
             return;
         index = transform.GetSiblingIndex();
         cost = DataManager.Instance.CardList[CardIndex].CardCost;
@@ -118,7 +121,7 @@ public class CardItem
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        if (BattleManager.Instance.IsDrag && !isAttackCard)
+        if (BattleManager.Instance.IsDrag && !isAttackCard || cantMove)
             return;
         transform.DOScale(1.5f, moveTime);
         transform.DORotateQuaternion(
@@ -145,11 +148,15 @@ public class CardItem
 
     public void OnPointerDown(PointerEventData eventData)
     {
+        if (cantMove)
+            return;
         isAttackCard = DataManager.Instance.CardList[CardIndex].CardType == "攻擊" ? true : false;
     }
 
     public void OnDrag(PointerEventData eventData)
     {
+        if (cantMove)
+            return;
         BattleManager.Instance.IsDrag = true;
         Cursor.visible = false;
         Vector2 dragPosition;
@@ -178,6 +185,8 @@ public class CardItem
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        if (cantMove)
+            return;
         BattleManager.Instance.IsDrag = false;
         Cursor.visible = true;
         if (isAttackCard)
