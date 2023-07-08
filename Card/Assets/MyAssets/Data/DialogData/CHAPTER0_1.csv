@@ -7,3 +7,7 @@ DEFAULT,TALK,???,0,.............................................................
 DEFAULT,TALK,???,0,還是想不起來。
 DEFAULT,TALK,???,0,不管怎樣，先四處探索吧，說不定會有其他發現。
 DEFAULT,TALK,,0,女孩深深吸了口氣，開始四處探索
+DEFAULT,CHOICE,,22,向前走
+DEFAULT,CLOSE,,,
+22,CHOICE,,32,向前走
+22,CHOICE,,21,向右走

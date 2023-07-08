@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,7 +10,9 @@ public class BattleManager : Singleton<BattleManager>
     public enum BattleType
     {
         None,
-        Initial,
+        ExploreInitial,
+        Explore,
+        BattleInitial,
         Dialog,
         Player,
         Attack,
@@ -24,6 +27,7 @@ public class BattleManager : Singleton<BattleManager>
     public List<int> LevelEnemyList { get; private set; }
     public bool IsDrag { get; set; }
     public IEffectFactory CardEffectFactory { get; set; }
+    public string CurrentLocationID { get; set; }
 
     protected override void Awake()
     {
@@ -38,7 +42,7 @@ public class BattleManager : Singleton<BattleManager>
     private void Update()
     {
         if (MyBattleType == BattleType.None)
-            ChangeTurn(BattleType.Initial);
+            ChangeTurn(BattleType.BattleInitial);
     }
 
     public void TakeDamage(CharacterData defender, int damage)
@@ -80,7 +84,13 @@ public class BattleManager : Singleton<BattleManager>
         {
             case BattleType.None:
                 break;
-            case BattleType.Initial:
+            case BattleType.ExploreInitial:
+                ExploreInitial();
+                break;
+            case BattleType.Explore:
+                Explore();
+                break;
+            case BattleType.BattleInitial:
                 Initial();
                 break;
             case BattleType.Dialog:
@@ -118,6 +128,40 @@ public class BattleManager : Singleton<BattleManager>
             LevelEnemyList.Add(DataManager.Instance.LevelList[id].LevelID);
         }
         ChangeTurn(BattleType.Dialog);
+    }
+
+    private void ExploreInitial()
+    {
+        int levelID = DataManager.Instance.LevelID;
+        for (int i = 0; i < DataManager.Instance.LevelList[levelID].LocationList.Count; i++)
+        {
+            if (DataManager.Instance.LevelList[levelID].LocationList.ElementAt(i).Value == "START")
+                CurrentLocationID = DataManager.Instance.LevelList[levelID].LocationList
+                    .ElementAt(i)
+                    .Key;
+        }
+        ChangeTurn(BattleType.Explore);
+    }
+
+    private void Explore()
+    {
+        switch (
+            DataManager.Instance.LevelList[DataManager.Instance.LevelID].LocationList[
+                CurrentLocationID
+            ]
+        )
+        {
+            case "START":
+                break;
+            case "RANDOM":
+                break;
+            case "ENEMY":
+                break;
+            case "RECOVERY":
+                break;
+            case "BOSS":
+                break;
+        }
     }
 
     private void Dialog()

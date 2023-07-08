@@ -145,7 +145,15 @@ public class DataManager : Singleton<DataManager>
                     level.RewardIDList.Add(new ValueTuple<int, int>(id, count));
             }
             level.DialogName = row[4];
-
+            string[] locationIDs = row[5].Split(';');
+            for (int j = 0; j < locationIDs.Length; j++)
+            {
+                string[] locationID = locationIDs[j].Split('=');
+                string id = locationID[0];
+                string count = locationID[1];
+                level.LocationList = new Dictionary<string, string>();
+                level.LocationList.Add(id, count);
+            }
             LevelList.Add(level.LevelID, level);
         }
         #endregion

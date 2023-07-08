@@ -135,10 +135,14 @@ public class DialogSystem : MonoBehaviour
                 break;
             case "CALL":
                 currentBranchID = DataManager.Instance.DialogList[dialogName][index].Order;
-                if (currentBranchID == "REWARDED")
-                    //QuestManager.Instance.GetRewards(questID);
-                    if (continueBool)
-                        CloseDialog();
+                //if (currentBranchID == "REWARDED")
+                //QuestManager.Instance.GetRewards(questID);
+                if (continueBool)
+                    CloseDialog();
+                break;
+            case "CLOSE":
+            if (continueBool)
+                CloseDialog();
                 break;
         }
     }
@@ -189,20 +193,17 @@ public class DialogSystem : MonoBehaviour
         choice.GetComponentInChildren<Text>().text = DataManager.Instance.DialogList[dialogName][
             index
         ].Content;
-        choice
-            .GetComponent<Button>()
-            .onClick.AddListener(() =>
-            {
-                GetBranchID(buttonBranchID);
-            });
+        choice.GetComponent<Button>().onClick.AddListener(() => GetBranchID(buttonBranchID));
         index++;
     }
 
     private void GetBranchID(string buttonBranchID)
     {
-        if (buttonBranchID == "ACTIVATE")
-            //QuestManager.Instance.ActivateQuest(questID);
-            currentBranchID = buttonBranchID;
+        //if (buttonBranchID == "ACTIVATE")
+        //QuestManager.Instance.ActivateQuest(questID);
+        if (BattleManager.Instance.MyBattleType == BattleManager.BattleType.Explore)
+            BattleManager.Instance.CurrentLocationID = buttonBranchID;
+        currentBranchID = buttonBranchID;
         DestroyChoice();
         inSelection = false;
         continueBool = true;

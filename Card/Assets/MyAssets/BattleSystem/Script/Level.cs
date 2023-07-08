@@ -10,5 +10,5 @@ public class Level
     public List<ValueTuple<int, int>> EnemyIDList { get; set; }
     public List<ValueTuple<int, int>> RewardIDList { get; set; }
     public string DialogName { get; set; }
-    public List<ValueTuple<int, int>> LocationList { get; set; }
+    public Dictionary<string, string> LocationList { get; set; }
 }

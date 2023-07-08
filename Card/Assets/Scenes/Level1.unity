@@ -2739,7 +2739,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 0}
   m_FillRect: {fileID: 1307254987}
   m_HandleRect: {fileID: 0}
@@ -4005,7 +4005,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 0}
   m_FillRect: {fileID: 1900164673}
   m_HandleRect: {fileID: 0}
@@ -5062,11 +5062,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8729052446690367520, guid: 14674524c0a3f0240a5d13c4d347ef55, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 480.52
+      value: 591
       objectReference: {fileID: 0}
     - target: {fileID: 8729052446690367520, guid: 14674524c0a3f0240a5d13c4d347ef55, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 120.51001
+      value: 85
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 14674524c0a3f0240a5d13c4d347ef55, type: 3}
