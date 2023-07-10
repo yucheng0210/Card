@@ -26,7 +26,6 @@ public class BattleManager : Singleton<BattleManager>
     public List<float> CardAngleList { get; set; }
     public List<int> LevelEnemyList { get; private set; }
     public bool IsDrag { get; set; }
-    public IEffectFactory CardEffectFactory { get; set; }
     public string CurrentLocationID { get; set; }
 
     protected override void Awake()
@@ -35,14 +34,13 @@ public class BattleManager : Singleton<BattleManager>
         IsDrag = false;
         CardPositionList = new List<Vector2>();
         CardAngleList = new List<float>();
-        CardEffectFactory = new EffectFactory();
         LevelEnemyList = new List<int>();
     }
 
     private void Update()
     {
         if (MyBattleType == BattleType.None)
-            ChangeTurn(BattleType.BattleInitial);
+            ChangeTurn(BattleType.ExploreInitial);
     }
 
     public void TakeDamage(CharacterData defender, int damage)
@@ -91,7 +89,7 @@ public class BattleManager : Singleton<BattleManager>
                 Explore();
                 break;
             case BattleType.BattleInitial:
-                Initial();
+                BattleInitial();
                 break;
             case BattleType.Dialog:
                 Dialog();
@@ -117,7 +115,7 @@ public class BattleManager : Singleton<BattleManager>
             ChangeTurn(BattleType.Win);
     }
 
-    private void Initial()
+    private void BattleInitial()
     {
         DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].CurrentActionPoint =
             DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].MaxActionPoint;

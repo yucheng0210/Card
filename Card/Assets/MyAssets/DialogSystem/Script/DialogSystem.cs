@@ -152,7 +152,7 @@ public class DialogSystem : MonoBehaviour
         DestroyChoice();
         dialog.SetActive(false);
         isTalking = false;
-        BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Player);
+        //BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Player);
     }
 
     private IEnumerator SetText()

@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface IEffect
 {
-    void ApplyEffect();
+    void ApplyEffect(int value, int target);
 }

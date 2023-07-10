@@ -4,15 +4,8 @@ using UnityEngine;
 
 public class IncreaseManaEffect : IEffect
 {
-    private int value;
-
-    public IncreaseManaEffect(int value)
+    public void ApplyEffect(int value, int target)
     {
-        this.value = value;
-    }
-
-    public void ApplyEffect()
-    {
-        DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].Mana += value;
+        DataManager.Instance.PlayerList[target].Mana += value;
     }
 }

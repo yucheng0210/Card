@@ -8,6 +8,10 @@ public class Enemy : MonoBehaviour
     private int enemyID;
     private EnemyData enemy;
     private SkinnedMeshRenderer skinMesh;
+    public int EnemyID
+    {
+        get { return enemyID; }
+    }
 
     public enum AttackType
     {

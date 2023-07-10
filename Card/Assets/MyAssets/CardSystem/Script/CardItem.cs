@@ -205,7 +205,7 @@ public class CardItem
             && DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].CurrentActionPoint
                 >= cost
         )
-            UseCard();
+            UseCard(DataManager.Instance.PlayerID);
         else
         {
             cardRectTransform.anchoredPosition = BattleManager.Instance.CardPositionList[index];
@@ -228,14 +228,14 @@ public class CardItem
             )
             {
                 enemy.OnUnSelect();
-                UseCard();
+                UseCard(enemy.EnemyID);
             }
         }
         else if (enemy != null)
             enemy.OnUnSelect();
     }
 
-    private void UseCard()
+    private void UseCard(int id)
     {
         cardRectTransform.DOScale(1.5f, 0);
         DataManager.Instance.HandCard.Remove(this);
@@ -257,9 +257,7 @@ public class CardItem
             int effectCount;
             effectID = DataManager.Instance.CardList[CardIndex].CardEffectList[i].Item1;
             effectCount = DataManager.Instance.CardList[CardIndex].CardEffectList[i].Item2;
-            BattleManager.Instance.CardEffectFactory
-                .CreateEffect(effectID, effectCount)
-                .ApplyEffect();
+            EffectFactory.Instance.CreateEffect(effectID).ApplyEffect(effectCount, id);
         }
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }

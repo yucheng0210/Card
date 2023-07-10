@@ -2,14 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EffectFactory : IEffectFactory
+public class EffectFactory : Singleton<EffectFactory>
 {
-    public IEffect CreateEffect(string effectType, int value)
+    public IEffect CreateEffect(string effectType)
     {
         switch (effectType)
         {
             case "IncreaseManaEffect":
-                return new IncreaseManaEffect(value);
+                return new IncreaseManaEffect();
             case "FireBallEffect":
                 return new FireBallEffect();
             default:
