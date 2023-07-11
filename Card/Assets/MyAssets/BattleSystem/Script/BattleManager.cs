@@ -125,7 +125,7 @@ public class BattleManager : Singleton<BattleManager>
         {
             LevelEnemyList.Add(DataManager.Instance.LevelList[id].LevelID);
         }
-        ChangeTurn(BattleType.Dialog);
+        ChangeTurn(BattleType.Player);
     }
 
     private void ExploreInitial()
@@ -133,7 +133,10 @@ public class BattleManager : Singleton<BattleManager>
         int levelID = DataManager.Instance.LevelID;
         for (int i = 0; i < DataManager.Instance.LevelList[levelID].LocationList.Count; i++)
         {
-            if (DataManager.Instance.LevelList[levelID].LocationList.ElementAt(i).Value == "START")
+            if (
+                DataManager.Instance.LevelList[levelID].LocationList.ElementAt(i).Value
+                == "ENTRANCE"
+            )
                 CurrentLocationID = DataManager.Instance.LevelList[levelID].LocationList
                     .ElementAt(i)
                     .Key;
@@ -143,23 +146,13 @@ public class BattleManager : Singleton<BattleManager>
 
     private void Explore()
     {
-        switch (
+        EventManager.Instance.DispatchEvent(
+            EventDefinition.eventExplore,
             DataManager.Instance.LevelList[DataManager.Instance.LevelID].LocationList[
                 CurrentLocationID
             ]
-        )
-        {
-            case "START":
-                break;
-            case "RANDOM":
-                break;
-            case "ENEMY":
-                break;
-            case "RECOVERY":
-                break;
-            case "BOSS":
-                break;
-        }
+        );
+        Debug.Log(CurrentLocationID);
     }
 
     private void Dialog()

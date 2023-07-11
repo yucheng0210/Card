@@ -140,10 +140,6 @@ public class DialogSystem : MonoBehaviour
                 if (continueBool)
                     CloseDialog();
                 break;
-            case "CLOSE":
-            if (continueBool)
-                CloseDialog();
-                break;
         }
     }
 
@@ -187,26 +183,34 @@ public class DialogSystem : MonoBehaviour
     {
         inSelection = true;
         string buttonBranchID = DataManager.Instance.DialogList[dialogName][index].Order;
+        string menuType = DataManager.Instance.DialogList[dialogName][index].TheName;
         GameObject choice;
         choice = Instantiate(choiceButton, choiceManager.transform.position, Quaternion.identity);
         choice.transform.SetParent(choiceManager.transform, false);
         choice.GetComponentInChildren<Text>().text = DataManager.Instance.DialogList[dialogName][
             index
         ].Content;
-        choice.GetComponent<Button>().onClick.AddListener(() => GetBranchID(buttonBranchID));
+        choice
+            .GetComponent<Button>()
+            .onClick.AddListener(() => GetBranchID(buttonBranchID, menuType));
         index++;
     }
 
-    private void GetBranchID(string buttonBranchID)
+    private void GetBranchID(string buttonBranchID, string menuType)
     {
         //if (buttonBranchID == "ACTIVATE")
         //QuestManager.Instance.ActivateQuest(questID);
-        if (BattleManager.Instance.MyBattleType == BattleManager.BattleType.Explore)
-            BattleManager.Instance.CurrentLocationID = buttonBranchID;
         currentBranchID = buttonBranchID;
         DestroyChoice();
         inSelection = false;
         continueBool = true;
+        if (menuType == "CLOSE")
+            CloseDialog();
+        if (BattleManager.Instance.MyBattleType == BattleManager.BattleType.Dialog)
+        {
+            BattleManager.Instance.CurrentLocationID = buttonBranchID;
+            BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Explore);
+        }
     }
 
     private void DestroyChoice()

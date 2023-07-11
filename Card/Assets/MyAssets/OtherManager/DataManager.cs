@@ -24,6 +24,7 @@ public class DataManager : Singleton<DataManager>
     public Dictionary<string, List<Dialog>> DialogList { get; set; }
     public int PlayerID { get; set; }
     public int LevelID { get; set; }
+    public int MoneyCount { get; set; }
 
     protected override void Awake()
     {
@@ -146,12 +147,12 @@ public class DataManager : Singleton<DataManager>
             }
             level.DialogName = row[4];
             string[] locationIDs = row[5].Split(';');
+            level.LocationList = new Dictionary<string, string>();
             for (int j = 0; j < locationIDs.Length; j++)
             {
                 string[] locationID = locationIDs[j].Split('=');
                 string id = locationID[0];
                 string count = locationID[1];
-                level.LocationList = new Dictionary<string, string>();
                 level.LocationList.Add(id, count);
             }
             LevelList.Add(level.LevelID, level);
@@ -201,6 +202,7 @@ public class DataManager : Singleton<DataManager>
 
     private void GameStart(params object[] args)
     {
+        MoneyCount = 0;
         PlayerID = 1001;
         LevelID = 1001;
         CardData cardData = new CardData();
