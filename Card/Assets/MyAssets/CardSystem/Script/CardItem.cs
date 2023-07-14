@@ -235,7 +235,7 @@ public class CardItem
             enemy.OnUnSelect();
     }
 
-    private void UseCard(int id)
+    private void UseCard(int target)
     {
         cardRectTransform.DOScale(1.5f, 0);
         DataManager.Instance.HandCard.Remove(this);
@@ -243,7 +243,7 @@ public class CardItem
         BattleManager.Instance.ConsumeActionPoint(cost);
         if (isAttackCard && DataManager.Instance.CardList[CardIndex].CardAttack != 0)
             BattleManager.Instance.TakeDamage(
-                DataManager.Instance.EnemyList[1001],
+                DataManager.Instance.EnemyList[target],
                 DataManager.Instance.CardList[CardIndex].CardAttack
             );
         BattleManager.Instance.GetShield(
@@ -253,11 +253,16 @@ public class CardItem
         gameObject.SetActive(false);
         for (int i = 0; i < DataManager.Instance.CardList[CardIndex].CardEffectList.Count; i++)
         {
+            if (DataManager.Instance.CardList[CardIndex].CardType == "能力")
+            {
+                BattleManager.Instance.CurrentAbilityList.Add(CardIndex, target);
+                return;
+            }
             string effectID;
             int effectCount;
             effectID = DataManager.Instance.CardList[CardIndex].CardEffectList[i].Item1;
             effectCount = DataManager.Instance.CardList[CardIndex].CardEffectList[i].Item2;
-            EffectFactory.Instance.CreateEffect(effectID).ApplyEffect(effectCount, id);
+            EffectFactory.Instance.CreateEffect(effectID).ApplyEffect(effectCount, target);
         }
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }

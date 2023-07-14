@@ -205,15 +205,9 @@ public class CardCreater : MonoBehaviour
             )
         );
         yield return new WaitForSecondsRealtime(1);
-        for (
-            int i = 0;
-            i < DataManager.Instance.LevelList[DataManager.Instance.LevelID].EnemyIDList.Count;
-            i++
-        )
+        for (int i = 0; i < BattleManager.Instance.CurrentEnemyList.Count; i++)
         {
-            int enemyID = DataManager.Instance.LevelList[DataManager.Instance.LevelID].EnemyIDList[
-                i
-            ].Item1;
+            int enemyID = BattleManager.Instance.CurrentEnemyList[i];
             BattleManager.Instance.TakeDamage(
                 DataManager.Instance.PlayerList[DataManager.Instance.PlayerID],
                 DataManager.Instance.EnemyList[enemyID].CurrentAttack
