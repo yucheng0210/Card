@@ -31,7 +31,14 @@ public class UIExplore : UIBase
     private void Random()
     {
         HideAllUI();
+        DataManager.Instance.MoneyCount += 100;
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Dialog);
+    }
+
+    private void Enemy()
+    {
+        BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Dialog);
+        UI.SetActive(false);
     }
 
     private void EventExplore(params object[] args)
@@ -45,6 +52,7 @@ public class UIExplore : UIBase
                 Random();
                 break;
             case "ENEMY":
+                Enemy();
                 break;
             case "RECOVERY":
                 break;

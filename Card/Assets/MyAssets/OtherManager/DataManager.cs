@@ -129,11 +129,8 @@ public class DataManager : Singleton<DataManager>
             for (int j = 0; j < enemyIDs.Length; j++)
             {
                 string[] enemyID = enemyIDs[j].Split('=');
-                int id,
-                    count;
-                level.EnemyIDList = new List<(int, int)>();
-                if (int.TryParse(enemyID[0], out id) && int.TryParse(enemyID[1], out count))
-                    level.EnemyIDList.Add(new ValueTuple<int, int>(id, count));
+                level.EnemyIDList = new Dictionary<int, string>();
+                level.EnemyIDList.Add(int.Parse(enemyID[0]), enemyID[1]);
             }
             string[] rewardIDs = row[3].Split(';');
             for (int j = 0; j < rewardIDs.Length; j++)
@@ -147,11 +144,11 @@ public class DataManager : Singleton<DataManager>
             }
             level.DialogName = row[4];
             string[] locationIDs = row[5].Split(';');
-            level.LocationList = new Dictionary<string, string>();
+            level.LocationList = new Dictionary<int, string>();
             for (int j = 0; j < locationIDs.Length; j++)
             {
                 string[] locationID = locationIDs[j].Split('=');
-                string id = locationID[0];
+                int id = int.Parse(locationID[0]);
                 string count = locationID[1];
                 level.LocationList.Add(id, count);
             }
@@ -217,6 +214,8 @@ public class DataManager : Singleton<DataManager>
         CardBag.Add(cardData);
         CardBag.Add(cardData);
         cardData = CardList[1004];
+        CardBag.Add(cardData);
+        cardData = CardList[1005];
         CardBag.Add(cardData);
         DataManager.Instance.PlayerList[PlayerID].Mana = 0;
     }

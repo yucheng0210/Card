@@ -7,7 +7,7 @@ using DG.Tweening;
 
 public class UIBattle : UIBase
 {
-    [Header("玩家UI")]
+    [Header("玩家")]
     [SerializeField]
     private RectTransform playerHealthRect;
 
@@ -38,21 +38,12 @@ public class UIBattle : UIBase
     [SerializeField]
     private Button changeTurnButton;
 
-    [Header("敵人UI")]
+    [Header("敵人")]
     [SerializeField]
-    private Slider enemyHealthSlider;
+    private Enemy enemyPrefab;
 
     [SerializeField]
-    private Text enemyHealthText;
-
-    [SerializeField]
-    private Text enemyAttackIntentText;
-
-    [SerializeField]
-    private RectTransform enemyHealthRect;
-
-    [SerializeField]
-    private RectTransform enemyHurtRect;
+    private Transform enemyTrans;
 
     [Header("傷害特效")]
     [SerializeField]
@@ -90,18 +81,23 @@ public class UIBattle : UIBase
         base.Start();
         changeTurnButton.onClick.AddListener(ChangeTurn);
         EventManager.Instance.AddEventRegister(EventDefinition.eventRefreshUI, EventRefreshUI);
-        EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
         EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
+        EventManager.Instance.AddEventRegister(
+            EventDefinition.eventBattleInitial,
+            EventBattleInitial
+        );
+        EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
     }
 
     private void Update()
     {
-        if (enemyHealthRect == null || playerHurtRect == null)
+        UpdateValue();
+    }
+
+    private void UpdateValue()
+    {
+        if (playerHurtRect == null)
             return;
-        enemyHurtRect.anchorMax = new Vector2(
-            Mathf.Lerp(enemyHurtRect.anchorMax.x, enemyHealthRect.anchorMax.x, Time.deltaTime * 5),
-            enemyHurtRect.anchorMax.y
-        );
         playerHurtRect.anchorMax = new Vector2(
             Mathf.Lerp(
                 playerHurtRect.anchorMax.x,
@@ -110,12 +106,6 @@ public class UIBattle : UIBase
             ),
             playerHurtRect.anchorMax.y
         );
-    }
-
-    public void ShowEnemyHealth(int maxHealth, int currentHealth)
-    {
-        enemyHealthSlider.value = (currentHealth / (float)maxHealth);
-        enemyHealthText.text = currentHealth.ToString() + "/" + maxHealth.ToString();
     }
 
     public void ChangeTurn()
@@ -129,6 +119,22 @@ public class UIBattle : UIBase
             BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Enemy);
             EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
         }
+    }
+
+    private void EventBattleInitial(params object[] args)
+    {
+        for (int i = 0; i < BattleManager.Instance.CurrentEnemyList.Count; i++)
+        {
+            Enemy enemy = Instantiate(enemyPrefab, enemyTrans);
+            enemy.EnemyID = BattleManager.Instance.CurrentEnemyList[i];
+        }
+        BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Player);
+    }
+
+    private void EventPlayerTurn(params object[] args)
+    {
+        Text buttonText = changeTurnButton.GetComponentInChildren<Text>();
+        buttonText.text = "結束回合";
     }
 
     private void EventTakeDamage(params object[] args)
@@ -167,28 +173,6 @@ public class UIBattle : UIBase
         );
     }
 
-    private void EventPlayerTurn(params object[] args)
-    {
-        Text buttonText = changeTurnButton.GetComponentInChildren<Text>();
-        buttonText.text = "結束回合";
-        for (
-            int i = 0;
-            i < DataManager.Instance.LevelList[DataManager.Instance.LevelID].EnemyIDList.Count;
-            i++
-        )
-        {
-            int enemyID = DataManager.Instance.LevelList[DataManager.Instance.LevelID].EnemyIDList[
-                i
-            ].Item1;
-            int randomAttack = UnityEngine.Random.Range(
-                DataManager.Instance.EnemyList[enemyID].MinAttack,
-                DataManager.Instance.EnemyList[enemyID].MaxAttack + 1
-            );
-            DataManager.Instance.EnemyList[enemyID].CurrentAttack = randomAttack;
-            enemyAttackIntentText.text = randomAttack.ToString();
-        }
-    }
-
     private void EventRefreshUI(params object[] args)
     {
         int id = DataManager.Instance.PlayerID;
@@ -205,14 +189,6 @@ public class UIBattle : UIBase
             DataManager.Instance.PlayerList[id].CurrentHealth.ToString()
             + "/"
             + DataManager.Instance.PlayerList[id].MaxHealth.ToString();
-        enemyHealthSlider.value = (float)(
-            (float)DataManager.Instance.EnemyList[1001].CurrentHealth
-            / DataManager.Instance.EnemyList[1001].MaxHealth
-        );
-        enemyHealthText.text =
-            DataManager.Instance.EnemyList[1001].CurrentHealth.ToString()
-            + "/"
-            + DataManager.Instance.EnemyList[1001].MaxHealth.ToString();
         shieldText.text = DataManager.Instance.PlayerList[id].CurrentShield.ToString();
         cardBagCountText.text = DataManager.Instance.CardBag.Count.ToString();
         usedCardBagCountText.text = DataManager.Instance.UsedCardBag.Count.ToString();
