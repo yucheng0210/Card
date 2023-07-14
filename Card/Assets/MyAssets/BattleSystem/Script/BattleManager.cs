@@ -18,15 +18,17 @@ public class BattleManager : Singleton<BattleManager>
         Attack,
         Enemy,
         Win,
+        Victory,
         Loss
     }
 
     public BattleType MyBattleType { get; set; }
     public List<Vector2> CardPositionList { get; set; }
     public List<float> CardAngleList { get; set; }
-    public List<int> LevelEnemyList { get; private set; }
+    public List<int> CurrentEnemyList { get; private set; }
+    public Dictionary<int, int> CurrentAbilityList { get; set; }
     public bool IsDrag { get; set; }
-    public string CurrentLocationID { get; set; }
+    public int CurrentLocationID { get; set; }
 
     protected override void Awake()
     {
@@ -34,7 +36,8 @@ public class BattleManager : Singleton<BattleManager>
         IsDrag = false;
         CardPositionList = new List<Vector2>();
         CardAngleList = new List<float>();
-        LevelEnemyList = new List<int>();
+        CurrentEnemyList = new List<int>();
+        CurrentAbilityList = new Dictionary<int, int>();
     }
 
     private void Update()
@@ -108,24 +111,27 @@ public class BattleManager : Singleton<BattleManager>
         }
     }
 
-    public void RemoveEnemy(int id)
+    public void RemoveEnemy(int id, bool isBoss)
     {
-        LevelEnemyList.Remove(id);
-        if (LevelEnemyList.Count <= 0)
+        CurrentEnemyList.Remove(id);
+        if (CurrentEnemyList.Count <= 0)
             ChangeTurn(BattleType.Win);
     }
 
     private void BattleInitial()
     {
+        CurrentEnemyList.Clear();
         DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].CurrentActionPoint =
             DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].MaxActionPoint;
-        EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
         int id = DataManager.Instance.LevelID;
-        for (int i = 0; i < DataManager.Instance.LevelList[id].EnemyIDList.Count; i++)
+        string[] enemyStr = DataManager.Instance.LevelList[id].EnemyIDList[CurrentLocationID].Split(
+            ','
+        );
+        for (int i = 0; i < enemyStr.Length; i++)
         {
-            LevelEnemyList.Add(DataManager.Instance.LevelList[id].LevelID);
+            CurrentEnemyList.Add(int.Parse(enemyStr[i]));
         }
-        ChangeTurn(BattleType.Player);
+        EventManager.Instance.DispatchEvent(EventDefinition.eventBattleInitial);
     }
 
     private void ExploreInitial()
@@ -164,6 +170,19 @@ public class BattleManager : Singleton<BattleManager>
     {
         DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].CurrentActionPoint =
             DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].MaxActionPoint;
+        for (int i = 0; i < CurrentAbilityList.Count; i++)
+        {
+            int id = CurrentAbilityList.ElementAt(i).Key;
+            int target = CurrentAbilityList.ElementAt(i).Value;
+            for (int j = 0; j < DataManager.Instance.CardList[id].CardEffectList.Count; j++)
+            {
+                string effectID;
+                int effectCount;
+                effectID = DataManager.Instance.CardList[id].CardEffectList[j].Item1;
+                effectCount = DataManager.Instance.CardList[id].CardEffectList[j].Item2;
+                EffectFactory.Instance.CreateEffect(effectID).ApplyEffect(effectCount, target);
+            }
+        }
         EventManager.Instance.DispatchEvent(EventDefinition.eventPlayerTurn);
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }

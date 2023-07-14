@@ -200,7 +200,13 @@ public class DialogSystem : MonoBehaviour
     {
         //if (buttonBranchID == "ACTIVATE")
         //QuestManager.Instance.ActivateQuest(questID);
-        currentBranchID = buttonBranchID;
+        if (buttonBranchID == "BATTLE")
+        {
+            currentBranchID += buttonBranchID;
+            BattleManager.Instance.ChangeTurn(BattleManager.BattleType.BattleInitial);
+        }
+        else
+            currentBranchID = buttonBranchID;
         DestroyChoice();
         inSelection = false;
         continueBool = true;
@@ -208,7 +214,7 @@ public class DialogSystem : MonoBehaviour
             CloseDialog();
         if (BattleManager.Instance.MyBattleType == BattleManager.BattleType.Dialog)
         {
-            BattleManager.Instance.CurrentLocationID = buttonBranchID;
+            BattleManager.Instance.CurrentLocationID = int.Parse(buttonBranchID);
             BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Explore);
         }
     }
