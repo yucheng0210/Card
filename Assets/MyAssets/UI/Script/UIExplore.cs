@@ -37,6 +37,26 @@ public class UIExplore : UIBase
 
     private void Enemy()
     {
+        HideAllUI();
+        BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Dialog);
+        UI.SetActive(false);
+    }
+
+    private void Recover()
+    {
+        HideAllUI();
+        int recoverCount = (int)(
+            DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].MaxHealth * 0.35f
+        );
+        DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].CurrentHealth +=
+            recoverCount;
+        ;
+        BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Dialog);
+    }
+
+    private void Boss()
+    {
+        HideAllUI();
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Dialog);
         UI.SetActive(false);
     }
@@ -55,8 +75,10 @@ public class UIExplore : UIBase
                 Enemy();
                 break;
             case "RECOVERY":
+                Recover();
                 break;
             case "BOSS":
+                Boss();
                 break;
         }
     }

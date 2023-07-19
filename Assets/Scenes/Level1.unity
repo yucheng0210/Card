@@ -1627,11 +1627,9 @@ MonoBehaviour:
   coolDown: 0.5
   cardXSpacing: 70
   cardYSpacing: 15
-  reduceValue: 5
   minCardAngle: 4
   moveTime: 0.5
   roundTip: {fileID: 286452091}
-  cardItemList: []
 --- !u!114 &403588570
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4933,6 +4931,7 @@ MonoBehaviour:
   changeTurnButton: {fileID: 703492576}
   enemyPrefab: {fileID: 6601281191731006363, guid: 9fb0e8dcac2809b4a98f1e96c21d7fd3, type: 3}
   enemyTrans: {fileID: 1793809485}
+  enemyDistance: {x: -300, y: 0}
   damageNumPrefab: {fileID: 544663525799068465, guid: b7cd9a2ef55cef54488dcd8bd9aa0488, type: 3}
   xOffset: 300
   curveHeight: 500
@@ -5632,7 +5631,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1793809484}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5641,7 +5640,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 458, y: -54}
+  m_AnchoredPosition: {x: 673, y: -54}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1868094711

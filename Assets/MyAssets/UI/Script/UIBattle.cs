@@ -45,6 +45,9 @@ public class UIBattle : UIBase
     [SerializeField]
     private Transform enemyTrans;
 
+    [SerializeField]
+    private Vector2 enemyDistance;
+
     [Header("傷害特效")]
     [SerializeField]
     private GameObject damageNumPrefab;
@@ -113,20 +116,28 @@ public class UIBattle : UIBase
         if (BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack)
             return;
         Text buttonText = changeTurnButton.GetComponentInChildren<Text>();
-        if (BattleManager.Instance.MyBattleType == BattleManager.BattleType.Attack)
-        {
-            buttonText.text = "敵方回合";
-            BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Enemy);
-            EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
-        }
+        buttonText.text = "敵方回合";
+        BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Enemy);
+        EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
 
     private void EventBattleInitial(params object[] args)
     {
+        StartCoroutine(CreateEnemy());
+    }
+
+    private IEnumerator CreateEnemy()
+    {
         for (int i = 0; i < BattleManager.Instance.CurrentEnemyList.Count; i++)
         {
             Enemy enemy = Instantiate(enemyPrefab, enemyTrans);
-            enemy.EnemyID = BattleManager.Instance.CurrentEnemyList[i];
+            enemy.GetComponent<RectTransform>().anchoredPosition += enemyDistance * i;
+            enemy.EnemyID = BattleManager.Instance.CurrentEnemyList[i].CharacterID;
+            enemy.EnemyLocation = i;
+            BattleManager.Instance.CurrentEnemyList[i].CurrentHealth = DataManager
+                .Instance
+                .EnemyList[enemy.EnemyID].MaxHealth;
+            yield return null;
         }
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Player);
     }

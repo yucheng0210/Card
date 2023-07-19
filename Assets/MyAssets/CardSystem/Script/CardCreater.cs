@@ -34,9 +34,6 @@ public class CardCreater : MonoBehaviour
     private float cardYSpacing;
 
     [SerializeField]
-    private float reduceValue;
-
-    [SerializeField]
     private float minCardAngle;
 
     [SerializeField]
@@ -45,12 +42,8 @@ public class CardCreater : MonoBehaviour
     [SerializeField]
     private GameObject roundTip;
 
-    [SerializeField]
-    private List<CardItem> cardItemList = new List<CardItem>();
-
     private void Start()
     {
-        CreateCard();
         //StartCoroutine(DrawCard());
         EventManager.Instance.AddEventRegister(
             EventDefinition.eventUseCard,
@@ -58,6 +51,11 @@ public class CardCreater : MonoBehaviour
         );
         EventManager.Instance.AddEventRegister(EventDefinition.eventEnemyTurn, EventEnemyTurn);
         EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
+        EventManager.Instance.AddEventRegister(EventDefinition.eventBattleWin, EventBattleWin);
+        EventManager.Instance.AddEventRegister(
+            EventDefinition.eventBattleInitial,
+            EventBattleInitial
+        );
     }
 
     private void CreateCard()
@@ -72,7 +70,7 @@ public class CardCreater : MonoBehaviour
             cardItem.CardDescription.text = cardBag[i].CardDescription;
             cardItem.CardCost.text = cardBag[i].CardCost.ToString();
             cardItem.gameObject.SetActive(false);
-            cardItemList.Add(cardItem);
+            BattleManager.Instance.CardItemList.Add(cardItem);
         }
     }
 
@@ -119,21 +117,7 @@ public class CardCreater : MonoBehaviour
 
         // 計算初始旋轉角度
         float startAngle = (drawCardCount / 2 - odd) * minCardAngle;
-        /*if (cardItemList.Count < drawCardCount)
-        {
-            for (int i = 0; i < DataManager.Instance.UsedCardBag.Count; i++)
-            {
-                cardItemList.Add(DataManager.Instance.UsedCardBag[i]);
-                int index = DataManager.Instance.UsedCardBag[i].CardIndex;
-                DataManager.Instance.CardBag.Add(DataManager.Instance.CardList[index]);
-            }
-            for (int i = 0; i < cardItemList.Count; i++)
-            {
-                cardItemList[i].transform.SetParent(transform);
-                cardItemList[i].GetComponent<RectTransform>().anchoredPosition = transform.position;
-            }
-            DataManager.Instance.UsedCardBag.Clear();
-        }*/
+
         // 根據抽卡數量將卡片添加到手牌中
         List<CardItem> handCard = DataManager.Instance.HandCard;
 
@@ -141,7 +125,7 @@ public class CardCreater : MonoBehaviour
         for (int i = 0; i < drawCardCount; i++)
         {
             yield return new WaitForSecondsRealtime(coolDown); // 等待冷卻時間
-            BattleManager.Instance.AddHandCard(1, cardItemList);
+            BattleManager.Instance.AddHandCard(1);
 
             handCard[i].transform.SetParent(handCardTrans); // 將卡片設定為手牌的子物件
             handCard[i].gameObject.SetActive(true); // 啟用卡片物件
@@ -165,21 +149,22 @@ public class CardCreater : MonoBehaviour
                     - (drawCardCount / 2 - odd <= i && odd == 0 ? 1 : 0)
                 ); // 更新下一張卡片的起始位置
             DataManager.Instance.CardBag.RemoveAt(0);
-            cardItemList.RemoveAt(0);
+            BattleManager.Instance.CardItemList.RemoveAt(0);
             EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
             if (DataManager.Instance.CardBag.Count == 0)
             {
                 for (int j = 0; j < DataManager.Instance.UsedCardBag.Count; j++)
                 {
-                    cardItemList.Add(DataManager.Instance.UsedCardBag[j]);
+                    BattleManager.Instance.CardItemList.Add(DataManager.Instance.UsedCardBag[j]);
                     int index = DataManager.Instance.UsedCardBag[j].CardIndex;
                     DataManager.Instance.CardBag.Add(DataManager.Instance.CardList[index]);
                 }
-                for (int j = 0; j < cardItemList.Count; j++)
+                for (int j = 0; j < BattleManager.Instance.CardItemList.Count; j++)
                 {
-                    cardItemList[j].transform.SetParent(transform);
-                    cardItemList[j].GetComponent<RectTransform>().anchoredPosition =
-                        transform.position;
+                    BattleManager.Instance.CardItemList[j].transform.SetParent(transform);
+                    BattleManager.Instance.CardItemList[j]
+                        .GetComponent<RectTransform>()
+                        .anchoredPosition = transform.position;
                 }
                 DataManager.Instance.UsedCardBag.Clear();
                 BattleManager.Instance.Shuffle();
@@ -207,10 +192,9 @@ public class CardCreater : MonoBehaviour
         yield return new WaitForSecondsRealtime(1);
         for (int i = 0; i < BattleManager.Instance.CurrentEnemyList.Count; i++)
         {
-            int enemyID = BattleManager.Instance.CurrentEnemyList[i];
             BattleManager.Instance.TakeDamage(
                 DataManager.Instance.PlayerList[DataManager.Instance.PlayerID],
-                DataManager.Instance.EnemyList[enemyID].CurrentAttack
+                BattleManager.Instance.CurrentEnemyList[i].CurrentAttack
             );
             yield return new WaitForSecondsRealtime(1);
         }
@@ -224,7 +208,6 @@ public class CardCreater : MonoBehaviour
         CardItem cardItem = (CardItem)args[0];
         DataManager.Instance.UsedCardBag.Add(cardItem);
         cardItem.transform.SetParent(usedCardTrans);
-        cardItemList.Remove(cardItem);
         List<CardItem> handCard = DataManager.Instance.HandCard;
         CalculatePositionAngle(handCard.Count);
         for (int i = 0; i < handCard.Count; i++)
@@ -239,6 +222,12 @@ public class CardCreater : MonoBehaviour
                     moveTime
                 );
         }
+    }
+
+    private void EventBattleInitial(params object[] args)
+    {
+        roundTip.GetComponentInChildren<Text>().text = "戰鬥開始";
+        CreateCard();
     }
 
     private void EventPlayerTurn(params object[] args)
@@ -267,5 +256,32 @@ public class CardCreater : MonoBehaviour
         Invoke("HideAllCards", moveTime);
         roundTip.GetComponentInChildren<Text>().text = "敵方回合";
         StartCoroutine(EnemyAttack());
+    }
+
+    private void EventBattleWin(params object[] args)
+    {
+        for (int i = 0; i < DataManager.Instance.HandCard.Count; i++)
+        {
+            BattleManager.Instance.CardItemList.Add(DataManager.Instance.HandCard[i]);
+            int index = DataManager.Instance.HandCard[i].CardIndex;
+            DataManager.Instance.CardBag.Add(DataManager.Instance.CardList[index]);
+        }
+        for (int j = 0; j < DataManager.Instance.UsedCardBag.Count; j++)
+        {
+            BattleManager.Instance.CardItemList.Add(DataManager.Instance.UsedCardBag[j]);
+            int index = DataManager.Instance.UsedCardBag[j].CardIndex;
+            DataManager.Instance.CardBag.Add(DataManager.Instance.CardList[index]);
+        }
+        for (int j = 0; j < BattleManager.Instance.CardItemList.Count; j++)
+        {
+            Destroy(BattleManager.Instance.CardItemList[j].gameObject);
+        }
+        BattleManager.Instance.CardAngleList.Clear();
+        BattleManager.Instance.CardPositionList.Clear();
+        BattleManager.Instance.CurrentEnemyList.Clear();
+        BattleManager.Instance.CurrentAbilityList.Clear();
+        DataManager.Instance.HandCard.Clear();
+        DataManager.Instance.UsedCardBag.Clear();
+        BattleManager.Instance.CardItemList.Clear();
     }
 }

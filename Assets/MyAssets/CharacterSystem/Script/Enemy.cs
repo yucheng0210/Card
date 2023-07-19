@@ -22,9 +22,9 @@ public class Enemy : MonoBehaviour
 
     [SerializeField]
     private RectTransform enemyHurtRect;
-    private EnemyData enemy;
     private SkinnedMeshRenderer skinMesh;
     public int EnemyID { get; set; }
+    public int EnemyLocation { get; set; }
 
     public enum AttackType
     {
@@ -36,15 +36,16 @@ public class Enemy : MonoBehaviour
     private void Awake()
     {
         skinMesh = GetComponentInChildren<SkinnedMeshRenderer>();
+        EventManager.Instance.AddEventRegister(EventDefinition.eventRefreshUI, EventRefreshUI);
         EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
         EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
-        EventManager.Instance.AddEventRegister(EventDefinition.eventRefreshUI, EventRefreshUI);
     }
 
-    private void Start()
+    private void OnDisable()
     {
-        enemy = DataManager.Instance.EnemyList[EnemyID];
-        enemy.CurrentHealth = enemy.MaxHealth;
+        EventManager.Instance.RemoveEventRegister(EventDefinition.eventRefreshUI, EventRefreshUI);
+        EventManager.Instance.RemoveEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
+        EventManager.Instance.RemoveEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
     }
 
     private void Update()
@@ -69,36 +70,32 @@ public class Enemy : MonoBehaviour
 
     private void EventTakeDamage(params object[] args)
     {
-        if (enemy.CurrentHealth <= 0)
+        if (BattleManager.Instance.CurrentEnemyList[EnemyLocation].CurrentHealth <= 0)
         {
-            BattleManager.Instance.RemoveEnemy(EnemyID, isBoss);
-            Destroy(gameObject, 1);
+            if (transform.parent.childCount == 1)
+                BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Win);
+            Destroy(gameObject);
         }
     }
 
     private void EventPlayerTurn(params object[] args)
     {
-        for (int i = 0; i < BattleManager.Instance.CurrentEnemyList.Count; i++)
-        {
-            int enemyID = BattleManager.Instance.CurrentEnemyList[i];
-            int randomAttack = UnityEngine.Random.Range(
-                DataManager.Instance.EnemyList[enemyID].MinAttack,
-                DataManager.Instance.EnemyList[enemyID].MaxAttack + 1
-            );
-            DataManager.Instance.EnemyList[enemyID].CurrentAttack = randomAttack;
-            enemyAttackIntentText.text = randomAttack.ToString();
-            Debug.Log(randomAttack);
-        }
+        int randomAttack = UnityEngine.Random.Range(
+            DataManager.Instance.EnemyList[EnemyID].MinAttack,
+            DataManager.Instance.EnemyList[EnemyID].MaxAttack + 1
+        );
+        BattleManager.Instance.CurrentEnemyList[EnemyLocation].CurrentAttack = randomAttack;
+        enemyAttackIntentText.text = randomAttack.ToString();
     }
 
     private void EventRefreshUI(params object[] args)
     {
         enemyHealthSlider.value = (float)(
-            (float)DataManager.Instance.EnemyList[EnemyID].CurrentHealth
+            (float)BattleManager.Instance.CurrentEnemyList[EnemyLocation].CurrentHealth
             / DataManager.Instance.EnemyList[EnemyID].MaxHealth
         );
         enemyHealthText.text =
-            DataManager.Instance.EnemyList[EnemyID].CurrentHealth.ToString()
+            BattleManager.Instance.CurrentEnemyList[EnemyLocation].CurrentHealth.ToString()
             + "/"
             + DataManager.Instance.EnemyList[EnemyID].MaxHealth.ToString();
     }

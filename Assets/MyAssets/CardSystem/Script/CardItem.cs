@@ -228,7 +228,7 @@ public class CardItem
             )
             {
                 enemy.OnUnSelect();
-                UseCard(enemy.EnemyID);
+                UseCard(enemy.EnemyLocation);
             }
         }
         else if (enemy != null)
@@ -243,7 +243,7 @@ public class CardItem
         BattleManager.Instance.ConsumeActionPoint(cost);
         if (isAttackCard && DataManager.Instance.CardList[CardIndex].CardAttack != 0)
             BattleManager.Instance.TakeDamage(
-                DataManager.Instance.EnemyList[target],
+                BattleManager.Instance.CurrentEnemyList[target],
                 DataManager.Instance.CardList[CardIndex].CardAttack
             );
         BattleManager.Instance.GetShield(

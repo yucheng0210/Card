@@ -126,19 +126,19 @@ public class DataManager : Singleton<DataManager>
             level.LevelID = int.Parse(row[0]);
             level.LevelName = row[1];
             string[] enemyIDs = row[2].Split(';');
+            level.EnemyIDList = new Dictionary<int, string>();
             for (int j = 0; j < enemyIDs.Length; j++)
             {
                 string[] enemyID = enemyIDs[j].Split('=');
-                level.EnemyIDList = new Dictionary<int, string>();
                 level.EnemyIDList.Add(int.Parse(enemyID[0]), enemyID[1]);
             }
             string[] rewardIDs = row[3].Split(';');
+            level.RewardIDList = new List<(int, int)>();
             for (int j = 0; j < rewardIDs.Length; j++)
             {
                 string[] rewardID = rewardIDs[j].Split('=');
                 int id,
                     count;
-                level.RewardIDList = new List<(int, int)>();
                 if (int.TryParse(rewardID[0], out id) && int.TryParse(rewardID[1], out count))
                     level.RewardIDList.Add(new ValueTuple<int, int>(id, count));
             }

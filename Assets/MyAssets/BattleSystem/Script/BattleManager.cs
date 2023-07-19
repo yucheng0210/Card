@@ -23,9 +23,10 @@ public class BattleManager : Singleton<BattleManager>
     }
 
     public BattleType MyBattleType { get; set; }
+    public List<CardItem> CardItemList { get; set; }
     public List<Vector2> CardPositionList { get; set; }
     public List<float> CardAngleList { get; set; }
-    public List<int> CurrentEnemyList { get; private set; }
+    public List<EnemyData> CurrentEnemyList { get; private set; }
     public Dictionary<int, int> CurrentAbilityList { get; set; }
     public bool IsDrag { get; set; }
     public int CurrentLocationID { get; set; }
@@ -34,9 +35,10 @@ public class BattleManager : Singleton<BattleManager>
     {
         base.Awake();
         IsDrag = false;
+        CardItemList = new List<CardItem>();
         CardPositionList = new List<Vector2>();
         CardAngleList = new List<float>();
-        CurrentEnemyList = new List<int>();
+        CurrentEnemyList = new List<EnemyData>();
         CurrentAbilityList = new Dictionary<int, int>();
     }
 
@@ -111,25 +113,17 @@ public class BattleManager : Singleton<BattleManager>
         }
     }
 
-    public void RemoveEnemy(int id, bool isBoss)
-    {
-        CurrentEnemyList.Remove(id);
-        if (CurrentEnemyList.Count <= 0)
-            ChangeTurn(BattleType.Win);
-    }
-
     private void BattleInitial()
     {
-        CurrentEnemyList.Clear();
         DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].CurrentActionPoint =
             DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].MaxActionPoint;
         int id = DataManager.Instance.LevelID;
         string[] enemyStr = DataManager.Instance.LevelList[id].EnemyIDList[CurrentLocationID].Split(
-            ','
+            '、'
         );
         for (int i = 0; i < enemyStr.Length; i++)
         {
-            CurrentEnemyList.Add(int.Parse(enemyStr[i]));
+            CurrentEnemyList.Add(DataManager.Instance.EnemyList[int.Parse(enemyStr[i])]);
         }
         EventManager.Instance.DispatchEvent(EventDefinition.eventBattleInitial);
     }
@@ -158,7 +152,7 @@ public class BattleManager : Singleton<BattleManager>
                 CurrentLocationID
             ]
         );
-        Debug.Log(CurrentLocationID);
+        Debug.Log("現在位置：" + CurrentLocationID);
     }
 
     private void Dialog()
@@ -208,11 +202,11 @@ public class BattleManager : Singleton<BattleManager>
         }
     }
 
-    public void AddHandCard(int drawCardCount, List<CardItem> cardItems)
+    public void AddHandCard(int drawCardCount)
     {
         for (int i = 0; i < drawCardCount; i++)
         {
-            DataManager.Instance.HandCard.Add(cardItems[i]);
+            DataManager.Instance.HandCard.Add(CardItemList[i]);
         }
     }
 }

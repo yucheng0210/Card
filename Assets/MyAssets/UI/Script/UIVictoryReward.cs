@@ -42,8 +42,8 @@ public class UIVictoryReward : UIBase
     private void NextLevel()
     {
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Dialog);
-        UIManager.Instance.HideUI("UIBattle");
         UIManager.Instance.ShowUI("UIExplore");
+        UI.SetActive(false);
     }
 
     private void GetReward(int rewardID, GameObject reward)

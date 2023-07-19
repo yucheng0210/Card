@@ -12,6 +12,8 @@ public class EffectFactory : Singleton<EffectFactory>
                 return new IncreaseManaEffect();
             case "FireBallEffect":
                 return new FireBallEffect();
+            case "DrawCardEffect":
+                return new DrawCardEffect();
             default:
                 return null;
         }

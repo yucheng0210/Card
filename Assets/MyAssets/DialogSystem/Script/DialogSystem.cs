@@ -222,7 +222,9 @@ public class DialogSystem : MonoBehaviour
     private void DestroyChoice()
     {
         for (int i = 0; i < choiceManager.transform.childCount; i++)
+        {
             Destroy(choiceManager.transform.GetChild(i).gameObject);
+        }
     }
 
     private void ContinueDialog()
