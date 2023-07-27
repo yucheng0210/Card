@@ -5,8 +5,8 @@ using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour
 {
-    [SerializeField]
-    private bool isBoss = false;
+  /*  [SerializeField]
+    private bool isBoss = false;*/
 
     [SerializeField]
     private Slider enemyHealthSlider;

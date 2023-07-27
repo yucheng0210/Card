@@ -6,6 +6,6 @@ public class DrawCardEffect : IEffect
 {
     public void ApplyEffect(int value, int target)
     {
-        BattleManager.Instance.AddHandCard(value);
+        EventManager.Instance.DispatchEvent(EventDefinition.eventDrawCard, value);
     }
 }

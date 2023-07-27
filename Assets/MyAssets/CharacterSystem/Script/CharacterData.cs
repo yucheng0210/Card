@@ -46,4 +46,9 @@ public abstract class CharacterData
                 currentShield = 999;
         }
     }
+
+    public CharacterData Clone()
+    {
+        return (CharacterData)MemberwiseClone();
+    }
 }

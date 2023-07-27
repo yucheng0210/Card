@@ -1619,11 +1619,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6d521adc7da3cf48b98cb210b3f95e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startPosY: -20
+  startPosition: {x: 878, y: 20}
   cardPrefab: {fileID: 524259916357414313, guid: 0b5874506f49ccf47b373a2dd736234d, type: 3}
   handCardTrans: {fileID: 2008770234}
   usedCardTrans: {fileID: 1296570504}
-  drawCardCount: 5
   coolDown: 0.5
   cardXSpacing: 70
   cardYSpacing: 15

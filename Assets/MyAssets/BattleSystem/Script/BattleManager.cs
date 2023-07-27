@@ -123,7 +123,9 @@ public class BattleManager : Singleton<BattleManager>
         );
         for (int i = 0; i < enemyStr.Length; i++)
         {
-            CurrentEnemyList.Add(DataManager.Instance.EnemyList[int.Parse(enemyStr[i])]);
+            CurrentEnemyList.Add(
+                (EnemyData)DataManager.Instance.EnemyList[int.Parse(enemyStr[i])].Clone()
+            );
         }
         EventManager.Instance.DispatchEvent(EventDefinition.eventBattleInitial);
     }
@@ -199,14 +201,6 @@ public class BattleManager : Singleton<BattleManager>
             CardData temp = DataManager.Instance.CardBag[randomIndex];
             DataManager.Instance.CardBag[randomIndex] = DataManager.Instance.CardBag[i];
             DataManager.Instance.CardBag[i] = temp;
-        }
-    }
-
-    public void AddHandCard(int drawCardCount)
-    {
-        for (int i = 0; i < drawCardCount; i++)
-        {
-            DataManager.Instance.HandCard.Add(CardItemList[i]);
         }
     }
 }

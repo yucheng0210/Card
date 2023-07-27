@@ -94,6 +94,8 @@ public class DataManager : Singleton<DataManager>
             playerData.CharacterName = row[1];
             playerData.MaxHealth = int.Parse(row[2]);
             playerData.MaxActionPoint = int.Parse(row[3]);
+            playerData.Mana = int.Parse(row[4]);
+            playerData.DefaultDrawCardCout = int.Parse(row[5]);
             playerData.CurrentHealth = playerData.MaxActionPoint;
             playerData.CurrentActionPoint = playerData.MaxActionPoint;
             playerData.CharacterPos = new Vector2(-447f, 121f);
@@ -215,8 +217,7 @@ public class DataManager : Singleton<DataManager>
         CardBag.Add(cardData);
         cardData = CardList[1004];
         CardBag.Add(cardData);
-        cardData = CardList[1005];
+        cardData = CardList[1007];
         CardBag.Add(cardData);
-        DataManager.Instance.PlayerList[PlayerID].Mana = 0;
     }
 }

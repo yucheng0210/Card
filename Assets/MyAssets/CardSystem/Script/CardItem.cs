@@ -239,7 +239,6 @@ public class CardItem
     {
         cardRectTransform.DOScale(1.5f, 0);
         DataManager.Instance.HandCard.Remove(this);
-        EventManager.Instance.DispatchEvent(EventDefinition.eventUseCard, this);
         BattleManager.Instance.ConsumeActionPoint(cost);
         if (isAttackCard && DataManager.Instance.CardList[CardIndex].CardAttack != 0)
             BattleManager.Instance.TakeDamage(
@@ -250,7 +249,7 @@ public class CardItem
             DataManager.Instance.PlayerList[DataManager.Instance.PlayerID],
             DataManager.Instance.CardList[CardIndex].CardShield
         );
-        gameObject.SetActive(false);
+        EventManager.Instance.DispatchEvent(EventDefinition.eventUseCard, this);
         for (int i = 0; i < DataManager.Instance.CardList[CardIndex].CardEffectList.Count; i++)
         {
             if (DataManager.Instance.CardList[CardIndex].CardType == "能力")
@@ -265,5 +264,6 @@ public class CardItem
             EffectFactory.Instance.CreateEffect(effectID).ApplyEffect(effectCount, target);
         }
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
+        gameObject.SetActive(false);
     }
 }
