@@ -1624,7 +1624,7 @@ MonoBehaviour:
   handCardTrans: {fileID: 2008770234}
   usedCardTrans: {fileID: 1296570504}
   coolDown: 0.5
-  cardXSpacing: 70
+  cardXSpacing: 140
   cardYSpacing: 15
   minCardAngle: 4
   moveTime: 0.5

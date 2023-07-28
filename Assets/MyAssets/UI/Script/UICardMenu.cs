@@ -40,7 +40,7 @@ public class UICardMenu : UIBase
         for (int i = 0; i < cardBag.Count; i++)
         {
             CardItem cardItem = Instantiate(cardPrefab, contentTrans);
-            cardItem.CardIndex = cardBag[i].CardID;
+            cardItem.CardID = cardBag[i].CardID;
             cardItem.CardName.text = cardBag[i].CardName;
             cardItem.CardDescription.text = cardBag[i].CardDescription;
             cardItem.CardCost.text = cardBag[i].CardCost.ToString();
@@ -59,7 +59,7 @@ public class UICardMenu : UIBase
         for (int i = 0; i < usedCardBag.Count; i++)
         {
             CardItem cardItem = Instantiate(cardPrefab, contentTrans);
-            cardItem.CardIndex = usedCardBag[i].CardIndex;
+            cardItem.CardID = usedCardBag[i].CardID;
             cardItem.CardName.text = usedCardBag[i].CardName.text;
             cardItem.CardDescription.text = usedCardBag[i].CardDescription.text;
             cardItem.CardCost.text = usedCardBag[i].CardCost.text;

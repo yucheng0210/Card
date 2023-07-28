@@ -875,6 +875,7 @@ GameObject:
   - component: {fileID: 4224030633799354690}
   - component: {fileID: 524259916357414313}
   - component: {fileID: 3561320526990298476}
+  - component: {fileID: 1236617893512282562}
   m_Layer: 5
   m_Name: Card
   m_TagString: Untagged
@@ -927,10 +928,11 @@ MonoBehaviour:
   cardDescription: {fileID: 824966239830101744}
   cardImage: {fileID: 483824088468915850}
   collision: {fileID: 6631526926885935851}
-  onPointerEnterUp: 100
+  pointerEnterUpY: 50
   pointerEnterSpacing: 150
   pointerEnterReduceCount: 50
-  moveTime: 0.35
+  moveTime: 0.5
+  cantMove: 0
 --- !u!222 &3561320526990298476
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -939,3 +941,15 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8719768827160432580}
   m_CullTransparentMesh: 1
+--- !u!225 &1236617893512282562
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8719768827160432580}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0

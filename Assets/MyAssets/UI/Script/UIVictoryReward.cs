@@ -68,7 +68,7 @@ public class UIVictoryReward : UIBase
             Dictionary<int, CardData> cardList = DataManager.Instance.CardList;
             cardRewardMenu.SetActive(true);
             CardItem cardItem = Instantiate(cardPrefab, cardRewardGroupTrans);
-            cardItem.CardIndex = cardList[rewardID].CardID;
+            cardItem.CardID = cardList[rewardID].CardID;
             cardItem.CardName.text = cardList[rewardID].CardName;
             cardItem.CardDescription.text = cardList[rewardID].CardDescription;
             cardItem.CardCost.text = cardList[rewardID].CardCost.ToString();
