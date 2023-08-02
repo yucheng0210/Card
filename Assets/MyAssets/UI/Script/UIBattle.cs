@@ -121,6 +121,25 @@ public class UIBattle : UIBase
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
 
+    private IEnumerator RemoveEnemy()
+    {
+        for (int i = BattleManager.Instance.CurrentEnemyList.Count - 1; i >= 0; i--)
+        {
+            if (BattleManager.Instance.CurrentEnemyList[i].CurrentHealth <= 0)
+            {
+                Destroy(enemyTrans.GetChild(i).gameObject);
+                BattleManager.Instance.CurrentEnemyList.RemoveAt(i);
+            }
+            yield return null;
+        }
+        for (int i = 0; i < enemyTrans.childCount; i++)
+        {
+            enemyTrans.GetChild(i).GetComponent<Enemy>().EnemyLocation = i;
+        }
+        if (BattleManager.Instance.CurrentEnemyList.Count == 0)
+            BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Win);
+    }
+
     private void EventBattleInitial(params object[] args)
     {
         StartCoroutine(CreateEnemy());
@@ -150,6 +169,7 @@ public class UIBattle : UIBase
 
     private void EventTakeDamage(params object[] args)
     {
+        StartCoroutine(RemoveEnemy());
         GameObject damageNum = Instantiate(damageNumPrefab, UI.transform);
         RectTransform damageRect = damageNum.GetComponent<RectTransform>();
         Text damageText = damageNum.GetComponentInChildren<Text>();

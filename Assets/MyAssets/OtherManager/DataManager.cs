@@ -217,7 +217,5 @@ public class DataManager : Singleton<DataManager>
         CardBag.Add(cardData);
         cardData = CardList[1004];
         CardBag.Add(cardData);
-        cardData = CardList[1007];
-        CardBag.Add(cardData);
     }
 }

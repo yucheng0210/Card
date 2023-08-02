@@ -68,11 +68,14 @@ public class UIVictoryReward : UIBase
             Dictionary<int, CardData> cardList = DataManager.Instance.CardList;
             cardRewardMenu.SetActive(true);
             CardItem cardItem = Instantiate(cardPrefab, cardRewardGroupTrans);
+            Button cardButton = cardItem.gameObject.AddComponent<Button>();
+            cardItem.GetComponent<CanvasGroup>().alpha = 1;
             cardItem.CardID = cardList[rewardID].CardID;
             cardItem.CardName.text = cardList[rewardID].CardName;
             cardItem.CardDescription.text = cardList[rewardID].CardDescription;
             cardItem.CardCost.text = cardList[rewardID].CardCost.ToString();
-            cardItem.GetComponentInChildren<Button>().onClick.AddListener(() => AddCard(rewardID));
+            cardItem.CantMove = true;
+            cardButton.onClick.AddListener(() => AddCard(rewardID));
         }
         Destroy(reward);
     }

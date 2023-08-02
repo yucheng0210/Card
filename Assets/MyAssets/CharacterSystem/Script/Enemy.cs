@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,8 +6,8 @@ using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour
 {
-  /*  [SerializeField]
-    private bool isBoss = false;*/
+    /*  [SerializeField]
+      private bool isBoss = false;*/
 
     [SerializeField]
     private Slider enemyHealthSlider;
@@ -37,15 +38,7 @@ public class Enemy : MonoBehaviour
     {
         skinMesh = GetComponentInChildren<SkinnedMeshRenderer>();
         EventManager.Instance.AddEventRegister(EventDefinition.eventRefreshUI, EventRefreshUI);
-        EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
         EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
-    }
-
-    private void OnDisable()
-    {
-        EventManager.Instance.RemoveEventRegister(EventDefinition.eventRefreshUI, EventRefreshUI);
-        EventManager.Instance.RemoveEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
-        EventManager.Instance.RemoveEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
     }
 
     private void Update()
@@ -58,6 +51,12 @@ public class Enemy : MonoBehaviour
         );
     }
 
+    private void OnDisable()
+    {
+        EventManager.Instance.RemoveEventRegister(EventDefinition.eventRefreshUI, EventRefreshUI);
+        EventManager.Instance.RemoveEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
+    }
+
     public void OnSelect()
     {
         skinMesh.material.SetColor("_OtlColor", Color.red);
@@ -66,16 +65,6 @@ public class Enemy : MonoBehaviour
     public void OnUnSelect()
     {
         skinMesh.material.SetColor("_OtlColor", Color.black);
-    }
-
-    private void EventTakeDamage(params object[] args)
-    {
-        if (BattleManager.Instance.CurrentEnemyList[EnemyLocation].CurrentHealth <= 0)
-        {
-            if (transform.parent.childCount == 1)
-                BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Win);
-            Destroy(gameObject);
-        }
     }
 
     private void EventPlayerTurn(params object[] args)
@@ -90,13 +79,20 @@ public class Enemy : MonoBehaviour
 
     private void EventRefreshUI(params object[] args)
     {
-        enemyHealthSlider.value = (float)(
-            (float)BattleManager.Instance.CurrentEnemyList[EnemyLocation].CurrentHealth
-            / DataManager.Instance.EnemyList[EnemyID].MaxHealth
-        );
-        enemyHealthText.text =
-            BattleManager.Instance.CurrentEnemyList[EnemyLocation].CurrentHealth.ToString()
-            + "/"
-            + DataManager.Instance.EnemyList[EnemyID].MaxHealth.ToString();
+        try
+        {
+            enemyHealthSlider.value = (float)(
+                (float)BattleManager.Instance.CurrentEnemyList[EnemyLocation].CurrentHealth
+                / DataManager.Instance.EnemyList[EnemyID].MaxHealth
+            );
+            enemyHealthText.text =
+                BattleManager.Instance.CurrentEnemyList[EnemyLocation].CurrentHealth.ToString()
+                + "/"
+                + DataManager.Instance.EnemyList[EnemyID].MaxHealth.ToString();
+        }
+        catch (ArgumentOutOfRangeException)
+        {
+            Debug.Log(EnemyLocation + "：" + "錯誤");
+        }
     }
 }

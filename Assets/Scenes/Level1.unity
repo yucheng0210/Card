@@ -4963,7 +4963,7 @@ MonoBehaviour:
   rewardGroupTrans: {fileID: 1764554846}
   rewardPrefab: {fileID: 1345386215471289017, guid: 366c543d4cd540b4e876bd466b93d823, type: 3}
   skipButton: {fileID: 144148504}
-  cardPrefab: {fileID: 5759197841695073801, guid: ce55cc0c320fb8b42bcd672b842e0b90, type: 3}
+  cardPrefab: {fileID: 524259916357414313, guid: 0b5874506f49ccf47b373a2dd736234d, type: 3}
   cardRewardMenu: {fileID: 771160224}
   cardRewardGroupTrans: {fileID: 758109998}
 --- !u!114 &1642177155

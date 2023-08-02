@@ -44,8 +44,7 @@ public class CardItem
     [SerializeField]
     private float moveTime;
 
-    [SerializeField]
-    private bool cantMove;
+    public bool CantMove { get; set; }
     private RectTransform cardRectTransform;
     private CardItem rightCard,
         leftCard;
@@ -83,7 +82,7 @@ public class CardItem
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (BattleManager.Instance.IsDrag || cantMove)
+        if (BattleManager.Instance.IsDrag || CantMove)
             return;
         index = transform.GetSiblingIndex();
         cost = DataManager.Instance.CardList[CardID].CardCost;
@@ -118,7 +117,7 @@ public class CardItem
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        if (BattleManager.Instance.IsDrag && !isAttackCard || cantMove)
+        if (BattleManager.Instance.IsDrag && !isAttackCard || CantMove)
             return;
         transform.DOScale(1.5f, moveTime);
         transform.DORotateQuaternion(
@@ -145,14 +144,14 @@ public class CardItem
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        if (cantMove)
+        if (CantMove)
             return;
         isAttackCard = DataManager.Instance.CardList[CardID].CardType == "攻擊" ? true : false;
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        if (cantMove)
+        if (CantMove)
             return;
         BattleManager.Instance.IsDrag = true;
         Cursor.visible = false;
@@ -182,7 +181,7 @@ public class CardItem
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        if (cantMove)
+        if (CantMove)
             return;
         BattleManager.Instance.IsDrag = false;
         Cursor.visible = true;
@@ -237,15 +236,15 @@ public class CardItem
         cardRectTransform.DOScale(1.5f, 0);
         DataManager.Instance.HandCard.Remove(this);
         BattleManager.Instance.ConsumeActionPoint(cost);
+        BattleManager.Instance.GetShield(
+            DataManager.Instance.PlayerList[DataManager.Instance.PlayerID],
+            DataManager.Instance.CardList[CardID].CardShield
+        );
         if (isAttackCard && DataManager.Instance.CardList[CardID].CardAttack != 0)
             BattleManager.Instance.TakeDamage(
                 BattleManager.Instance.CurrentEnemyList[target],
                 DataManager.Instance.CardList[CardID].CardAttack
             );
-        BattleManager.Instance.GetShield(
-            DataManager.Instance.PlayerList[DataManager.Instance.PlayerID],
-            DataManager.Instance.CardList[CardID].CardShield
-        );
         EventManager.Instance.DispatchEvent(EventDefinition.eventUseCard, this);
         for (int i = 0; i < DataManager.Instance.CardList[CardID].CardEffectList.Count; i++)
         {

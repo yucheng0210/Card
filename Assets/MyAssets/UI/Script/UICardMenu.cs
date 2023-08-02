@@ -40,11 +40,12 @@ public class UICardMenu : UIBase
         for (int i = 0; i < cardBag.Count; i++)
         {
             CardItem cardItem = Instantiate(cardPrefab, contentTrans);
+            cardItem.GetComponent<CanvasGroup>().alpha = 1;
             cardItem.CardID = cardBag[i].CardID;
             cardItem.CardName.text = cardBag[i].CardName;
             cardItem.CardDescription.text = cardBag[i].CardDescription;
             cardItem.CardCost.text = cardBag[i].CardCost.ToString();
-            cardItem.Collision.SetActive(false);
+            cardItem.CantMove = true;
         }
     }
 

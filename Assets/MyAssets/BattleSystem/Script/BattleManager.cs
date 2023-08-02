@@ -60,13 +60,11 @@ public class BattleManager : Singleton<BattleManager>
             defender.CharacterPos,
             damage
         );
-        EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
 
     public void GetShield(CharacterData defender, int point)
     {
         defender.CurrentShield += point;
-        EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
 
     public void ConsumeActionPoint(int point)
@@ -77,7 +75,6 @@ public class BattleManager : Singleton<BattleManager>
         )
             DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].CurrentActionPoint -=
                 point;
-        EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
 
     public void ChangeTurn(BattleType type)

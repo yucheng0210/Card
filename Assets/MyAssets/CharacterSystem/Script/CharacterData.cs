@@ -31,7 +31,7 @@ public abstract class CharacterData
             if (currentHealth < 0)
                 currentHealth = 0;
             if (currentHealth > MaxHealth)
-                currentHealth = 999;
+                currentHealth = maxHealth;
         }
     }
     public int CurrentShield

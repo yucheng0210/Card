@@ -215,6 +215,7 @@ public class CardCreater : MonoBehaviour
                 DataManager.Instance.PlayerList[DataManager.Instance.PlayerID],
                 BattleManager.Instance.CurrentEnemyList[i].CurrentAttack
             );
+            EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
             yield return new WaitForSecondsRealtime(1);
         }
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Player);
