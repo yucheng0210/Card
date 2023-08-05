@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Net.Mime;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,7 +7,6 @@ using UnityEngine.UI;
 
 public class UIManager : Singleton<UIManager>
 {
-    private Transform canvasTrans;
     public Dictionary<string, UIBase> UIDict { get; set; }
 
     protected override void Awake()
@@ -66,7 +66,7 @@ public class UIManager : Singleton<UIManager>
 
     public IEnumerator FadeIn(CanvasGroup canvasGroup, float fadeTime, bool canDestroy)
     {
-        while (canvasGroup.alpha != 0)
+        while (canvasGroup.alpha > 0)
         {
             canvasGroup.alpha -= Time.unscaledDeltaTime / fadeTime;
             yield return null;
@@ -77,7 +77,7 @@ public class UIManager : Singleton<UIManager>
 
     public Vector2 GetBezierCurve(Vector2 start, Vector2 mid, Vector2 end, float t)
     {
-        return Mathf.Pow((1.0f - t), 2) * start
+        return Mathf.Pow(1.0f - t, 2) * start
             + 2.0f * t * (1.0f - t) * mid
             + Mathf.Pow(t, 2) * end;
     }

@@ -42,12 +42,6 @@ public class BattleManager : Singleton<BattleManager>
         CurrentAbilityList = new Dictionary<int, int>();
     }
 
-    private void Update()
-    {
-        if (MyBattleType == BattleType.None)
-            ChangeTurn(BattleType.ExploreInitial);
-    }
-
     public void TakeDamage(CharacterData defender, int damage)
     {
         int currentDamage = damage - defender.CurrentShield;
@@ -194,7 +188,7 @@ public class BattleManager : Singleton<BattleManager>
     {
         for (int i = 0; i < DataManager.Instance.CardBag.Count; i++)
         {
-            int randomIndex = UnityEngine.Random.Range(0, DataManager.Instance.CardBag.Count);
+            int randomIndex = Random.Range(0, DataManager.Instance.CardBag.Count);
             CardData temp = DataManager.Instance.CardBag[randomIndex];
             DataManager.Instance.CardBag[randomIndex] = DataManager.Instance.CardBag[i];
             DataManager.Instance.CardBag[i] = temp;

@@ -60,6 +60,7 @@ public class UICardMenu : UIBase
         for (int i = 0; i < usedCardBag.Count; i++)
         {
             CardItem cardItem = Instantiate(cardPrefab, contentTrans);
+            cardItem.GetComponent<CanvasGroup>().alpha = 1;
             cardItem.CardID = usedCardBag[i].CardID;
             cardItem.CardName.text = usedCardBag[i].CardName.text;
             cardItem.CardDescription.text = usedCardBag[i].CardDescription.text;

@@ -11,7 +11,7 @@ public class DataManager : Singleton<DataManager>
     private const string enemyListPath = "Assets/MyAssets/Data/ENEMYLIST.csv";
     private const string levelListPath = "Assets/MyAssets/Data/LEVELLIST.csv";
     private const string itemListPath = "Assets/MyAssets/Data/ITEMLIST.csv";
-    private string dialogDataListPath = "Assets/MyAssets/Data/DialogData";
+    private const string dialogDataListPath = "Assets/MyAssets/Data/DialogData";
     public Dictionary<int, CardData> CardList { get; set; }
     public List<CardData> CardBag { get; set; }
     public List<CardItem> UsedCardBag { get; set; }
@@ -55,18 +55,20 @@ public class DataManager : Singleton<DataManager>
         for (int i = 1; i < lineData.Length; i++)
         {
             string[] row = lineData[i].Split(',');
-            CardData cardData = new CardData();
-            cardData.CardID = int.Parse(row[0]);
-            cardData.CardName = row[1];
-            cardData.CardType = row[2];
-            cardData.CardImagePath = row[3];
-            cardData.CardCost = int.Parse(row[4]);
-            cardData.CardAttribute = row[5];
-            cardData.CardSpecialEffect = row[6];
-            cardData.CardDescription = row[7];
-            cardData.CardAttack = int.Parse(row[8]);
-            cardData.CardShield = int.Parse(row[9]);
-            cardData.CardEffectList = new List<(string, int)>();
+            CardData cardData = new()
+            {
+                CardID = int.Parse(row[0]),
+                CardName = row[1],
+                CardType = row[2],
+                CardImagePath = row[3],
+                CardCost = int.Parse(row[4]),
+                CardAttribute = row[5],
+                CardSpecialEffect = row[6],
+                CardDescription = row[7],
+                CardAttack = int.Parse(row[8]),
+                CardShield = int.Parse(row[9]),
+                CardEffectList = new List<(string, int)>()
+            };
             if (row[10] != "")
             {
                 string[] cardEffects = row[10].Split(';');
@@ -74,9 +76,8 @@ public class DataManager : Singleton<DataManager>
                 {
                     string[] cardEffect = cardEffects[j].Split('=');
                     string id;
-                    int count;
                     id = cardEffect[0];
-                    if (int.TryParse(cardEffect[1], out count))
+                    if (int.TryParse(cardEffect[1], out int count))
                         cardData.CardEffectList.Add(new ValueTuple<string, int>(id, count));
                 }
             }
@@ -89,16 +90,16 @@ public class DataManager : Singleton<DataManager>
         for (int i = 1; i < lineData.Length; i++)
         {
             string[] row = lineData[i].Split(',');
-            PlayerData playerData = new PlayerData();
-            playerData.CharacterID = int.Parse(row[0]);
-            playerData.CharacterName = row[1];
-            playerData.MaxHealth = int.Parse(row[2]);
-            playerData.MaxActionPoint = int.Parse(row[3]);
-            playerData.Mana = int.Parse(row[4]);
-            playerData.DefaultDrawCardCout = int.Parse(row[5]);
-            playerData.CurrentHealth = playerData.MaxActionPoint;
-            playerData.CurrentActionPoint = playerData.MaxActionPoint;
-            playerData.CharacterPos = new Vector2(-447f, 121f);
+            PlayerData playerData = new()
+            {
+                CharacterID = int.Parse(row[0]),
+                CharacterName = row[1],
+                MaxHealth = int.Parse(row[2]),
+                MaxActionPoint = int.Parse(row[3]),
+                Mana = int.Parse(row[4]),
+                DefaultDrawCardCout = int.Parse(row[5]),
+                CharacterPos = new Vector2(-447f, 121f)
+            };
             PlayerList.Add(playerData.CharacterID, playerData);
         }
         #endregion
@@ -107,14 +108,15 @@ public class DataManager : Singleton<DataManager>
         for (int i = 1; i < lineData.Length; i++)
         {
             string[] row = lineData[i].Split(',');
-            EnemyData enemyData = new EnemyData();
-            enemyData.CharacterID = int.Parse(row[0]);
-            enemyData.CharacterName = row[1];
-            enemyData.MaxHealth = int.Parse(row[2]);
-            enemyData.MinAttack = int.Parse(row[3]);
-            enemyData.MaxAttack = int.Parse(row[4]);
-            enemyData.CurrentHealth = enemyData.MaxHealth;
-            enemyData.CharacterPos = new Vector2(474f, 121f);
+            EnemyData enemyData = new()
+            {
+                CharacterID = int.Parse(row[0]),
+                CharacterName = row[1],
+                MaxHealth = int.Parse(row[2]),
+                MinAttack = int.Parse(row[3]),
+                MaxAttack = int.Parse(row[4]),
+                CharacterPos = new Vector2(474f, 121f)
+            };
             EnemyList.Add(enemyData.CharacterID, enemyData);
         }
 
@@ -124,9 +126,11 @@ public class DataManager : Singleton<DataManager>
         for (int i = 1; i < lineData.Length; i++)
         {
             string[] row = lineData[i].Split(',');
-            Level level = new Level();
-            level.LevelID = int.Parse(row[0]);
-            level.LevelName = row[1];
+            Level level = new()
+            {
+                LevelID = int.Parse(row[0]),
+                LevelName = row[1]
+            };
             string[] enemyIDs = row[2].Split(';');
             level.EnemyIDList = new Dictionary<int, string>();
             for (int j = 0; j < enemyIDs.Length; j++)
@@ -139,9 +143,7 @@ public class DataManager : Singleton<DataManager>
             for (int j = 0; j < rewardIDs.Length; j++)
             {
                 string[] rewardID = rewardIDs[j].Split('=');
-                int id,
-                    count;
-                if (int.TryParse(rewardID[0], out id) && int.TryParse(rewardID[1], out count))
+                if (int.TryParse(rewardID[0], out int id) && int.TryParse(rewardID[1], out int count))
                     level.RewardIDList.Add(new ValueTuple<int, int>(id, count));
             }
             level.DialogName = row[4];
@@ -162,16 +164,18 @@ public class DataManager : Singleton<DataManager>
         for (int i = 1; i < lineData.Length; i++)
         {
             string[] row = lineData[i].Split(',');
-            Item item = new Item();
-            item.ItemID = int.Parse(row[0]);
-            item.ItemName = row[1];
-            item.ItemImagePath = row[2];
-            item.ItemInfo = row[3];
-            item.ItemBuyPrice = int.Parse(row[4]);
-            item.ItemSellPrice = int.Parse(row[5]);
-            item.ItemEffectName = row[6];
-            item.ItemRarity = row[7];
-            item.ItemType = row[8];
+            Item item = new()
+            {
+                ItemID = int.Parse(row[0]),
+                ItemName = row[1],
+                ItemImagePath = row[2],
+                ItemInfo = row[3],
+                ItemBuyPrice = int.Parse(row[4]),
+                ItemSellPrice = int.Parse(row[5]),
+                ItemEffectName = row[6],
+                ItemRarity = row[7],
+                ItemType = row[8]
+            };
             ItemList.Add(item.ItemID, item);
         }
         #endregion
@@ -179,16 +183,18 @@ public class DataManager : Singleton<DataManager>
         foreach (string file in Directory.GetFiles(dialogDataListPath, "*.csv"))
         {
             lineData = File.ReadAllLines(file);
-            List<Dialog> dialogs = new List<Dialog>();
+            List<Dialog> dialogs = new();
             for (int i = 1; i < lineData.Length; i++)
             {
                 string[] row = lineData[i].Split(',');
-                Dialog dialog = new Dialog();
-                dialog.Branch = row[0];
-                dialog.Type = row[1];
-                dialog.TheName = row[2];
-                dialog.Order = row[3];
-                dialog.Content = row[4];
+                Dialog dialog = new()
+                {
+                    Branch = row[0],
+                    Type = row[1],
+                    TheName = row[2],
+                    Order = row[3],
+                    Content = row[4]
+                };
                 dialogs.Add(dialog);
             }
             string fileName = Path.GetFileNameWithoutExtension(file);
@@ -204,7 +210,7 @@ public class DataManager : Singleton<DataManager>
         MoneyCount = 0;
         PlayerID = 1001;
         LevelID = 1001;
-        CardData cardData = new CardData();
+        CardData cardData;
         for (int i = 0; i < 5; i++)
         {
             cardData = CardList[1001];

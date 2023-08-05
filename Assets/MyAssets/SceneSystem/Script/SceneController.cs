@@ -35,7 +35,7 @@ public class SceneController : Singleton<SceneController>
         //EventManager.Instance.DispatchEvent(EventDefinition.eventSceneLoading);
         //GameObject fade = Instantiate(sceneFaderPrefab.gameObject);
         progressSlider.value = 0.0f;
-        yield return StartCoroutine(UIManager.Instance.FadeOut(sceneFaderPrefab, 1));
+        yield return StartCoroutine(UIManager.Instance.FadeOut(sceneFaderPrefab, 10));
         //progressCanvas.SetActive(true);
         AsyncOperation async = SceneManager.LoadSceneAsync(sceneName);
         async.allowSceneActivation = false;
@@ -54,6 +54,6 @@ public class SceneController : Singleton<SceneController>
         yield return new WaitForSeconds(0.5f);
         //progressCanvas.SetActive(false);
         async.allowSceneActivation = true;
-        yield return StartCoroutine(UIManager.Instance.FadeIn(sceneFaderPrefab, 1, false));
+        StartCoroutine(UIManager.Instance.FadeIn(sceneFaderPrefab, 1, false));
     }
 }

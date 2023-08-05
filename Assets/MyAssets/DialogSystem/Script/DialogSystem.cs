@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -210,8 +211,16 @@ public class DialogSystem : MonoBehaviour
         DestroyChoice();
         inSelection = false;
         continueBool = true;
-        if (menuType == "CLOSE")
-            CloseDialog();
+        switch (menuType)
+        {
+            case "CLOSE":
+                CloseDialog();
+                break;
+            case "END":
+                UIManager.Instance.ShowUI("UIMap");
+                BattleManager.Instance.ChangeTurn(BattleManager.BattleType.None);
+                break;
+        }
         if (BattleManager.Instance.MyBattleType == BattleManager.BattleType.Dialog)
         {
             BattleManager.Instance.CurrentLocationID = int.Parse(buttonBranchID);
@@ -238,15 +247,15 @@ public class DialogSystem : MonoBehaviour
             continueBool = true;
     }
 
-    private void EventQuestActivate(params object[] args)
-    {
-        currentBranchID = "ACTIVE";
-    }
+    /* private void EventQuestActivate(params object[] args)
+     {
+         currentBranchID = "ACTIVE";
+     }
 
-    private void EventQuestCompleted(params object[] args)
-    {
-        currentBranchID = "COMPLETED";
-    }
+     private void EventQuestCompleted(params object[] args)
+     {
+         currentBranchID = "COMPLETED";
+     }*/
 
     private void EventDialog(params object[] args)
     {
