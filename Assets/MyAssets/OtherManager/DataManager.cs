@@ -40,12 +40,11 @@ public class DataManager : Singleton<DataManager>
         Backpack = new Dictionary<int, Item>();
         DialogList = new Dictionary<string, List<Dialog>>();
         LoadData();
-        GameStart();
     }
 
     private void Start()
     {
-        EventManager.Instance.AddEventRegister(EventDefinition.eventStartGame, GameStart);
+        StartCoroutine(StartGame());
     }
 
     private void LoadData()
@@ -205,7 +204,7 @@ public class DataManager : Singleton<DataManager>
 
     public void LoadLevel() { }
 
-    private void GameStart(params object[] args)
+    private IEnumerator StartGame()
     {
         MoneyCount = 0;
         PlayerID = 1001;
@@ -223,5 +222,7 @@ public class DataManager : Singleton<DataManager>
         CardBag.Add(cardData);
         cardData = CardList[1004];
         CardBag.Add(cardData);
+        yield return new WaitForSecondsRealtime(1);
+        BattleManager.Instance.ChangeTurn(BattleManager.BattleType.ExploreInitial);
     }
 }

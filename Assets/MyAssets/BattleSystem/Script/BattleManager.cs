@@ -41,7 +41,6 @@ public class BattleManager : Singleton<BattleManager>
         CurrentEnemyList = new List<EnemyData>();
         CurrentAbilityList = new Dictionary<int, int>();
     }
-
     public void TakeDamage(CharacterData defender, int damage)
     {
         int currentDamage = damage - defender.CurrentShield;

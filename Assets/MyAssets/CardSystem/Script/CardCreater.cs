@@ -186,13 +186,8 @@ public class CardCreater : MonoBehaviour
     {
         for (int i = 0; i < DataManager.Instance.UsedCardBag.Count; i++)
         {
-            StartCoroutine(
-                UIManager.Instance.FadeIn(
-                    DataManager.Instance.UsedCardBag[i].GetComponent<CanvasGroup>(),
-                    moveTime / 2,
-                    false
-                )
-            );
+            StartCoroutine(UIManager.Instance.FadeIn(DataManager.Instance.UsedCardBag[i].GetComponent<CanvasGroup>(),
+            moveTime / 2));
             yield return null;
         }
         yield return new WaitForSecondsRealtime(moveTime);

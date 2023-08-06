@@ -11,8 +11,11 @@ public class UIStartMenu : UIBase
     protected override void Start()
     {
         base.Start();
-        startButton.onClick.AddListener(
-            () => StartCoroutine(SceneController.Instance.Transition("Level1"))
-        );
+        startButton.onClick.AddListener(GameStart);
+    }
+    private void GameStart()
+    {
+        startButton.onClick.RemoveAllListeners();
+        StartCoroutine(SceneController.Instance.Transition("Level1"));
     }
 }

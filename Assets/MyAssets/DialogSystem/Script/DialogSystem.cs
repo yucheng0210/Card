@@ -68,7 +68,6 @@ public class DialogSystem : MonoBehaviour
             EventDefinition.eventQuestCompleted,
             EventQuestCompleted
         );*/
-        dialogName = DataManager.Instance.LevelList[DataManager.Instance.LevelID].DialogName;
         EventManager.Instance.AddEventRegister(EventDefinition.eventDialog, EventDialog);
     }
 
@@ -259,6 +258,7 @@ public class DialogSystem : MonoBehaviour
 
     private void EventDialog(params object[] args)
     {
+        dialogName = DataManager.Instance.LevelList[DataManager.Instance.LevelID].DialogName;
         textFinished = false;
         textLabel.text = "";
         currentTextWaitTime = maxTextWaitTime;
