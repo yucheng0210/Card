@@ -222,7 +222,7 @@ public class DataManager : Singleton<DataManager>
         CardBag.Add(cardData);
         cardData = CardList[1004];
         CardBag.Add(cardData);
-        yield return new WaitForSecondsRealtime(1);
+        yield return null;
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.ExploreInitial);
     }
 }

@@ -55,7 +55,7 @@ public class UIVictoryReward : UIBase
 
     private void GetCardReward(GameObject reward)
     {
-        List<int> normalCardList = new List<int>();
+        List<int> normalCardList = new();
         for (int i = 0; i < DataManager.Instance.CardList.Count; i++)
         {
             if (DataManager.Instance.CardList.ElementAt(i).Value.CardRarity == "普通")
@@ -64,7 +64,7 @@ public class UIVictoryReward : UIBase
 
         for (int i = 0; i < 3; i++)
         {
-            int rewardID = normalCardList[UnityEngine.Random.Range(0, normalCardList.Count)];
+            int rewardID = normalCardList[Random.Range(0, normalCardList.Count)];
             Dictionary<int, CardData> cardList = DataManager.Instance.CardList;
             cardRewardMenu.SetActive(true);
             CardItem cardItem = Instantiate(cardPrefab, cardRewardGroupTrans);
@@ -76,6 +76,7 @@ public class UIVictoryReward : UIBase
             cardItem.CardCost.text = cardList[rewardID].CardCost.ToString();
             cardItem.CantMove = true;
             cardButton.onClick.AddListener(() => AddCard(rewardID));
+            normalCardList.Remove(rewardID);
         }
         Destroy(reward);
     }

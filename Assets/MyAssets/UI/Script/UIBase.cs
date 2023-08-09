@@ -18,11 +18,11 @@ public abstract class UIBase : MonoBehaviour
 
     public virtual void Show()
     {
-        ui.gameObject.SetActive(true);
+        ui.SetActive(true);
     }
 
     public virtual void Hide()
     {
-        ui.gameObject.SetActive(false);
+        ui.SetActive(false);
     }
 }
