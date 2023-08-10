@@ -5,18 +5,28 @@ using UnityEngine.UI;
 using System.Linq;
 public class UIMap : UIBase
 {
-    [SerializeField]
     private Dictionary<int, Button> mapList = new();
+    [SerializeField]
+    private Transform mapButtonsTrans;
     protected override void Start()
     {
         base.Start();
-        for (int i = 0; i < mapList.Count; i++)
+        StartGame();
+    }
+    private void StartGame()
+    {
+        for (int i = 0; i < mapButtonsTrans.childCount; i++)
         {
-            mapList.ElementAt(i).Value.onClick.AddListener(() => EntryPoint(mapList.ElementAt(i).Key));
+            int mapID = DataManager.Instance.LevelList.ElementAt(i).Key;
+            mapList.Add(mapID, mapButtonsTrans.GetChild(i).GetComponent<Button>());
+            mapList[mapID].onClick.AddListener(() => EntryPoint(mapID));
         }
     }
+
     private void EntryPoint(int id)
     {
+        Debug.Log(id);
         DataManager.Instance.LevelID = id;
+        UIManager.Instance.HideUI("UIMap");
     }
 }
