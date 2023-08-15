@@ -25,8 +25,8 @@ public class UIMap : UIBase
 
     private void EntryPoint(int id)
     {
-        Debug.Log(id);
         DataManager.Instance.LevelID = id;
         UIManager.Instance.HideUI("UIMap");
+        BattleManager.Instance.ChangeTurn(BattleManager.BattleType.ExploreInitial);
     }
 }

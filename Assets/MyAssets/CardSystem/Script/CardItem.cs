@@ -79,7 +79,6 @@ public class CardItem
             DataManager.Instance.CardList[CardID].CardImagePath
         );
     }
-
     public void OnPointerEnter(PointerEventData eventData)
     {
         if (BattleManager.Instance.IsDrag || CantMove)
@@ -233,6 +232,8 @@ public class CardItem
 
     private void UseCard(int target)
     {
+        if (BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack)
+            return;
         cardRectTransform.DOScale(1.5f, 0);
         DataManager.Instance.HandCard.Remove(this);
         BattleManager.Instance.ConsumeActionPoint(cost);
