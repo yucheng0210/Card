@@ -10,7 +10,6 @@ public class BattleManager : Singleton<BattleManager>
     public enum BattleType
     {
         None,
-        ExploreInitial,
         Explore,
         BattleInitial,
         Dialog,
@@ -30,6 +29,10 @@ public class BattleManager : Singleton<BattleManager>
     public Dictionary<int, int> CurrentAbilityList { get; set; }
     public bool IsDrag { get; set; }
     public int CurrentLocationID { get; set; }
+    //棋盤
+    public Dictionary<string, string> CheckerboardList { get; set; }
+    public Transform PlayerTrans { get; set; }
+    public Transform CheckerboardTrans { get; set; }
 
     protected override void Awake()
     {
@@ -40,6 +43,7 @@ public class BattleManager : Singleton<BattleManager>
         CardAngleList = new List<float>();
         CurrentEnemyList = new List<EnemyData>();
         CurrentAbilityList = new Dictionary<int, int>();
+        CheckerboardList = new Dictionary<string, string>();
     }
     public void TakeDamage(CharacterData defender, int damage)
     {
@@ -77,9 +81,6 @@ public class BattleManager : Singleton<BattleManager>
         {
             case BattleType.None:
                 break;
-            case BattleType.ExploreInitial:
-                ExploreInitial();
-                break;
             case BattleType.Explore:
                 Explore();
                 break;
@@ -105,46 +106,36 @@ public class BattleManager : Singleton<BattleManager>
 
     private void BattleInitial()
     {
-        DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].CurrentActionPoint =
-            DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].MaxActionPoint;
-        int id = DataManager.Instance.LevelID;
-        string[] enemyStr = DataManager.Instance.LevelList[id].EnemyIDList[CurrentLocationID].Split(
-            '、'
-        );
-        for (int i = 0; i < enemyStr.Length; i++)
+        int playerID = DataManager.Instance.PlayerID;
+        int levelID = DataManager.Instance.LevelID;
+        DataManager.Instance.PlayerList[playerID].CurrentActionPoint =
+            DataManager.Instance.PlayerList[playerID].MaxActionPoint;
+        for (int i = 0; i < DataManager.Instance.LevelList[levelID].EnemyIDList.Count; i++)
         {
             CurrentEnemyList.Add(
-                (EnemyData)DataManager.Instance.EnemyList[int.Parse(enemyStr[i])].Clone()
+                (EnemyData)DataManager.Instance.EnemyList.ElementAt(i).Value.Clone()
             );
         }
-        EventManager.Instance.DispatchEvent(EventDefinition.eventBattleInitial);
-    }
-
-    private void ExploreInitial()
-    {
-        int levelID = DataManager.Instance.LevelID;
-        for (int i = 0; i < DataManager.Instance.LevelList[levelID].LocationList.Count; i++)
+        for (int i = 0; i < 5; i++)
         {
-            if (
-                DataManager.Instance.LevelList[levelID].LocationList.ElementAt(i).Value
-                == "ENTRANCE"
-            )
-                CurrentLocationID = DataManager.Instance.LevelList[levelID].LocationList
-                    .ElementAt(i)
-                    .Key;
+            for (int j = 0; j < 8; j++)
+            {
+                string loaction = i.ToString() + " " + j.ToString();
+                if (DataManager.Instance.LevelList[levelID].EnemyIDList.ContainsKey(loaction))
+                    CheckerboardList.Add(loaction, "Enemy");
+                else
+                    CheckerboardList.Add(loaction, "Empty");
+            }
         }
-        ChangeTurn(BattleType.Explore);
+        EventManager.Instance.DispatchEvent(EventDefinition.eventBattleInitial);
     }
 
     private void Explore()
     {
         EventManager.Instance.DispatchEvent(
             EventDefinition.eventExplore,
-            DataManager.Instance.LevelList[DataManager.Instance.LevelID].LocationList[
-                CurrentLocationID
-            ]
+            DataManager.Instance.LevelList[DataManager.Instance.LevelID].LevelType
         );
-        Debug.Log("現在位置：" + CurrentLocationID);
     }
 
     private void Dialog()

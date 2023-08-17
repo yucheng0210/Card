@@ -21,10 +21,10 @@ public class UIExplore : UIBase
         }
     }
 
-    private void Entrance()
+    private void Dialog()
     {
         HideAllUI();
-        entrance.SetActive(true);
+        //entrance.SetActive(true);
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Dialog);
     }
 
@@ -35,10 +35,10 @@ public class UIExplore : UIBase
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Dialog);
     }
 
-    private void Enemy()
+    private void Battle()
     {
         HideAllUI();
-        BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Dialog);
+        BattleManager.Instance.ChangeTurn(BattleManager.BattleType.BattleInitial);
         UI.SetActive(false);
     }
 
@@ -63,16 +63,16 @@ public class UIExplore : UIBase
 
     private void EventExplore(params object[] args)
     {
-        switch (args[0].ToString())
+        switch (args[0])
         {
-            case "ENTRANCE":
-                Entrance();
+            case "DIALOG":
+                Dialog();
                 break;
             case "RANDOM":
                 Random();
                 break;
-            case "ENEMY":
-                Enemy();
+            case "BATTLE":
+                Battle();
                 break;
             case "RECOVERY":
                 Recover();

@@ -89,6 +89,7 @@ public class DataManager : Singleton<DataManager>
         for (int i = 1; i < lineData.Length; i++)
         {
             string[] row = lineData[i].Split(',');
+
             PlayerData playerData = new()
             {
                 CharacterID = int.Parse(row[0]),
@@ -97,7 +98,7 @@ public class DataManager : Singleton<DataManager>
                 MaxActionPoint = int.Parse(row[3]),
                 Mana = int.Parse(row[4]),
                 DefaultDrawCardCout = int.Parse(row[5]),
-                CharacterPos = new Vector2(-447f, 121f)
+                //CharacterPos = row[6]
             };
             PlayerList.Add(playerData.CharacterID, playerData);
         }
@@ -114,7 +115,7 @@ public class DataManager : Singleton<DataManager>
                 MaxHealth = int.Parse(row[2]),
                 MinAttack = int.Parse(row[3]),
                 MaxAttack = int.Parse(row[4]),
-                CharacterPos = new Vector2(474f, 121f)
+                //CharacterPos = row[6]
             };
             EnemyList.Add(enemyData.CharacterID, enemyData);
         }
@@ -131,11 +132,11 @@ public class DataManager : Singleton<DataManager>
                 LevelName = row[1]
             };
             string[] enemyIDs = row[2].Split(';');
-            level.EnemyIDList = new Dictionary<int, string>();
+            level.EnemyIDList = new Dictionary<string, string>();
             for (int j = 0; j < enemyIDs.Length; j++)
             {
                 string[] enemyID = enemyIDs[j].Split('=');
-                level.EnemyIDList.Add(int.Parse(enemyID[0]), enemyID[1]);
+                level.EnemyIDList.Add(enemyID[0], enemyID[1]);
             }
             string[] rewardIDs = row[3].Split(';');
             level.RewardIDList = new List<(int, int)>();
@@ -146,15 +147,8 @@ public class DataManager : Singleton<DataManager>
                     level.RewardIDList.Add(new ValueTuple<int, int>(id, count));
             }
             level.DialogName = row[4];
-            string[] locationIDs = row[5].Split(';');
-            level.LocationList = new Dictionary<int, string>();
-            for (int j = 0; j < locationIDs.Length; j++)
-            {
-                string[] locationID = locationIDs[j].Split('=');
-                int id = int.Parse(locationID[0]);
-                string count = locationID[1];
-                level.LocationList.Add(id, count);
-            }
+            level.LevelType = row[5];
+            level.PlayerStartPos = row[6];
             LevelList.Add(level.LevelID, level);
         }
         #endregion
@@ -223,6 +217,6 @@ public class DataManager : Singleton<DataManager>
         cardData = CardList[1004];
         CardBag.Add(cardData);
         yield return null;
-        BattleManager.Instance.ChangeTurn(BattleManager.BattleType.ExploreInitial);
+        BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Explore);
     }
 }

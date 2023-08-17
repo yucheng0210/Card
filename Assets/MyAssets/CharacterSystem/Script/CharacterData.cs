@@ -9,7 +9,7 @@ public abstract class CharacterData
     private int currentShield;
     public int CharacterID { get; set; }
     public string CharacterName { get; set; }
-    public Vector2 CharacterPos { get; set; }
+    public string CharacterPos { get; set; }
     public int MaxHealth
     {
         get { return maxHealth; }

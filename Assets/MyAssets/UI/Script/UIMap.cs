@@ -27,6 +27,6 @@ public class UIMap : UIBase
     {
         DataManager.Instance.LevelID = id;
         UIManager.Instance.HideUI("UIMap");
-        BattleManager.Instance.ChangeTurn(BattleManager.BattleType.ExploreInitial);
+        BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Explore);
     }
 }
