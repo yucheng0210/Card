@@ -25,14 +25,14 @@ public class BattleManager : Singleton<BattleManager>
     public List<CardItem> CardItemList { get; set; }
     public List<Vector2> CardPositionList { get; set; }
     public List<float> CardAngleList { get; set; }
-    public List<EnemyData> CurrentEnemyList { get; private set; }
-    public Dictionary<int, int> CurrentAbilityList { get; set; }
+    public Dictionary<string, EnemyData> CurrentEnemyList { get; private set; }
+    public Dictionary<int, string> CurrentAbilityList { get; set; }
     public bool IsDrag { get; set; }
-    public int CurrentLocationID { get; set; }
     //棋盤
+    public string CurrentLocationID { get; set; }
     public Dictionary<string, string> CheckerboardList { get; set; }
-    public Transform PlayerTrans { get; set; }
-    public Transform CheckerboardTrans { get; set; }
+    public RectTransform PlayerTrans { get; set; }
+    public RectTransform CheckerboardTrans { get; set; }
 
     protected override void Awake()
     {
@@ -41,8 +41,8 @@ public class BattleManager : Singleton<BattleManager>
         CardItemList = new List<CardItem>();
         CardPositionList = new List<Vector2>();
         CardAngleList = new List<float>();
-        CurrentEnemyList = new List<EnemyData>();
-        CurrentAbilityList = new Dictionary<int, int>();
+        CurrentEnemyList = new Dictionary<string, EnemyData>();
+        CurrentAbilityList = new Dictionary<int, string>();
         CheckerboardList = new Dictionary<string, string>();
     }
     public void TakeDamage(CharacterData defender, int damage)
@@ -52,11 +52,9 @@ public class BattleManager : Singleton<BattleManager>
             currentDamage = 0;
         defender.CurrentShield -= damage;
         defender.CurrentHealth -= currentDamage;
-        EventManager.Instance.DispatchEvent(
-            EventDefinition.eventTakeDamage,
-            defender.CharacterPos,
-            damage
-        );
+        Vector2 pos = new(CheckerboardTrans.GetChild(GetCheckerboardPoint(defender.CharacterPos)).localEulerAngles.x
+        , CheckerboardTrans.GetChild(GetCheckerboardPoint(defender.CharacterPos)).localPosition.y);
+        EventManager.Instance.DispatchEvent(EventDefinition.eventTakeDamage, pos, damage);
     }
 
     public void GetShield(CharacterData defender, int point)
@@ -103,24 +101,35 @@ public class BattleManager : Singleton<BattleManager>
                 break;
         }
     }
-
+    public string ConvertCheckerboardPos(int x, int y)
+    {
+        return x.ToString() + ' ' + y.ToString();
+    }
+    public int GetCheckerboardPoint(string point)
+    {
+        string[] points = point.Split(' ');
+        return int.Parse(points[0]) + int.Parse(points[1]) * 8;
+    }
     private void BattleInitial()
     {
+        CurrentLocationID = DataManager.Instance.LevelList[DataManager.Instance.LevelID].PlayerStartPos;
         int playerID = DataManager.Instance.PlayerID;
         int levelID = DataManager.Instance.LevelID;
         DataManager.Instance.PlayerList[playerID].CurrentActionPoint =
             DataManager.Instance.PlayerList[playerID].MaxActionPoint;
+        PlayerTrans.anchoredPosition = CheckerboardTrans
+        .GetChild(GetCheckerboardPoint(CurrentLocationID)).localPosition;
         for (int i = 0; i < DataManager.Instance.LevelList[levelID].EnemyIDList.Count; i++)
         {
-            CurrentEnemyList.Add(
-                (EnemyData)DataManager.Instance.EnemyList.ElementAt(i).Value.Clone()
-            );
+            int enemyID = DataManager.Instance.LevelList[levelID].EnemyIDList.ElementAt(i).Value;
+            string loactionID = DataManager.Instance.LevelList[levelID].EnemyIDList.ElementAt(i).Key;
+            CurrentEnemyList.Add(loactionID, (EnemyData)DataManager.Instance.EnemyList[enemyID].Clone());
         }
         for (int i = 0; i < 5; i++)
         {
             for (int j = 0; j < 8; j++)
             {
-                string loaction = i.ToString() + " " + j.ToString();
+                string loaction = ConvertCheckerboardPos(i, j);
                 if (DataManager.Instance.LevelList[levelID].EnemyIDList.ContainsKey(loaction))
                     CheckerboardList.Add(loaction, "Enemy");
                 else
@@ -150,7 +159,7 @@ public class BattleManager : Singleton<BattleManager>
         for (int i = 0; i < CurrentAbilityList.Count; i++)
         {
             int id = CurrentAbilityList.ElementAt(i).Key;
-            int target = CurrentAbilityList.ElementAt(i).Value;
+            string target = CurrentAbilityList.ElementAt(i).Value;
             for (int j = 0; j < DataManager.Instance.CardList[id].CardEffectList.Count; j++)
             {
                 string effectID;

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DrawCardEffect : IEffect
 {
-    public void ApplyEffect(int value, int target)
+    public void ApplyEffect(int value, string target)
     {
         EventManager.Instance.DispatchEvent(EventDefinition.eventDrawCard, value);
     }

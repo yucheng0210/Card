@@ -42,9 +42,6 @@ public class UICardMenu : UIBase
             CardItem cardItem = Instantiate(cardPrefab, contentTrans);
             cardItem.GetComponent<CanvasGroup>().alpha = 1;
             cardItem.CardID = cardBag[i].CardID;
-            cardItem.CardName.text = cardBag[i].CardName;
-            cardItem.CardDescription.text = cardBag[i].CardDescription;
-            cardItem.CardCost.text = cardBag[i].CardCost.ToString();
             cardItem.CantMove = true;
         }
     }
@@ -62,10 +59,7 @@ public class UICardMenu : UIBase
             CardItem cardItem = Instantiate(cardPrefab, contentTrans);
             cardItem.GetComponent<CanvasGroup>().alpha = 1;
             cardItem.CardID = usedCardBag[i].CardID;
-            cardItem.CardName.text = usedCardBag[i].CardName.text;
-            cardItem.CardDescription.text = usedCardBag[i].CardDescription.text;
-            cardItem.CardCost.text = usedCardBag[i].CardCost.text;
-            cardItem.Collision.SetActive(false);
+            cardItem.CantMove = true;
         }
     }
 }

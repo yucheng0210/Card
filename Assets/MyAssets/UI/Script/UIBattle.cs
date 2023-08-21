@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using System.Linq;
 
 public class UIBattle : UIBase
 {
@@ -57,7 +58,9 @@ public class UIBattle : UIBase
 
     [SerializeField]
     private float curveHeight;
-
+    [Header("棋盤")]
+    [SerializeField]
+    private RectTransform checkerboardTrans;
     public Text ActionPointText
     {
         get { return actionPointText; }
@@ -83,6 +86,7 @@ public class UIBattle : UIBase
     {
         base.Start();
         changeTurnButton.onClick.AddListener(ChangeTurn);
+        BattleManager.Instance.CheckerboardTrans = checkerboardTrans;
         EventManager.Instance.AddEventRegister(EventDefinition.eventRefreshUI, EventRefreshUI);
         EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
         EventManager.Instance.AddEventRegister(
@@ -125,17 +129,18 @@ public class UIBattle : UIBase
     {
         for (int i = BattleManager.Instance.CurrentEnemyList.Count - 1; i >= 0; i--)
         {
-            if (BattleManager.Instance.CurrentEnemyList[i].CurrentHealth <= 0)
+            string key = BattleManager.Instance.CurrentEnemyList.ElementAt(i).Key;
+            if (BattleManager.Instance.CurrentEnemyList[key].CurrentHealth <= 0)
             {
                 Destroy(enemyTrans.GetChild(i).gameObject);
-                BattleManager.Instance.CurrentEnemyList.RemoveAt(i);
+                BattleManager.Instance.CurrentEnemyList.Remove(key);
             }
             yield return null;
         }
-        for (int i = 0; i < enemyTrans.childCount; i++)
+        /*for (int i = 0; i < enemyTrans.childCount; i++)
         {
             enemyTrans.GetChild(i).GetComponent<Enemy>().EnemyLocation = i;
-        }
+        }*/
         if (BattleManager.Instance.CurrentEnemyList.Count == 0)
             BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Win);
     }
@@ -149,11 +154,14 @@ public class UIBattle : UIBase
     {
         for (int i = 0; i < BattleManager.Instance.CurrentEnemyList.Count; i++)
         {
+            string key = BattleManager.Instance.CurrentEnemyList.ElementAt(i).Key;
             Enemy enemy = Instantiate(enemyPrefab, enemyTrans);
-            enemy.GetComponent<RectTransform>().anchoredPosition += enemyDistance * i;
-            enemy.EnemyID = BattleManager.Instance.CurrentEnemyList[i].CharacterID;
-            enemy.EnemyLocation = i;
-            BattleManager.Instance.CurrentEnemyList[i].CurrentHealth = DataManager
+            enemy.EnemyLocation = key;
+            enemy.GetComponent<RectTransform>().anchoredPosition = BattleManager.Instance.CheckerboardTrans
+            .GetChild(BattleManager.Instance.GetCheckerboardPoint(key)).localPosition;
+            enemy.EnemyID = BattleManager.Instance.CurrentEnemyList[key].CharacterID;
+            enemy.EnemyImage.sprite = Resources.Load<Sprite>(BattleManager.Instance.CurrentEnemyList[key].EnemyImagePath);
+            BattleManager.Instance.CurrentEnemyList[key].CurrentHealth = DataManager
                 .Instance
                 .EnemyList[enemy.EnemyID].MaxHealth;
             yield return null;
@@ -174,7 +182,7 @@ public class UIBattle : UIBase
         RectTransform damageRect = damageNum.GetComponent<RectTransform>();
         Text damageText = damageNum.GetComponentInChildren<Text>();
         damageText.text = args[1].ToString();
-        int direction = UnityEngine.Random.Range(0, 2);
+        int direction = Random.Range(0, 2);
         if (direction == 0)
             xOffset *= -1;
         Vector2 startPoint = (Vector2)args[0];

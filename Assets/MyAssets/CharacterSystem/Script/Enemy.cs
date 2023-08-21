@@ -24,8 +24,9 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     private RectTransform enemyHurtRect;
     private SkinnedMeshRenderer skinMesh;
+    public Image EnemyImage { get; set; }
     public int EnemyID { get; set; }
-    public int EnemyLocation { get; set; }
+    public string EnemyLocation { get; set; }
 
     public enum AttackType
     {
@@ -37,6 +38,7 @@ public class Enemy : MonoBehaviour
     private void Awake()
     {
         skinMesh = GetComponentInChildren<SkinnedMeshRenderer>();
+        EnemyImage = GetComponent<Image>();
         EventManager.Instance.AddEventRegister(EventDefinition.eventRefreshUI, EventRefreshUI);
         EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
     }

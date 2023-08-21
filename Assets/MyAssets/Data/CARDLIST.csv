@@ -6,4 +6,4 @@
 1005,湧泉,能力,null,1,無,null,每回合生成兩點魔力。,0,0,IncreaseManaEffect=2,普通
 1006,魔盾,防禦,null,1,無,null,消耗2點MP，產生5點護盾。,0,5,,普通
 1007,以一換二,增益,null ,1,無,null,抽兩張牌。,0,0,DrawCardEffect=2,普通
-1008,移動,移動,null,1,無,null,移動一格。,0,0,MoveEffect=1,
+1008,移動,移動,null,1,無,null,移動一格。,0,0,MoveEffect=1,普通

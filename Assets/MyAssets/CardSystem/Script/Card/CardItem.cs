@@ -14,7 +14,6 @@ public class CardItem
         IEndDragHandler,
         IPointerDownHandler
 {
-    public int CardID { get; set; }
     private int index;
 
     [SerializeField]
@@ -44,13 +43,19 @@ public class CardItem
     [SerializeField]
     private float moveTime;
 
-    public bool CantMove { get; set; }
-    private RectTransform cardRectTransform;
     private CardItem rightCard,
         leftCard;
     private bool isAttackCard;
     private Enemy enemy;
-    private int cost;
+    public int CardID { get; set; }
+    public int Cost { get; set; }
+    public RectTransform CardRectTransform { get; set; }
+    public bool CantMove { get; set; }
+    public Image CardImage
+    {
+        get { return cardImage; }
+        set { cardImage = value; }
+    }
     public GameObject Collision
     {
         get { return collision; }
@@ -71,24 +76,31 @@ public class CardItem
         get { return cardDescription; }
         set { cardDescription = value; }
     }
-
     private void Start()
     {
-        cardRectTransform = transform.GetComponent<RectTransform>();
-        cardImage.sprite = Resources.Load<Sprite>(
-            DataManager.Instance.CardList[CardID].CardImagePath
-        );
+        SetCardInfo();
+    }
+    private void SetCardInfo()
+    {
+        Dictionary<int, CardData> cardList = DataManager.Instance.CardList;
+        CardName.text = cardList[CardID].CardName;
+        CardDescription.text = cardList[CardID].CardDescription;
+        CardCost.text = cardList[CardID].CardCost.ToString();
+        CardRectTransform = transform.GetComponent<RectTransform>();
+        Cost = DataManager.Instance.CardList[CardID].CardCost;
+        CardImage.sprite = Resources.Load<Sprite>(
+           DataManager.Instance.CardList[CardID].CardImagePath
+       );
     }
     public void OnPointerEnter(PointerEventData eventData)
     {
         if (BattleManager.Instance.IsDrag || CantMove)
             return;
         index = transform.GetSiblingIndex();
-        cost = DataManager.Instance.CardList[CardID].CardCost;
         Quaternion zeroRotation = Quaternion.Euler(0, 0, 0);
         transform.DOScale(2.5f, moveTime);
         transform.DORotateQuaternion(zeroRotation, moveTime);
-        cardRectTransform.DOAnchorPosY(pointerEnterUpY, moveTime);
+        CardRectTransform.DOAnchorPosY(pointerEnterUpY, moveTime);
         float space = pointerEnterSpacing;
         for (int i = index + 1; i < transform.parent.childCount; i++)
         {
@@ -123,7 +135,7 @@ public class CardItem
             Quaternion.Euler(0, 0, BattleManager.Instance.CardAngleList[index]),
             moveTime
         );
-        cardRectTransform.DOAnchorPos(BattleManager.Instance.CardPositionList[index], moveTime);
+        CardRectTransform.DOAnchorPos(BattleManager.Instance.CardPositionList[index], moveTime);
         transform.SetSiblingIndex(index);
         for (int i = index + 1; i < transform.parent.childCount; i++)
         {
@@ -169,13 +181,13 @@ public class CardItem
             EventManager.Instance.DispatchEvent(
                 EventDefinition.eventAttackLine,
                 true,
-                cardRectTransform.anchoredPosition,
+                CardRectTransform.anchoredPosition,
                 dragPosition
             );
             CheckRayToEnemy(false);
             return;
         }
-        cardRectTransform.anchoredPosition = dragPosition;
+        CardRectTransform.anchoredPosition = dragPosition;
     }
 
     public void OnEndDrag(PointerEventData eventData)
@@ -189,22 +201,22 @@ public class CardItem
             EventManager.Instance.DispatchEvent(
                 EventDefinition.eventAttackLine,
                 false,
-                cardRectTransform.anchoredPosition,
-                cardRectTransform.anchoredPosition
+                CardRectTransform.anchoredPosition,
+                CardRectTransform.anchoredPosition
             );
             CheckRayToEnemy(true);
             return;
         }
         if (
-            cardRectTransform.anchoredPosition.y >= 540
+            CardRectTransform.anchoredPosition.y >= 540
             && DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].CurrentActionPoint
-                >= cost
+                >= Cost
         )
-            UseCard(DataManager.Instance.PlayerID);
+            UseCard();
         else
         {
-            cardRectTransform.anchoredPosition = BattleManager.Instance.CardPositionList[index];
-            cardRectTransform.SetSiblingIndex(index);
+            CardRectTransform.anchoredPosition = BattleManager.Instance.CardPositionList[index];
+            CardRectTransform.SetSiblingIndex(index);
         }
     }
 
@@ -219,7 +231,7 @@ public class CardItem
             if (
                 onEnd
                 && DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].CurrentActionPoint
-                    >= cost
+                    >= Cost
             )
             {
                 enemy.OnUnSelect();
@@ -230,20 +242,20 @@ public class CardItem
             enemy.OnUnSelect();
     }
 
-    private void UseCard(int target)
+    private void UseCard(string enemyLoaction)
     {
         if (BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack)
             return;
-        cardRectTransform.DOScale(1.5f, 0);
+        CardRectTransform.DOScale(1.5f, 0);
         DataManager.Instance.HandCard.Remove(this);
-        BattleManager.Instance.ConsumeActionPoint(cost);
+        BattleManager.Instance.ConsumeActionPoint(Cost);
         BattleManager.Instance.GetShield(
             DataManager.Instance.PlayerList[DataManager.Instance.PlayerID],
             DataManager.Instance.CardList[CardID].CardShield
         );
-        if (isAttackCard && DataManager.Instance.CardList[CardID].CardAttack != 0)
+        if (DataManager.Instance.CardList[CardID].CardAttack != 0)
             BattleManager.Instance.TakeDamage(
-                BattleManager.Instance.CurrentEnemyList[target],
+                BattleManager.Instance.CurrentEnemyList[enemyLoaction],
                 DataManager.Instance.CardList[CardID].CardAttack
             );
         EventManager.Instance.DispatchEvent(EventDefinition.eventUseCard, this);
@@ -251,14 +263,43 @@ public class CardItem
         {
             if (DataManager.Instance.CardList[CardID].CardType == "能力")
             {
-                BattleManager.Instance.CurrentAbilityList.Add(CardID, target);
+                BattleManager.Instance.CurrentAbilityList.Add(CardID, enemyLoaction);
                 return;
             }
             string effectID;
             int effectCount;
             effectID = DataManager.Instance.CardList[CardID].CardEffectList[i].Item1;
             effectCount = DataManager.Instance.CardList[CardID].CardEffectList[i].Item2;
-            EffectFactory.Instance.CreateEffect(effectID).ApplyEffect(effectCount, target);
+            EffectFactory.Instance.CreateEffect(effectID).ApplyEffect(effectCount, enemyLoaction);
+        }
+        EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
+        gameObject.SetActive(false);
+    }
+    //攻擊
+    private void UseCard()
+    {
+        if (BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack)
+            return;
+        CardRectTransform.DOScale(1.5f, 0);
+        DataManager.Instance.HandCard.Remove(this);
+        BattleManager.Instance.ConsumeActionPoint(Cost);
+        BattleManager.Instance.GetShield(
+            DataManager.Instance.PlayerList[DataManager.Instance.PlayerID],
+            DataManager.Instance.CardList[CardID].CardShield
+        );
+        EventManager.Instance.DispatchEvent(EventDefinition.eventUseCard, this);
+        for (int i = 0; i < DataManager.Instance.CardList[CardID].CardEffectList.Count; i++)
+        {
+            if (DataManager.Instance.CardList[CardID].CardType == "能力")
+            {
+                BattleManager.Instance.CurrentAbilityList.Add(CardID, "Player");
+                return;
+            }
+            string effectID;
+            int effectCount;
+            effectID = DataManager.Instance.CardList[CardID].CardEffectList[i].Item1;
+            effectCount = DataManager.Instance.CardList[CardID].CardEffectList[i].Item2;
+            EffectFactory.Instance.CreateEffect(effectID).ApplyEffect(effectCount, "Player");
         }
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
         gameObject.SetActive(false);

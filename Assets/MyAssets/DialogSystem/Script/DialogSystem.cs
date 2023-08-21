@@ -222,7 +222,7 @@ public class DialogSystem : MonoBehaviour
         }
         if (BattleManager.Instance.MyBattleType == BattleManager.BattleType.Dialog)
         {
-            BattleManager.Instance.CurrentLocationID = int.Parse(buttonBranchID);
+            //BattleManager.Instance.CurrentLocationID = int.Parse(buttonBranchID);
             BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Explore);
         }
     }

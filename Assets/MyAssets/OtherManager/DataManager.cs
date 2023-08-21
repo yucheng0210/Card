@@ -98,7 +98,6 @@ public class DataManager : Singleton<DataManager>
                 MaxActionPoint = int.Parse(row[3]),
                 Mana = int.Parse(row[4]),
                 DefaultDrawCardCout = int.Parse(row[5]),
-                //CharacterPos = row[6]
             };
             PlayerList.Add(playerData.CharacterID, playerData);
         }
@@ -115,6 +114,7 @@ public class DataManager : Singleton<DataManager>
                 MaxHealth = int.Parse(row[2]),
                 MinAttack = int.Parse(row[3]),
                 MaxAttack = int.Parse(row[4]),
+                EnemyImagePath = row[5],
                 //CharacterPos = row[6]
             };
             EnemyList.Add(enemyData.CharacterID, enemyData);
@@ -132,11 +132,11 @@ public class DataManager : Singleton<DataManager>
                 LevelName = row[1]
             };
             string[] enemyIDs = row[2].Split(';');
-            level.EnemyIDList = new Dictionary<string, string>();
+            level.EnemyIDList = new Dictionary<string, int>();
             for (int j = 0; j < enemyIDs.Length; j++)
             {
                 string[] enemyID = enemyIDs[j].Split('=');
-                level.EnemyIDList.Add(enemyID[0], enemyID[1]);
+                level.EnemyIDList.Add(enemyID[0], int.Parse(enemyID[1]));
             }
             string[] rewardIDs = row[3].Split(';');
             level.RewardIDList = new List<(int, int)>();
@@ -211,11 +211,11 @@ public class DataManager : Singleton<DataManager>
             cardData = CardList[1002];
             CardBag.Add(cardData);
         }
-        cardData = CardList[1003];
-        CardBag.Add(cardData);
-        CardBag.Add(cardData);
-        cardData = CardList[1004];
-        CardBag.Add(cardData);
+        CardBag.Add(CardList[1003]);
+        CardBag.Add(CardList[1003]);
+        CardBag.Add(CardList[1004]);
+        CardBag.Add(CardList[1008]);
+        PlayerList[PlayerID].CharacterPos = LevelList[LevelID].PlayerStartPos;
         yield return null;
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Explore);
     }

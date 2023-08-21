@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class FireBallEffect : IEffect
 {
-    public void ApplyEffect(int value, int target)
+    public void ApplyEffect(int value, string target)
     {
         int mana = DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].Mana;
         int upCount = mana / 10;

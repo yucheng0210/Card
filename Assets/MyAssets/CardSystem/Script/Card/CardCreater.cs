@@ -63,9 +63,6 @@ public class CardCreater : MonoBehaviour
         {
             CardItem cardItem = Instantiate(cardPrefab, transform);
             cardItem.CardID = cardBag[i].CardID;
-            cardItem.CardName.text = cardBag[i].CardName;
-            cardItem.CardDescription.text = cardBag[i].CardDescription;
-            cardItem.CardCost.text = cardBag[i].CardCost.ToString();
             cardItem.gameObject.SetActive(false);
             BattleManager.Instance.CardItemList.Add(cardItem);
         }
@@ -206,9 +203,10 @@ public class CardCreater : MonoBehaviour
         yield return new WaitForSecondsRealtime(1);
         for (int i = 0; i < BattleManager.Instance.CurrentEnemyList.Count; i++)
         {
+            string loaction = BattleManager.Instance.CurrentEnemyList.ElementAt(i).Key;
             BattleManager.Instance.TakeDamage(
                 DataManager.Instance.PlayerList[DataManager.Instance.PlayerID],
-                BattleManager.Instance.CurrentEnemyList[i].CurrentAttack
+                BattleManager.Instance.CurrentEnemyList[loaction].CurrentAttack
             );
             EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
             yield return new WaitForSecondsRealtime(1);

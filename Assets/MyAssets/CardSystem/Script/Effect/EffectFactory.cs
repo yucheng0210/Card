@@ -14,6 +14,8 @@ public class EffectFactory : Singleton<EffectFactory>
                 return new FireBallEffect();
             case "DrawCardEffect":
                 return new DrawCardEffect();
+            case "MoveEffect":
+                return new MoveEffect();
             default:
                 return null;
         }
