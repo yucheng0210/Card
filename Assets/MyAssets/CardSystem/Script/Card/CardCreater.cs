@@ -206,7 +206,8 @@ public class CardCreater : MonoBehaviour
             string loaction = BattleManager.Instance.CurrentEnemyList.ElementAt(i).Key;
             BattleManager.Instance.TakeDamage(
                 DataManager.Instance.PlayerList[DataManager.Instance.PlayerID],
-                BattleManager.Instance.CurrentEnemyList[loaction].CurrentAttack
+                BattleManager.Instance.CurrentEnemyList[loaction].CurrentAttack, 
+                loaction
             );
             EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
             yield return new WaitForSecondsRealtime(1);

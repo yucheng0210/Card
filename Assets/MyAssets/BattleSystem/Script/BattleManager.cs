@@ -45,15 +45,15 @@ public class BattleManager : Singleton<BattleManager>
         CurrentAbilityList = new Dictionary<int, string>();
         CheckerboardList = new Dictionary<string, string>();
     }
-    public void TakeDamage(CharacterData defender, int damage)
+    public void TakeDamage(CharacterData defender, int damage, string loaction)
     {
         int currentDamage = damage - defender.CurrentShield;
         if (currentDamage < 0)
             currentDamage = 0;
         defender.CurrentShield -= damage;
         defender.CurrentHealth -= currentDamage;
-        Vector2 pos = new(CheckerboardTrans.GetChild(GetCheckerboardPoint(defender.CharacterPos)).localEulerAngles.x
-        , CheckerboardTrans.GetChild(GetCheckerboardPoint(defender.CharacterPos)).localPosition.y);
+        Vector2 pos = new(CheckerboardTrans.GetChild(GetCheckerboardPoint(loaction)).localPosition.x
+        , CheckerboardTrans.GetChild(GetCheckerboardPoint(loaction)).localPosition.y);
         EventManager.Instance.DispatchEvent(EventDefinition.eventTakeDamage, pos, damage);
     }
 

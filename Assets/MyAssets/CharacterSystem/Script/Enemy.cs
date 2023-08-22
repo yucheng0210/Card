@@ -61,12 +61,12 @@ public class Enemy : MonoBehaviour
 
     public void OnSelect()
     {
-        skinMesh.material.SetColor("_OtlColor", Color.red);
+        //skinMesh.material.SetColor("_OtlColor", Color.red);
     }
 
     public void OnUnSelect()
     {
-        skinMesh.material.SetColor("_OtlColor", Color.black);
+        //skinMesh.material.SetColor("_OtlColor", Color.black);
     }
 
     private void EventPlayerTurn(params object[] args)

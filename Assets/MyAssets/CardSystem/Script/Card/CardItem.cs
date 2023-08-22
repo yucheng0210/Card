@@ -256,7 +256,8 @@ public class CardItem
         if (DataManager.Instance.CardList[CardID].CardAttack != 0)
             BattleManager.Instance.TakeDamage(
                 BattleManager.Instance.CurrentEnemyList[enemyLoaction],
-                DataManager.Instance.CardList[CardID].CardAttack
+                DataManager.Instance.CardList[CardID].CardAttack,
+                enemyLoaction
             );
         EventManager.Instance.DispatchEvent(EventDefinition.eventUseCard, this);
         for (int i = 0; i < DataManager.Instance.CardList[CardID].CardEffectList.Count; i++)
