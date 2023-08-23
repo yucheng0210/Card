@@ -10,9 +10,9 @@ public class MoveEffect : IEffect
     public void ApplyEffect(int value, string target)
     {
         List<string> emptyPlaceList = new();
-        string[] pos = BattleManager.Instance.CurrentLocationID.Split(' ');
-        int x = int.Parse(pos[0]);
-        int y = int.Parse(pos[1]);
+        int[] pos = BattleManager.Instance.ConvertNormalPos(BattleManager.Instance.CurrentLocationID);
+        int x = pos[0];
+        int y = pos[1];
         emptyPlaceList.Add(BattleManager.Instance.ConvertCheckerboardPos(x, y + 1));
         emptyPlaceList.Add(BattleManager.Instance.ConvertCheckerboardPos(x, y - 1));
         emptyPlaceList.Add(BattleManager.Instance.ConvertCheckerboardPos(x + 1, y));
@@ -31,7 +31,7 @@ public class MoveEffect : IEffect
                     .GetChild(BattleManager.Instance.GetCheckerboardPoint(emptyPlaceList[i]));
                     int avoidClosure = i;
                     emptyPlace.GetComponent<Image>().color = Color.green;
-                    emptyPlace.GetComponent<Button>().onClick.AddListener(() => 
+                    emptyPlace.GetComponent<Button>().onClick.AddListener(() =>
                     Move(emptyPlace.localPosition, emptyPlaceList[avoidClosure]));
                 }
             }
@@ -41,7 +41,7 @@ public class MoveEffect : IEffect
     {
         BattleManager.Instance.CurrentLocationID = loactionID;
         Transform checkerboardTrans = BattleManager.Instance.CheckerboardTrans;
-        BattleManager.Instance.PlayerTrans.DOAnchorPos(destination, 1);
+        BattleManager.Instance.PlayerTrans.DOAnchorPos(destination, 0.5f);
         for (int i = 0; i < checkerboardTrans.childCount; i++)
         {
             checkerboardTrans.GetChild(i).GetComponent<Image>().color = Color.white;

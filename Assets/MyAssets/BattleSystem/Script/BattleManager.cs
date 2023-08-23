@@ -101,6 +101,14 @@ public class BattleManager : Singleton<BattleManager>
                 break;
         }
     }
+    public int[] ConvertNormalPos(string loaction)
+    {
+        string[] myLocation = loaction.Split(' ');
+        int[] normalPos = new int[2];
+        normalPos[0] = int.Parse(myLocation[0]);
+        normalPos[1] = int.Parse(myLocation[1]);
+        return normalPos;
+    }
     public string ConvertCheckerboardPos(int x, int y)
     {
         return x.ToString() + ' ' + y.ToString();

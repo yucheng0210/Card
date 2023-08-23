@@ -204,10 +204,15 @@ public class CardCreater : MonoBehaviour
         for (int i = 0; i < BattleManager.Instance.CurrentEnemyList.Count; i++)
         {
             string loaction = BattleManager.Instance.CurrentEnemyList.ElementAt(i).Key;
+            int[] playerNormalPos = BattleManager.Instance.ConvertNormalPos(BattleManager.Instance.CurrentLocationID);
+            int[] enemyNormalPos = BattleManager.Instance.ConvertNormalPos(loaction);
+            float distance = MathF.Sqrt(Mathf.Pow(playerNormalPos[0] - enemyNormalPos[0], 2)
+             + Mathf.Pow(playerNormalPos[1] - enemyNormalPos[1], 2));
+            Debug.Log(distance);
             BattleManager.Instance.TakeDamage(
                 DataManager.Instance.PlayerList[DataManager.Instance.PlayerID],
-                BattleManager.Instance.CurrentEnemyList[loaction].CurrentAttack, 
-                loaction
+                BattleManager.Instance.CurrentEnemyList[loaction].CurrentAttack,
+                BattleManager.Instance.CurrentLocationID
             );
             EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
             yield return new WaitForSecondsRealtime(1);
