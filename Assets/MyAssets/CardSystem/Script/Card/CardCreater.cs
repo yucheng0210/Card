@@ -195,59 +195,6 @@ public class CardCreater : MonoBehaviour
         }
     }
 
-    private IEnumerator EnemyAttack()
-    {
-        yield return (
-            UIManager.Instance.FadeOutIn(roundTip.GetComponent<CanvasGroup>(), 0.5f, 1, false)
-        );
-        yield return new WaitForSecondsRealtime(1);
-        for (int i = 0; i < BattleManager.Instance.CurrentEnemyList.Count; i++)
-        {
-            string loaction = BattleManager.Instance.CurrentEnemyList.ElementAt(i).Key;
-            int[] playerNormalPos = BattleManager.Instance.ConvertNormalPos(BattleManager.Instance.CurrentLocationID);
-            int[] enemyNormalPos = BattleManager.Instance.ConvertNormalPos(loaction);
-            float distance = MathF.Sqrt(Mathf.Pow(playerNormalPos[0] - enemyNormalPos[0], 2)
-             + Mathf.Pow(playerNormalPos[1] - enemyNormalPos[1], 2));
-            Debug.Log(distance);
-            BattleManager.Instance.TakeDamage(
-                DataManager.Instance.PlayerList[DataManager.Instance.PlayerID],
-                BattleManager.Instance.CurrentEnemyList[loaction].CurrentAttack,
-                BattleManager.Instance.CurrentLocationID
-            );
-            EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
-            yield return new WaitForSecondsRealtime(1);
-        }
-        BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Player);
-    }
-
-    private IEnumerator PlayerDrawCard()
-    {
-        yield return (
-            UIManager.Instance.FadeOutIn(roundTip.GetComponent<CanvasGroup>(), 0.5f, 1, false)
-        ); // 執行 UI 淡入淡出效果
-        StartCoroutine(
-            DrawCard(
-                DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].DefaultDrawCardCout
-            )
-        );
-    }
-
-    private void AdjustCard()
-    {
-        List<CardItem> handCard = DataManager.Instance.HandCard;
-        for (int i = 0; i < handCard.Count; i++)
-        {
-            handCard[i]
-                .GetComponent<RectTransform>()
-                .DOAnchorPos(BattleManager.Instance.CardPositionList[i], moveTime);
-            handCard[i]
-                .GetComponent<RectTransform>()
-                .DORotateQuaternion(
-                    Quaternion.Euler(0, 0, BattleManager.Instance.CardAngleList[i]),
-                    moveTime
-                );
-        }
-    }
 
     private void EventDrawCard(params object[] args)
     {
@@ -279,6 +226,68 @@ public class CardCreater : MonoBehaviour
         StartCoroutine(PlayerDrawCard());
     }
 
+
+    private IEnumerator PlayerDrawCard()
+    {
+        yield return (
+            UIManager.Instance.FadeOutIn(roundTip.GetComponent<CanvasGroup>(), 0.5f, 1, false)
+        ); // 執行 UI 淡入淡出效果
+        StartCoroutine(
+            DrawCard(
+                DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].DefaultDrawCardCout
+            )
+        );
+    }
+
+    private void AdjustCard()
+    {
+        List<CardItem> handCard = DataManager.Instance.HandCard;
+        for (int i = 0; i < handCard.Count; i++)
+        {
+            handCard[i]
+                .GetComponent<RectTransform>()
+                .DOAnchorPos(BattleManager.Instance.CardPositionList[i], moveTime);
+            handCard[i]
+                .GetComponent<RectTransform>()
+                .DORotateQuaternion(
+                    Quaternion.Euler(0, 0, BattleManager.Instance.CardAngleList[i]),
+                    moveTime
+                );
+        }
+    }
+    private IEnumerator EnemyAttack()
+    {
+        yield return (
+            UIManager.Instance.FadeOutIn(roundTip.GetComponent<CanvasGroup>(), 0.5f, 1, false)
+        );
+        yield return new WaitForSecondsRealtime(1);
+        for (int i = 0; i < BattleManager.Instance.CurrentEnemyList.Count; i++)
+        {
+            string loaction = BattleManager.Instance.CurrentEnemyList.ElementAt(i).Key;
+            int[] playerNormalPos = BattleManager.Instance.ConvertNormalPos(BattleManager.Instance.CurrentLocationID);
+            int[] enemyNormalPos = BattleManager.Instance.ConvertNormalPos(loaction);
+            float distance = MathF.Sqrt(Mathf.Pow(playerNormalPos[0] - enemyNormalPos[0], 2)
+             + Mathf.Pow(playerNormalPos[1] - enemyNormalPos[1], 2));
+            if (distance > 4)
+            {
+                List<string> emptyPlaceList =
+                BattleManager.Instance.GetEmptyPlace(loaction, BattleManager.Instance.CurrentEnemyList[loaction].StepCount);
+                int randomIndex = UnityEngine.Random.Range(0, emptyPlaceList.Count);
+                RectTransform enemyTrans = BattleManager.Instance.CurrentEnemyList[loaction].EnemyTrans;
+                RectTransform emptyPlace = BattleManager.Instance.CheckerboardTrans
+                .GetChild(BattleManager.Instance.GetCheckerboardPoint(emptyPlaceList[randomIndex])).GetComponent<RectTransform>();
+                enemyTrans.DOAnchorPos(emptyPlace.localPosition, 0.5f);
+            }
+            /*BattleManager.Instance.TakeDamage(
+                DataManager.Instance.PlayerList[DataManager.Instance.PlayerID],
+                BattleManager.Instance.CurrentEnemyList[loaction].CurrentAttack,
+                BattleManager.Instance.CurrentLocationID
+            );*/
+            EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
+            yield return new WaitForSecondsRealtime(1);
+        }
+        BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Player);
+    }
     private void EventEnemyTurn(params object[] args)
     {
         for (int i = 0; i < DataManager.Instance.HandCard.Count; i++)

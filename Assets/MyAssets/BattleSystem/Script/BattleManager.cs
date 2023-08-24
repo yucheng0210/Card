@@ -25,8 +25,9 @@ public class BattleManager : Singleton<BattleManager>
     public List<CardItem> CardItemList { get; set; }
     public List<Vector2> CardPositionList { get; set; }
     public List<float> CardAngleList { get; set; }
-    public Dictionary<string, EnemyData> CurrentEnemyList { get; private set; }
     public Dictionary<int, string> CurrentAbilityList { get; set; }
+    //敵人
+    public Dictionary<string, EnemyData> CurrentEnemyList { get; private set; }
     public bool IsDrag { get; set; }
     //棋盤
     public string CurrentLocationID { get; set; }
@@ -71,7 +72,51 @@ public class BattleManager : Singleton<BattleManager>
             DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].CurrentActionPoint -=
                 point;
     }
-
+    public int[] ConvertNormalPos(string loaction)
+    {
+        string[] myLocation = loaction.Split(' ');
+        int[] normalPos = new int[2];
+        normalPos[0] = int.Parse(myLocation[0]);
+        normalPos[1] = int.Parse(myLocation[1]);
+        return normalPos;
+    }
+    public string ConvertCheckerboardPos(int x, int y)
+    {
+        return x.ToString() + ' ' + y.ToString();
+    }
+    public int GetCheckerboardPoint(string point)
+    {
+        string[] points = point.Split(' ');
+        return int.Parse(points[0]) + int.Parse(points[1]) * 8;
+    }
+    public List<string> GetEmptyPlace(string loaction, int stepCount)
+    {
+        List<string> emptyPlaceList = new();
+        int[] pos = ConvertNormalPos(loaction);
+        int x = pos[0];
+        int y = pos[1];
+        for (int i = 1; i <= stepCount; i++)
+        {
+            emptyPlaceList.Add(ConvertCheckerboardPos(x, y + i));
+            emptyPlaceList.Add(ConvertCheckerboardPos(x, y - i));
+            emptyPlaceList.Add(ConvertCheckerboardPos(x + i, y));
+            emptyPlaceList.Add(ConvertCheckerboardPos(x - i, y));
+            if (i == stepCount)
+                break;
+            emptyPlaceList.Add(ConvertCheckerboardPos(x + i, y + i));
+            emptyPlaceList.Add(ConvertCheckerboardPos(x + i, y - i));
+            emptyPlaceList.Add(ConvertCheckerboardPos(x - i, y + i));
+            emptyPlaceList.Add(ConvertCheckerboardPos(x - i, y - i));
+        }
+        List<string> newEmptyPlaceList = new();
+        for (int i = 0; i < emptyPlaceList.Count; i++)
+        {
+            if (CheckerboardList.ContainsKey(emptyPlaceList[i]) && CheckerboardList[emptyPlaceList[i]] == "Empty")
+                newEmptyPlaceList.Add(emptyPlaceList[i]);
+        }
+        emptyPlaceList = newEmptyPlaceList;
+        return emptyPlaceList;
+    }
     public void ChangeTurn(BattleType type)
     {
         MyBattleType = type;
@@ -101,23 +146,6 @@ public class BattleManager : Singleton<BattleManager>
                 break;
         }
     }
-    public int[] ConvertNormalPos(string loaction)
-    {
-        string[] myLocation = loaction.Split(' ');
-        int[] normalPos = new int[2];
-        normalPos[0] = int.Parse(myLocation[0]);
-        normalPos[1] = int.Parse(myLocation[1]);
-        return normalPos;
-    }
-    public string ConvertCheckerboardPos(int x, int y)
-    {
-        return x.ToString() + ' ' + y.ToString();
-    }
-    public int GetCheckerboardPoint(string point)
-    {
-        string[] points = point.Split(' ');
-        return int.Parse(points[0]) + int.Parse(points[1]) * 8;
-    }
     private void BattleInitial()
     {
         CurrentLocationID = DataManager.Instance.LevelList[DataManager.Instance.LevelID].PlayerStartPos;
@@ -133,9 +161,9 @@ public class BattleManager : Singleton<BattleManager>
             string loactionID = DataManager.Instance.LevelList[levelID].EnemyIDList.ElementAt(i).Key;
             CurrentEnemyList.Add(loactionID, (EnemyData)DataManager.Instance.EnemyList[enemyID].Clone());
         }
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 8; i++)
         {
-            for (int j = 0; j < 8; j++)
+            for (int j = 0; j < 5; j++)
             {
                 string loaction = ConvertCheckerboardPos(i, j);
                 if (DataManager.Instance.LevelList[levelID].EnemyIDList.ContainsKey(loaction))

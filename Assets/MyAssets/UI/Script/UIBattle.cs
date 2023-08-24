@@ -161,6 +161,7 @@ public class UIBattle : UIBase
             .GetChild(BattleManager.Instance.GetCheckerboardPoint(key)).localPosition;
             enemy.EnemyID = BattleManager.Instance.CurrentEnemyList[key].CharacterID;
             enemy.EnemyImage.sprite = Resources.Load<Sprite>(BattleManager.Instance.CurrentEnemyList[key].EnemyImagePath);
+            BattleManager.Instance.CurrentEnemyList[key].EnemyTrans = enemy.GetComponent<RectTransform>();
             BattleManager.Instance.CurrentEnemyList[key].CurrentHealth = DataManager
                 .Instance
                 .EnemyList[enemy.EnemyID].MaxHealth;
@@ -186,9 +187,9 @@ public class UIBattle : UIBase
         if (direction == 0)
             xOffset *= -1;
         Vector2 startPoint = (Vector2)args[0];
-        Vector2 endPoint = new Vector2(startPoint.x + xOffset, -540);
-        Vector2 midPoint = new Vector2(startPoint.x + xOffset / 2, startPoint.y + curveHeight);
-        Vector2 endScale = new Vector2(0.5f, 0.5f);
+        Vector2 endPoint = new(startPoint.x + xOffset, -540);
+        Vector2 midPoint = new(startPoint.x + xOffset / 2, startPoint.y + curveHeight);
+        Vector2 endScale = new(0.5f, 0.5f);
         DOTween
             .To(
                 (t) =>

@@ -115,7 +115,7 @@ public class DataManager : Singleton<DataManager>
                 MinAttack = int.Parse(row[3]),
                 MaxAttack = int.Parse(row[4]),
                 EnemyImagePath = row[5],
-                //CharacterPos = row[6]
+                StepCount = int.Parse(row[6])
             };
             EnemyList.Add(enemyData.CharacterID, enemyData);
         }
