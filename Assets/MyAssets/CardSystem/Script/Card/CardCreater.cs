@@ -268,16 +268,44 @@ public class CardCreater : MonoBehaviour
             int[] enemyNormalPos = BattleManager.Instance.ConvertNormalPos(loaction);
             float distance = MathF.Sqrt(Mathf.Pow(playerNormalPos[0] - enemyNormalPos[0], 2)
              + Mathf.Pow(playerNormalPos[1] - enemyNormalPos[1], 2));
-            if (distance > 4)
+            int stepCount = BattleManager.Instance.CurrentEnemyList[loaction].StepCount;
+            RectTransform enemyTrans = BattleManager.Instance.CurrentEnemyList[loaction].EnemyTrans;
+            List<string> emptyPlaceList =
+            BattleManager.Instance.GetEmptyPlace(loaction, stepCount);
+            if (distance > 3)
             {
-                List<string> emptyPlaceList =
-                BattleManager.Instance.GetEmptyPlace(loaction, BattleManager.Instance.CurrentEnemyList[loaction].StepCount);
                 int randomIndex = UnityEngine.Random.Range(0, emptyPlaceList.Count);
-                RectTransform enemyTrans = BattleManager.Instance.CurrentEnemyList[loaction].EnemyTrans;
                 RectTransform emptyPlace = BattleManager.Instance.CheckerboardTrans
                 .GetChild(BattleManager.Instance.GetCheckerboardPoint(emptyPlaceList[randomIndex])).GetComponent<RectTransform>();
                 enemyTrans.DOAnchorPos(emptyPlace.localPosition, 0.5f);
+                enemyTrans.GetComponent<Enemy>().EnemyLocation = emptyPlaceList[randomIndex];
+                BattleManager.Instance.CurrentEnemyList.Add(emptyPlaceList[randomIndex], BattleManager.Instance.CurrentEnemyList[loaction]);
+                BattleManager.Instance.CurrentEnemyList.Remove(loaction);
             }
+            else
+            {
+                float minDistance = 99;
+                int[] minPoint = new int[2];
+                for (int j = 0; j < emptyPlaceList.Count; j++)
+                {
+                    int[] targetPoint = BattleManager.Instance.ConvertNormalPos(emptyPlaceList[i]);
+                    float targetDistance = MathF.Sqrt(Mathf.Pow(playerNormalPos[0] - targetPoint[0], 2)
+                    + Mathf.Pow(playerNormalPos[1] - targetPoint[1], 2));
+                    if (targetDistance < minDistance)
+                    {
+                        minDistance = targetDistance;
+                        minPoint = targetPoint;
+                    }
+                }
+                string minLocation = BattleManager.Instance.ConvertCheckerboardPos(minPoint[0], minPoint[1]);
+                RectTransform emptyPlace = BattleManager.Instance.CheckerboardTrans
+                .GetChild(BattleManager.Instance.GetCheckerboardPoint(minLocation)).GetComponent<RectTransform>();
+                enemyTrans.DOAnchorPos(emptyPlace.localPosition, 0.5f);
+                enemyTrans.GetComponent<Enemy>().EnemyLocation = minLocation;
+                BattleManager.Instance.CurrentEnemyList.Add(minLocation, BattleManager.Instance.CurrentEnemyList[loaction]);
+                BattleManager.Instance.CurrentEnemyList.Remove(loaction);
+            }
+
             /*BattleManager.Instance.TakeDamage(
                 DataManager.Instance.PlayerList[DataManager.Instance.PlayerID],
                 BattleManager.Instance.CurrentEnemyList[loaction].CurrentAttack,

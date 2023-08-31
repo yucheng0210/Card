@@ -10,4 +10,5 @@ public class EnemyData : CharacterData
     public int StepCount { get; set; }
     public string EnemyImagePath { get; set; }
     public RectTransform EnemyTrans { get; set; }
+    public string EnemyLocation { get; set; }
 }

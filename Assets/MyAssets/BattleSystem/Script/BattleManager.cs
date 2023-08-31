@@ -27,7 +27,7 @@ public class BattleManager : Singleton<BattleManager>
     public List<float> CardAngleList { get; set; }
     public Dictionary<int, string> CurrentAbilityList { get; set; }
     //敵人
-    public Dictionary<string, EnemyData> CurrentEnemyList { get; private set; }
+    public Dictionary<string, EnemyData> CurrentEnemyList { get; set; }
     public bool IsDrag { get; set; }
     //棋盤
     public string CurrentLocationID { get; set; }
@@ -146,6 +146,21 @@ public class BattleManager : Singleton<BattleManager>
                 break;
         }
     }
+    public void RefreshCheckerboardList()
+    {
+        CheckerboardList.Clear();
+        for (int i = 0; i < 8; i++)
+        {
+            for (int j = 0; j < 5; j++)
+            {
+                string loaction = ConvertCheckerboardPos(i, j);
+                if (CurrentEnemyList.ContainsKey(loaction))
+                    CheckerboardList.Add(loaction, "Enemy");
+                else
+                    CheckerboardList.Add(loaction, "Empty");
+            }
+        }
+    }
     private void BattleInitial()
     {
         CurrentLocationID = DataManager.Instance.LevelList[DataManager.Instance.LevelID].PlayerStartPos;
@@ -161,17 +176,7 @@ public class BattleManager : Singleton<BattleManager>
             string loactionID = DataManager.Instance.LevelList[levelID].EnemyIDList.ElementAt(i).Key;
             CurrentEnemyList.Add(loactionID, (EnemyData)DataManager.Instance.EnemyList[enemyID].Clone());
         }
-        for (int i = 0; i < 8; i++)
-        {
-            for (int j = 0; j < 5; j++)
-            {
-                string loaction = ConvertCheckerboardPos(i, j);
-                if (DataManager.Instance.LevelList[levelID].EnemyIDList.ContainsKey(loaction))
-                    CheckerboardList.Add(loaction, "Enemy");
-                else
-                    CheckerboardList.Add(loaction, "Empty");
-            }
-        }
+        RefreshCheckerboardList();
         EventManager.Instance.DispatchEvent(EventDefinition.eventBattleInitial);
     }
 
