@@ -46,7 +46,7 @@ public abstract class CharacterData
                 currentShield = 999;
         }
     }
-
+    public int AttackDistance { get; set; }
     public CharacterData Clone()
     {
         return (CharacterData)MemberwiseClone();

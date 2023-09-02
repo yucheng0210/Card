@@ -119,6 +119,7 @@ public class CardCreater : MonoBehaviour
             yield return new WaitForSecondsRealtime(coolDown); // 等待冷卻時間
             handCard[i].transform.SetParent(handCardTrans); // 將卡片設定為手牌的子物件
             handCard[i].gameObject.SetActive(true); // 啟用卡片物件
+            handCard[i].CantMove = false;
             StartCoroutine(
                 UIManager.Instance.FadeOut(handCard[i].GetComponent<CanvasGroup>(), moveTime)
             );
@@ -257,6 +258,8 @@ public class CardCreater : MonoBehaviour
     }
     private IEnumerator EnemyAttack()
     {
+        Dictionary<string, EnemyData> newCurrentEnemyList = new();
+        List<string> movedLocationList = new();
         yield return (
             UIManager.Instance.FadeOutIn(roundTip.GetComponent<CanvasGroup>(), 0.5f, 1, false)
         );
@@ -272,23 +275,27 @@ public class CardCreater : MonoBehaviour
             RectTransform enemyTrans = BattleManager.Instance.CurrentEnemyList[loaction].EnemyTrans;
             List<string> emptyPlaceList =
             BattleManager.Instance.GetEmptyPlace(loaction, stepCount);
-            if (distance > 3)
+            for (int j = 0; j < movedLocationList.Count; j++)//因為不是立即更新棋盤的空白位置
             {
-                int randomIndex = UnityEngine.Random.Range(0, emptyPlaceList.Count);
-                RectTransform emptyPlace = BattleManager.Instance.CheckerboardTrans
-                .GetChild(BattleManager.Instance.GetCheckerboardPoint(emptyPlaceList[randomIndex])).GetComponent<RectTransform>();
-                enemyTrans.DOAnchorPos(emptyPlace.localPosition, 0.5f);
-                enemyTrans.GetComponent<Enemy>().EnemyLocation = emptyPlaceList[randomIndex];
-                BattleManager.Instance.CurrentEnemyList.Add(emptyPlaceList[randomIndex], BattleManager.Instance.CurrentEnemyList[loaction]);
-                BattleManager.Instance.CurrentEnemyList.Remove(loaction);
+                if (emptyPlaceList.Contains(movedLocationList[j]))
+                    emptyPlaceList.Remove(movedLocationList[j]);
             }
-            else
+            if (distance <= BattleManager.Instance.CurrentEnemyList[loaction].AttackDistance)
+            {
+                BattleManager.Instance.TakeDamage(
+                    DataManager.Instance.PlayerList[DataManager.Instance.PlayerID],
+                    BattleManager.Instance.CurrentEnemyList[loaction].CurrentAttack,
+                    BattleManager.Instance.CurrentLocationID
+                );
+                newCurrentEnemyList.Add(loaction, BattleManager.Instance.CurrentEnemyList[loaction]);
+            }
+            else if (distance <= BattleManager.Instance.CurrentEnemyList[loaction].AlertDistance)
             {
                 float minDistance = 99;
                 int[] minPoint = new int[2];
                 for (int j = 0; j < emptyPlaceList.Count; j++)
                 {
-                    int[] targetPoint = BattleManager.Instance.ConvertNormalPos(emptyPlaceList[i]);
+                    int[] targetPoint = BattleManager.Instance.ConvertNormalPos(emptyPlaceList[j]);
                     float targetDistance = MathF.Sqrt(Mathf.Pow(playerNormalPos[0] - targetPoint[0], 2)
                     + Mathf.Pow(playerNormalPos[1] - targetPoint[1], 2));
                     if (targetDistance < minDistance)
@@ -301,19 +308,30 @@ public class CardCreater : MonoBehaviour
                 RectTransform emptyPlace = BattleManager.Instance.CheckerboardTrans
                 .GetChild(BattleManager.Instance.GetCheckerboardPoint(minLocation)).GetComponent<RectTransform>();
                 enemyTrans.DOAnchorPos(emptyPlace.localPosition, 0.5f);
-                enemyTrans.GetComponent<Enemy>().EnemyLocation = minLocation;
-                BattleManager.Instance.CurrentEnemyList.Add(minLocation, BattleManager.Instance.CurrentEnemyList[loaction]);
-                BattleManager.Instance.CurrentEnemyList.Remove(loaction);
+                newCurrentEnemyList.Add(minLocation, BattleManager.Instance.CurrentEnemyList[loaction]);
+                movedLocationList.Add(minLocation);
             }
-
-            /*BattleManager.Instance.TakeDamage(
-                DataManager.Instance.PlayerList[DataManager.Instance.PlayerID],
-                BattleManager.Instance.CurrentEnemyList[loaction].CurrentAttack,
-                BattleManager.Instance.CurrentLocationID
-            );*/
+            else
+            {
+                int randomIndex = UnityEngine.Random.Range(0, emptyPlaceList.Count);
+                RectTransform emptyPlace = BattleManager.Instance.CheckerboardTrans
+                .GetChild(BattleManager.Instance.GetCheckerboardPoint(emptyPlaceList[randomIndex])).GetComponent<RectTransform>();
+                enemyTrans.DOAnchorPos(emptyPlace.localPosition, 0.5f);
+                newCurrentEnemyList.Add(emptyPlaceList[randomIndex], BattleManager.Instance.CurrentEnemyList[loaction]);
+                movedLocationList.Add(emptyPlaceList[randomIndex]);
+            }
             EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
             yield return new WaitForSecondsRealtime(1);
         }
+        BattleManager.Instance.CurrentEnemyList.Clear();
+        for (int i = 0; i < newCurrentEnemyList.Count; i++)
+        {
+            BattleManager.Instance.CurrentEnemyList.Add(newCurrentEnemyList.ElementAt(i).Key, newCurrentEnemyList.ElementAt(i).Value);
+            BattleManager.Instance.CurrentEnemyList[newCurrentEnemyList.ElementAt(i).Key].EnemyTrans
+            .GetComponent<Enemy>().EnemyLocation = newCurrentEnemyList.ElementAt(i).Key;
+
+        }
+        BattleManager.Instance.RefreshCheckerboardList();
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Player);
     }
     private void EventEnemyTurn(params object[] args)
@@ -321,6 +339,7 @@ public class CardCreater : MonoBehaviour
         for (int i = 0; i < DataManager.Instance.HandCard.Count; i++)
         {
             DataManager.Instance.HandCard[i].gameObject.SetActive(true);
+            DataManager.Instance.HandCard[i].CantMove = true;
             DataManager.Instance.HandCard[i].transform.SetParent(usedCardTrans);
             DataManager.Instance.HandCard[i]
                 .GetComponent<RectTransform>()

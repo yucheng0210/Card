@@ -98,6 +98,7 @@ public class DataManager : Singleton<DataManager>
                 MaxActionPoint = int.Parse(row[3]),
                 Mana = int.Parse(row[4]),
                 DefaultDrawCardCout = int.Parse(row[5]),
+                AttackDistance=int.Parse(row[6]),
             };
             PlayerList.Add(playerData.CharacterID, playerData);
         }
@@ -115,7 +116,9 @@ public class DataManager : Singleton<DataManager>
                 MinAttack = int.Parse(row[3]),
                 MaxAttack = int.Parse(row[4]),
                 EnemyImagePath = row[5],
-                StepCount = int.Parse(row[6])
+                StepCount = int.Parse(row[6]),
+                AttackDistance=int.Parse(row[7]),
+                AlertDistance=int.Parse(row[8]),
             };
             EnemyList.Add(enemyData.CharacterID, enemyData);
         }

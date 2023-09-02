@@ -154,8 +154,16 @@ public class BattleManager : Singleton<BattleManager>
             for (int j = 0; j < 5; j++)
             {
                 string loaction = ConvertCheckerboardPos(i, j);
-                if (CurrentEnemyList.ContainsKey(loaction))
+                if (CurrentLocationID == loaction)
+                {
+                    CheckerboardList.Add(loaction, "Player");
+                    //Debug.Log("玩家：" + loaction);
+                }
+                else if (CurrentEnemyList.ContainsKey(loaction))
+                {
                     CheckerboardList.Add(loaction, "Enemy");
+                    //Debug.Log("敵人：" + loaction);
+                }
                 else
                     CheckerboardList.Add(loaction, "Empty");
             }

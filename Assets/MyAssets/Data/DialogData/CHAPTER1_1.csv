@@ -3,9 +3,9 @@ DEFAULT,TALK,???,,.....................................................。
 DEFAULT,TALK,???,,..................................。
 DEFAULT,TALK,???,,......。
 DEFAULT,TALK,,,女主角緩緩地睜開雙眼。
-DEFAULT,TALK,???,,唉......果然又是夢。
-DEFAULT,TALK,???,,什麼時候這些夢也能成真呢？
+DEFAULT,TALK,女主角,,唉......又是這個夢。
+DEFAULT,TALK,女主角,,什麼時候這些夢也能成真呢？
 DEFAULT,TALK,,,女主角扶著身旁的樹木爬起來。
-DEFAULT,TALK,???,,好想死，又得去工作了。
+DEFAULT,TALK,女主角,,好想死，又得去工作了。
 DEFAULT,TALK,,,女主角向著森林深處走去。
 DEFAULT,CHOICE,END,DEFAULT,離開。
