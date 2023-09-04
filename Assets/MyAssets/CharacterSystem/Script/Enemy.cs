@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.NetworkInformation;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,7 +9,8 @@ public class Enemy : MonoBehaviour
 {
     /*  [SerializeField]
       private bool isBoss = false;*/
-
+    [SerializeField]
+    private Image alertImage;
     [SerializeField]
     private Slider enemyHealthSlider;
 
@@ -24,6 +26,11 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     private RectTransform enemyHurtRect;
     private SkinnedMeshRenderer skinMesh;
+    public Image EnemyAlert
+    {
+        get { return alertImage; }
+        set { alertImage = value; }
+    }
     public Image EnemyImage { get; set; }
     public int EnemyID { get; set; }
     public string EnemyLocation { get; set; }

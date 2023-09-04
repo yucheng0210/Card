@@ -117,6 +117,47 @@ public class BattleManager : Singleton<BattleManager>
         emptyPlaceList = newEmptyPlaceList;
         return emptyPlaceList;
     }
+    public float GetDistance(string location)
+    {
+        int[] playerNormalPos = ConvertNormalPos(CurrentLocationID);
+        int[] enemyNormalPos = ConvertNormalPos(location);
+        float distance = Mathf.Sqrt(Mathf.Pow(playerNormalPos[0] - enemyNormalPos[0], 2)
+         + Mathf.Pow(playerNormalPos[1] - enemyNormalPos[1], 2));
+        return distance;
+    }
+    public void RefreshEnemyAlert()
+    {
+        RefreshCheckerboardList();
+        for (int i = 0; i < CurrentEnemyList.Count; i++)
+        {
+            string location = CurrentEnemyList.ElementAt(i).Key;
+            CurrentEnemyList.ElementAt(i).Value.EnemyTrans.GetComponent<Enemy>().EnemyAlert.enabled =
+            GetDistance(location) <= CurrentEnemyList[location].AttackDistance;
+        }
+    }
+    public void RefreshCheckerboardList()
+    {
+        CheckerboardList.Clear();
+        for (int i = 0; i < 8; i++)
+        {
+            for (int j = 0; j < 5; j++)
+            {
+                string loaction = ConvertCheckerboardPos(i, j);
+                if (CurrentLocationID == loaction)
+                {
+                    CheckerboardList.Add(loaction, "Player");
+                    //Debug.Log("玩家：" + loaction);
+                }
+                else if (CurrentEnemyList.ContainsKey(loaction))
+                {
+                    CheckerboardList.Add(loaction, "Enemy");
+                   // Debug.Log("敵人：" + loaction);
+                }
+                else
+                    CheckerboardList.Add(loaction, "Empty");
+            }
+        }
+    }
     public void ChangeTurn(BattleType type)
     {
         MyBattleType = type;
@@ -144,29 +185,6 @@ public class BattleManager : Singleton<BattleManager>
                 break;
             case BattleType.Loss:
                 break;
-        }
-    }
-    public void RefreshCheckerboardList()
-    {
-        CheckerboardList.Clear();
-        for (int i = 0; i < 8; i++)
-        {
-            for (int j = 0; j < 5; j++)
-            {
-                string loaction = ConvertCheckerboardPos(i, j);
-                if (CurrentLocationID == loaction)
-                {
-                    CheckerboardList.Add(loaction, "Player");
-                    //Debug.Log("玩家：" + loaction);
-                }
-                else if (CurrentEnemyList.ContainsKey(loaction))
-                {
-                    CheckerboardList.Add(loaction, "Enemy");
-                    //Debug.Log("敵人：" + loaction);
-                }
-                else
-                    CheckerboardList.Add(loaction, "Empty");
-            }
         }
     }
     private void BattleInitial()

@@ -266,38 +266,38 @@ public class CardCreater : MonoBehaviour
         yield return new WaitForSecondsRealtime(1);
         for (int i = 0; i < BattleManager.Instance.CurrentEnemyList.Count; i++)
         {
-            string loaction = BattleManager.Instance.CurrentEnemyList.ElementAt(i).Key;
-            int[] playerNormalPos = BattleManager.Instance.ConvertNormalPos(BattleManager.Instance.CurrentLocationID);
-            int[] enemyNormalPos = BattleManager.Instance.ConvertNormalPos(loaction);
-            float distance = MathF.Sqrt(Mathf.Pow(playerNormalPos[0] - enemyNormalPos[0], 2)
-             + Mathf.Pow(playerNormalPos[1] - enemyNormalPos[1], 2));
-            int stepCount = BattleManager.Instance.CurrentEnemyList[loaction].StepCount;
-            RectTransform enemyTrans = BattleManager.Instance.CurrentEnemyList[loaction].EnemyTrans;
+            string location = BattleManager.Instance.CurrentEnemyList.ElementAt(i).Key;
+            float distance = BattleManager.Instance.GetDistance(location);
+            int stepCount = BattleManager.Instance.CurrentEnemyList[location].StepCount;
+            RectTransform enemyTrans = BattleManager.Instance.CurrentEnemyList[location].EnemyTrans;
             List<string> emptyPlaceList =
-            BattleManager.Instance.GetEmptyPlace(loaction, stepCount);
+            BattleManager.Instance.GetEmptyPlace(location, stepCount);
             for (int j = 0; j < movedLocationList.Count; j++)//因為不是立即更新棋盤的空白位置
             {
                 if (emptyPlaceList.Contains(movedLocationList[j]))
                     emptyPlaceList.Remove(movedLocationList[j]);
             }
-            if (distance <= BattleManager.Instance.CurrentEnemyList[loaction].AttackDistance)
+            if (distance <= BattleManager.Instance.CurrentEnemyList[location].AttackDistance)
             {
+                enemyTrans.GetComponent<Enemy>().EnemyAlert.enabled = true;
+                yield return null;
                 BattleManager.Instance.TakeDamage(
                     DataManager.Instance.PlayerList[DataManager.Instance.PlayerID],
-                    BattleManager.Instance.CurrentEnemyList[loaction].CurrentAttack,
+                    BattleManager.Instance.CurrentEnemyList[location].CurrentAttack,
                     BattleManager.Instance.CurrentLocationID
                 );
-                newCurrentEnemyList.Add(loaction, BattleManager.Instance.CurrentEnemyList[loaction]);
+                newCurrentEnemyList.Add(location, BattleManager.Instance.CurrentEnemyList[location]);
             }
-            else if (distance <= BattleManager.Instance.CurrentEnemyList[loaction].AlertDistance)
+            else if (distance <= BattleManager.Instance.CurrentEnemyList[location].AlertDistance)
             {
+                enemyTrans.GetComponent<Enemy>().EnemyAlert.enabled = true;
+                yield return null;
                 float minDistance = 99;
                 int[] minPoint = new int[2];
                 for (int j = 0; j < emptyPlaceList.Count; j++)
                 {
                     int[] targetPoint = BattleManager.Instance.ConvertNormalPos(emptyPlaceList[j]);
-                    float targetDistance = MathF.Sqrt(Mathf.Pow(playerNormalPos[0] - targetPoint[0], 2)
-                    + Mathf.Pow(playerNormalPos[1] - targetPoint[1], 2));
+                    float targetDistance = BattleManager.Instance.GetDistance(emptyPlaceList[j]);
                     if (targetDistance < minDistance)
                     {
                         minDistance = targetDistance;
@@ -308,16 +308,18 @@ public class CardCreater : MonoBehaviour
                 RectTransform emptyPlace = BattleManager.Instance.CheckerboardTrans
                 .GetChild(BattleManager.Instance.GetCheckerboardPoint(minLocation)).GetComponent<RectTransform>();
                 enemyTrans.DOAnchorPos(emptyPlace.localPosition, 0.5f);
-                newCurrentEnemyList.Add(minLocation, BattleManager.Instance.CurrentEnemyList[loaction]);
+                newCurrentEnemyList.Add(minLocation, BattleManager.Instance.CurrentEnemyList[location]);
                 movedLocationList.Add(minLocation);
             }
             else
             {
+                enemyTrans.GetComponent<Enemy>().EnemyAlert.enabled = false;
+                yield return null;
                 int randomIndex = UnityEngine.Random.Range(0, emptyPlaceList.Count);
                 RectTransform emptyPlace = BattleManager.Instance.CheckerboardTrans
                 .GetChild(BattleManager.Instance.GetCheckerboardPoint(emptyPlaceList[randomIndex])).GetComponent<RectTransform>();
                 enemyTrans.DOAnchorPos(emptyPlace.localPosition, 0.5f);
-                newCurrentEnemyList.Add(emptyPlaceList[randomIndex], BattleManager.Instance.CurrentEnemyList[loaction]);
+                newCurrentEnemyList.Add(emptyPlaceList[randomIndex], BattleManager.Instance.CurrentEnemyList[location]);
                 movedLocationList.Add(emptyPlaceList[randomIndex]);
             }
             EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
@@ -329,7 +331,6 @@ public class CardCreater : MonoBehaviour
             BattleManager.Instance.CurrentEnemyList.Add(newCurrentEnemyList.ElementAt(i).Key, newCurrentEnemyList.ElementAt(i).Value);
             BattleManager.Instance.CurrentEnemyList[newCurrentEnemyList.ElementAt(i).Key].EnemyTrans
             .GetComponent<Enemy>().EnemyLocation = newCurrentEnemyList.ElementAt(i).Key;
-
         }
         BattleManager.Instance.RefreshCheckerboardList();
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Player);

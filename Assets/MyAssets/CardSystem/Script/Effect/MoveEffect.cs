@@ -18,6 +18,7 @@ public class MoveEffect : IEffect
             emptyPlace.GetComponent<Image>().color = Color.green;
             emptyPlace.GetComponent<Button>().onClick.AddListener(() =>
             Move(emptyPlace.localPosition, emptyPlaceList[avoidClosure]));
+            Debug.Log("玩家可行走位置：" + emptyPlaceList[i]);
         }
     }
     private void Move(Vector2 destination, string loactionID)
@@ -25,6 +26,7 @@ public class MoveEffect : IEffect
         BattleManager.Instance.CurrentLocationID = loactionID;
         RectTransform checkerboardTrans = BattleManager.Instance.CheckerboardTrans;
         BattleManager.Instance.PlayerTrans.DOAnchorPos(destination, 0.5f);
+        BattleManager.Instance.RefreshEnemyAlert();
         for (int i = 0; i < checkerboardTrans.childCount; i++)
         {
             checkerboardTrans.GetChild(i).GetComponent<Image>().color = Color.white;

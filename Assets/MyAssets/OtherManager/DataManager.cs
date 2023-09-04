@@ -207,7 +207,7 @@ public class DataManager : Singleton<DataManager>
         PlayerID = 1001;
         LevelID = 1001;
         CardData cardData;
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 3; i++)
         {
             cardData = CardList[1001];
             CardBag.Add(cardData);
@@ -217,7 +217,10 @@ public class DataManager : Singleton<DataManager>
         CardBag.Add(CardList[1003]);
         CardBag.Add(CardList[1003]);
         CardBag.Add(CardList[1004]);
-        CardBag.Add(CardList[1008]);
+        CardBag.Add(CardList[1004]);
+        CardBag.Add(CardList[1005]);
+        CardBag.Add(CardList[1005]);
+        CardBag.Add(CardList[3001]);
         PlayerList[PlayerID].CharacterPos = LevelList[LevelID].PlayerStartPos;
         yield return null;
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Explore);
