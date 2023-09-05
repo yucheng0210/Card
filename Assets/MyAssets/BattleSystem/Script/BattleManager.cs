@@ -132,7 +132,7 @@ public class BattleManager : Singleton<BattleManager>
         {
             string location = CurrentEnemyList.ElementAt(i).Key;
             CurrentEnemyList.ElementAt(i).Value.EnemyTrans.GetComponent<Enemy>().EnemyAlert.enabled =
-            GetDistance(location) <= CurrentEnemyList[location].AttackDistance;
+            GetDistance(location) <= CurrentEnemyList[location].AlertDistance;
         }
     }
     public void RefreshCheckerboardList()
@@ -151,7 +151,7 @@ public class BattleManager : Singleton<BattleManager>
                 else if (CurrentEnemyList.ContainsKey(loaction))
                 {
                     CheckerboardList.Add(loaction, "Enemy");
-                   // Debug.Log("敵人：" + loaction);
+                    // Debug.Log("敵人：" + loaction);
                 }
                 else
                     CheckerboardList.Add(loaction, "Empty");

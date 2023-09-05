@@ -12,13 +12,13 @@ public class MoveEffect : IEffect
         List<string> emptyPlaceList = BattleManager.Instance.GetEmptyPlace(BattleManager.Instance.CurrentLocationID, value);
         for (int i = 0; i < emptyPlaceList.Count; i++)
         {
-            RectTransform emptyPlace = BattleManager.Instance.CheckerboardTrans
-            .GetChild(BattleManager.Instance.GetCheckerboardPoint(emptyPlaceList[i])).GetComponent<RectTransform>();
             int avoidClosure = i;
+            RectTransform emptyPlace = BattleManager.Instance.CheckerboardTrans
+            .GetChild(BattleManager.Instance.GetCheckerboardPoint(emptyPlaceList[avoidClosure])).GetComponent<RectTransform>();
             emptyPlace.GetComponent<Image>().color = Color.green;
             emptyPlace.GetComponent<Button>().onClick.AddListener(() =>
             Move(emptyPlace.localPosition, emptyPlaceList[avoidClosure]));
-            Debug.Log("玩家可行走位置：" + emptyPlaceList[i]);
+            // Debug.Log("玩家可行走位置：" + emptyPlaceList[avoidClosure]);
         }
     }
     private void Move(Vector2 destination, string loactionID)

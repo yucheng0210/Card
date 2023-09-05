@@ -280,7 +280,7 @@ public class CardCreater : MonoBehaviour
             if (distance <= BattleManager.Instance.CurrentEnemyList[location].AttackDistance)
             {
                 enemyTrans.GetComponent<Enemy>().EnemyAlert.enabled = true;
-                yield return null;
+                yield return new WaitForSecondsRealtime(0.5f);
                 BattleManager.Instance.TakeDamage(
                     DataManager.Instance.PlayerList[DataManager.Instance.PlayerID],
                     BattleManager.Instance.CurrentEnemyList[location].CurrentAttack,
@@ -291,7 +291,7 @@ public class CardCreater : MonoBehaviour
             else if (distance <= BattleManager.Instance.CurrentEnemyList[location].AlertDistance)
             {
                 enemyTrans.GetComponent<Enemy>().EnemyAlert.enabled = true;
-                yield return null;
+                yield return new WaitForSecondsRealtime(0.5f);
                 float minDistance = 99;
                 int[] minPoint = new int[2];
                 for (int j = 0; j < emptyPlaceList.Count; j++)
@@ -310,11 +310,18 @@ public class CardCreater : MonoBehaviour
                 enemyTrans.DOAnchorPos(emptyPlace.localPosition, 0.5f);
                 newCurrentEnemyList.Add(minLocation, BattleManager.Instance.CurrentEnemyList[location]);
                 movedLocationList.Add(minLocation);
+                yield return new WaitForSecondsRealtime(0.5f);
+                if (minDistance == 1)
+                    BattleManager.Instance.TakeDamage(
+                       DataManager.Instance.PlayerList[DataManager.Instance.PlayerID],
+                       BattleManager.Instance.CurrentEnemyList[location].CurrentAttack,
+                       BattleManager.Instance.CurrentLocationID
+                   );
             }
             else
             {
                 enemyTrans.GetComponent<Enemy>().EnemyAlert.enabled = false;
-                yield return null;
+                yield return new WaitForSecondsRealtime(0.5f);
                 int randomIndex = UnityEngine.Random.Range(0, emptyPlaceList.Count);
                 RectTransform emptyPlace = BattleManager.Instance.CheckerboardTrans
                 .GetChild(BattleManager.Instance.GetCheckerboardPoint(emptyPlaceList[randomIndex])).GetComponent<RectTransform>();
