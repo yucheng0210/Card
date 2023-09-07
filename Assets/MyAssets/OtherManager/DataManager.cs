@@ -81,6 +81,7 @@ public class DataManager : Singleton<DataManager>
                 }
             }
             cardData.CardRarity = row[11];
+            cardData.CardAttackDistance = int.Parse(row[12]);
             CardList.Add(cardData.CardID, cardData);
         }
         #endregion
@@ -98,7 +99,6 @@ public class DataManager : Singleton<DataManager>
                 MaxActionPoint = int.Parse(row[3]),
                 Mana = int.Parse(row[4]),
                 DefaultDrawCardCout = int.Parse(row[5]),
-                AttackDistance=int.Parse(row[6]),
             };
             PlayerList.Add(playerData.CharacterID, playerData);
         }
@@ -117,8 +117,8 @@ public class DataManager : Singleton<DataManager>
                 MaxAttack = int.Parse(row[4]),
                 EnemyImagePath = row[5],
                 StepCount = int.Parse(row[6]),
-                AttackDistance=int.Parse(row[7]),
-                AlertDistance=int.Parse(row[8]),
+                AttackDistance = int.Parse(row[7]),
+                AlertDistance = int.Parse(row[8]),
             };
             EnemyList.Add(enemyData.CharacterID, enemyData);
         }
@@ -152,6 +152,16 @@ public class DataManager : Singleton<DataManager>
             level.DialogName = row[4];
             level.LevelType = row[5];
             level.PlayerStartPos = row[6];
+            level.LevelParentList = new();
+            if (!string.IsNullOrEmpty(row[7]))
+            {
+                string[] parentIDs = row[7].Split(';');
+                for (int j = 0; j < parentIDs.Length; j++)
+                {
+                    level.LevelParentList.Add(int.Parse(parentIDs[j]));
+                }
+            }
+            level.LevelPassed = false;
             LevelList.Add(level.LevelID, level);
         }
         #endregion

@@ -12,4 +12,5 @@ public class EnemyData : CharacterData
     public RectTransform EnemyTrans { get; set; }
     public string EnemyLocation { get; set; }
     public int AlertDistance { get; set; }
+    public int AttackDistance { get; set; }
 }

@@ -202,7 +202,6 @@ public class BattleManager : Singleton<BattleManager>
             string loactionID = DataManager.Instance.LevelList[levelID].EnemyIDList.ElementAt(i).Key;
             CurrentEnemyList.Add(loactionID, (EnemyData)DataManager.Instance.EnemyList[enemyID].Clone());
         }
-        RefreshCheckerboardList();
         EventManager.Instance.DispatchEvent(EventDefinition.eventBattleInitial);
     }
 

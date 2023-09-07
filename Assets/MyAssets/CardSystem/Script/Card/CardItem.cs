@@ -241,10 +241,11 @@ public class CardItem
         else if (enemy != null)
             enemy.OnUnSelect();
     }
-
+    //攻擊
     private void UseCard(string enemyLoaction)
     {
-        if (BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack)
+        if (BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack
+        || BattleManager.Instance.GetDistance(enemyLoaction) >= DataManager.Instance.CardList[CardID].CardAttackDistance)
             return;
         CardRectTransform.DOScale(1.5f, 0);
         DataManager.Instance.HandCard.Remove(this);
@@ -276,7 +277,7 @@ public class CardItem
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
         gameObject.SetActive(false);
     }
-    //攻擊
+
     private void UseCard()
     {
         if (BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack)

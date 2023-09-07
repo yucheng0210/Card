@@ -147,7 +147,7 @@ public class UIBattle : UIBase
 
     private void EventBattleInitial(params object[] args)
     {
-        StartCoroutine(CreateEnemy());
+        StartCoroutine(CreateEnemy());       
     }
 
     private IEnumerator CreateEnemy()
@@ -167,6 +167,7 @@ public class UIBattle : UIBase
                 .EnemyList[enemy.EnemyID].MaxHealth;
             yield return null;
         }
+        BattleManager.Instance.RefreshEnemyAlert();
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Player);
     }
 

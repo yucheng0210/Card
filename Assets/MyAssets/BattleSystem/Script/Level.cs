@@ -12,4 +12,6 @@ public class Level
     public string DialogName { get; set; }
     public string LevelType { get; set; }
     public string PlayerStartPos { get; set; }
+    public bool LevelPassed { get; set; }
+    public List<int> LevelParentList { get; set; }
 }

@@ -63,6 +63,7 @@ public class UIExplore : UIBase
 
     private void EventExplore(params object[] args)
     {
+        DataManager.Instance.LevelList[DataManager.Instance.LevelID].LevelPassed = true;
         switch (args[0])
         {
             case "DIALOG":

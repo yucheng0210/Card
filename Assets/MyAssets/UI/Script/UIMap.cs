@@ -25,6 +25,15 @@ public class UIMap : UIBase
 
     private void EntryPoint(int id)
     {
+        bool cantEnter = DataManager.Instance.LevelList[id].LevelPassed;
+        for (int i = 0; i < DataManager.Instance.LevelList[id].LevelParentList.Count; i++)
+        {
+            int parentID = DataManager.Instance.LevelList[id].LevelParentList[i];
+            if (!DataManager.Instance.LevelList[parentID].LevelPassed)
+                cantEnter = true;
+        }
+        if (cantEnter)
+            return;
         DataManager.Instance.LevelID = id;
         UIManager.Instance.HideUI("UIMap");
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Explore);
