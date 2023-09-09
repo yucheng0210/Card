@@ -20,6 +20,7 @@ public class MoveEffect : IEffect
             Move(emptyPlace.localPosition, emptyPlaceList[avoidClosure]));
             // Debug.Log("玩家可行走位置：" + emptyPlaceList[avoidClosure]);
         }
+        BattleManager.Instance.ChangeTurn(BattleManager.BattleType.UsingEffect);
     }
     private void Move(Vector2 destination, string loactionID)
     {
@@ -32,5 +33,6 @@ public class MoveEffect : IEffect
             checkerboardTrans.GetChild(i).GetComponent<Image>().color = Color.white;
             checkerboardTrans.GetChild(i).GetComponent<Button>().onClick.RemoveAllListeners();
         }
+        BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Attack);
     }
 }

@@ -15,6 +15,7 @@ public class BattleManager : Singleton<BattleManager>
         Dialog,
         Player,
         Attack,
+        UsingEffect,
         Enemy,
         Win,
         Victory,
@@ -157,6 +158,10 @@ public class BattleManager : Singleton<BattleManager>
                     CheckerboardList.Add(loaction, "Empty");
             }
         }
+    }
+    public void ConsumeMana(int consumeMana)
+    {
+        DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].Mana -= consumeMana;
     }
     public void ChangeTurn(BattleType type)
     {

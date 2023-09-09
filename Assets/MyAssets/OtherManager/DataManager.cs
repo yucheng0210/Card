@@ -82,6 +82,7 @@ public class DataManager : Singleton<DataManager>
             }
             cardData.CardRarity = row[11];
             cardData.CardAttackDistance = int.Parse(row[12]);
+            cardData.CardManaCost = int.Parse(row[13]);
             CardList.Add(cardData.CardID, cardData);
         }
         #endregion
@@ -223,11 +224,11 @@ public class DataManager : Singleton<DataManager>
             CardBag.Add(cardData);
             cardData = CardList[1002];
             CardBag.Add(cardData);
+            cardData = CardList[1004];
+            CardBag.Add(cardData);
         }
         CardBag.Add(CardList[1003]);
         CardBag.Add(CardList[1003]);
-        CardBag.Add(CardList[1004]);
-        CardBag.Add(CardList[1004]);
         CardBag.Add(CardList[1005]);
         CardBag.Add(CardList[1005]);
         CardBag.Add(CardList[3001]);

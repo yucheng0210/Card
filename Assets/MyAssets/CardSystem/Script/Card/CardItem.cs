@@ -207,12 +207,8 @@ public class CardItem
             CheckRayToEnemy(true);
             return;
         }
-        if (
-            CardRectTransform.anchoredPosition.y >= 540
-            && DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].CurrentActionPoint
-                >= Cost
-        )
-            UseCard();
+        if (CardRectTransform.anchoredPosition.y >= 540 && GetUseCardCondition())
+            UseCard("Player");
         else
         {
             CardRectTransform.anchoredPosition = BattleManager.Instance.CardPositionList[index];
@@ -228,11 +224,8 @@ public class CardItem
         {
             enemy = hit.transform.GetComponent<Enemy>();
             enemy.OnSelect();
-            if (
-                onEnd
-                && DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].CurrentActionPoint
-                    >= Cost
-            )
+            if (onEnd && GetUseCardCondition() && BattleManager.Instance.GetDistance(enemy.EnemyLocation)
+            <= DataManager.Instance.CardList[CardID].CardAttackDistance)
             {
                 enemy.OnUnSelect();
                 UseCard(enemy.EnemyLocation);
@@ -241,50 +234,56 @@ public class CardItem
         else if (enemy != null)
             enemy.OnUnSelect();
     }
-    //攻擊
-    private void UseCard(string enemyLoaction)
+    private bool GetUseCardCondition()
     {
-        if (BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack
-        || BattleManager.Instance.GetDistance(enemyLoaction) >= DataManager.Instance.CardList[CardID].CardAttackDistance)
-            return;
-        CardRectTransform.DOScale(1.5f, 0);
-        DataManager.Instance.HandCard.Remove(this);
-        BattleManager.Instance.ConsumeActionPoint(Cost);
-        BattleManager.Instance.GetShield(
-            DataManager.Instance.PlayerList[DataManager.Instance.PlayerID],
-            DataManager.Instance.CardList[CardID].CardShield
-        );
-        if (DataManager.Instance.CardList[CardID].CardAttack != 0)
-            BattleManager.Instance.TakeDamage(
-                BattleManager.Instance.CurrentEnemyList[enemyLoaction],
-                DataManager.Instance.CardList[CardID].CardAttack,
-                enemyLoaction
-            );
-        EventManager.Instance.DispatchEvent(EventDefinition.eventUseCard, this);
-        for (int i = 0; i < DataManager.Instance.CardList[CardID].CardEffectList.Count; i++)
-        {
-            if (DataManager.Instance.CardList[CardID].CardType == "能力")
-            {
-                BattleManager.Instance.CurrentAbilityList.Add(CardID, enemyLoaction);
-                return;
-            }
-            string effectID;
-            int effectCount;
-            effectID = DataManager.Instance.CardList[CardID].CardEffectList[i].Item1;
-            effectCount = DataManager.Instance.CardList[CardID].CardEffectList[i].Item2;
-            EffectFactory.Instance.CreateEffect(effectID).ApplyEffect(effectCount, enemyLoaction);
-        }
-        EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
-        gameObject.SetActive(false);
+        PlayerData playerData = DataManager.Instance.PlayerList[DataManager.Instance.PlayerID];
+        return playerData.CurrentActionPoint >= Cost && playerData.Mana >= DataManager.Instance.CardList[CardID].CardManaCost;
     }
-
-    private void UseCard()
+    //攻擊
+    private void UseCard(string target)
     {
         if (BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack)
             return;
         CardRectTransform.DOScale(1.5f, 0);
         DataManager.Instance.HandCard.Remove(this);
         BattleManager.Instance.ConsumeActionPoint(Cost);
+        BattleManager.Instance.ConsumeMana(DataManager.Instance.CardList[CardID].CardManaCost);
+        BattleManager.Instance.GetShield(
+            DataManager.Instance.PlayerList[DataManager.Instance.PlayerID],
+            DataManager.Instance.CardList[CardID].CardShield
+        );
+        if (DataManager.Instance.CardList[CardID].CardAttack != 0)
+            BattleManager.Instance.TakeDamage(
+                BattleManager.Instance.CurrentEnemyList[target],
+                DataManager.Instance.CardList[CardID].CardAttack,
+                target
+            );
+        EventManager.Instance.DispatchEvent(EventDefinition.eventUseCard, this);
+        for (int i = 0; i < DataManager.Instance.CardList[CardID].CardEffectList.Count; i++)
+        {
+            if (DataManager.Instance.CardList[CardID].CardType == "能力")
+            {
+                BattleManager.Instance.CurrentAbilityList.Add(CardID, target);
+                return;
+            }
+            string effectID;
+            int effectCount;
+            effectID = DataManager.Instance.CardList[CardID].CardEffectList[i].Item1;
+            effectCount = DataManager.Instance.CardList[CardID].CardEffectList[i].Item2;
+            EffectFactory.Instance.CreateEffect(effectID).ApplyEffect(effectCount, target);
+        }
+        EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
+        gameObject.SetActive(false);
+    }
+
+    /*private void UseCard()
+    {
+        if (BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack)
+            return;
+        CardRectTransform.DOScale(1.5f, 0);
+        DataManager.Instance.HandCard.Remove(this);
+        BattleManager.Instance.ConsumeActionPoint(Cost);
+        BattleManager.Instance.ConsumeMana(DataManager.Instance.CardList[CardID].CardManaCost);
         BattleManager.Instance.GetShield(
             DataManager.Instance.PlayerList[DataManager.Instance.PlayerID],
             DataManager.Instance.CardList[CardID].CardShield
@@ -305,5 +304,5 @@ public class CardItem
         }
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
         gameObject.SetActive(false);
-    }
+    }*/
 }

@@ -14,6 +14,7 @@ public class EventDefinition
     public const string eventUseCard = "EVENT_USE_CARD";
     public const string eventTakeDamage = "EVENT_TAKE_DAMAGE";
     public const string eventDrawCard = "EVENT_DRAW_CARD";
+    public const string eventCardCantMove = "EVENT_CARD_CANT_MOVE";
 
     //探索相關
     public const string eventExplore = "EVENT_EXPLORE";
