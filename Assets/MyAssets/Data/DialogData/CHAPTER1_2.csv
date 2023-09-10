@@ -1,3 +1,6 @@
 ﻿分支,類型,名稱,指令,內容
-DEFAULT,TALK,???,,這些哥布林真難纏。
-DEFAULT,CHOICE,END,DEFAULT,離開。
+DEFAULT,TALK,女主角,,這些哥布林真難纏。
+DEFAULT,TALK,女主角,,全身都腰酸背痛的。
+DEFAULT,TALK,女主角,,真的受不了。
+DEFAULT,TALK,女主角,,不過沒遇到狼人我算幸運了吧。
+DEFAULT,CHOICE,END,DEFAULT,離開

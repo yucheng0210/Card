@@ -3,9 +3,12 @@ DEFAULT,TALK,???,,.....................................................。
 DEFAULT,TALK,???,,..................................。
 DEFAULT,TALK,???,,......。
 DEFAULT,TALK,,,女主角緩緩地睜開雙眼。
-DEFAULT,TALK,女主角,,唉......又是這個夢。
-DEFAULT,TALK,女主角,,什麼時候這些夢也能成真呢？
+DEFAULT,TALK,女主角,,唉......又是這個奇怪的夢。
 DEFAULT,TALK,,,女主角扶著身旁的樹木爬起來。
-DEFAULT,TALK,女主角,,好想死，又得去工作了。
-DEFAULT,TALK,,,女主角向著森林深處走去。
-DEFAULT,CHOICE,END,DEFAULT,離開。
+DEFAULT,TALK,女主角,,呵呵，今天可真是個美好工作的一天。
+DEFAULT,TALK,女主角,,哦，這看起來像是為了生活費打拼的可憐社畜。
+DEFAULT,TALK,,,女主角拿起鏡子照著自己苦笑著。
+DEFAULT,TALK,女主角,,每天都是一個無止境的循環。
+DEFAULT,TALK,女主角,,這就是我的人生嗎？
+DEFAULT,TALK,,,女主角喃喃自語向著森林深處走去。
+DEFAULT,CHOICE,END,DEFAULT,離開
