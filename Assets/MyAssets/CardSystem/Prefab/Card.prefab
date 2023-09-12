@@ -928,11 +928,10 @@ MonoBehaviour:
   cardDescription: {fileID: 824966239830101744}
   cardImage: {fileID: 483824088468915850}
   collision: {fileID: 6631526926885935851}
-  pointerEnterUpY: 50
+  pointerEnterUpY: 80
   pointerEnterSpacing: 150
   pointerEnterReduceCount: 50
   moveTime: 0.5
-  cantMove: 0
 --- !u!222 &3561320526990298476
 CanvasRenderer:
   m_ObjectHideFlags: 0

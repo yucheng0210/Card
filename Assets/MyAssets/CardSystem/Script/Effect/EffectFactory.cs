@@ -16,6 +16,8 @@ public class EffectFactory : Singleton<EffectFactory>
                 return new DrawCardEffect();
             case "MoveEffect":
                 return new MoveEffect();
+            case "BurnEffect":
+                return new BurnEffect();
             default:
                 return null;
         }

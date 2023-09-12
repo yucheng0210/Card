@@ -27,11 +27,13 @@ public class BattleManager : Singleton<BattleManager>
     public List<Vector2> CardPositionList { get; set; }
     public List<float> CardAngleList { get; set; }
     public Dictionary<int, string> CurrentAbilityList { get; set; }
+    public List<string> StateEventList { get; set; }
     //敵人
     public Dictionary<string, EnemyData> CurrentEnemyList { get; set; }
     public bool IsDrag { get; set; }
     //棋盤
     public string CurrentLocationID { get; set; }
+    public Dictionary<string, Terrain> CurrentTerrainList { get; set; }
     public Dictionary<string, string> CheckerboardList { get; set; }
     public RectTransform PlayerTrans { get; set; }
     public RectTransform CheckerboardTrans { get; set; }
@@ -46,6 +48,7 @@ public class BattleManager : Singleton<BattleManager>
         CurrentEnemyList = new Dictionary<string, EnemyData>();
         CurrentAbilityList = new Dictionary<int, string>();
         CheckerboardList = new Dictionary<string, string>();
+        CurrentTerrainList = new Dictionary<string, Terrain>();
     }
     public void TakeDamage(CharacterData defender, int damage, string loaction)
     {
@@ -143,19 +146,23 @@ public class BattleManager : Singleton<BattleManager>
         {
             for (int j = 0; j < 5; j++)
             {
-                string loaction = ConvertCheckerboardPos(i, j);
-                if (CurrentLocationID == loaction)
+                string location = ConvertCheckerboardPos(i, j);
+                if (CurrentLocationID == location)
                 {
-                    CheckerboardList.Add(loaction, "Player");
+                    CheckerboardList.Add(location, "Player");
                     //Debug.Log("玩家：" + loaction);
                 }
-                else if (CurrentEnemyList.ContainsKey(loaction))
+                else if (CurrentEnemyList.ContainsKey(location))
                 {
-                    CheckerboardList.Add(loaction, "Enemy");
+                    CheckerboardList.Add(location, "Enemy");
                     // Debug.Log("敵人：" + loaction);
                 }
+                else if (CurrentTerrainList.ContainsKey(location))
+                {
+                    CheckerboardList.Add(location, "Terrain");
+                }
                 else
-                    CheckerboardList.Add(loaction, "Empty");
+                    CheckerboardList.Add(location, "Empty");
             }
         }
     }
@@ -206,6 +213,12 @@ public class BattleManager : Singleton<BattleManager>
             int enemyID = DataManager.Instance.LevelList[levelID].EnemyIDList.ElementAt(i).Value;
             string loactionID = DataManager.Instance.LevelList[levelID].EnemyIDList.ElementAt(i).Key;
             CurrentEnemyList.Add(loactionID, (EnemyData)DataManager.Instance.EnemyList[enemyID].Clone());
+        }
+        for (int i = 0; i < DataManager.Instance.LevelList[levelID].TerrainIDList.Count; i++)
+        {
+            int terrainID = DataManager.Instance.LevelList[levelID].TerrainIDList.ElementAt(i).Value;
+            string loactionID = DataManager.Instance.LevelList[levelID].TerrainIDList.ElementAt(i).Key;
+            CurrentTerrainList.Add(loactionID, DataManager.Instance.TerrainList[terrainID].Clone());
         }
         EventManager.Instance.DispatchEvent(EventDefinition.eventBattleInitial);
     }

@@ -61,6 +61,12 @@ public class UIBattle : UIBase
     [Header("棋盤")]
     [SerializeField]
     private RectTransform checkerboardTrans;
+
+    [SerializeField]
+    private GameObject terrainPrefab;
+
+    [SerializeField]
+    private Transform terrainTrans;
     public Text ActionPointText
     {
         get { return actionPointText; }
@@ -147,10 +153,10 @@ public class UIBattle : UIBase
 
     private void EventBattleInitial(params object[] args)
     {
-        StartCoroutine(CreateEnemy());       
+        StartCoroutine(CreateEnemyAndTerrain());
     }
 
-    private IEnumerator CreateEnemy()
+    private IEnumerator CreateEnemyAndTerrain()
     {
         for (int i = 0; i < BattleManager.Instance.CurrentEnemyList.Count; i++)
         {
@@ -165,6 +171,19 @@ public class UIBattle : UIBase
             BattleManager.Instance.CurrentEnemyList[key].CurrentHealth = DataManager
                 .Instance
                 .EnemyList[enemy.EnemyID].MaxHealth;
+            yield return null;
+        }
+        for (int i = 0; i < BattleManager.Instance.CurrentTerrainList.Count; i++)
+        {
+            string key = BattleManager.Instance.CurrentTerrainList.ElementAt(i).Key;
+            GameObject terrain = Instantiate(terrainPrefab, terrainTrans);
+            terrain.GetComponent<RectTransform>().anchoredPosition = BattleManager.Instance.CheckerboardTrans
+            .GetChild(BattleManager.Instance.GetCheckerboardPoint(key)).localPosition;
+            /*terrain.ImagePath.sprite = Resources.Load<Sprite>(BattleManager.Instance.CurrentEnemyList[key].EnemyImagePath);
+            BattleManager.Instance.CurrentEnemyList[key].EnemyTrans = enemy.GetComponent<RectTransform>();
+            BattleManager.Instance.CurrentEnemyList[key].CurrentHealth = DataManager
+                .Instance
+                .EnemyList[enemy.EnemyID].MaxHealth;*/
             yield return null;
         }
         BattleManager.Instance.RefreshEnemyAlert();

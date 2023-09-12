@@ -12,6 +12,7 @@ public class DataManager : Singleton<DataManager>
     private const string levelListPath = "Assets/MyAssets/Data/LEVELLIST.csv";
     private const string itemListPath = "Assets/MyAssets/Data/ITEMLIST.csv";
     private const string dialogDataListPath = "Assets/MyAssets/Data/DialogData";
+    private const string terrainListPath = "Assets/MyAssets/Data/TERRAINLIST.csv";
     public Dictionary<int, CardData> CardList { get; set; }
     public List<CardData> CardBag { get; set; }
     public List<CardItem> UsedCardBag { get; set; }
@@ -22,6 +23,7 @@ public class DataManager : Singleton<DataManager>
     public Dictionary<int, Item> ItemList { get; set; }
     public Dictionary<int, Item> Backpack { get; set; }
     public Dictionary<string, List<Dialog>> DialogList { get; set; }
+    public Dictionary<int, Terrain> TerrainList { get; set; }
     public int PlayerID { get; set; }
     public int LevelID { get; set; }
     public int MoneyCount { get; set; }
@@ -39,6 +41,7 @@ public class DataManager : Singleton<DataManager>
         ItemList = new Dictionary<int, Item>();
         Backpack = new Dictionary<int, Item>();
         DialogList = new Dictionary<string, List<Dialog>>();
+        TerrainList = new Dictionary<int, Terrain>();
         LoadData();
     }
 
@@ -133,26 +136,33 @@ public class DataManager : Singleton<DataManager>
             Level level = new()
             {
                 LevelID = int.Parse(row[0]),
-                LevelName = row[1]
+                LevelName = row[1],
+                DialogName = row[4],
+                LevelType = row[5],
+                PlayerStartPos = row[6],
+                LevelPassed = false
             };
-            string[] enemyIDs = row[2].Split(';');
-            level.EnemyIDList = new Dictionary<string, int>();
-            for (int j = 0; j < enemyIDs.Length; j++)
+            if (!string.IsNullOrEmpty(row[2]))
             {
-                string[] enemyID = enemyIDs[j].Split('=');
-                level.EnemyIDList.Add(enemyID[0], int.Parse(enemyID[1]));
+                string[] enemyIDs = row[2].Split(';');
+                level.EnemyIDList = new Dictionary<string, int>();
+                for (int j = 0; j < enemyIDs.Length; j++)
+                {
+                    string[] enemyID = enemyIDs[j].Split('=');
+                    level.EnemyIDList.Add(enemyID[0], int.Parse(enemyID[1]));
+                }
             }
-            string[] rewardIDs = row[3].Split(';');
-            level.RewardIDList = new List<(int, int)>();
-            for (int j = 0; j < rewardIDs.Length; j++)
+            if (!string.IsNullOrEmpty(row[3]))
             {
-                string[] rewardID = rewardIDs[j].Split('=');
-                if (int.TryParse(rewardID[0], out int id) && int.TryParse(rewardID[1], out int count))
-                    level.RewardIDList.Add(new ValueTuple<int, int>(id, count));
+                string[] rewardIDs = row[3].Split(';');
+                level.RewardIDList = new List<(int, int)>();
+                for (int j = 0; j < rewardIDs.Length; j++)
+                {
+                    string[] rewardID = rewardIDs[j].Split('=');
+                    if (int.TryParse(rewardID[0], out int id) && int.TryParse(rewardID[1], out int count))
+                        level.RewardIDList.Add(new ValueTuple<int, int>(id, count));
+                }
             }
-            level.DialogName = row[4];
-            level.LevelType = row[5];
-            level.PlayerStartPos = row[6];
             level.LevelParentList = new();
             if (!string.IsNullOrEmpty(row[7]))
             {
@@ -162,7 +172,16 @@ public class DataManager : Singleton<DataManager>
                     level.LevelParentList.Add(int.Parse(parentIDs[j]));
                 }
             }
-            level.LevelPassed = false;
+            if (!string.IsNullOrEmpty(row[8]))
+            {
+                string[] terrainIDs = row[8].Split(';');
+                level.TerrainIDList = new Dictionary<string, int>();
+                for (int j = 0; j < terrainIDs.Length; j++)
+                {
+                    string[] terrainID = terrainIDs[j].Split('=');
+                    level.TerrainIDList.Add(terrainID[0], int.Parse(terrainID[1]));
+                }
+            }
             LevelList.Add(level.LevelID, level);
         }
         #endregion
@@ -206,6 +225,24 @@ public class DataManager : Singleton<DataManager>
             }
             string fileName = Path.GetFileNameWithoutExtension(file);
             DialogList.Add(fileName, dialogs);
+        }
+        #endregion
+        #region 地形列表
+        lineData = File.ReadAllLines(terrainListPath);
+        for (int i = 1; i < lineData.Length; i++)
+        {
+            string[] row = lineData[i].Split(',');
+            Terrain terrain = new()
+            {
+                TerrainID = int.Parse(row[0]),
+                TerrainName = row[1],
+                MaxHealth = int.Parse(row[2]),
+                MinAttack = int.Parse(row[3]),
+                MaxAttack = int.Parse(row[4]),
+                AttackDistance = int.Parse(row[5]),
+                //ImagePath=row[6]
+            };
+            TerrainList.Add(terrain.TerrainID, terrain);
         }
         #endregion
     }
