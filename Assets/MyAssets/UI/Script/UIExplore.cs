@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIExplore : UIBase
 {
     [SerializeField]
-    private GameObject entrance;
+    private GameObject corpse;
 
     protected override void Start()
     {
@@ -23,28 +24,25 @@ public class UIExplore : UIBase
 
     private void Dialog()
     {
-        HideAllUI();
         //entrance.SetActive(true);
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Dialog);
     }
 
     private void Random()
     {
-        HideAllUI();
-        DataManager.Instance.MoneyCount += 100;
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Dialog);
+        corpse.SetActive(true);
+        corpse.GetComponent<Button>().onClick.AddListener(() => EventManager.Instance.DispatchEvent(EventDefinition.eventBattleWin));
     }
 
     private void Battle()
     {
-        HideAllUI();
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.BattleInitial);
         UI.SetActive(false);
     }
 
     private void Recover()
     {
-        HideAllUI();
         int recoverCount = (int)(
             DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].MaxHealth * 0.35f
         );
@@ -56,10 +54,10 @@ public class UIExplore : UIBase
 
     private void Boss()
     {
-        HideAllUI();
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Dialog);
         UI.SetActive(false);
     }
+
 
     private void EventExplore(params object[] args)
     {

@@ -200,13 +200,13 @@ public class DialogSystem : MonoBehaviour
     {
         //if (buttonBranchID == "ACTIVATE")
         //QuestManager.Instance.ActivateQuest(questID);
-        if (buttonBranchID == "BATTLE")
-        {
-            currentBranchID += buttonBranchID;
-            BattleManager.Instance.ChangeTurn(BattleManager.BattleType.BattleInitial);
-        }
-        else
-            currentBranchID = buttonBranchID;
+        /* if (buttonBranchID == "BATTLE")
+         {
+             currentBranchID += buttonBranchID;
+             BattleManager.Instance.ChangeTurn(BattleManager.BattleType.BattleInitial);
+         }
+         else*/
+        currentBranchID = buttonBranchID;
         DestroyChoice();
         inSelection = false;
         continueBool = true;
@@ -214,17 +214,18 @@ public class DialogSystem : MonoBehaviour
         {
             case "CLOSE":
                 CloseDialog();
+                //BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Explore);
                 break;
             case "END":
                 UIManager.Instance.ShowUI("UIMap");
                 BattleManager.Instance.ChangeTurn(BattleManager.BattleType.None);
                 break;
         }
-        if (BattleManager.Instance.MyBattleType == BattleManager.BattleType.Dialog)
-        {
-            //BattleManager.Instance.CurrentLocationID = int.Parse(buttonBranchID);
-            BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Explore);
-        }
+        /* if (BattleManager.Instance.MyBattleType == BattleManager.BattleType.Dialog)
+         {
+             //BattleManager.Instance.CurrentLocationID = int.Parse(buttonBranchID);
+             BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Explore);
+         }*/
     }
 
     private void DestroyChoice()

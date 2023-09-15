@@ -1,0 +1,5 @@
+﻿分支,類型,名稱,指令,內容
+DEFAULT,TALK,,,發現獵人屍體。
+DEFAULT,CHOICE,CLOSE,END,查看
+END,TALK,,女主角為死者禱告一段時間。,
+END,CHOICE,END,DEFAULT,離開
