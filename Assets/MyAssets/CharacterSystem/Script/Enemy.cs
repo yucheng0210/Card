@@ -20,12 +20,12 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     private Text enemyAttackIntentText;
 
-    [SerializeField]
-    private RectTransform enemyHealthRect;
+    /* [SerializeField]
+     private RectTransform enemyHealthRect;
 
-    [SerializeField]
-    private RectTransform enemyHurtRect;
-    private SkinnedMeshRenderer skinMesh;
+     [SerializeField]
+     private RectTransform enemyHurtRect;
+     private SkinnedMeshRenderer skinMesh;*/
     public Image EnemyAlert
     {
         get { return alertImage; }
@@ -44,25 +44,25 @@ public class Enemy : MonoBehaviour
 
     private void Awake()
     {
-        skinMesh = GetComponentInChildren<SkinnedMeshRenderer>();
+        //skinMesh = GetComponentInChildren<SkinnedMeshRenderer>();
         EnemyImage = GetComponent<Image>();
-        EventManager.Instance.AddEventRegister(EventDefinition.eventRefreshUI, EventRefreshUI);
+        //EventManager.Instance.AddEventRegister(EventDefinition.eventRefreshUI, EventRefreshUI);
         EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
     }
 
-    private void Update()
-    {
-        if (enemyHealthRect == null)
-            return;
-        enemyHurtRect.anchorMax = new Vector2(
-            Mathf.Lerp(enemyHurtRect.anchorMax.x, enemyHealthRect.anchorMax.x, Time.deltaTime * 5),
-            enemyHurtRect.anchorMax.y
-        );
-    }
+    /* private void Update()
+     {
+         if (enemyHealthRect == null)
+             return;
+         enemyHurtRect.anchorMax = new Vector2(
+             Mathf.Lerp(enemyHurtRect.anchorMax.x, enemyHealthRect.anchorMax.x, Time.deltaTime * 5),
+             enemyHurtRect.anchorMax.y
+         );
+     }*/
 
     private void OnDisable()
     {
-        EventManager.Instance.RemoveEventRegister(EventDefinition.eventRefreshUI, EventRefreshUI);
+        // EventManager.Instance.RemoveEventRegister(EventDefinition.eventRefreshUI, EventRefreshUI);
         EventManager.Instance.RemoveEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
     }
 
@@ -86,22 +86,22 @@ public class Enemy : MonoBehaviour
         enemyAttackIntentText.text = randomAttack.ToString();
     }
 
-    private void EventRefreshUI(params object[] args)
-    {
-        try
-        {
-            enemyHealthSlider.value = (float)(
-                (float)BattleManager.Instance.CurrentEnemyList[EnemyLocation].CurrentHealth
-                / DataManager.Instance.EnemyList[EnemyID].MaxHealth
-            );
-            enemyHealthText.text =
-                BattleManager.Instance.CurrentEnemyList[EnemyLocation].CurrentHealth.ToString()
-                + "/"
-                + DataManager.Instance.EnemyList[EnemyID].MaxHealth.ToString();
-        }
-        catch (ArgumentOutOfRangeException)
-        {
-            Debug.Log(EnemyLocation + "：" + "錯誤");
-        }
-    }
+    /* private void EventRefreshUI(params object[] args)
+     {
+         try
+         {
+             enemyHealthSlider.value = (float)(
+                 (float)BattleManager.Instance.CurrentEnemyList[EnemyLocation].CurrentHealth
+                 / DataManager.Instance.EnemyList[EnemyID].MaxHealth
+             );
+             enemyHealthText.text =
+                 BattleManager.Instance.CurrentEnemyList[EnemyLocation].CurrentHealth.ToString()
+                 + "/"
+                 + DataManager.Instance.EnemyList[EnemyID].MaxHealth.ToString();
+         }
+         catch (ArgumentOutOfRangeException)
+         {
+             Debug.Log(EnemyLocation + "：" + "錯誤");
+         }
+     }*/
 }

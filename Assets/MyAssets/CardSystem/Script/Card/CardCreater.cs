@@ -119,6 +119,8 @@ public class CardCreater : MonoBehaviour
             yield return new WaitForSecondsRealtime(coolDown); // 等待冷卻時間
             handCard[i].transform.SetParent(handCardTrans); // 將卡片設定為手牌的子物件
             handCard[i].gameObject.SetActive(true); // 啟用卡片物件
+            EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
+            yield return null;
             handCard[i].CantMove = false;
             StartCoroutine(
                 UIManager.Instance.FadeOut(handCard[i].GetComponent<CanvasGroup>(), moveTime)

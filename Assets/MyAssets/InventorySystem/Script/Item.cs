@@ -13,4 +13,5 @@ public class Item
     public string ItemEffectName { get; set; }
     public string ItemRarity { get; set; }
     public string ItemType { get; set; }
+    public int ItemHeld { get; set; }
 }

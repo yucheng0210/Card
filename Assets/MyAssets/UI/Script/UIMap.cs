@@ -22,7 +22,10 @@ public class UIMap : UIBase
             mapList[mapID].onClick.AddListener(() => EntryPoint(mapID));
         }
     }
+    private void CanEnterEffect(int id)
+    {
 
+    }
     private void EntryPoint(int id)
     {
         bool cantEnter = DataManager.Instance.LevelList[id].LevelPassed;

@@ -48,7 +48,7 @@ public class UIVictoryReward : UIBase
 
     private void GetReward(int rewardID, GameObject reward)
     {
-        DataManager.Instance.Backpack.Add(rewardID, DataManager.Instance.ItemList[rewardID]);
+        BackpackManager.Instance.AddItem(rewardID, DataManager.Instance.Backpack);
         ReduceCount();
         Destroy(reward);
     }
@@ -56,15 +56,30 @@ public class UIVictoryReward : UIBase
     private void GetCardReward(GameObject reward)
     {
         List<int> normalCardList = new();
+        List<int> rareCardList = new();
         for (int i = 0; i < DataManager.Instance.CardList.Count; i++)
         {
-            if (DataManager.Instance.CardList.ElementAt(i).Value.CardRarity == "普通")
-                normalCardList.Add(DataManager.Instance.CardList.ElementAt(i).Key);
+            switch (DataManager.Instance.CardList.ElementAt(i).Value.CardRarity)
+            {
+                case "普通":
+                    normalCardList.Add(DataManager.Instance.CardList.ElementAt(i).Key);
+                    break;
+                case "稀有":
+                    rareCardList.Add(DataManager.Instance.CardList.ElementAt(i).Key);
+                    break;
+            }
         }
 
         for (int i = 0; i < 3; i++)
         {
-            int rewardID = normalCardList[Random.Range(0, normalCardList.Count)];
+            int cardType = Random.Range(0, 100);
+            int rewardID;
+            if (cardType >= 95)
+                continue;
+            else if (cardType >= 80)
+                rewardID = normalCardList[Random.Range(0, normalCardList.Count)];
+            else
+                rewardID = rareCardList[Random.Range(0, rareCardList.Count)];
             Dictionary<int, CardData> cardList = DataManager.Instance.CardList;
             cardRewardMenu.SetActive(true);
             CardItem cardItem = Instantiate(cardPrefab, cardRewardGroupTrans);

@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using DG.Tweening;
+using Unity.VisualScripting;
 
 public class CardItem
     : MonoBehaviour,
@@ -51,6 +52,7 @@ public class CardItem
     public int Cost { get; set; }
     public RectTransform CardRectTransform { get; set; }
     public bool CantMove { get; set; }
+    private Outline outline;
     public Image CardImage
     {
         get { return cardImage; }
@@ -79,7 +81,13 @@ public class CardItem
     private void Start()
     {
         SetCardInfo();
+        EventManager.Instance.AddEventRegister(EventDefinition.eventRefreshUI, EventRefreshUI);
     }
+    private void OnDisable()
+    {
+        EventManager.Instance.RemoveEventRegister(EventDefinition.eventRefreshUI, EventRefreshUI);
+    }
+
     private void SetCardInfo()
     {
         Dictionary<int, CardData> cardList = DataManager.Instance.CardList;
@@ -91,6 +99,7 @@ public class CardItem
         CardImage.sprite = Resources.Load<Sprite>(
            DataManager.Instance.CardList[CardID].CardImagePath
        );
+        outline = GetComponentInChildren<Outline>();
     }
     public void OnPointerEnter(PointerEventData eventData)
     {
@@ -244,6 +253,9 @@ public class CardItem
     {
         if (BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack)
             return;
+        if (BattleManager.Instance.CurrentNegativeState.Contains(BattleManager.NegativeState.CantMove)
+        && DataManager.Instance.CardList[CardID].CardType == "移動")
+            return;
         CardRectTransform.DOScale(1.5f, 0);
         DataManager.Instance.HandCard.Remove(this);
         BattleManager.Instance.ConsumeActionPoint(Cost);
@@ -264,7 +276,7 @@ public class CardItem
             if (DataManager.Instance.CardList[CardID].CardType == "能力")
             {
                 BattleManager.Instance.CurrentAbilityList.Add(CardID, target);
-                return;
+                continue;
             }
             string effectID;
             int effectCount;
@@ -275,7 +287,14 @@ public class CardItem
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
         gameObject.SetActive(false);
     }
-
+    private void EventRefreshUI(params object[] args)
+    {
+        if (DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].CurrentActionPoint >= Cost
+        && DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].Mana >= DataManager.Instance.CardList[CardID].CardManaCost)
+            outline.effectDistance = new Vector2(6, 6);
+        else
+            outline.effectDistance = new Vector2(0, 0);
+    }
     /*private void UseCard()
     {
         if (BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack)

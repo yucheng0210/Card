@@ -21,8 +21,12 @@ public class BattleManager : Singleton<BattleManager>
         Victory,
         Loss
     }
-
+    public enum NegativeState
+    {
+        CantMove
+    }
     public BattleType MyBattleType { get; set; }
+    public List<NegativeState> CurrentNegativeState { get; set; }
     public List<CardItem> CardItemList { get; set; }
     public List<Vector2> CardPositionList { get; set; }
     public List<float> CardAngleList { get; set; }
@@ -49,6 +53,7 @@ public class BattleManager : Singleton<BattleManager>
         CurrentAbilityList = new Dictionary<int, string>();
         CheckerboardList = new Dictionary<string, string>();
         CurrentTerrainList = new Dictionary<string, Terrain>();
+        CurrentNegativeState = new List<NegativeState>();
     }
     public void TakeDamage(CharacterData defender, int damage, string loaction)
     {
@@ -92,6 +97,12 @@ public class BattleManager : Singleton<BattleManager>
     {
         string[] points = point.Split(' ');
         return int.Parse(points[0]) + int.Parse(points[1]) * 8;
+    }
+    public string ConvertCheckerboardPos(int point)
+    {
+        int x = point % 8;
+        int y = point / 8;
+        return x.ToString() + ' ' + y.ToString();
     }
     public List<string> GetEmptyPlace(string loaction, int stepCount)
     {
@@ -206,6 +217,7 @@ public class BattleManager : Singleton<BattleManager>
         int levelID = DataManager.Instance.LevelID;
         DataManager.Instance.PlayerList[playerID].CurrentActionPoint =
             DataManager.Instance.PlayerList[playerID].MaxActionPoint;
+        DataManager.Instance.PlayerList[playerID].Mana = 5;
         PlayerTrans.anchoredPosition = CheckerboardTrans
         .GetChild(GetCheckerboardPoint(CurrentLocationID)).localPosition;
         for (int i = 0; i < DataManager.Instance.LevelList[levelID].EnemyIDList.Count; i++)
@@ -225,6 +237,7 @@ public class BattleManager : Singleton<BattleManager>
 
     private void Explore()
     {
+        EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
         EventManager.Instance.DispatchEvent(
             EventDefinition.eventExplore,
             DataManager.Instance.LevelList[DataManager.Instance.LevelID].LevelType
@@ -238,8 +251,12 @@ public class BattleManager : Singleton<BattleManager>
 
     private void PlayerTurn()
     {
-        DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].CurrentActionPoint =
-            DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].MaxActionPoint;
+        int playerID = DataManager.Instance.PlayerID;
+        DataManager.Instance.PlayerList[playerID].CurrentActionPoint =
+        DataManager.Instance.PlayerList[playerID].MaxActionPoint;
+        DataManager.Instance.PlayerList[playerID].Mana++;
+        DataManager.Instance.PlayerList[playerID].CurrentShield = 0;
+        CurrentNegativeState.Clear();
         for (int i = 0; i < CurrentAbilityList.Count; i++)
         {
             int id = CurrentAbilityList.ElementAt(i).Key;

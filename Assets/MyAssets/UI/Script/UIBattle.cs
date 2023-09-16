@@ -45,9 +45,23 @@ public class UIBattle : UIBase
 
     [SerializeField]
     private Transform enemyTrans;
+    [SerializeField]
+    private GameObject enemyInfo;
+    [SerializeField]
+    private Text enemyName;
+    [SerializeField]
+    private Text enemyLocation;
+    [SerializeField]
+    private Image enemyImage;
+    [SerializeField]
+    private Text enemyShield;
+    [SerializeField]
+    private Text enemyHealth;
+    [SerializeField]
+    private RectTransform enemyHealthRect;
 
     [SerializeField]
-    private Vector2 enemyDistance;
+    private RectTransform enemyHurtRect;
 
     [Header("傷害特效")]
     [SerializeField]
@@ -100,17 +114,44 @@ public class UIBattle : UIBase
             EventBattleInitial
         );
         EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
+        CheckEnemyInfo();
     }
 
     private void Update()
     {
         UpdateValue();
     }
+    private void CheckEnemyInfo()
+    {
+        for (int i = 0; i < checkerboardTrans.childCount; i++)
+        {
+            string location = BattleManager.Instance.ConvertCheckerboardPos(i);
+            checkerboardTrans.GetChild(i).GetComponent<Button>().onClick.AddListener(() => RefreshEnemyInfo(location));
+        }
+    }
+    private void RefreshEnemyInfo(string location)
+    {
+        if (!BattleManager.Instance.CurrentEnemyList.ContainsKey(location))
+            return;
+        int x = BattleManager.Instance.ConvertNormalPos(location)[0];
+        int y = BattleManager.Instance.ConvertNormalPos(location)[1];
+        enemyInfo.SetActive(true);
+        enemyName.text = BattleManager.Instance.CurrentEnemyList[location].CharacterName;
+        enemyLocation.text = x.ToString() + "，" + y.ToString();
+        enemyImage.sprite = Resources.Load<Sprite>(BattleManager.Instance.CurrentEnemyList[location].EnemyImagePath);
+        enemyHealth.text = BattleManager.Instance.CurrentEnemyList[location].CurrentHealth.ToString()
+        + "/" + BattleManager.Instance.CurrentEnemyList[location].MaxHealth.ToString();
+        enemyShield.text = BattleManager.Instance.CurrentEnemyList[location].CurrentShield.ToString();
+    }
 
     private void UpdateValue()
     {
-        if (playerHurtRect == null)
+        if (playerHurtRect == null || enemyHealthRect == null)
             return;
+        enemyHurtRect.anchorMax = new Vector2(
+            Mathf.Lerp(enemyHurtRect.anchorMax.x, enemyHealthRect.anchorMax.x, Time.deltaTime * 5),
+            enemyHurtRect.anchorMax.y
+        );
         playerHurtRect.anchorMax = new Vector2(
             Mathf.Lerp(
                 playerHurtRect.anchorMax.x,
@@ -203,6 +244,7 @@ public class UIBattle : UIBase
         RectTransform damageRect = damageNum.GetComponent<RectTransform>();
         Text damageText = damageNum.GetComponentInChildren<Text>();
         damageText.text = args[1].ToString();
+        damageText.DOColor(new Color(60f / 255f, 0, 0), 0.75f);
         int direction = Random.Range(0, 2);
         if (direction == 0)
             xOffset *= -1;

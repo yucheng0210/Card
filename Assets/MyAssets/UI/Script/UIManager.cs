@@ -79,4 +79,46 @@ public class UIManager : Singleton<UIManager>
             + 2.0f * t * (1.0f - t) * mid
             + Mathf.Pow(t, 2) * end;
     }
+    private void CreateNewItem(Item item, BackpackSlot slotPrefab, Transform slotGroupTrans)
+    {
+        BackpackSlot newItem = Instantiate(
+            slotPrefab,
+            slotGroupTrans.position,
+            Quaternion.identity
+        );
+        newItem.gameObject.transform.SetParent(slotGroupTrans, false);
+        newItem.SlotItem = item;
+        newItem.SlotImage.sprite = Resources.Load<Sprite>(item.ItemImagePath);
+        newItem.SlotCount.text = item.ItemHeld.ToString();
+    }
+
+    /*   private void CreateNewItem(Quest quest, QuestSlot slotPrefab, Transform slotGroupTrans)
+       {
+           QuestSlot newItem = Instantiate(slotPrefab, slotGroupTrans.position, Quaternion.identity);
+           newItem.gameObject.transform.SetParent(slotGroupTrans, false);
+           newItem.MyQuest = quest;
+           newItem.SlotName.text = quest.TheName;
+           newItem.NPCName.text = quest.NPC;
+       }*/
+
+    public void RefreshItem(
+        BackpackSlot slotPrefab,
+        Transform slotGroupTrans,
+        Dictionary<int, Item> inventory
+    )
+    {
+        for (int i = 0; i < slotGroupTrans.childCount; i++)
+            Destroy(slotGroupTrans.GetChild(i).gameObject);
+        foreach (KeyValuePair<int, Item> i in inventory)
+        {
+            if (i.Value.ItemHeld == 0)
+            {
+                inventory.Remove(i.Key);
+                RefreshItem(slotPrefab, slotGroupTrans, inventory);
+                break;
+            }
+            else
+                CreateNewItem(i.Value, slotPrefab, slotGroupTrans);
+        }
+    }
 }

@@ -18,6 +18,8 @@ public class EffectFactory : Singleton<EffectFactory>
                 return new MoveEffect();
             case "BurnEffect":
                 return new BurnEffect();
+            case "CantMoveEffect":
+                return new CantMoveEffect();
             default:
                 return null;
         }
