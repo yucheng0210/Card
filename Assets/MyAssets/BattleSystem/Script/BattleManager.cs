@@ -126,6 +126,8 @@ public class BattleManager : Singleton<BattleManager>
         List<string> newEmptyPlaceList = new();
         for (int i = 0; i < emptyPlaceList.Count; i++)
         {
+           // if(CheckerboardList[emptyPlaceList[i]] == "Terrain")
+
             if (CheckerboardList.ContainsKey(emptyPlaceList[i]) && CheckerboardList[emptyPlaceList[i]] == "Empty")
                 newEmptyPlaceList.Add(emptyPlaceList[i]);
         }
