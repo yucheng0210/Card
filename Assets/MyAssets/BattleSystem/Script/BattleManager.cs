@@ -81,9 +81,9 @@ public class BattleManager : Singleton<BattleManager>
             DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].CurrentActionPoint -=
                 point;
     }
-    public int[] ConvertNormalPos(string loaction)
+    public int[] ConvertNormalPos(string location)
     {
-        string[] myLocation = loaction.Split(' ');
+        string[] myLocation = location.Split(' ');
         int[] normalPos = new int[2];
         normalPos[0] = int.Parse(myLocation[0]);
         normalPos[1] = int.Parse(myLocation[1]);
@@ -104,34 +104,74 @@ public class BattleManager : Singleton<BattleManager>
         int y = point / 8;
         return x.ToString() + ' ' + y.ToString();
     }
-    public List<string> GetEmptyPlace(string loaction, int stepCount)
+    public List<string> GetEmptyPlace(string location, int stepCount)
     {
         List<string> emptyPlaceList = new();
-        int[] pos = ConvertNormalPos(loaction);
+        int[] pos = ConvertNormalPos(location);
         int x = pos[0];
         int y = pos[1];
+        string up = "", down = "", left = "", right = "", upRight = "", upLeft = "", downRight = "", downLeft = "";
         for (int i = 1; i <= stepCount; i++)
         {
-            emptyPlaceList.Add(ConvertCheckerboardPos(x, y + i));
-            emptyPlaceList.Add(ConvertCheckerboardPos(x, y - i));
-            emptyPlaceList.Add(ConvertCheckerboardPos(x + i, y));
-            emptyPlaceList.Add(ConvertCheckerboardPos(x - i, y));
+            if (up != "CantMove")
+                up = ConvertCheckerboardPos(x, y + i);
+            if (down != "CantMove")
+                down = ConvertCheckerboardPos(x, y - i);
+            if (left != "CantMove")
+                left = ConvertCheckerboardPos(x - i, y);
+            if (right != "CantMove")
+                right = ConvertCheckerboardPos(x + i, y);
+            //上
+            if (CheckerboardList.ContainsKey(up) && CheckerboardList[up] == "Empty")
+                emptyPlaceList.Add(up);
+            else
+                up = "CantMove";
+            //下
+            if (CheckerboardList.ContainsKey(down) && CheckerboardList[down] == "Empty")
+                emptyPlaceList.Add(down);
+            else
+                down = "CantMove";
+            //左
+            if (CheckerboardList.ContainsKey(left) && CheckerboardList[left] == "Empty")
+                emptyPlaceList.Add(left);
+            else
+                left = "CantMove";
+            //右
+            if (CheckerboardList.ContainsKey(right) && CheckerboardList[right] == "Empty")
+                emptyPlaceList.Add(right);
+            else
+                right = "CantMove";
             if (i == stepCount)
                 break;
-            emptyPlaceList.Add(ConvertCheckerboardPos(x + i, y + i));
-            emptyPlaceList.Add(ConvertCheckerboardPos(x + i, y - i));
-            emptyPlaceList.Add(ConvertCheckerboardPos(x - i, y + i));
-            emptyPlaceList.Add(ConvertCheckerboardPos(x - i, y - i));
+            if (upRight != "CantMove")
+                upRight = ConvertCheckerboardPos(x + i, y + i);
+            if (upLeft != "CantMove")
+                upLeft = ConvertCheckerboardPos(x - i, y + i);
+            if (downRight != "CantMove")
+                downRight = ConvertCheckerboardPos(x + i, y - i);
+            if (downLeft != "CantMove")
+                downLeft = ConvertCheckerboardPos(x - i, y - i);
+            //右上
+            if (CheckerboardList.ContainsKey(upRight) && CheckerboardList[upRight] == "Empty")
+                emptyPlaceList.Add(upRight);
+            else
+                upRight = "CantMove";
+            //左上
+            if (CheckerboardList.ContainsKey(upLeft) && CheckerboardList[upLeft] == "Empty")
+                emptyPlaceList.Add(upLeft);
+            else
+                upLeft = "CantMove";
+            //右下
+            if (CheckerboardList.ContainsKey(downRight) && CheckerboardList[downRight] == "Empty")
+                emptyPlaceList.Add(downRight);
+            else
+                downRight = "CantMove";
+            //左下
+            if (CheckerboardList.ContainsKey(downLeft) && CheckerboardList[downLeft] == "Empty")
+                emptyPlaceList.Add(downLeft);
+            else
+                downLeft = "CantMove";
         }
-        List<string> newEmptyPlaceList = new();
-        for (int i = 0; i < emptyPlaceList.Count; i++)
-        {
-           // if(CheckerboardList[emptyPlaceList[i]] == "Terrain")
-
-            if (CheckerboardList.ContainsKey(emptyPlaceList[i]) && CheckerboardList[emptyPlaceList[i]] == "Empty")
-                newEmptyPlaceList.Add(emptyPlaceList[i]);
-        }
-        emptyPlaceList = newEmptyPlaceList;
         return emptyPlaceList;
     }
     public float GetDistance(string location)

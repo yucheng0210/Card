@@ -57,7 +57,10 @@ public class UIExplore : UIBase
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Dialog);
         UI.SetActive(false);
     }
+    private void RemoveCard()
+    {
 
+    }
 
     private void EventExplore(params object[] args)
     {
@@ -79,6 +82,10 @@ public class UIExplore : UIBase
             case "BOSS":
                 Boss();
                 break;
+            case "REMOVECARD":
+                RemoveCard();
+                break;
+
         }
     }
 }
