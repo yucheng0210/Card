@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,6 +8,14 @@ public class UIExplore : UIBase
 {
     [SerializeField]
     private GameObject corpse;
+
+    [SerializeField]
+    private Button removeCardButton;
+    [SerializeField]
+    private Transform contentTrans;
+    [SerializeField]
+    private Button applyButton;
+    private int currentRemoveID = -1;
 
     protected override void Start()
     {
@@ -33,6 +42,7 @@ public class UIExplore : UIBase
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Dialog);
         corpse.SetActive(true);
         corpse.GetComponent<Button>().onClick.AddListener(() => EventManager.Instance.DispatchEvent(EventDefinition.eventBattleWin));
+        corpse.GetComponent<Button>().onClick.AddListener(() => corpse.SetActive(false));
     }
 
     private void Battle()
@@ -59,9 +69,35 @@ public class UIExplore : UIBase
     }
     private void RemoveCard()
     {
-
+        applyButton.gameObject.SetActive(true);
+        for (int i = 0; i < contentTrans.childCount; i++)
+        {
+            int avoidClosure = i;
+            Button cardButton = contentTrans.GetChild(avoidClosure).AddComponent<Button>();
+            cardButton.onClick.AddListener(() => RefreshRemoveID(avoidClosure));
+        }
     }
-
+    private void RefreshRemoveID(int removeID)
+    {
+        currentRemoveID = removeID;
+        if (currentRemoveID <= contentTrans.childCount && currentRemoveID != -1)
+            applyButton.onClick.AddListener(() => RemoveSuccess(currentRemoveID, contentTrans.GetChild(currentRemoveID).gameObject));
+    }
+    private void RemoveSuccess(int removeID, GameObject removeCard)
+    {
+        applyButton.gameObject.SetActive(false);
+        DataManager.Instance.CardBag.RemoveAt(removeID);
+        Destroy(removeCard);
+        for (int i = 0; i < contentTrans.childCount; i++)
+        {
+            contentTrans.GetChild(i).GetComponent<Button>().onClick.RemoveAllListeners();
+        }
+        removeCardButton.gameObject.SetActive(false);
+        UIManager.Instance.ShowUI("UIMap");
+        UIManager.Instance.HideUI("UICardMenu");
+        EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
+        currentRemoveID = -1;
+    }
     private void EventExplore(params object[] args)
     {
         DataManager.Instance.LevelList[DataManager.Instance.LevelID].LevelPassed = true;
@@ -83,7 +119,8 @@ public class UIExplore : UIBase
                 Boss();
                 break;
             case "REMOVECARD":
-                RemoveCard();
+                removeCardButton.gameObject.SetActive(true);
+                removeCardButton.onClick.AddListener(RemoveCard);
                 break;
 
         }

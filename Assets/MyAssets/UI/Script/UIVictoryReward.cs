@@ -44,6 +44,7 @@ public class UIVictoryReward : UIBase
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Dialog);
         UIManager.Instance.ShowUI("UIExplore");
         UI.SetActive(false);
+        EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
 
     private void GetReward(int rewardID, GameObject reward)

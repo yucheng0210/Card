@@ -12,6 +12,9 @@ public class UICardMenu : UIBase
     private Button usedCardMenuButton;
 
     [SerializeField]
+    private Button removeCardButton;
+
+    [SerializeField]
     private CardItem cardPrefab;
 
     [SerializeField]
@@ -21,6 +24,7 @@ public class UICardMenu : UIBase
     {
         cardMenuButton.onClick.AddListener(RefreshCardBag);
         usedCardMenuButton.onClick.AddListener(RefreshUsedCardBag);
+        removeCardButton.onClick.AddListener(RefreshCardBag);
     }
 
     private void Update()
