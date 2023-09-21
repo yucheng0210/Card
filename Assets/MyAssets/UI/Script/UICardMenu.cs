@@ -30,7 +30,10 @@ public class UICardMenu : UIBase
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape) && UI.activeSelf)
+        {
+            RefreshCardBag();
             UI.SetActive(false);
+        }
     }
 
     private void RefreshCardBag()

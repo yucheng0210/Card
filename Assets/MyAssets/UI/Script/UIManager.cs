@@ -121,4 +121,8 @@ public class UIManager : Singleton<UIManager>
                 CreateNewItem(i.Value, slotPrefab, slotGroupTrans);
         }
     }
+    public void ChangeOutline(Outline outline, float length)
+    {
+        outline.effectDistance = new Vector2(length, length);
+    }
 }

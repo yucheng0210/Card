@@ -21,10 +21,24 @@ public class UIMap : UIBase
     }
     private void StartGame()
     {
+        int levelIndex = 0;
         for (int i = 0; i < mapButtonsTrans.childCount; i++)
         {
-            int mapID = DataManager.Instance.LevelList.ElementAt(i).Key;
-            mapList.Add(mapID, mapButtonsTrans.GetChild(i).GetComponent<Button>());
+            int mapID = DataManager.Instance.LevelList.ElementAt(levelIndex).Key;
+            if (mapButtonsTrans.GetChild(i).CompareTag("MapSelect"))
+            {
+                for (int j = 0; j < mapButtonsTrans.GetChild(i).childCount; j++)
+                {
+                    mapID = DataManager.Instance.LevelList.ElementAt(levelIndex).Key;
+                    mapList.Add(mapID, mapButtonsTrans.GetChild(i).GetChild(j).GetComponent<Button>());
+                    levelIndex++;
+                }
+            }
+            else
+            {
+                mapList.Add(mapID, mapButtonsTrans.GetChild(i).GetComponent<Button>());
+                levelIndex++;
+            }
             mapList[mapID].onClick.AddListener(() => EntryPoint(mapID));
         }
         for (int i = 0; i < mapList.Count; i++)

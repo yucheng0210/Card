@@ -291,9 +291,9 @@ public class CardItem
     {
         if (DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].CurrentActionPoint >= Cost
         && DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].Mana >= DataManager.Instance.CardList[CardID].CardManaCost)
-            outline.effectDistance = new Vector2(6, 6);
+            UIManager.Instance.ChangeOutline(outline, 6);
         else
-            outline.effectDistance = new Vector2(0, 0);
+            UIManager.Instance.ChangeOutline(outline, 0);
     }
     /*private void UseCard()
     {

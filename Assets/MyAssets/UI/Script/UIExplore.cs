@@ -15,12 +15,15 @@ public class UIExplore : UIBase
     private Transform contentTrans;
     [SerializeField]
     private Button applyButton;
+    [SerializeField]
+    private Button exitButton;
     private int currentRemoveID = -1;
 
     protected override void Start()
     {
         base.Start();
         EventManager.Instance.AddEventRegister(EventDefinition.eventExplore, EventExplore);
+        exitButton.onClick.AddListener(ExitExplore);
     }
 
     private void HideAllUI()
@@ -69,7 +72,6 @@ public class UIExplore : UIBase
     }
     private void RemoveCard()
     {
-        applyButton.gameObject.SetActive(true);
         for (int i = 0; i < contentTrans.childCount; i++)
         {
             int avoidClosure = i;
@@ -79,12 +81,22 @@ public class UIExplore : UIBase
     }
     private void RefreshRemoveID(int removeID)
     {
+        applyButton.gameObject.SetActive(true);
         currentRemoveID = removeID;
+        applyButton.onClick.RemoveAllListeners();
+        for (int i = 0; i < contentTrans.childCount; i++)
+        {
+            UIManager.Instance.ChangeOutline(contentTrans.GetChild(i).GetComponentInChildren<Outline>(), 0);
+        }
         if (currentRemoveID <= contentTrans.childCount && currentRemoveID != -1)
+        {
+            UIManager.Instance.ChangeOutline(contentTrans.GetChild(currentRemoveID).GetComponentInChildren<Outline>(), 6);
             applyButton.onClick.AddListener(() => RemoveSuccess(currentRemoveID, contentTrans.GetChild(currentRemoveID).gameObject));
+        }
     }
     private void RemoveSuccess(int removeID, GameObject removeCard)
     {
+        applyButton.onClick.RemoveAllListeners();
         applyButton.gameObject.SetActive(false);
         DataManager.Instance.CardBag.RemoveAt(removeID);
         Destroy(removeCard);
@@ -93,10 +105,13 @@ public class UIExplore : UIBase
             contentTrans.GetChild(i).GetComponent<Button>().onClick.RemoveAllListeners();
         }
         removeCardButton.gameObject.SetActive(false);
+        currentRemoveID = -1;
+    }
+    private void ExitExplore()
+    {
         UIManager.Instance.ShowUI("UIMap");
         UIManager.Instance.HideUI("UICardMenu");
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
-        currentRemoveID = -1;
     }
     private void EventExplore(params object[] args)
     {
