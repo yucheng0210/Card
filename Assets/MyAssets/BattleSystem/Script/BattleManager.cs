@@ -174,6 +174,10 @@ public class BattleManager : Singleton<BattleManager>
         }
         return emptyPlaceList;
     }
+    public bool CheckTerrainObstacles(string location, int alertDistance, string target)
+    {
+        return !GetEmptyPlace(location, alertDistance).Contains(target);
+    }
     public float GetDistance(string location)
     {
         int[] playerNormalPos = ConvertNormalPos(CurrentLocationID);
@@ -188,8 +192,9 @@ public class BattleManager : Singleton<BattleManager>
         for (int i = 0; i < CurrentEnemyList.Count; i++)
         {
             string location = CurrentEnemyList.ElementAt(i).Key;
+            bool checkTerrainObstacles = CheckTerrainObstacles(location, CurrentEnemyList[location].AlertDistance, CurrentLocationID);
             CurrentEnemyList.ElementAt(i).Value.EnemyTrans.GetComponent<Enemy>().EnemyAlert.enabled =
-            GetDistance(location) <= CurrentEnemyList[location].AlertDistance;
+            GetDistance(location) <= CurrentEnemyList[location].AlertDistance && !checkTerrainObstacles;
         }
     }
     public void RefreshCheckerboardList()
@@ -200,12 +205,13 @@ public class BattleManager : Singleton<BattleManager>
             for (int j = 0; j < 5; j++)
             {
                 string location = ConvertCheckerboardPos(i, j);
-                if (CurrentLocationID == location)
+                /*if (CurrentLocationID == location)
                 {
                     CheckerboardList.Add(location, "Player");
                     //Debug.Log("玩家：" + loaction);
                 }
-                else if (CurrentEnemyList.ContainsKey(location))
+                else*/
+                if (CurrentEnemyList.ContainsKey(location))
                 {
                     CheckerboardList.Add(location, "Enemy");
                     // Debug.Log("敵人：" + loaction);

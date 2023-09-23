@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -115,7 +116,26 @@ public class UIExplore : UIBase
     }
     private void EventExplore(params object[] args)
     {
-        DataManager.Instance.LevelList[DataManager.Instance.LevelID].LevelPassed = true;
+        int levelID = DataManager.Instance.LevelID;
+        DataManager.Instance.LevelList[levelID].LevelPassed = true;
+        bool isSelectLevel = true;
+        for (int i = 0; i < DataManager.Instance.LevelList.Count; i++)
+        {
+            int id = DataManager.Instance.LevelList.ElementAt(i).Key;
+            for (int j = 0; j < DataManager.Instance.LevelList[id].LevelParentList.Count; j++)
+            {
+                if (DataManager.Instance.LevelList[id].LevelParentList.Count != DataManager.Instance.LevelList[levelID].LevelParentList.Count)
+                {
+                    isSelectLevel = false;
+                    break;
+                }
+                if (DataManager.Instance.LevelList[id].LevelParentList[j] != DataManager.Instance.LevelList[levelID].LevelParentList[j])
+                    isSelectLevel = false;
+            }
+            if (isSelectLevel)
+                DataManager.Instance.LevelList[id].LevelPassed = true;
+            isSelectLevel = true;
+        }
         switch (args[0])
         {
             case "DIALOG":

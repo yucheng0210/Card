@@ -275,6 +275,8 @@ public class CardCreater : MonoBehaviour
             RectTransform enemyTrans = BattleManager.Instance.CurrentEnemyList[location].EnemyTrans;
             List<string> emptyPlaceList =
             BattleManager.Instance.GetEmptyPlace(location, stepCount);
+            bool checkTerrainObstacles = BattleManager.Instance.CheckTerrainObstacles(location, BattleManager.Instance.CurrentEnemyList[location].AlertDistance
+            , BattleManager.Instance.CurrentLocationID);
             for (int j = 0; j < movedLocationList.Count; j++)//因為不是立即更新棋盤的空白位置
             {
                 if (emptyPlaceList.Contains(movedLocationList[j]))
@@ -290,7 +292,7 @@ public class CardCreater : MonoBehaviour
                 );
                 newCurrentEnemyList.Add(newLocation, BattleManager.Instance.CurrentEnemyList[location]);
             }
-            else if (distance <= BattleManager.Instance.CurrentEnemyList[location].AlertDistance)
+            else if (distance <= BattleManager.Instance.CurrentEnemyList[location].AlertDistance && !checkTerrainObstacles)
             {
                 yield return new WaitForSecondsRealtime(0.5f);
                 float minDistance = 99;
@@ -331,7 +333,7 @@ public class CardCreater : MonoBehaviour
                 movedLocationList.Add(newLocation);
             }
             enemyTrans.GetComponent<Enemy>().EnemyAlert.enabled = BattleManager.Instance.GetDistance(newLocation)
-            <= BattleManager.Instance.CurrentEnemyList[location].AlertDistance;
+            <= BattleManager.Instance.CurrentEnemyList[location].AlertDistance && !checkTerrainObstacles;
             EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
             yield return new WaitForSecondsRealtime(1);
         }
