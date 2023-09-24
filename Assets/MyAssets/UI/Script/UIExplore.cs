@@ -57,13 +57,10 @@ public class UIExplore : UIBase
 
     private void Recover()
     {
-        int recoverCount = (int)(
-            DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].MaxHealth * 0.35f
-        );
-        DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].CurrentHealth +=
-            recoverCount;
-        ;
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Dialog);
+        int playerID = DataManager.Instance.PlayerID;
+        int recoverCount = (int)(DataManager.Instance.PlayerList[playerID].MaxHealth * 0.35f);
+        DataManager.Instance.PlayerList[playerID].CurrentHealth += recoverCount;
     }
 
     private void Boss()
@@ -147,7 +144,7 @@ public class UIExplore : UIBase
             case "BATTLE":
                 Battle();
                 break;
-            case "RECOVERY":
+            case "RECOVER":
                 Recover();
                 break;
             case "BOSS":
