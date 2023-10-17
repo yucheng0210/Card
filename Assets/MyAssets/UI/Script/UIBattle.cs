@@ -227,7 +227,7 @@ public class UIBattle : UIBase
                 .EnemyList[enemy.EnemyID].MaxHealth;*/
             yield return null;
         }
-        BattleManager.Instance.RefreshEnemyAlert();
+        StartCoroutine(UIManager.Instance.RefreshEnemyAlert());
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Player);
     }
 

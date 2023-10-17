@@ -29,11 +29,11 @@ public class UIMap : UIBase
             {
                 for (int j = 0; j < mapButtonsTrans.GetChild(i).childCount; j++)
                 {
+                    mapID = DataManager.Instance.LevelList.ElementAt(levelIndex).Key;
                     int localMapID = mapID;
                     mapList.Add(localMapID, mapButtonsTrans.GetChild(i).GetChild(j).GetComponent<Button>());
-                    levelIndex++;
                     mapList[localMapID].onClick.AddListener(() => EntryPoint(localMapID));
-                    mapID = DataManager.Instance.LevelList.ElementAt(levelIndex).Key;
+                    levelIndex++;
                 }
 
             }

@@ -22,11 +22,17 @@ public class BagMenu : UIBase
 
     [SerializeField]
     private Button useButton;
+    [SerializeField]
+    private Button showButton;
+    [SerializeField]
+    private Button hideButton;
 
     protected override void Start()
     {
         base.Start();
-        /* EventManager.Instance.AddEventRegister(EventDefinition.eventAddItemToBag, EventAddItem);
+        showButton.onClick.AddListener(Show);
+        hideButton.onClick.AddListener(Hide);
+         EventManager.Instance.AddEventRegister(EventDefinition.eventAddItemToBag, EventAddItem);
          EventManager.Instance.AddEventRegister(
              EventDefinition.eventRemoveItemToBag,
              EventRemoveItem
@@ -35,7 +41,7 @@ public class BagMenu : UIBase
              EventDefinition.eventReviseMoneyToBag,
              EventReviseMoney
          );
-         EventManager.Instance.AddEventRegister(EventDefinition.eventOnClickedToBag, EventOnClicked);*/
+         EventManager.Instance.AddEventRegister(EventDefinition.eventOnClickedToBag, EventOnClicked);
     }
 
     public override void Show()

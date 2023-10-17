@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Terrain : MonoBehaviour
+public class Terrain
 {
     public int TerrainID { get; set; }
     public string TerrainName { get; set; }

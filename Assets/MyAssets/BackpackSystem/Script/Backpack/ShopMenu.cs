@@ -40,11 +40,11 @@ public class ShopMenu : UIBase
     {
         base.Start();
         switchButton.onClick.AddListener(SellSwitch);
-       /* EventManager.Instance.AddEventRegister(EventDefinition.eventOnClickedToBag, EventOnClicked);
+        EventManager.Instance.AddEventRegister(EventDefinition.eventOnClickedToBag, EventOnClicked);
         EventManager.Instance.AddEventRegister(
             EventDefinition.eventReviseMoneyToBag,
             EventReviseMoney
-        );*/
+        );
     }
 
     private void Update()
@@ -64,13 +64,13 @@ public class ShopMenu : UIBase
 
     public void Business(Item item)
     {
-       /* if (!switchBool)
+       if (!switchBool)
         {
-            if (DataManager.Instance.MoneyCount >= item.ItemCost)
+            if (DataManager.Instance.MoneyCount >= item.ItemBuyPrice)
             {
                 BackpackManager.Instance.ReduceMoney(item.ItemBuyPrice);
-                BackpackManager.Instance.AddItem(item.ItemIndex, DataManager.Instance.Backpack);
-                BackpackManager.Instance.ReduceItem(item.ItemIndex, DataManager.Instance.ShopBag);
+                BackpackManager.Instance.AddItem(item.ItemID, DataManager.Instance.Backpack);
+                BackpackManager.Instance.ReduceItem(item.ItemID, DataManager.Instance.ShopBag);
                 UIManager.Instance.RefreshItem(
                     backpackSlot,
                     slotGroupTrans,
@@ -81,14 +81,14 @@ public class ShopMenu : UIBase
         else
         {
             BackpackManager.Instance.AddMoney(item.ItemSellPrice);
-            BackpackManager.Instance.AddItem(item.ItemIndex, DataManager.Instance.ShopBag);
-            BackpackManager.Instance.ReduceItem(item.ItemIndex, DataManager.Instance.Backpack);
+            BackpackManager.Instance.AddItem(item.ItemID, DataManager.Instance.ShopBag);
+            BackpackManager.Instance.ReduceItem(item.ItemID, DataManager.Instance.Backpack);
             UIManager.Instance.RefreshItem(
                 backpackSlot,
                 slotGroupTrans,
                 DataManager.Instance.Backpack
             );
-        }*/
+        }
     }
 
     public void UpdateItemInfo(string itemDes, string itemName)
@@ -99,7 +99,7 @@ public class ShopMenu : UIBase
 
     public void SellSwitch()
     {
-       /* if (switchBool)
+        if (switchBool)
         {
             UIManager.Instance.RefreshItem(
                 backpackSlot,
@@ -120,7 +120,7 @@ public class ShopMenu : UIBase
             switchButtonText.text = "買";
             useButtonText.text = "賣";
             switchBool = true;
-        }*/
+        }
     }
 
     public void EventOnClicked(params object[] args)

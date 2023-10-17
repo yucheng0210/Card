@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using System.Linq;
 public class UIManager : Singleton<UIManager>
 {
     public Dictionary<string, UIBase> UIDict { get; set; }
@@ -124,5 +124,33 @@ public class UIManager : Singleton<UIManager>
     public void ChangeOutline(Outline outline, float length)
     {
         outline.effectDistance = new Vector2(length, length);
+    }
+    public void RefreshCardBag(Transform contentTrans,CardItem cardPrefab)
+    {
+      ShowUI("UICardMenu");
+        List<CardData> cardBag = DataManager.Instance.CardBag;
+        for (int i = 0; i < contentTrans.childCount; i++)
+        {
+            Destroy(contentTrans.GetChild(i).gameObject);
+        }
+        for (int i = 0; i < cardBag.Count; i++)
+        {
+            CardItem cardItem = Instantiate(cardPrefab, contentTrans);
+            cardItem.GetComponent<CanvasGroup>().alpha = 1;
+            cardItem.CardID = cardBag[i].CardID;
+            cardItem.CantMove = true;
+        }
+    }
+    public IEnumerator RefreshEnemyAlert()
+    {
+        BattleManager.Instance.RefreshCheckerboardList();
+        yield return null;
+        for (int i = 0; i < BattleManager.Instance.CurrentEnemyList.Count; i++)
+        {
+            string location = BattleManager.Instance.CurrentEnemyList.ElementAt(i).Key;
+            bool checkTerrainObstacles = BattleManager.Instance.CheckTerrainObstacles(location, BattleManager.Instance.CurrentEnemyList[location].AlertDistance,  BattleManager.Instance.CurrentLocationID);
+            BattleManager.Instance.CurrentEnemyList.ElementAt(i).Value.EnemyTrans.GetComponent<Enemy>().EnemyAlert.enabled =
+            BattleManager.Instance.GetDistance(location) <= BattleManager.Instance.CurrentEnemyList[location].AlertDistance && !checkTerrainObstacles;
+        }
     }
 }

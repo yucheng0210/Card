@@ -27,7 +27,6 @@ public class MoveEffect : IEffect
         BattleManager.Instance.CurrentLocationID = loactionID;
         RectTransform checkerboardTrans = BattleManager.Instance.CheckerboardTrans;
         BattleManager.Instance.PlayerTrans.DOAnchorPos(destination, 0.5f);
-        BattleManager.Instance.RefreshEnemyAlert();
         for (int i = 0; i < checkerboardTrans.childCount; i++)
         {
             checkerboardTrans.GetChild(i).GetComponent<Image>().color = Color.white;

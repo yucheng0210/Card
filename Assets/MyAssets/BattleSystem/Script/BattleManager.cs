@@ -186,17 +186,7 @@ public class BattleManager : Singleton<BattleManager>
          + Mathf.Pow(playerNormalPos[1] - enemyNormalPos[1], 2));
         return distance;
     }
-    public void RefreshEnemyAlert()
-    {
-        RefreshCheckerboardList();
-        for (int i = 0; i < CurrentEnemyList.Count; i++)
-        {
-            string location = CurrentEnemyList.ElementAt(i).Key;
-            bool checkTerrainObstacles = CheckTerrainObstacles(location, CurrentEnemyList[location].AlertDistance, CurrentLocationID);
-            CurrentEnemyList.ElementAt(i).Value.EnemyTrans.GetComponent<Enemy>().EnemyAlert.enabled =
-            GetDistance(location) <= CurrentEnemyList[location].AlertDistance && !checkTerrainObstacles;
-        }
-    }
+    
     public void RefreshCheckerboardList()
     {
         CheckerboardList.Clear();
@@ -217,9 +207,7 @@ public class BattleManager : Singleton<BattleManager>
                     // Debug.Log("敵人：" + loaction);
                 }
                 else if (CurrentTerrainList.ContainsKey(location))
-                {
                     CheckerboardList.Add(location, "Terrain");
-                }
                 else
                     CheckerboardList.Add(location, "Empty");
             }
@@ -242,6 +230,9 @@ public class BattleManager : Singleton<BattleManager>
             case BattleType.BattleInitial:
                 BattleInitial();
                 break;
+            case BattleType.Attack:
+            Attack();
+            break;
             case BattleType.Dialog:
                 Dialog();
                 break;
@@ -282,7 +273,10 @@ public class BattleManager : Singleton<BattleManager>
         }
         EventManager.Instance.DispatchEvent(EventDefinition.eventBattleInitial);
     }
-
+private void Attack()
+{
+    StartCoroutine(UIManager.Instance.RefreshEnemyAlert());
+}
     private void Explore()
     {
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);

@@ -23,6 +23,12 @@ public class EventDefinition
     public const string eventRefreshUI = "EVENT_REFRESH_UI";
     public const string eventAttackLine = "EVENT_ATTACKLINE";
 
+    //物品相關
+    public const string eventOnClickedToBag="EVENT_ONCLICKED_TO_BAG";
+    public const string eventReviseMoneyToBag="EVENT_REVISE_MONEY_TO_BAG";
+    public const string eventRemoveItemToBag="EVENT_REMOVE_ITEM_TO_BAG";
+    public const string eventAddItemToBag="EVENT_ADD_ITEM_TO_BAG";
+
     //其他
     public const string eventStartGame = "EVENT_START_GAME";
     public const string eventDialog = "EVENT_DIALOG";

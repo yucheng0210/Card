@@ -10,9 +10,8 @@ public class UICardMenu : UIBase
 
     [SerializeField]
     private Button usedCardMenuButton;
-
     [SerializeField]
-    private Button removeCardButton;
+    private Button hideButton;
 
     [SerializeField]
     private CardItem cardPrefab;
@@ -20,37 +19,12 @@ public class UICardMenu : UIBase
     [SerializeField]
     private Transform contentTrans;
 
-    private void Awake()
+    protected override void Start()
     {
-        cardMenuButton.onClick.AddListener(RefreshCardBag);
+        base.Start();
+        cardMenuButton.onClick.AddListener(()=>UIManager.Instance.RefreshCardBag(contentTrans,cardPrefab));
+        hideButton.onClick.AddListener(Hide);
         usedCardMenuButton.onClick.AddListener(RefreshUsedCardBag);
-        removeCardButton.onClick.AddListener(RefreshCardBag);
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape) && UI.activeSelf)
-        {
-            RefreshCardBag();
-            UI.SetActive(false);
-        }
-    }
-
-    private void RefreshCardBag()
-    {
-        UI.SetActive(true);
-        List<CardData> cardBag = DataManager.Instance.CardBag;
-        for (int i = 0; i < contentTrans.childCount; i++)
-        {
-            Destroy(contentTrans.GetChild(i).gameObject);
-        }
-        for (int i = 0; i < cardBag.Count; i++)
-        {
-            CardItem cardItem = Instantiate(cardPrefab, contentTrans);
-            cardItem.GetComponent<CanvasGroup>().alpha = 1;
-            cardItem.CardID = cardBag[i].CardID;
-            cardItem.CantMove = true;
-        }
     }
 
     private void RefreshUsedCardBag()

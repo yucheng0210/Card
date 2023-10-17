@@ -13,11 +13,14 @@ public class UIExplore : UIBase
     [SerializeField]
     private Button removeCardButton;
     [SerializeField]
+    private CardItem cardPrefab;
+    [SerializeField]
     private Transform contentTrans;
     [SerializeField]
     private Button applyButton;
     [SerializeField]
     private Button exitButton;
+    [SerializeField]
     private int currentRemoveID = -1;
 
     protected override void Start()
@@ -68,25 +71,28 @@ public class UIExplore : UIBase
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Dialog);
         UI.SetActive(false);
     }
-    private void RemoveCard()
+    private IEnumerator RemoveCard()
     {
+        UIManager.Instance.RefreshCardBag(contentTrans,cardPrefab);
+        yield return null;
         for (int i = 0; i < contentTrans.childCount; i++)
         {
-            int avoidClosure = i;
-            Button cardButton = contentTrans.GetChild(avoidClosure).AddComponent<Button>();
+           int avoidClosure= i;
+            Button cardButton = contentTrans.GetChild(i).AddComponent<Button>();
             cardButton.onClick.AddListener(() => RefreshRemoveID(avoidClosure));
         }
     }
     private void RefreshRemoveID(int removeID)
     {
         applyButton.gameObject.SetActive(true);
+        exitButton.gameObject.SetActive(true);
         currentRemoveID = removeID;
         applyButton.onClick.RemoveAllListeners();
         for (int i = 0; i < contentTrans.childCount; i++)
         {
             UIManager.Instance.ChangeOutline(contentTrans.GetChild(i).GetComponentInChildren<Outline>(), 0);
         }
-        if (currentRemoveID <= contentTrans.childCount && currentRemoveID != -1)
+        if (currentRemoveID < contentTrans.childCount && currentRemoveID != -1)
         {
             UIManager.Instance.ChangeOutline(contentTrans.GetChild(currentRemoveID).GetComponentInChildren<Outline>(), 6);
             applyButton.onClick.AddListener(() => RemoveSuccess(currentRemoveID, contentTrans.GetChild(currentRemoveID).gameObject));
@@ -102,11 +108,12 @@ public class UIExplore : UIBase
         {
             contentTrans.GetChild(i).GetComponent<Button>().onClick.RemoveAllListeners();
         }
+        removeCardButton.onClick.RemoveAllListeners();
         removeCardButton.gameObject.SetActive(false);
-        currentRemoveID = -1;
     }
     private void ExitExplore()
     {
+        exitButton.gameObject.SetActive(false);
         UIManager.Instance.ShowUI("UIMap");
         UIManager.Instance.HideUI("UICardMenu");
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
@@ -152,7 +159,8 @@ public class UIExplore : UIBase
                 break;
             case "REMOVECARD":
                 removeCardButton.gameObject.SetActive(true);
-                removeCardButton.onClick.AddListener(RemoveCard);
+                currentRemoveID = -1;
+                removeCardButton.onClick.AddListener(()=>StartCoroutine(RemoveCard()));
                 break;
 
         }

@@ -344,7 +344,7 @@ public class CardCreater : MonoBehaviour
             BattleManager.Instance.CurrentEnemyList[newCurrentEnemyList.ElementAt(i).Key].EnemyTrans
             .GetComponent<Enemy>().EnemyLocation = newCurrentEnemyList.ElementAt(i).Key;
         }
-        BattleManager.Instance.RefreshEnemyAlert();
+        StartCoroutine(UIManager.Instance.RefreshEnemyAlert());
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Player);
     }
     private void EventEnemyTurn(params object[] args)

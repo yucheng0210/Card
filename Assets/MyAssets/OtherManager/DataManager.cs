@@ -22,6 +22,7 @@ public class DataManager : Singleton<DataManager>
     public Dictionary<int, Level> LevelList { get; set; }
     public Dictionary<int, Item> ItemList { get; set; }
     public Dictionary<int, Item> Backpack { get; set; }
+    public Dictionary<int, Item> ShopBag { get; set; }
     public Dictionary<string, List<Dialog>> DialogList { get; set; }
     public Dictionary<int, Terrain> TerrainList { get; set; }
     public int PlayerID { get; set; }
@@ -40,6 +41,7 @@ public class DataManager : Singleton<DataManager>
         UsedCardBag = new List<CardItem>();
         ItemList = new Dictionary<int, Item>();
         Backpack = new Dictionary<int, Item>();
+        ShopBag=new Dictionary<int,Item>();
         DialogList = new Dictionary<string, List<Dialog>>();
         TerrainList = new Dictionary<int, Terrain>();
         LoadData();
@@ -269,6 +271,7 @@ public class DataManager : Singleton<DataManager>
         CardBag.Add(CardList[1005]);
         CardBag.Add(CardList[1005]);
         CardBag.Add(CardList[3001]);
+         BackpackManager.Instance.AddItem(3001, Backpack);
         PlayerList[PlayerID].CharacterPos = LevelList[LevelID].PlayerStartPos;
         yield return null;
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Explore);
