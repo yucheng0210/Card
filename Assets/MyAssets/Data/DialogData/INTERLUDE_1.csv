@@ -1,0 +1,17 @@
+﻿分支,類型,名稱,指令,內容
+DEFAULT,TALK,???,,女兒啊，要好好認真讀書，長大才會有出息。
+DEFAULT,TALK,???,,我們家族世世代代都是扶持神殿的世家，所以你也必須成為神殿的神官。
+DEFAULT,TALK,???,,知道嗎？
+DEFAULT,TALK,女主角,,......。
+DEFAULT,TALK,???,,回答呢？
+DEFAULT,TALK,女主角,,知道了。
+DEFAULT,TALK,???,,你要知道你這個世代遠比我們輕鬆，我們以前的生活更苦，當時神殿勢力還沒有現在這麼龐大，島上到處都是搶劫和暴動，該死的島政府根本毫無作為，只會搜刮民脂民膏。
+DEFAULT,TALK,???,,真是一群廢物。
+DEFAULT,TALK,???,,要不是我們這代辛辛苦苦建立新的秩序系統，到現在島上肯定還是混亂狀態。
+DEFAULT,TALK,???,,知道了嗎？
+DEFAULT,TALK,女主角,,是。
+DEFAULT,TALK,???,,果然是我們的乖女兒。
+DEFAULT,TALK,???,,唯有好好認真讀書當上神殿的神官，以後路就會輕鬆多了。
+DEFAULT,TALK,???,,我們這都是為了你好。
+DEFAULT,TALK,女主角,,......。
+DEFAULT,CHOICE,END,DEFAULT,

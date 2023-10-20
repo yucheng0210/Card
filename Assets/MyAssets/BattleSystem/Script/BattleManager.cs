@@ -122,25 +122,13 @@ public class BattleManager : Singleton<BattleManager>
             if (right != "CantMove")
                 right = ConvertCheckerboardPos(x + i, y);
             //上
-            if (CheckerboardList.ContainsKey(up) && CheckerboardList[up] == "Empty")
-                emptyPlaceList.Add(up);
-            else
-                up = "CantMove";
+            up = CheckPlaceEmpty(up, emptyPlaceList);
             //下
-            if (CheckerboardList.ContainsKey(down) && CheckerboardList[down] == "Empty")
-                emptyPlaceList.Add(down);
-            else
-                down = "CantMove";
+            down = CheckPlaceEmpty(down, emptyPlaceList);
             //左
-            if (CheckerboardList.ContainsKey(left) && CheckerboardList[left] == "Empty")
-                emptyPlaceList.Add(left);
-            else
-                left = "CantMove";
+            left = CheckPlaceEmpty(left, emptyPlaceList);
             //右
-            if (CheckerboardList.ContainsKey(right) && CheckerboardList[right] == "Empty")
-                emptyPlaceList.Add(right);
-            else
-                right = "CantMove";
+            right = CheckPlaceEmpty(right, emptyPlaceList);
             if (i == stepCount)
                 break;
             if (upRight != "CantMove")
@@ -152,27 +140,25 @@ public class BattleManager : Singleton<BattleManager>
             if (downLeft != "CantMove")
                 downLeft = ConvertCheckerboardPos(x - i, y - i);
             //右上
-            if (CheckerboardList.ContainsKey(upRight) && CheckerboardList[upRight] == "Empty")
-                emptyPlaceList.Add(upRight);
-            else
-                upRight = "CantMove";
+            upRight = CheckPlaceEmpty(upRight, emptyPlaceList);
             //左上
-            if (CheckerboardList.ContainsKey(upLeft) && CheckerboardList[upLeft] == "Empty")
-                emptyPlaceList.Add(upLeft);
-            else
-                upLeft = "CantMove";
+            upLeft = CheckPlaceEmpty(upLeft, emptyPlaceList);
             //右下
-            if (CheckerboardList.ContainsKey(downRight) && CheckerboardList[downRight] == "Empty")
-                emptyPlaceList.Add(downRight);
-            else
-                downRight = "CantMove";
+            downRight = CheckPlaceEmpty(downRight, emptyPlaceList);
             //左下
-            if (CheckerboardList.ContainsKey(downLeft) && CheckerboardList[downLeft] == "Empty")
-                emptyPlaceList.Add(downLeft);
-            else
-                downLeft = "CantMove";
+            downLeft = CheckPlaceEmpty(downLeft, emptyPlaceList);
         }
         return emptyPlaceList;
+    }
+    private string CheckPlaceEmpty(string place, List<string> emptyPlaceList)
+    {
+        if (CheckerboardList.ContainsKey(place) && CheckerboardList[place] == "Empty")
+        {
+            emptyPlaceList.Add(place);
+            return place;
+        }
+        else
+            return "CantMove";
     }
     public bool CheckTerrainObstacles(string location, int alertDistance, string target)
     {
@@ -186,7 +172,7 @@ public class BattleManager : Singleton<BattleManager>
          + Mathf.Pow(playerNormalPos[1] - enemyNormalPos[1], 2));
         return distance;
     }
-    
+
     public void RefreshCheckerboardList()
     {
         CheckerboardList.Clear();
@@ -231,8 +217,8 @@ public class BattleManager : Singleton<BattleManager>
                 BattleInitial();
                 break;
             case BattleType.Attack:
-            Attack();
-            break;
+                Attack();
+                break;
             case BattleType.Dialog:
                 Dialog();
                 break;
@@ -273,10 +259,10 @@ public class BattleManager : Singleton<BattleManager>
         }
         EventManager.Instance.DispatchEvent(EventDefinition.eventBattleInitial);
     }
-private void Attack()
-{
-    StartCoroutine(UIManager.Instance.RefreshEnemyAlert());
-}
+    private void Attack()
+    {
+        StartCoroutine(UIManager.Instance.RefreshEnemyAlert());
+    }
     private void Explore()
     {
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);

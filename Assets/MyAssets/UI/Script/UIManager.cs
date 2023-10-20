@@ -125,9 +125,9 @@ public class UIManager : Singleton<UIManager>
     {
         outline.effectDistance = new Vector2(length, length);
     }
-    public void RefreshCardBag(Transform contentTrans,CardItem cardPrefab)
+    public void RefreshCardBag(Transform contentTrans, CardItem cardPrefab)
     {
-      ShowUI("UICardMenu");
+        ShowUI("UICardMenu");
         List<CardData> cardBag = DataManager.Instance.CardBag;
         for (int i = 0; i < contentTrans.childCount; i++)
         {
@@ -148,9 +148,18 @@ public class UIManager : Singleton<UIManager>
         for (int i = 0; i < BattleManager.Instance.CurrentEnemyList.Count; i++)
         {
             string location = BattleManager.Instance.CurrentEnemyList.ElementAt(i).Key;
-            bool checkTerrainObstacles = BattleManager.Instance.CheckTerrainObstacles(location, BattleManager.Instance.CurrentEnemyList[location].AlertDistance,  BattleManager.Instance.CurrentLocationID);
+            bool checkTerrainObstacles = BattleManager.Instance.CheckTerrainObstacles(location, BattleManager.Instance.CurrentEnemyList[location].AlertDistance, BattleManager.Instance.CurrentLocationID);
             BattleManager.Instance.CurrentEnemyList.ElementAt(i).Value.EnemyTrans.GetComponent<Enemy>().EnemyAlert.enabled =
             BattleManager.Instance.GetDistance(location) <= BattleManager.Instance.CurrentEnemyList[location].AlertDistance && !checkTerrainObstacles;
+        }
+    }
+    public void ClearMoveClue()
+    {
+        RectTransform checkerboardTrans = BattleManager.Instance.CheckerboardTrans;
+        for (int i = 0; i < checkerboardTrans.childCount; i++)
+        {
+            checkerboardTrans.GetChild(i).GetComponent<Image>().color = Color.white;
+            checkerboardTrans.GetChild(i).GetComponent<Button>().onClick.RemoveAllListeners();
         }
     }
 }

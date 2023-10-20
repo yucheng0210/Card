@@ -133,6 +133,21 @@ public class UIBattle : UIBase
     {
         if (!BattleManager.Instance.CurrentEnemyList.ContainsKey(location))
             return;
+        UIManager.Instance.ClearMoveClue();
+        List<string> emptyPlaceList = BattleManager.Instance.GetEmptyPlace(location, BattleManager.Instance.CurrentEnemyList[location].AlertDistance);
+        for (int i = 0; i < emptyPlaceList.Count; i++)
+        {
+            RectTransform emptyPlace = BattleManager.Instance.CheckerboardTrans
+           .GetChild(BattleManager.Instance.GetCheckerboardPoint(emptyPlaceList[i])).GetComponent<RectTransform>();
+            emptyPlace.GetComponent<Image>().color = Color.yellow;
+        }
+        emptyPlaceList = BattleManager.Instance.GetEmptyPlace(location, BattleManager.Instance.CurrentEnemyList[location].StepCount);
+        for (int i = 0; i < emptyPlaceList.Count; i++)
+        {
+            RectTransform emptyPlace = BattleManager.Instance.CheckerboardTrans
+           .GetChild(BattleManager.Instance.GetCheckerboardPoint(emptyPlaceList[i])).GetComponent<RectTransform>();
+            emptyPlace.GetComponent<Image>().color = Color.red;
+        }
         int x = BattleManager.Instance.ConvertNormalPos(location)[0];
         int y = BattleManager.Instance.ConvertNormalPos(location)[1];
         enemyInfo.SetActive(true);

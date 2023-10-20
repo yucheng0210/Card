@@ -25,13 +25,8 @@ public class MoveEffect : IEffect
     private void Move(Vector2 destination, string loactionID)
     {
         BattleManager.Instance.CurrentLocationID = loactionID;
-        RectTransform checkerboardTrans = BattleManager.Instance.CheckerboardTrans;
         BattleManager.Instance.PlayerTrans.DOAnchorPos(destination, 0.5f);
-        for (int i = 0; i < checkerboardTrans.childCount; i++)
-        {
-            checkerboardTrans.GetChild(i).GetComponent<Image>().color = Color.white;
-            checkerboardTrans.GetChild(i).GetComponent<Button>().onClick.RemoveAllListeners();
-        }
+        UIManager.Instance.ClearMoveClue();
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Attack);
     }
 }
