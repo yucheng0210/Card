@@ -134,11 +134,21 @@ public class DialogSystem : MonoBehaviour
                 index++;
                 break;
             case "CALL":
-                currentBranchID = DataManager.Instance.DialogList[dialogName][index].Order;
+                string order = DataManager.Instance.DialogList[dialogName][index].Order;
                 //if (currentBranchID == "REWARDED")
                 //QuestManager.Instance.GetRewards(questID);
-                if (continueBool)
-                    CloseDialog();
+                switch (order)
+                {
+                    case "CLOSE":
+                        CloseDialog();
+                        //BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Explore);
+                        break;
+                    case "END":
+                        UIManager.Instance.ShowUI("UIMap");
+                        BattleManager.Instance.ChangeTurn(BattleManager.BattleType.None);
+                        CloseDialog();
+                        break;
+                }
                 break;
         }
     }
@@ -210,7 +220,7 @@ public class DialogSystem : MonoBehaviour
         DestroyChoice();
         inSelection = false;
         continueBool = true;
-        switch (menuType)
+        /*switch (menuType)
         {
             case "CLOSE":
                 CloseDialog();
@@ -220,7 +230,7 @@ public class DialogSystem : MonoBehaviour
                 UIManager.Instance.ShowUI("UIMap");
                 BattleManager.Instance.ChangeTurn(BattleManager.BattleType.None);
                 break;
-        }
+        }*/
         /* if (BattleManager.Instance.MyBattleType == BattleManager.BattleType.Dialog)
          {
              //BattleManager.Instance.CurrentLocationID = int.Parse(buttonBranchID);

@@ -114,7 +114,7 @@ public class UIBattle : UIBase
             EventBattleInitial
         );
         EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
-        CheckEnemyInfo();
+        EventManager.Instance.AddEventRegister(EventDefinition.eventEnemyTurn, EventEnemyTurn);
     }
 
     private void Update()
@@ -131,23 +131,11 @@ public class UIBattle : UIBase
     }
     private void RefreshEnemyInfo(string location)
     {
+        UIManager.Instance.ClearMoveClue(false);
         if (!BattleManager.Instance.CurrentEnemyList.ContainsKey(location))
             return;
-        UIManager.Instance.ClearMoveClue();
-        List<string> emptyPlaceList = BattleManager.Instance.GetEmptyPlace(location, BattleManager.Instance.CurrentEnemyList[location].AlertDistance);
-        for (int i = 0; i < emptyPlaceList.Count; i++)
-        {
-            RectTransform emptyPlace = BattleManager.Instance.CheckerboardTrans
-           .GetChild(BattleManager.Instance.GetCheckerboardPoint(emptyPlaceList[i])).GetComponent<RectTransform>();
-            emptyPlace.GetComponent<Image>().color = Color.yellow;
-        }
-        emptyPlaceList = BattleManager.Instance.GetEmptyPlace(location, BattleManager.Instance.CurrentEnemyList[location].StepCount);
-        for (int i = 0; i < emptyPlaceList.Count; i++)
-        {
-            RectTransform emptyPlace = BattleManager.Instance.CheckerboardTrans
-           .GetChild(BattleManager.Instance.GetCheckerboardPoint(emptyPlaceList[i])).GetComponent<RectTransform>();
-            emptyPlace.GetComponent<Image>().color = Color.red;
-        }
+        UIManager.Instance.ChangeCheckerboardColor(Color.yellow, location, BattleManager.Instance.CurrentEnemyList[location].AlertDistance);
+        UIManager.Instance.ChangeCheckerboardColor(Color.red, location, BattleManager.Instance.CurrentEnemyList[location].StepCount);
         int x = BattleManager.Instance.ConvertNormalPos(location)[0];
         int y = BattleManager.Instance.ConvertNormalPos(location)[1];
         enemyInfo.SetActive(true);
@@ -248,10 +236,14 @@ public class UIBattle : UIBase
 
     private void EventPlayerTurn(params object[] args)
     {
+        CheckEnemyInfo();
         Text buttonText = changeTurnButton.GetComponentInChildren<Text>();
         buttonText.text = "結束回合";
     }
-
+    private void EventEnemyTurn(params object[] args)
+    {
+        UIManager.Instance.ClearMoveClue(true);
+    }
     private void EventTakeDamage(params object[] args)
     {
         StartCoroutine(RemoveEnemy());

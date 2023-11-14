@@ -153,13 +153,24 @@ public class UIManager : Singleton<UIManager>
             BattleManager.Instance.GetDistance(location) <= BattleManager.Instance.CurrentEnemyList[location].AlertDistance && !checkTerrainObstacles;
         }
     }
-    public void ClearMoveClue()
+    public void ClearMoveClue(bool canRemove)
     {
         RectTransform checkerboardTrans = BattleManager.Instance.CheckerboardTrans;
         for (int i = 0; i < checkerboardTrans.childCount; i++)
         {
             checkerboardTrans.GetChild(i).GetComponent<Image>().color = Color.white;
-            checkerboardTrans.GetChild(i).GetComponent<Button>().onClick.RemoveAllListeners();
+            if (canRemove)
+                checkerboardTrans.GetChild(i).GetComponent<Button>().onClick.RemoveAllListeners();
+        }
+    }
+    public void ChangeCheckerboardColor(Color color, string location, int stepCount)
+    {
+        List<string> emptyPlaceList = BattleManager.Instance.GetEmptyPlace(location, stepCount);
+        for (int i = 0; i < emptyPlaceList.Count; i++)
+        {
+            RectTransform emptyPlace = BattleManager.Instance.CheckerboardTrans
+           .GetChild(BattleManager.Instance.GetCheckerboardPoint(emptyPlaceList[i])).GetComponent<RectTransform>();
+            emptyPlace.GetComponent<Image>().color = color;
         }
     }
 }

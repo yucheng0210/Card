@@ -7,26 +7,36 @@ using DG.Tweening;
 
 public class MoveEffect : IEffect
 {
+    private List<UnityEngine.Events.UnityAction> removeList = new();
+    private List<string> emptyPlaceList;
     public void ApplyEffect(int value, string target)
     {
-        List<string> emptyPlaceList = BattleManager.Instance.GetEmptyPlace(BattleManager.Instance.CurrentLocationID, value);
+        emptyPlaceList = BattleManager.Instance.GetEmptyPlace(BattleManager.Instance.CurrentLocationID, value); ;
+        UIManager.Instance.ChangeCheckerboardColor(Color.green, BattleManager.Instance.CurrentLocationID, value);
         for (int i = 0; i < emptyPlaceList.Count; i++)
         {
             int avoidClosure = i;
             RectTransform emptyPlace = BattleManager.Instance.CheckerboardTrans
             .GetChild(BattleManager.Instance.GetCheckerboardPoint(emptyPlaceList[avoidClosure])).GetComponent<RectTransform>();
-            emptyPlace.GetComponent<Image>().color = Color.green;
-            emptyPlace.GetComponent<Button>().onClick.AddListener(() =>
-            Move(emptyPlace.localPosition, emptyPlaceList[avoidClosure]));
+            UnityEngine.Events.UnityAction moveAction = () =>
+            Move(emptyPlace.localPosition, emptyPlaceList[avoidClosure]);
+            emptyPlace.GetComponent<Button>().onClick.AddListener(moveAction);
+            removeList.Add(moveAction);
             // Debug.Log("玩家可行走位置：" + emptyPlaceList[avoidClosure]);
         }
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.UsingEffect);
     }
     private void Move(Vector2 destination, string loactionID)
     {
+        for (int i = 0; i < emptyPlaceList.Count; i++)
+        {
+            RectTransform emptyPlace = BattleManager.Instance.CheckerboardTrans
+            .GetChild(BattleManager.Instance.GetCheckerboardPoint(emptyPlaceList[i])).GetComponent<RectTransform>();
+            emptyPlace.GetComponent<Button>().onClick.RemoveListener(removeList[i]);
+        }
         BattleManager.Instance.CurrentLocationID = loactionID;
         BattleManager.Instance.PlayerTrans.DOAnchorPos(destination, 0.5f);
-        UIManager.Instance.ClearMoveClue();
+        UIManager.Instance.ClearMoveClue(false);
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Attack);
     }
 }
