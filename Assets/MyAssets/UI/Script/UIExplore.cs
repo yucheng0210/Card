@@ -28,6 +28,7 @@ public class UIExplore : UIBase
         base.Start();
         EventManager.Instance.AddEventRegister(EventDefinition.eventExplore, EventExplore);
         exitButton.onClick.AddListener(ExitExplore);
+        BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Explore);
     }
 
     private void HideAllUI()
@@ -73,11 +74,11 @@ public class UIExplore : UIBase
     }
     private IEnumerator RemoveCard()
     {
-        UIManager.Instance.RefreshCardBag(contentTrans,cardPrefab);
+        UIManager.Instance.RefreshCardBag(contentTrans, cardPrefab);
         yield return null;
         for (int i = 0; i < contentTrans.childCount; i++)
         {
-           int avoidClosure= i;
+            int avoidClosure = i;
             Button cardButton = contentTrans.GetChild(i).AddComponent<Button>();
             cardButton.onClick.AddListener(() => RefreshRemoveID(avoidClosure));
         }
@@ -160,7 +161,7 @@ public class UIExplore : UIBase
             case "REMOVECARD":
                 removeCardButton.gameObject.SetActive(true);
                 currentRemoveID = -1;
-                removeCardButton.onClick.AddListener(()=>StartCoroutine(RemoveCard()));
+                removeCardButton.onClick.AddListener(() => StartCoroutine(RemoveCard()));
                 break;
 
         }

@@ -41,7 +41,7 @@ public class DataManager : Singleton<DataManager>
         UsedCardBag = new List<CardItem>();
         ItemList = new Dictionary<int, Item>();
         Backpack = new Dictionary<int, Item>();
-        ShopBag=new Dictionary<int,Item>();
+        ShopBag = new Dictionary<int, Item>();
         DialogList = new Dictionary<string, List<Dialog>>();
         TerrainList = new Dictionary<int, Terrain>();
         LoadData();
@@ -49,7 +49,7 @@ public class DataManager : Singleton<DataManager>
 
     private void Start()
     {
-        StartCoroutine(StartGame());
+        StartGame();
     }
 
     private void LoadData()
@@ -251,7 +251,7 @@ public class DataManager : Singleton<DataManager>
 
     public void LoadLevel() { }
 
-    private IEnumerator StartGame()
+    private void StartGame()
     {
         MoneyCount = 0;
         PlayerID = 1001;
@@ -271,9 +271,7 @@ public class DataManager : Singleton<DataManager>
         CardBag.Add(CardList[1005]);
         CardBag.Add(CardList[1005]);
         CardBag.Add(CardList[3001]);
-         BackpackManager.Instance.AddItem(3001, Backpack);
+        BackpackManager.Instance.AddItem(3001, Backpack);
         PlayerList[PlayerID].CharacterPos = LevelList[LevelID].PlayerStartPos;
-        yield return null;
-        BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Explore);
     }
 }

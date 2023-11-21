@@ -141,6 +141,7 @@ public class UIManager : Singleton<UIManager>
             cardItem.CantMove = true;
         }
     }
+
     public IEnumerator RefreshEnemyAlert()
     {
         BattleManager.Instance.RefreshCheckerboardList();

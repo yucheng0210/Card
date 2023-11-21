@@ -22,7 +22,7 @@ public class UICardMenu : UIBase
     protected override void Start()
     {
         base.Start();
-        cardMenuButton.onClick.AddListener(()=>UIManager.Instance.RefreshCardBag(contentTrans,cardPrefab));
+        cardMenuButton.onClick.AddListener(() => UIManager.Instance.RefreshCardBag(contentTrans, cardPrefab));
         hideButton.onClick.AddListener(Hide);
         usedCardMenuButton.onClick.AddListener(RefreshUsedCardBag);
     }

@@ -8,14 +8,25 @@ public class UIStartMenu : UIBase
     [SerializeField]
     private Button startButton;
 
+    [SerializeField]
+    private Button optionButton;
+    [SerializeField]
+    private Button exitButton;
+
     protected override void Start()
     {
         base.Start();
-        startButton.onClick.AddListener(GameStart);
+        startButton.onClick.AddListener(StartGame);
+        exitButton.onClick.AddListener(ExitGame);
     }
-    private void GameStart()
+    private void StartGame()
     {
         startButton.onClick.RemoveAllListeners();
         StartCoroutine(SceneController.Instance.Transition("Level1"));
+    }
+    private void ExitGame()
+    {
+        UnityEditor.EditorApplication.isPlaying = false;
+        //Application.Quit();
     }
 }
