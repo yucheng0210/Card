@@ -81,6 +81,13 @@ public class UIBattle : UIBase
 
     [SerializeField]
     private Transform terrainTrans;
+    [Header("藥水")]
+    [SerializeField]
+    private Transform potionGroupTrans;
+    [SerializeField]
+    private Button potionPrefab;
+    [SerializeField]
+    private Transform potionClueMenu;
     public Text ActionPointText
     {
         get { return actionPointText; }
@@ -197,11 +204,17 @@ public class UIBattle : UIBase
 
     private void EventBattleInitial(params object[] args)
     {
-        StartCoroutine(CreateEnemyAndTerrain());
+        StartCoroutine(BattleInitial());
     }
 
-    private IEnumerator CreateEnemyAndTerrain()
+    private IEnumerator BattleInitial()
     {
+        for (int i = 0; i < DataManager.Instance.PotionBag.Count; i++)
+        {
+            int avoidClosure = i;
+            Button potion = Instantiate(potionPrefab, potionGroupTrans);
+            potion.onClick.AddListener(() => UsePotion(DataManager.Instance.PotionBag[avoidClosure].ItemID));
+        }
         for (int i = 0; i < BattleManager.Instance.CurrentEnemyList.Count; i++)
         {
             string key = BattleManager.Instance.CurrentEnemyList.ElementAt(i).Key;
@@ -233,7 +246,16 @@ public class UIBattle : UIBase
         StartCoroutine(UIManager.Instance.RefreshEnemyAlert());
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Player);
     }
-
+    private void UsePotion(int id)
+    {
+        potionClueMenu.gameObject.SetActive(true);
+        string[] effect = DataManager.Instance.ItemList[id].ItemEffectName.Split('=');
+        string effectName = effect[0];
+        int value = int.Parse(effect[1]);
+        potionClueMenu.GetChild(0).GetComponent<Button>().onClick.AddListener(() => EffectFactory.Instance.CreateEffect(effectName).ApplyEffect(value, "Player"));
+        potionClueMenu.GetChild(0).GetComponent<Button>().onClick.AddListener(() => potionClueMenu.gameObject.SetActive(false));
+        potionClueMenu.GetChild(1).GetComponent<Button>().onClick.AddListener(() => potionClueMenu.gameObject.SetActive(false));
+    }
     private void EventPlayerTurn(params object[] args)
     {
         CheckEnemyInfo();

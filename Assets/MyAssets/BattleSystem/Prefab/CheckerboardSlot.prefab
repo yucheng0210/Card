@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4172690119380974229}
   - component: {fileID: 4878678400145058172}
   m_Layer: 5
-  m_Name: Slot
+  m_Name: CheckerboardSlot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

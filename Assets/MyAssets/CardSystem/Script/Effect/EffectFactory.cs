@@ -10,6 +10,8 @@ public class EffectFactory : Singleton<EffectFactory>
         {
             case "IncreaseManaEffect":
                 return new IncreaseManaEffect();
+            case "IncreaseHealth":
+                return new IncreaseHealth();
             case "FireBallEffect":
                 return new FireBallEffect();
             case "DrawCardEffect":
