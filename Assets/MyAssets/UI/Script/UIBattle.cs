@@ -209,12 +209,7 @@ public class UIBattle : UIBase
 
     private IEnumerator BattleInitial()
     {
-        for (int i = 0; i < DataManager.Instance.PotionBag.Count; i++)
-        {
-            int avoidClosure = i;
-            Button potion = Instantiate(potionPrefab, potionGroupTrans);
-            potion.onClick.AddListener(() => UsePotion(DataManager.Instance.PotionBag[avoidClosure].ItemID));
-        }
+        RefreshPotionBag();
         for (int i = 0; i < BattleManager.Instance.CurrentEnemyList.Count; i++)
         {
             string key = BattleManager.Instance.CurrentEnemyList.ElementAt(i).Key;
@@ -246,15 +241,38 @@ public class UIBattle : UIBase
         StartCoroutine(UIManager.Instance.RefreshEnemyAlert());
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Player);
     }
-    private void UsePotion(int id)
+    private void RefreshPotionBag()
+    {
+        for (int i = 0; i < potionGroupTrans.childCount; i++)
+        {
+            Destroy(potionGroupTrans.GetChild(i).gameObject);
+        }
+        for (int i = 0; i < DataManager.Instance.PotionBag.Count; i++)
+        {
+            int avoidClosure = i;
+            Button potion = Instantiate(potionPrefab, potionGroupTrans);
+            potion.onClick.AddListener(() => UsePotion(DataManager.Instance.PotionBag[avoidClosure].ItemID, avoidClosure));
+        }
+    }
+    private void UsePotion(int itemID, int bagID)
     {
         potionClueMenu.gameObject.SetActive(true);
-        string[] effect = DataManager.Instance.ItemList[id].ItemEffectName.Split('=');
+        string[] effect = DataManager.Instance.ItemList[itemID].ItemEffectName.Split('=');
         string effectName = effect[0];
         int value = int.Parse(effect[1]);
-        potionClueMenu.GetChild(0).GetComponent<Button>().onClick.AddListener(() => EffectFactory.Instance.CreateEffect(effectName).ApplyEffect(value, "Player"));
-        potionClueMenu.GetChild(0).GetComponent<Button>().onClick.AddListener(() => potionClueMenu.gameObject.SetActive(false));
-        potionClueMenu.GetChild(1).GetComponent<Button>().onClick.AddListener(() => potionClueMenu.gameObject.SetActive(false));
+        Button yesButton = potionClueMenu.GetChild(0).GetComponent<Button>();
+        Button noButton = potionClueMenu.GetChild(1).GetComponent<Button>();
+        yesButton.onClick.RemoveAllListeners();
+        noButton.onClick.RemoveAllListeners();
+        yesButton.onClick.AddListener(() => UsePotionEffect(effectName, value, bagID));
+        noButton.onClick.AddListener(() => potionClueMenu.gameObject.SetActive(false));
+    }
+    private void UsePotionEffect(string effectName, int value, int bagID)
+    {
+        EffectFactory.Instance.CreateEffect(effectName).ApplyEffect(value, "Player");
+        DataManager.Instance.PotionBag.RemoveAt(bagID);
+        potionClueMenu.gameObject.SetActive(false);
+        RefreshPotionBag();
     }
     private void EventPlayerTurn(params object[] args)
     {
