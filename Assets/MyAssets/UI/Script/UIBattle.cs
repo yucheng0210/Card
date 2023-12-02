@@ -141,8 +141,10 @@ public class UIBattle : UIBase
         UIManager.Instance.ClearMoveClue(false);
         if (!BattleManager.Instance.CurrentEnemyList.ContainsKey(location))
             return;
-        UIManager.Instance.ChangeCheckerboardColor(Color.yellow, location, BattleManager.Instance.CurrentEnemyList[location].AlertDistance);
-        UIManager.Instance.ChangeCheckerboardColor(Color.red, location, BattleManager.Instance.CurrentEnemyList[location].StepCount);
+        UIManager.Instance.ChangeCheckerboardColor
+        (Color.yellow, location, BattleManager.Instance.CurrentEnemyList[location].AlertDistance, BattleManager.CheckEmptyType.EnemyAttack);
+        UIManager.Instance.ChangeCheckerboardColor
+        (Color.red, location, BattleManager.Instance.CurrentEnemyList[location].StepCount, BattleManager.CheckEmptyType.EnemyAttack);
         int x = BattleManager.Instance.ConvertNormalPos(location)[0];
         int y = BattleManager.Instance.ConvertNormalPos(location)[1];
         enemyInfo.SetActive(true);
@@ -256,6 +258,8 @@ public class UIBattle : UIBase
     }
     private void UsePotion(int itemID, int bagID)
     {
+        if (BattleManager.Instance.MyBattleType == BattleManager.BattleType.Enemy)
+            return;
         potionClueMenu.gameObject.SetActive(true);
         string[] effect = DataManager.Instance.ItemList[itemID].ItemEffectName.Split('=');
         string effectName = effect[0];

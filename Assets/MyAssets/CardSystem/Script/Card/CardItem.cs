@@ -133,6 +133,8 @@ public class CardItem
                 space = pointerEnterReduceCount;
         }
         transform.SetAsLastSibling();
+        UIManager.Instance.ChangeCheckerboardColor
+        (Color.gray, BattleManager.Instance.CurrentLocationID, DataManager.Instance.CardList[CardID].CardAttackDistance, BattleManager.CheckEmptyType.PlayerAttack);
     }
 
     public void OnPointerExit(PointerEventData eventData)
@@ -160,6 +162,7 @@ public class CardItem
                 .GetComponent<RectTransform>()
                 .DOAnchorPosX(BattleManager.Instance.CardPositionList[i].x, moveTime);
         }
+        UIManager.Instance.ClearMoveClue(false);
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -233,8 +236,7 @@ public class CardItem
         {
             enemy = hit.transform.GetComponent<Enemy>();
             enemy.OnSelect();
-            if (onEnd && GetUseCardCondition() && BattleManager.Instance.GetDistance(enemy.EnemyLocation)
-            <= DataManager.Instance.CardList[CardID].CardAttackDistance)
+            if (onEnd && GetUseCardCondition() && CheckEnemyInAttackRange(enemy.EnemyLocation))
             {
                 enemy.OnUnSelect();
                 UseCard(enemy.EnemyLocation);
@@ -243,12 +245,23 @@ public class CardItem
         else if (enemy != null)
             enemy.OnUnSelect();
     }
+    private bool CheckEnemyInAttackRange(string enemyLocation)
+    {
+        List<string> emptyPlaceList = BattleManager.Instance
+        .GetEmptyPlace(BattleManager.Instance.CurrentLocationID, DataManager.Instance.CardList[CardID].CardAttackDistance, BattleManager.CheckEmptyType.PlayerAttack);
+        bool inRangeBool = false;
+        for (int i = 0; i < emptyPlaceList.Count; i++)
+        {
+            if (emptyPlaceList[i].Contains(enemyLocation))
+                inRangeBool = true;
+        }
+        return inRangeBool;
+    }
     private bool GetUseCardCondition()
     {
         PlayerData playerData = DataManager.Instance.PlayerList[DataManager.Instance.PlayerID];
         return playerData.CurrentActionPoint >= Cost && playerData.Mana >= DataManager.Instance.CardList[CardID].CardManaCost;
     }
-    //攻擊
     private void UseCard(string target)
     {
         if (BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack)
@@ -265,11 +278,7 @@ public class CardItem
             DataManager.Instance.CardList[CardID].CardShield
         );
         if (DataManager.Instance.CardList[CardID].CardAttack != 0)
-            BattleManager.Instance.TakeDamage(
-                BattleManager.Instance.CurrentEnemyList[target],
-                DataManager.Instance.CardList[CardID].CardAttack,
-                target
-            );
+            BattleManager.Instance.TakeDamage(BattleManager.Instance.CurrentEnemyList[target], DataManager.Instance.CardList[CardID].CardAttack, target);
         EventManager.Instance.DispatchEvent(EventDefinition.eventUseCard, this);
         for (int i = 0; i < DataManager.Instance.CardList[CardID].CardEffectList.Count; i++)
         {

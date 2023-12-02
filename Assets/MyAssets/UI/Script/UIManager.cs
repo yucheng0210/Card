@@ -149,7 +149,11 @@ public class UIManager : Singleton<UIManager>
         for (int i = 0; i < BattleManager.Instance.CurrentEnemyList.Count; i++)
         {
             string location = BattleManager.Instance.CurrentEnemyList.ElementAt(i).Key;
-            bool checkTerrainObstacles = BattleManager.Instance.CheckTerrainObstacles(location, BattleManager.Instance.CurrentEnemyList[location].AlertDistance, BattleManager.Instance.CurrentLocationID);
+
+            bool checkTerrainObstacles = BattleManager.Instance.
+            CheckTerrainObstacles(location, BattleManager.Instance.CurrentEnemyList[location].AlertDistance
+            , BattleManager.Instance.CurrentLocationID, BattleManager.CheckEmptyType.EnemyAttack);
+
             BattleManager.Instance.CurrentEnemyList.ElementAt(i).Value.EnemyTrans.GetComponent<Enemy>().EnemyAlert.enabled =
             BattleManager.Instance.GetDistance(location) <= BattleManager.Instance.CurrentEnemyList[location].AlertDistance && !checkTerrainObstacles;
         }
@@ -164,9 +168,9 @@ public class UIManager : Singleton<UIManager>
                 checkerboardTrans.GetChild(i).GetComponent<Button>().onClick.RemoveAllListeners();
         }
     }
-    public void ChangeCheckerboardColor(Color color, string location, int stepCount)
+    public void ChangeCheckerboardColor(Color color, string location, int stepCount, BattleManager.CheckEmptyType checkEmptyType)
     {
-        List<string> emptyPlaceList = BattleManager.Instance.GetEmptyPlace(location, stepCount);
+        List<string> emptyPlaceList = BattleManager.Instance.GetEmptyPlace(location, stepCount, checkEmptyType);
         for (int i = 0; i < emptyPlaceList.Count; i++)
         {
             RectTransform emptyPlace = BattleManager.Instance.CheckerboardTrans

@@ -104,7 +104,7 @@ public class BattleManager : Singleton<BattleManager>
         int y = point / 8;
         return x.ToString() + ' ' + y.ToString();
     }
-    public List<string> GetEmptyPlace(string location, int stepCount)
+    public List<string> GetEmptyPlace(string location, int stepCount, CheckEmptyType checkEmptyType)
     {
         List<string> emptyPlaceList = new();
         int[] pos = ConvertNormalPos(location);
@@ -122,13 +122,13 @@ public class BattleManager : Singleton<BattleManager>
             if (right != "CantMove")
                 right = ConvertCheckerboardPos(x + i, y);
             //上
-            up = CheckPlaceEmpty(up, emptyPlaceList);
+            up = CheckPlaceEmpty(up, emptyPlaceList, checkEmptyType);
             //下
-            down = CheckPlaceEmpty(down, emptyPlaceList);
+            down = CheckPlaceEmpty(down, emptyPlaceList, checkEmptyType);
             //左
-            left = CheckPlaceEmpty(left, emptyPlaceList);
+            left = CheckPlaceEmpty(left, emptyPlaceList, checkEmptyType);
             //右
-            right = CheckPlaceEmpty(right, emptyPlaceList);
+            right = CheckPlaceEmpty(right, emptyPlaceList, checkEmptyType);
             if (i == stepCount)
                 break;
             if (upRight != "CantMove")
@@ -140,19 +140,45 @@ public class BattleManager : Singleton<BattleManager>
             if (downLeft != "CantMove")
                 downLeft = ConvertCheckerboardPos(x - i, y - i);
             //右上
-            upRight = CheckPlaceEmpty(upRight, emptyPlaceList);
+            upRight = CheckPlaceEmpty(upRight, emptyPlaceList, checkEmptyType);
             //左上
-            upLeft = CheckPlaceEmpty(upLeft, emptyPlaceList);
+            upLeft = CheckPlaceEmpty(upLeft, emptyPlaceList, checkEmptyType);
             //右下
-            downRight = CheckPlaceEmpty(downRight, emptyPlaceList);
+            downRight = CheckPlaceEmpty(downRight, emptyPlaceList, checkEmptyType);
             //左下
-            downLeft = CheckPlaceEmpty(downLeft, emptyPlaceList);
+            downLeft = CheckPlaceEmpty(downLeft, emptyPlaceList, checkEmptyType);
         }
         return emptyPlaceList;
     }
-    private string CheckPlaceEmpty(string place, List<string> emptyPlaceList)
+    public enum CheckEmptyType
     {
-        if (CheckerboardList.ContainsKey(place) && CheckerboardList[place] == "Empty")
+        PlayerAttack,
+        EnemyAttack,
+        Move
+    }
+    private string CheckPlaceEmpty(string place, List<string> emptyPlaceList, CheckEmptyType checkEmptyType)
+    {
+        bool isEmpty = false;
+        if (CheckerboardList.ContainsKey(place))
+        {
+            if (CheckerboardList[place] == "Empty")
+                isEmpty = true;
+            else
+            {
+                switch (checkEmptyType)
+                {
+                    case CheckEmptyType.PlayerAttack:
+                        if (CheckerboardList[place] == "Enemy")
+                            isEmpty = true;
+                        break;
+                    case CheckEmptyType.EnemyAttack:
+                        if (CheckerboardList[place] == "Player")
+                            isEmpty = true;
+                        break;
+                }
+            }
+        }
+        if (isEmpty)
         {
             emptyPlaceList.Add(place);
             return place;
@@ -160,9 +186,9 @@ public class BattleManager : Singleton<BattleManager>
         else
             return "CantMove";
     }
-    public bool CheckTerrainObstacles(string location, int alertDistance, string target)
+    public bool CheckTerrainObstacles(string location, int alertDistance, string target, CheckEmptyType checkEmptyType)
     {
-        return !GetEmptyPlace(location, alertDistance).Contains(target);
+        return !GetEmptyPlace(location, alertDistance, checkEmptyType).Contains(target);
     }
     public float GetDistance(string location)
     {
@@ -181,16 +207,16 @@ public class BattleManager : Singleton<BattleManager>
             for (int j = 0; j < 5; j++)
             {
                 string location = ConvertCheckerboardPos(i, j);
-                /*if (CurrentLocationID == location)
+                if (CurrentLocationID == location)
                 {
                     CheckerboardList.Add(location, "Player");
-                    //Debug.Log("玩家：" + loaction);
+                    //Debug.Log("玩家：" + location);
                 }
-                else*/
+                else
                 if (CurrentEnemyList.ContainsKey(location))
                 {
                     CheckerboardList.Add(location, "Enemy");
-                    // Debug.Log("敵人：" + loaction);
+                    // Debug.Log("敵人：" + location);
                 }
                 else if (CurrentTerrainList.ContainsKey(location))
                     CheckerboardList.Add(location, "Terrain");

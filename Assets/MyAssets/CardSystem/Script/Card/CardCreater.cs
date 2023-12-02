@@ -274,15 +274,15 @@ public class CardCreater : MonoBehaviour
             int stepCount = BattleManager.Instance.CurrentEnemyList[location].StepCount;
             RectTransform enemyTrans = BattleManager.Instance.CurrentEnemyList[location].EnemyTrans;
             List<string> emptyPlaceList =
-            BattleManager.Instance.GetEmptyPlace(location, stepCount);
+            BattleManager.Instance.GetEmptyPlace(location, stepCount, BattleManager.CheckEmptyType.Move);
             bool checkTerrainObstacles = BattleManager.Instance.CheckTerrainObstacles(location, BattleManager.Instance.CurrentEnemyList[location].AlertDistance
-            , BattleManager.Instance.CurrentLocationID);
+            , BattleManager.Instance.CurrentLocationID, BattleManager.CheckEmptyType.EnemyAttack);
             for (int j = 0; j < movedLocationList.Count; j++)//因為不是立即更新棋盤的空白位置
             {
                 if (emptyPlaceList.Contains(movedLocationList[j]))
                     emptyPlaceList.Remove(movedLocationList[j]);
             }
-            if (distance <= BattleManager.Instance.CurrentEnemyList[location].AttackDistance)
+            if (distance <= BattleManager.Instance.CurrentEnemyList[location].AttackDistance && !checkTerrainObstacles)
             {
                 yield return new WaitForSecondsRealtime(0.5f);
                 BattleManager.Instance.TakeDamage(
