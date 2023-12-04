@@ -144,9 +144,12 @@ public class DialogSystem : MonoBehaviour
                         //BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Explore);
                         break;
                     case "END":
-                        UIManager.Instance.ShowUI("UIMap");
-                        BattleManager.Instance.ChangeTurn(BattleManager.BattleType.None);
-                        CloseDialog();
+                        if (continueBool)
+                        {
+                            UIManager.Instance.ShowUI("UIMap");
+                            BattleManager.Instance.ChangeTurn(BattleManager.BattleType.None);
+                            CloseDialog();
+                        }
                         break;
                 }
                 break;
