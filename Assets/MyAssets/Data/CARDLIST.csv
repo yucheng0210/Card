@@ -1,12 +1,12 @@
-﻿標示,名稱,類型,背景圖路徑,消耗費用,屬性,特效,描述,攻擊,護盾,效果,稀有度,攻擊距離,魔力消耗
-1001,魔力彈,攻擊,null,1,無,null,消耗3點魔力，造成6點傷害。,6,0,,普通,2,3
-1002,魔力盾,防禦,CardImage/NormalShield,1,無,null,消耗3點魔力，獲得5點護盾。,0,5,,普通,0,3
-1003,聚魔,增益,null,1,無,null,獲得5點魔力。,0,0,IncreaseManaEffect=5,普通,0,0
-1004,移動,移動,null,1,無,null,移動一格。,0,0,MoveEffect=1,普通,0,0
-1005,法師至尊平A,攻擊,CardImage/NormalAttack,1,無,null,造成8點傷害。,8,0,,普通,1,0
-1006,湧泉,能力,null,1,無,null,每回合生成兩點魔力。,0,0,IncreaseManaEffect=2,普通,0,5
-1007,0,防禦,null,1,無,null,消耗3點魔力，獲得5點護盾。,0,5,,普通,0,0
-1008,以一換二,增益,null ,1,無,null,抽兩張牌。,0,0,DrawCardEffect=2,普通,0,0
-1009,冥想,增益,null,1,無,null,獲得8點魔力，限制移動。,0,0,IncreaseManaEffect=8;CantMoveEffect=0,普通,0,0
-2001,瞬閃,移動,null,1,無,null,移動兩格。,0,0,MoveEffect=2,稀有,0,0
-3001,火球,攻擊,null,0,火,null,消耗所有魔力，造成魔力x2+總魔力/5點平方傷害。,0,0,FireBallEffect=0,史詩,2,0
+﻿標示,名稱,類型,背景圖路徑,消耗費用,屬性,特效,描述,攻擊,護盾,效果,稀有度,攻擊距離,魔力消耗,是否消耗
+1001,魔力彈,攻擊,null,1,無,null,消耗3點魔力，造成6點傷害。,6,0,,普通,2,3,FALSE
+1002,魔力盾,防禦,CardImage/NormalShield,1,無,null,消耗3點魔力，獲得5點護盾。,0,5,,普通,0,3,FALSE
+1003,聚魔,增益,null,1,無,null,獲得5點魔力。,0,0,IncreaseManaEffect=5,普通,0,0,FALSE
+1004,移動,移動,null,1,無,null,移動一格。,0,0,MoveEffect=1,普通,0,0,FALSE
+1005,法師至尊平A,攻擊,CardImage/NormalAttack,1,無,null,造成8點傷害。,8,0,,普通,1,0,FALSE
+1006,湧泉,能力,null,1,無,null,每回合生成兩點魔力。,0,0,IncreaseManaEffect=2,普通,0,5,FALSE
+1007,0,防禦,null,1,無,null,消耗3點魔力，獲得5點護盾。,0,5,,普通,0,0,FALSE
+1008,以一換二,增益,null ,1,無,null,抽兩張牌。,0,0,DrawCardEffect=2,普通,0,0,FALSE
+1009,冥想,增益,null,1,無,null,獲得8點魔力，限制移動。,0,0,IncreaseManaEffect=8;CantMoveEffect=0,普通,0,0,FALSE
+2001,瞬閃,移動,null,1,無,null,移動兩格。,0,0,MoveEffect=2,稀有,0,0,FALSE
+3001,火球,攻擊,null,0,火,null,消耗所有魔力，造成魔力x2+總魔力/5點平方傷害。,0,0,FireBallEffect=0,史詩,2,0,TRUE

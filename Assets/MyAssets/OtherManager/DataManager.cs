@@ -15,8 +15,9 @@ public class DataManager : Singleton<DataManager>
     private const string terrainListPath = "Assets/MyAssets/Data/TERRAINLIST.csv";
     public Dictionary<int, CardData> CardList { get; set; }
     public List<CardData> CardBag { get; set; }
-    public List<Item> PotionBag { get; set; }
     public List<CardItem> UsedCardBag { get; set; }
+    public List<CardItem> RemoveCardBag { get; set; }
+    public List<Item> PotionBag { get; set; }
     public List<CardItem> HandCard { get; set; }
     public Dictionary<int, PlayerData> PlayerList { get; set; }
     public Dictionary<int, EnemyData> EnemyList { get; set; }
@@ -35,12 +36,13 @@ public class DataManager : Singleton<DataManager>
         base.Awake();
         CardList = new Dictionary<int, CardData>();
         CardBag = new List<CardData>();
+        UsedCardBag = new List<CardItem>();
+        RemoveCardBag = new List<CardItem>();
         PotionBag = new List<Item>();
         HandCard = new List<CardItem>();
         PlayerList = new Dictionary<int, PlayerData>();
         EnemyList = new Dictionary<int, EnemyData>();
         LevelList = new Dictionary<int, Level>();
-        UsedCardBag = new List<CardItem>();
         ItemList = new Dictionary<int, Item>();
         Backpack = new Dictionary<int, Item>();
         ShopBag = new Dictionary<int, Item>();
@@ -90,6 +92,7 @@ public class DataManager : Singleton<DataManager>
             cardData.CardRarity = row[11];
             cardData.CardAttackDistance = int.Parse(row[12]);
             cardData.CardManaCost = int.Parse(row[13]);
+            cardData.CardRemove = bool.Parse(row[14]);
             CardList.Add(cardData.CardID, cardData);
         }
         #endregion

@@ -35,6 +35,8 @@ public class UIBattle : UIBase
 
     [SerializeField]
     private Text usedCardBagCountText;
+    [SerializeField]
+    private Text removeCardBagCountText;
 
     [SerializeField]
     private Button changeTurnButton;
@@ -345,5 +347,6 @@ public class UIBattle : UIBase
         shieldText.text = DataManager.Instance.PlayerList[id].CurrentShield.ToString();
         cardBagCountText.text = DataManager.Instance.CardBag.Count.ToString();
         usedCardBagCountText.text = DataManager.Instance.UsedCardBag.Count.ToString();
+        removeCardBagCountText.text = DataManager.Instance.RemoveCardBag.Count.ToString();
     }
 }

@@ -266,31 +266,32 @@ public class CardItem
     {
         if (BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack)
             return;
-        if (BattleManager.Instance.CurrentNegativeState.Contains(BattleManager.NegativeState.CantMove)
-        && DataManager.Instance.CardList[CardID].CardType == "移動")
+        CardData cardData = DataManager.Instance.CardList[CardID];
+        if (BattleManager.Instance.CurrentNegativeState.Contains(BattleManager.NegativeState.CantMove) && cardData.CardType == "移動")
             return;
         CardRectTransform.DOScale(1.5f, 0);
         DataManager.Instance.HandCard.Remove(this);
         BattleManager.Instance.ConsumeActionPoint(Cost);
-        BattleManager.Instance.ConsumeMana(DataManager.Instance.CardList[CardID].CardManaCost);
-        BattleManager.Instance.GetShield(
-            DataManager.Instance.PlayerList[DataManager.Instance.PlayerID],
-            DataManager.Instance.CardList[CardID].CardShield
-        );
-        if (DataManager.Instance.CardList[CardID].CardAttack != 0)
-            BattleManager.Instance.TakeDamage(BattleManager.Instance.CurrentEnemyList[target], DataManager.Instance.CardList[CardID].CardAttack, target);
+        BattleManager.Instance.ConsumeMana(cardData.CardManaCost);
+        BattleManager.Instance.GetShield(DataManager.Instance.PlayerList[DataManager.Instance.PlayerID], cardData.CardShield);
+        if (cardData.CardAttack != 0)
+            BattleManager.Instance.TakeDamage(BattleManager.Instance.CurrentEnemyList[target], cardData.CardAttack, target);
+        if (!cardData.CardRemove)
+            DataManager.Instance.UsedCardBag.Add(this);
+        else
+            DataManager.Instance.RemoveCardBag.Add(this);
         EventManager.Instance.DispatchEvent(EventDefinition.eventUseCard, this);
-        for (int i = 0; i < DataManager.Instance.CardList[CardID].CardEffectList.Count; i++)
+        for (int i = 0; i < cardData.CardEffectList.Count; i++)
         {
-            if (DataManager.Instance.CardList[CardID].CardType == "能力")
+            if (cardData.CardType == "能力")
             {
                 BattleManager.Instance.CurrentAbilityList.Add(CardID, target);
                 continue;
             }
             string effectID;
             int effectCount;
-            effectID = DataManager.Instance.CardList[CardID].CardEffectList[i].Item1;
-            effectCount = DataManager.Instance.CardList[CardID].CardEffectList[i].Item2;
+            effectID = cardData.CardEffectList[i].Item1;
+            effectCount = cardData.CardEffectList[i].Item2;
             EffectFactory.Instance.CreateEffect(effectID).ApplyEffect(effectCount, target);
         }
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);

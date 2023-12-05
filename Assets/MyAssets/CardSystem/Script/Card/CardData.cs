@@ -52,4 +52,5 @@ public class CardData
     public string CardRarity { get; set; }
     public int CardAttackDistance { get; set; }
     public int CardManaCost { get; set; }
+    public bool CardRemove { get; set; }
 }

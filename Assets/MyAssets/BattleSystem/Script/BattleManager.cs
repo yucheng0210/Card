@@ -32,6 +32,7 @@ public class BattleManager : Singleton<BattleManager>
     public List<float> CardAngleList { get; set; }
     public Dictionary<int, string> CurrentAbilityList { get; set; }
     public List<string> StateEventList { get; set; }
+    public List<string> PlayerSkillList { get; set; }
     //敵人
     public Dictionary<string, EnemyData> CurrentEnemyList { get; set; }
     public bool IsDrag { get; set; }

@@ -210,7 +210,6 @@ public class CardCreater : MonoBehaviour
         BattleManager.Instance.CardAngleList.Clear();
         currentPosX -= cardXSpacing / 2;
         CardItem cardItem = (CardItem)args[0];
-        DataManager.Instance.UsedCardBag.Add(cardItem);
         cardItem.transform.SetParent(usedCardTrans);
         CalculatePositionAngle(DataManager.Instance.HandCard.Count);
         AdjustCard();
@@ -394,6 +393,7 @@ public class CardCreater : MonoBehaviour
         BattleManager.Instance.CurrentAbilityList.Clear();
         DataManager.Instance.HandCard.Clear();
         DataManager.Instance.UsedCardBag.Clear();
+        DataManager.Instance.RemoveCardBag.Clear();
         BattleManager.Instance.CardItemList.Clear();
     }
 }
