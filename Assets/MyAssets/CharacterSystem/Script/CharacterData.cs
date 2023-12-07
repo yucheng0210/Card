@@ -46,6 +46,7 @@ public abstract class CharacterData
                 currentShield = 999;
         }
     }
+    public int StartSkill { get; set; }
     public CharacterData Clone()
     {
         return (CharacterData)MemberwiseClone();

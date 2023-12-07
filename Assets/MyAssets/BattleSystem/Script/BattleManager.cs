@@ -25,14 +25,14 @@ public class BattleManager : Singleton<BattleManager>
     {
         CantMove
     }
+    //玩家
     public BattleType MyBattleType { get; set; }
     public List<NegativeState> CurrentNegativeState { get; set; }
     public List<CardItem> CardItemList { get; set; }
     public List<Vector2> CardPositionList { get; set; }
     public List<float> CardAngleList { get; set; }
-    public Dictionary<int, string> CurrentAbilityList { get; set; }
+    public Dictionary<string, int> CurrentAbilityList { get; set; }
     public List<string> StateEventList { get; set; }
-    public List<string> PlayerSkillList { get; set; }
     //敵人
     public Dictionary<string, EnemyData> CurrentEnemyList { get; set; }
     public bool IsDrag { get; set; }
@@ -51,7 +51,7 @@ public class BattleManager : Singleton<BattleManager>
         CardPositionList = new List<Vector2>();
         CardAngleList = new List<float>();
         CurrentEnemyList = new Dictionary<string, EnemyData>();
-        CurrentAbilityList = new Dictionary<int, string>();
+        CurrentAbilityList = new Dictionary<string, int>();
         CheckerboardList = new Dictionary<string, string>();
         CurrentTerrainList = new Dictionary<string, Terrain>();
         CurrentNegativeState = new List<NegativeState>();
@@ -267,11 +267,14 @@ public class BattleManager : Singleton<BattleManager>
         CurrentLocationID = DataManager.Instance.LevelList[DataManager.Instance.LevelID].PlayerStartPos;
         int playerID = DataManager.Instance.PlayerID;
         int levelID = DataManager.Instance.LevelID;
-        DataManager.Instance.PlayerList[playerID].CurrentActionPoint =
-            DataManager.Instance.PlayerList[playerID].MaxActionPoint;
-        DataManager.Instance.PlayerList[playerID].Mana = 5;
-        PlayerTrans.anchoredPosition = CheckerboardTrans
-        .GetChild(GetCheckerboardPoint(CurrentLocationID)).localPosition;
+        int skillID = DataManager.Instance.PlayerList[playerID].StartSkill;
+        DataManager.Instance.PlayerList[playerID].CurrentActionPoint = DataManager.Instance.PlayerList[playerID].MaxActionPoint;
+        DataManager.Instance.PlayerList[playerID].Mana = 0;
+        PlayerTrans.anchoredPosition = CheckerboardTrans.GetChild(GetCheckerboardPoint(CurrentLocationID)).localPosition;
+        for (int i = 0; i < DataManager.Instance.SkillList[skillID].SkillContent.Count; i++)
+        {
+            CurrentAbilityList.Add(DataManager.Instance.SkillList[skillID].SkillContent[i].Item1, DataManager.Instance.SkillList[skillID].SkillContent[i].Item2);
+        }
         for (int i = 0; i < DataManager.Instance.LevelList[levelID].EnemyIDList.Count; i++)
         {
             int enemyID = DataManager.Instance.LevelList[levelID].EnemyIDList.ElementAt(i).Value;
@@ -309,21 +312,17 @@ public class BattleManager : Singleton<BattleManager>
         int playerID = DataManager.Instance.PlayerID;
         DataManager.Instance.PlayerList[playerID].CurrentActionPoint =
         DataManager.Instance.PlayerList[playerID].MaxActionPoint;
-        DataManager.Instance.PlayerList[playerID].Mana++;
+        //DataManager.Instance.PlayerList[playerID].Mana++;
         DataManager.Instance.PlayerList[playerID].CurrentShield = 0;
         CurrentNegativeState.Clear();
         for (int i = 0; i < CurrentAbilityList.Count; i++)
         {
-            int id = CurrentAbilityList.ElementAt(i).Key;
-            string target = CurrentAbilityList.ElementAt(i).Value;
-            for (int j = 0; j < DataManager.Instance.CardList[id].CardEffectList.Count; j++)
-            {
-                string effectID;
-                int effectCount;
-                effectID = DataManager.Instance.CardList[id].CardEffectList[j].Item1;
-                effectCount = DataManager.Instance.CardList[id].CardEffectList[j].Item2;
-                EffectFactory.Instance.CreateEffect(effectID).ApplyEffect(effectCount, target);
-            }
+            string effectID;
+            int effectCount;
+            effectID = CurrentAbilityList.ElementAt(i).Key;
+            effectCount = CurrentAbilityList.ElementAt(i).Value;
+            EffectFactory.Instance.CreateEffect(effectID).ApplyEffect(effectCount, "Player");
+
         }
         EventManager.Instance.DispatchEvent(EventDefinition.eventPlayerTurn);
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);

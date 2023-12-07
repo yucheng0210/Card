@@ -285,7 +285,7 @@ public class CardItem
         {
             if (cardData.CardType == "能力")
             {
-                BattleManager.Instance.CurrentAbilityList.Add(CardID, target);
+                BattleManager.Instance.CurrentAbilityList.Add(cardData.CardEffectList[i].Item1, cardData.CardEffectList[i].Item2);
                 continue;
             }
             string effectID;

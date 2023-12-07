@@ -13,6 +13,7 @@ public class DataManager : Singleton<DataManager>
     private const string itemListPath = "Assets/MyAssets/Data/ITEMLIST.csv";
     private const string dialogDataListPath = "Assets/MyAssets/Data/DialogData";
     private const string terrainListPath = "Assets/MyAssets/Data/TERRAINLIST.csv";
+    private const string skillListPath = "Assets/MyAssets/Data/SKILLLIST.csv";
     public Dictionary<int, CardData> CardList { get; set; }
     public List<CardData> CardBag { get; set; }
     public List<CardItem> UsedCardBag { get; set; }
@@ -25,6 +26,7 @@ public class DataManager : Singleton<DataManager>
     public Dictionary<int, Item> ItemList { get; set; }
     public Dictionary<int, Item> Backpack { get; set; }
     public Dictionary<int, Item> ShopBag { get; set; }
+    public Dictionary<int, Skill> SkillList { get; set; }
     public Dictionary<string, List<Dialog>> DialogList { get; set; }
     public Dictionary<int, Terrain> TerrainList { get; set; }
     public int PlayerID { get; set; }
@@ -48,6 +50,7 @@ public class DataManager : Singleton<DataManager>
         ShopBag = new Dictionary<int, Item>();
         DialogList = new Dictionary<string, List<Dialog>>();
         TerrainList = new Dictionary<int, Terrain>();
+        SkillList = new Dictionary<int, Skill>();
         LoadData();
     }
 
@@ -110,6 +113,7 @@ public class DataManager : Singleton<DataManager>
                 MaxActionPoint = int.Parse(row[3]),
                 Mana = int.Parse(row[4]),
                 DefaultDrawCardCout = int.Parse(row[5]),
+                StartSkill = int.Parse(row[6])
             };
             PlayerList.Add(playerData.CharacterID, playerData);
         }
@@ -250,6 +254,34 @@ public class DataManager : Singleton<DataManager>
                 //ImagePath=row[6]
             };
             TerrainList.Add(terrain.TerrainID, terrain);
+        }
+        #endregion
+        #region 權能列表 
+        lineData = File.ReadAllLines(skillListPath);
+        for (int i = 1; i < lineData.Length; i++)
+        {
+            string[] row = lineData[i].Split(',');
+            Skill skill = new()
+            {
+                SkillID = int.Parse(row[0]),
+                SkillName = row[1],
+                SkillDescrption = row[2],
+                SkillContent = new List<(string, int)>(),
+                SkillType = row[4]
+            };
+            if (row[3] != "")
+            {
+                string[] skillEffects = row[3].Split(';');
+                for (int j = 0; j < skillEffects.Length; j++)
+                {
+                    string[] skillEffect = skillEffects[j].Split('=');
+                    string id;
+                    id = skillEffect[0];
+                    if (int.TryParse(skillEffect[1], out int count))
+                        skill.SkillContent.Add(new ValueTuple<string, int>(id, count));
+                }
+            }
+            SkillList.Add(skill.SkillID, skill);
         }
         #endregion
     }
