@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -119,6 +120,11 @@ public class UIExplore : UIBase
         UIManager.Instance.HideUI("UICardMenu");
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
+    private void Shop()
+    {
+        UIManager.Instance.ShowUI("UIShop");
+        UI.SetActive(false);
+    }
     private void EventExplore(params object[] args)
     {
         int levelID = DataManager.Instance.LevelID;
@@ -162,6 +168,9 @@ public class UIExplore : UIBase
                 removeCardButton.gameObject.SetActive(true);
                 currentRemoveID = -1;
                 removeCardButton.onClick.AddListener(() => StartCoroutine(RemoveCard()));
+                break;
+            case "SHOP":
+                Shop();
                 break;
 
         }

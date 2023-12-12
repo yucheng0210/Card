@@ -31,7 +31,7 @@ public class UIIllustratedBook : UIBase
         {
             CardItem cardItem = Instantiate(cardPrefab, contentTrans);
             cardItem.GetComponent<CanvasGroup>().alpha = 1;
-            cardItem.CardID = illustratedBook[illustratedBook.ElementAt(i).Key].CardID;
+            cardItem.CardID = illustratedBook.ElementAt(i).Key;
             cardItem.CantMove = true;
         }
     }
