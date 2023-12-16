@@ -32,6 +32,7 @@ public class BattleManager : Singleton<BattleManager>
     public List<Vector2> CardPositionList { get; set; }
     public List<float> CardAngleList { get; set; }
     public Dictionary<string, int> CurrentAbilityList { get; set; }
+    public Dictionary<string, string> CurrentTrapList { get; set; }
     public List<string> StateEventList { get; set; }
     //敵人
     public Dictionary<string, EnemyData> CurrentEnemyList { get; set; }
@@ -55,6 +56,7 @@ public class BattleManager : Singleton<BattleManager>
         CheckerboardList = new Dictionary<string, string>();
         CurrentTerrainList = new Dictionary<string, Terrain>();
         CurrentNegativeState = new List<NegativeState>();
+        CurrentTrapList = new Dictionary<string, string>();
     }
     public void TakeDamage(CharacterData defender, int damage, string loaction)
     {
@@ -75,12 +77,8 @@ public class BattleManager : Singleton<BattleManager>
 
     public void ConsumeActionPoint(int point)
     {
-        if (
-            DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].CurrentActionPoint
-            >= point
-        )
-            DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].CurrentActionPoint -=
-                point;
+        if (DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].CurrentActionPoint >= point)
+            DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].CurrentActionPoint -= point;
     }
     public int[] ConvertNormalPos(string location)
     {
@@ -213,8 +211,7 @@ public class BattleManager : Singleton<BattleManager>
                     CheckerboardList.Add(location, "Player");
                     //Debug.Log("玩家：" + location);
                 }
-                else
-                if (CurrentEnemyList.ContainsKey(location))
+                else if (CurrentEnemyList.ContainsKey(location))
                 {
                     CheckerboardList.Add(location, "Enemy");
                     // Debug.Log("敵人：" + location);

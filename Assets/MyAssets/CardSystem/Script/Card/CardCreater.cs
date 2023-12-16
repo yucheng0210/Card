@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using UnityEngine.UI;
+using Unity.VisualScripting;
 
 public class CardCreater : MonoBehaviour
 {
@@ -257,6 +258,14 @@ public class CardCreater : MonoBehaviour
                 );
         }
     }
+    private void CheckTrap(string location)
+    {
+        for (int i = 0; i < BattleManager.Instance.CurrentTrapList.Count; i++)
+        {
+           // if (BattleManager.Instance.CurrentTrapList.ContainsKey(location))
+              //  EffectFactory.Instance.CreateEffect(BattleManager.Instance.CurrentTrapList[location]).ApplyEffect();
+        }
+    }
     private IEnumerator EnemyAttack()
     {
         Dictionary<string, EnemyData> newCurrentEnemyList = new();
@@ -272,8 +281,7 @@ public class CardCreater : MonoBehaviour
             float distance = BattleManager.Instance.GetDistance(location);
             int stepCount = BattleManager.Instance.CurrentEnemyList[location].StepCount;
             RectTransform enemyTrans = BattleManager.Instance.CurrentEnemyList[location].EnemyTrans;
-            List<string> emptyPlaceList =
-            BattleManager.Instance.GetEmptyPlace(location, stepCount, BattleManager.CheckEmptyType.Move);
+            List<string> emptyPlaceList = BattleManager.Instance.GetEmptyPlace(location, stepCount, BattleManager.CheckEmptyType.Move);
             bool checkTerrainObstacles = BattleManager.Instance.CheckTerrainObstacles(location, BattleManager.Instance.CurrentEnemyList[location].AlertDistance
             , BattleManager.Instance.CurrentLocationID, BattleManager.CheckEmptyType.EnemyAttack);
             for (int j = 0; j < movedLocationList.Count; j++)//因為不是立即更新棋盤的空白位置
@@ -314,11 +322,7 @@ public class CardCreater : MonoBehaviour
                 movedLocationList.Add(newLocation);
                 yield return new WaitForSecondsRealtime(1);
                 if (minDistance == 1)
-                    BattleManager.Instance.TakeDamage(
-                       DataManager.Instance.PlayerList[DataManager.Instance.PlayerID],
-                       BattleManager.Instance.CurrentEnemyList[location].CurrentAttack,
-                       BattleManager.Instance.CurrentLocationID
-                   );
+                    BattleManager.Instance.TakeDamage(DataManager.Instance.PlayerList[DataManager.Instance.PlayerID], BattleManager.Instance.CurrentEnemyList[location].CurrentAttack, BattleManager.Instance.CurrentLocationID);
             }
             else
             {
@@ -333,6 +337,7 @@ public class CardCreater : MonoBehaviour
             }
             enemyTrans.GetComponent<Enemy>().EnemyAlert.enabled = BattleManager.Instance.GetDistance(newLocation)
             <= BattleManager.Instance.CurrentEnemyList[location].AlertDistance && !checkTerrainObstacles;
+
             EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
             yield return new WaitForSecondsRealtime(1);
         }

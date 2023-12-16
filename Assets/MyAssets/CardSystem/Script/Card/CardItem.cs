@@ -283,15 +283,19 @@ public class CardItem
         EventManager.Instance.DispatchEvent(EventDefinition.eventUseCard, this);
         for (int i = 0; i < cardData.CardEffectList.Count; i++)
         {
-            if (cardData.CardType == "能力")
-            {
-                BattleManager.Instance.CurrentAbilityList.Add(cardData.CardEffectList[i].Item1, cardData.CardEffectList[i].Item2);
-                continue;
-            }
             string effectID;
             int effectCount;
             effectID = cardData.CardEffectList[i].Item1;
             effectCount = cardData.CardEffectList[i].Item2;
+            if (cardData.CardType == "能力")
+            {
+                BattleManager.Instance.CurrentAbilityList.Add(effectID, effectCount);
+                continue;
+            }
+            if (cardData.CardType == "陷阱")
+            {
+                BattleManager.Instance.CurrentTrapList.Add(BattleManager.Instance.CurrentLocationID, effectID);
+            }
             EffectFactory.Instance.CreateEffect(effectID).ApplyEffect(effectCount, target);
         }
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);

@@ -4,8 +4,8 @@
 1003,聚魔,增益,null,1,無,null,獲得5點魔力。,0,0,IncreaseManaEffect=5,普通,0,0,FALSE
 1004,移動,移動,null,1,無,null,移動一格。,0,0,MoveEffect=1,普通,0,0,FALSE
 1005,法師至尊平A,攻擊,CardImage/NormalAttack,1,無,null,造成8點傷害。,8,0,,普通,1,0,FALSE
-1006,湧泉,能力,null,1,無,null,每回合生成兩點魔力。,0,0,IncreaseManaEffect=2,普通,0,5,FALSE
-1007,0,防禦,null,1,無,null,消耗3點魔力，獲得5點護盾。,0,5,,普通,0,0,FALSE
+1006,湧泉,能力,null,1,無,null,每回合生成兩點魔力。,0,0,IncreaseManaEffect=2,普通,0,0,FALSE
+1007,岩壁,防禦,null,2,無,null,產生13點護盾，限制移動。,0,13,CantMoveEffect=0,普通,0,5,FALSE
 1008,以一換二,增益,null ,1,無,null,抽兩張牌。,0,0,DrawCardEffect=2,普通,0,0,FALSE
 1009,冥想,增益,null,1,無,null,獲得8點魔力，限制移動。,0,0,IncreaseManaEffect=8;CantMoveEffect=0,普通,0,0,FALSE
 2001,瞬閃,移動,null,1,無,null,移動兩格。,0,0,MoveEffect=2,稀有,0,0,FALSE
