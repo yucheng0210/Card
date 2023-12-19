@@ -56,7 +56,7 @@ public class UIExplore : UIBase
 
     private void Battle()
     {
-        BattleManager.Instance.ChangeTurn(BattleManager.BattleType.BattleInitial);
+        BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Dialog);
         UI.SetActive(false);
     }
 

@@ -151,6 +151,14 @@ public class DialogSystem : MonoBehaviour
                             CloseDialog();
                         }
                         break;
+                    case "BATTLE":
+                        if (continueBool)
+                        {
+                            BattleManager.Instance.ChangeTurn(BattleManager.BattleType.BattleInitial);
+                            currentBranchID = "BATTLE";
+                            CloseDialog();
+                        }
+                        break;
                 }
                 break;
         }
@@ -200,12 +208,8 @@ public class DialogSystem : MonoBehaviour
         GameObject choice;
         choice = Instantiate(choiceButton, choiceManager.transform.position, Quaternion.identity);
         choice.transform.SetParent(choiceManager.transform, false);
-        choice.GetComponentInChildren<Text>().text = DataManager.Instance.DialogList[dialogName][
-            index
-        ].Content;
-        choice
-            .GetComponent<Button>()
-            .onClick.AddListener(() => GetBranchID(buttonBranchID, menuType));
+        choice.GetComponentInChildren<Text>().text = DataManager.Instance.DialogList[dialogName][index].Content;
+        choice.GetComponent<Button>().onClick.AddListener(() => GetBranchID(buttonBranchID, menuType));
         index++;
     }
 
