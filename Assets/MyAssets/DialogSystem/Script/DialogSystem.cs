@@ -149,6 +149,7 @@ public class DialogSystem : MonoBehaviour
                             UIManager.Instance.ShowUI("UIMap");
                             BattleManager.Instance.ChangeTurn(BattleManager.BattleType.None);
                             CloseDialog();
+                            currentBranchID = "DEFAULT";
                         }
                         break;
                     case "BATTLE":

@@ -180,8 +180,6 @@ public class UIBattle : UIBase
     {
         if (BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack)
             return;
-        Text buttonText = changeTurnButton.GetComponentInChildren<Text>();
-        buttonText.text = "敵方回合";
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Enemy);
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }

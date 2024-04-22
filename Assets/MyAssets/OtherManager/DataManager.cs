@@ -6,14 +6,15 @@ using System;
 
 public class DataManager : Singleton<DataManager>
 {
-    private const string cardListPath = "Assets/MyAssets/Data/CARDLIST.csv";
-    private const string playerListPath = "Assets/MyAssets/Data/PLAYERLIST.csv";
-    private const string enemyListPath = "Assets/MyAssets/Data/ENEMYLIST.csv";
-    private const string levelListPath = "Assets/MyAssets/Data/LEVELLIST.csv";
-    private const string itemListPath = "Assets/MyAssets/Data/ITEMLIST.csv";
-    private const string dialogDataListPath = "Assets/MyAssets/Data/DialogData";
-    private const string terrainListPath = "Assets/MyAssets/Data/TERRAINLIST.csv";
-    private const string skillListPath = "Assets/MyAssets/Data/SKILLLIST.csv";
+    private readonly string cardListPath = Application.streamingAssetsPath + "/CARDLIST.csv";
+    private readonly string playerListPath = Application.streamingAssetsPath + "/PLAYERLIST.csv";
+    private readonly string enemyListPath = Application.streamingAssetsPath + "/ENEMYLIST.csv";
+    private readonly string levelListPath = Application.streamingAssetsPath + "/LEVELLIST.csv";
+    private readonly string levelTypeListPath = Application.streamingAssetsPath + "/LEVELTYPELIST.csv";
+    private readonly string itemListPath = Application.streamingAssetsPath + "/ITEMLIST.csv";
+    private readonly string dialogDataListPath = Application.streamingAssetsPath + "/DialogData";
+    private readonly string terrainListPath = Application.streamingAssetsPath + "/TERRAINLIST.csv";
+    private readonly string skillListPath = Application.streamingAssetsPath + "/SKILLLIST.csv";
     public Dictionary<int, CardData> CardList { get; set; }
     public List<CardData> CardBag { get; set; }
     public List<CardItem> UsedCardBag { get; set; }
@@ -23,6 +24,7 @@ public class DataManager : Singleton<DataManager>
     public Dictionary<int, PlayerData> PlayerList { get; set; }
     public Dictionary<int, EnemyData> EnemyList { get; set; }
     public Dictionary<int, Level> LevelList { get; set; }
+    public Dictionary<int, Level> LevelTypeList { get; set; }
     public Dictionary<int, Item> ItemList { get; set; }
     public Dictionary<int, Item> Backpack { get; set; }
     public Dictionary<int, Item> ShopBag { get; set; }
@@ -45,6 +47,7 @@ public class DataManager : Singleton<DataManager>
         PlayerList = new Dictionary<int, PlayerData>();
         EnemyList = new Dictionary<int, EnemyData>();
         LevelList = new Dictionary<int, Level>();
+        LevelTypeList = new Dictionary<int, Level>();
         ItemList = new Dictionary<int, Item>();
         Backpack = new Dictionary<int, Item>();
         ShopBag = new Dictionary<int, Item>();
@@ -140,7 +143,64 @@ public class DataManager : Singleton<DataManager>
 
         #endregion
         #region 關卡列表
-        lineData = File.ReadAllLines(levelListPath);
+        /* lineData = File.ReadAllLines(levelListPath);
+         for (int i = 1; i < lineData.Length; i++)
+         {
+             string[] row = lineData[i].Split(',');
+             Level level = new()
+             {
+                 LevelID = int.Parse(row[0]),
+                 LevelName = row[1],
+                 DialogName = row[4],
+                 LevelType = row[5],
+                 PlayerStartPos = row[6],
+                 LevelPassed = false
+             };
+             if (!string.IsNullOrEmpty(row[2]))
+             {
+                 string[] enemyIDs = row[2].Split(';');
+                 level.EnemyIDList = new Dictionary<string, int>();
+                 for (int j = 0; j < enemyIDs.Length; j++)
+                 {
+                     string[] enemyID = enemyIDs[j].Split('=');
+                     level.EnemyIDList.Add(enemyID[0], int.Parse(enemyID[1]));
+                 }
+             }
+             if (!string.IsNullOrEmpty(row[3]))
+             {
+                 string[] rewardIDs = row[3].Split(';');
+                 level.RewardIDList = new List<(int, int)>();
+                 for (int j = 0; j < rewardIDs.Length; j++)
+                 {
+                     string[] rewardID = rewardIDs[j].Split('=');
+                     if (int.TryParse(rewardID[0], out int id) && int.TryParse(rewardID[1], out int count))
+                         level.RewardIDList.Add(new ValueTuple<int, int>(id, count));
+                 }
+             }
+             level.LevelParentList = new();
+             if (!string.IsNullOrEmpty(row[7]))
+             {
+                 string[] parentIDs = row[7].Split(';');
+                 for (int j = 0; j < parentIDs.Length; j++)
+                 {
+                     level.LevelParentList.Add(int.Parse(parentIDs[j]));
+                 }
+             }
+             if (!string.IsNullOrEmpty(row[8]))
+             {
+                 string[] terrainIDs = row[8].Split(';');
+                 level.TerrainIDList = new Dictionary<string, int>();
+                 for (int j = 0; j < terrainIDs.Length; j++)
+                 {
+                     string[] terrainID = terrainIDs[j].Split('=');
+                     level.TerrainIDList.Add(terrainID[0], int.Parse(terrainID[1]));
+                 }
+             }
+             LevelList.Add(level.LevelID, level);
+         }*/
+        #endregion
+        #region 關卡類型列表
+        lineData = File.ReadAllLines(levelTypeListPath);
         for (int i = 1; i < lineData.Length; i++)
         {
             string[] row = lineData[i].Split(',');
@@ -148,9 +208,9 @@ public class DataManager : Singleton<DataManager>
             {
                 LevelID = int.Parse(row[0]),
                 LevelName = row[1],
-                DialogName = row[4],
-                LevelType = row[5],
-                PlayerStartPos = row[6],
+                //DialogName = row[4],
+                LevelType = row[4],
+                PlayerStartPos = row[5],
                 LevelPassed = false
             };
             if (!string.IsNullOrEmpty(row[2]))
@@ -174,18 +234,18 @@ public class DataManager : Singleton<DataManager>
                         level.RewardIDList.Add(new ValueTuple<int, int>(id, count));
                 }
             }
-            level.LevelParentList = new();
-            if (!string.IsNullOrEmpty(row[7]))
+            /* level.LevelParentList = new();
+             if (!string.IsNullOrEmpty(row[7]))
+             {
+                 string[] parentIDs = row[7].Split(';');
+                 for (int j = 0; j < parentIDs.Length; j++)
+                 {
+                     level.LevelParentList.Add(int.Parse(parentIDs[j]));
+                 }
+             }*/
+            if (!string.IsNullOrEmpty(row[6]))
             {
-                string[] parentIDs = row[7].Split(';');
-                for (int j = 0; j < parentIDs.Length; j++)
-                {
-                    level.LevelParentList.Add(int.Parse(parentIDs[j]));
-                }
-            }
-            if (!string.IsNullOrEmpty(row[8]))
-            {
-                string[] terrainIDs = row[8].Split(';');
+                string[] terrainIDs = row[6].Split(';');
                 level.TerrainIDList = new Dictionary<string, int>();
                 for (int j = 0; j < terrainIDs.Length; j++)
                 {
@@ -193,7 +253,7 @@ public class DataManager : Singleton<DataManager>
                     level.TerrainIDList.Add(terrainID[0], int.Parse(terrainID[1]));
                 }
             }
-            LevelList.Add(level.LevelID, level);
+            LevelTypeList.Add(level.LevelID, level);
         }
         #endregion
         #region 物品列表
@@ -285,14 +345,12 @@ public class DataManager : Singleton<DataManager>
         }
         #endregion
     }
-
-    public void LoadLevel() { }
-
     private void StartGame()
     {
+        RandomLevel();
         MoneyCount = 0;
         PlayerID = 1001;
-        LevelID = 1001;
+        LevelID = 1;
         CardData cardData;
         for (int i = 0; i < 3; i++)
         {
@@ -311,5 +369,17 @@ public class DataManager : Singleton<DataManager>
         BackpackManager.Instance.AddItem(3001, Backpack);
         PotionBag.Add(ItemList[1001]);
         PlayerList[PlayerID].CharacterPos = LevelList[LevelID].PlayerStartPos;
+    }
+    private void RandomLevel()
+    {
+        for (int i = 1; i < 20; i++)
+        {
+            int randomIndex = UnityEngine.Random.Range(1001, 1010);
+            Level level = LevelTypeList[randomIndex];
+            level.LevelParentList = new List<int>();
+            level.LevelParentList.Add(i - 1);
+            level.DialogName = "CHAPTER1_2";
+            LevelList.Add(i, level);
+        }
     }
 }
