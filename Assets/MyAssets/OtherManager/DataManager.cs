@@ -378,7 +378,7 @@ public class DataManager : Singleton<DataManager>
             Level level = LevelTypeList[randomIndex];
             level.LevelParentList = new List<int>();
             level.LevelParentList.Add(i - 1);
-            level.DialogName = "CHAPTER1_2";
+            //level.DialogName = "CHAPTER1_1";
             LevelList.Add(i, level);
         }
     }

@@ -8,12 +8,18 @@ public class UIMap : UIBase
 {
     [SerializeField]
     private Transform mapButtonsTrans;
+    [SerializeField]
+    private int levelCount;
+    [SerializeField]
+    private GameObject normalLevelPrefab;
+    [SerializeField]
+    private GameObject selectLevelPrefab;
     private Dictionary<int, Sequence> effectList = new();
     private Dictionary<int, Button> mapList = new();
     protected override void Start()
     {
         base.Start();
-        StartGame();
+        //StartGame();
     }
     private void Update()
     {
@@ -35,7 +41,6 @@ public class UIMap : UIBase
                     mapList[localMapID].onClick.AddListener(() => EntryPoint(localMapID));
                     levelIndex++;
                 }
-
             }
             else
             {
@@ -53,6 +58,13 @@ public class UIMap : UIBase
             scaleSequence.Append(mapList[id].transform.DOScale(new Vector3(1f, 1f, 1f), 0.5f));
             scaleSequence.SetLoops(-1);
             effectList.Add(id, scaleSequence);
+        }
+    }
+    private void RandomMap()
+    {
+        for (int i = 0; i < levelCount; i++)
+        {
+
         }
     }
     private bool CantEnter(int id)

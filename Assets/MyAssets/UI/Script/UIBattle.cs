@@ -282,7 +282,7 @@ public class UIBattle : UIBase
     {
         CheckEnemyInfo();
         Text buttonText = changeTurnButton.GetComponentInChildren<Text>();
-        buttonText.text = "結束回合";
+        //buttonText.text = "結束回合";
     }
     private void EventEnemyTurn(params object[] args)
     {
