@@ -32,7 +32,6 @@ public class DataManager : Singleton<DataManager>
     public Dictionary<string, List<Dialog>> DialogList { get; set; }
     public Dictionary<int, Terrain> TerrainList { get; set; }
     public int PlayerID { get; set; }
-    public int LevelID { get; set; }
     public int MoneyCount { get; set; }
 
     protected override void Awake()
@@ -350,7 +349,6 @@ public class DataManager : Singleton<DataManager>
         RandomLevel();
         MoneyCount = 0;
         PlayerID = 1001;
-        LevelID = 1;
         CardData cardData;
         for (int i = 0; i < 3; i++)
         {
@@ -368,11 +366,11 @@ public class DataManager : Singleton<DataManager>
         CardBag.Add(CardList[3001]);
         BackpackManager.Instance.AddItem(3001, Backpack);
         PotionBag.Add(ItemList[1001]);
-        PlayerList[PlayerID].CharacterPos = LevelList[LevelID].PlayerStartPos;
+       // PlayerList[PlayerID].CharacterPos = LevelList[LevelID].PlayerStartPos;
     }
     private void RandomLevel()
     {
-        for (int i = 1; i < 20; i++)
+       /* for (int i = 1; i < 20; i++)
         {
             int randomIndex = UnityEngine.Random.Range(1001, 1010);
             Level level = LevelTypeList[randomIndex];
@@ -380,6 +378,6 @@ public class DataManager : Singleton<DataManager>
             level.LevelParentList.Add(i - 1);
             //level.DialogName = "CHAPTER1_1";
             LevelList.Add(i, level);
-        }
+        }*/
     }
 }

@@ -277,7 +277,7 @@ public class DialogSystem : MonoBehaviour
 
     private void EventDialog(params object[] args)
     {
-        dialogName = DataManager.Instance.LevelList[DataManager.Instance.LevelID].DialogName;
+        dialogName = DataManager.Instance.LevelList[MapManager.Instance.LevelID].DialogName;
         textFinished = false;
         textLabel.text = "";
         currentTextWaitTime = maxTextWaitTime;

@@ -261,9 +261,9 @@ public class BattleManager : Singleton<BattleManager>
     }
     private void BattleInitial()
     {
-        CurrentLocationID = DataManager.Instance.LevelList[DataManager.Instance.LevelID].PlayerStartPos;
+        CurrentLocationID = DataManager.Instance.LevelList[MapManager.Instance.LevelID].PlayerStartPos;
         int playerID = DataManager.Instance.PlayerID;
-        int levelID = DataManager.Instance.LevelID;
+        int levelID = MapManager.Instance.LevelID;
         int skillID = DataManager.Instance.PlayerList[playerID].StartSkill;
         DataManager.Instance.PlayerList[playerID].CurrentActionPoint = DataManager.Instance.PlayerList[playerID].MaxActionPoint;
         DataManager.Instance.PlayerList[playerID].Mana = 0;
@@ -295,7 +295,7 @@ public class BattleManager : Singleton<BattleManager>
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
         EventManager.Instance.DispatchEvent(
             EventDefinition.eventExplore,
-            DataManager.Instance.LevelList[DataManager.Instance.LevelID].LevelType
+            MapManager.Instance.MapNodes[MapManager.Instance.LevelCount][MapManager.Instance.LevelID].l.LevelType
         );
     }
 

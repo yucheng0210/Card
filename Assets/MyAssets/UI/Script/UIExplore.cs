@@ -56,7 +56,8 @@ public class UIExplore : UIBase
 
     private void Battle()
     {
-        BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Dialog);
+        //BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Dialog);
+        Debug.Log("battle");
         UI.SetActive(false);
     }
 
@@ -127,8 +128,8 @@ public class UIExplore : UIBase
     }
     private void EventExplore(params object[] args)
     {
-        int levelID = DataManager.Instance.LevelID;
-        DataManager.Instance.LevelList[levelID].LevelPassed = true;
+        int levelID = MapManager.Instance.LevelID;
+        MapManager.Instance.MapNodes[MapManager.Instance.LevelCount][MapManager.Instance.LevelID].l.LevelPassed = true;
         bool isSelectLevel = true;
         for (int i = 0; i < DataManager.Instance.LevelList.Count; i++)
         {

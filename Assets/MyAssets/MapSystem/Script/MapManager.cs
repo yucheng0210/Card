@@ -14,6 +14,9 @@ public class MapManager : Singleton<MapManager>
     [SerializeField] EveryLevel[] levels;
     [SerializeField]
     private Transform mapTrans;
+    public MapNode[][] MapNodes { get { return mapNodes; } }
+    public int LevelCount { get; set; }
+    public int LevelID { get; set; }
     protected override void Awake()
     {
         base.Awake();

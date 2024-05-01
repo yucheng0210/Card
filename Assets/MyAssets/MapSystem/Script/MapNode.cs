@@ -10,6 +10,8 @@ public class MapNode : MonoBehaviour
     public int level;
     public bool isUsed = false;
 
+    public Level l;
+
     private void Awake() {
         // Debug.Log(gameObject.GetComponent<RectTransform>().localPosition);
     }

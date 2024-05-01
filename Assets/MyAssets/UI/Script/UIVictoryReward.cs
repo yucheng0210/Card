@@ -116,7 +116,7 @@ public class UIVictoryReward : UIBase
     {
         UI.SetActive(true);
         cardRewardMenu.SetActive(false);
-        int id = DataManager.Instance.LevelID;
+        int id = MapManager.Instance.LevelID;
         totalCount = DataManager.Instance.LevelList[id].RewardIDList.Count + 1;
         for (int i = 0; i < rewardGroupTrans.childCount; i++)
         {
