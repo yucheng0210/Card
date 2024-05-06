@@ -9,9 +9,7 @@ public class UIMap : UIBase
     [SerializeField]
     private Transform mapButtonsTrans;
     [SerializeField]
-    private GameObject normalLevelPrefab;
-    [SerializeField]
-    private GameObject selectLevelPrefab;
+    private List<Sprite> mapTypeList = new List<Sprite>();
     private Sequence[][] effectList;
     private Button[][] mapList;
     protected override void Start()
@@ -84,11 +82,40 @@ public class UIMap : UIBase
                 scaleSequence.Append(mapList[i][j].transform.DOScale(new Vector3(1f, 1f, 1f), 0.5f));
                 scaleSequence.SetLoops(-1);
                 effectList[i][j] = scaleSequence;
+                MapManager.Instance.MapNodes[i][j].transform.localRotation = Quaternion.Euler(0, 0, -90);
+                Image mapImage = MapManager.Instance.MapNodes[i][j].GetComponent<Image>();
+                string mapType = MapManager.Instance.MapNodes[i][j].l.LevelType;
+                SetMapTypeImage(mapImage, mapType);
             }
         }
         CanEnterEffect();
-    }
 
+    }
+    private void SetMapTypeImage(Image mapImage, string mapType)
+    {
+        switch (mapType)
+        {
+            case "RANDOM":
+                mapImage.sprite = mapTypeList[0];
+                break;
+            case "BATTLE":
+                mapImage.sprite = mapTypeList[1];
+                break;
+            case "RECOVER":
+                mapImage.sprite = mapTypeList[2];
+                break;
+            case "BOSS":
+                mapImage.sprite = mapTypeList[3];
+                break;
+            case "SHOP":
+                mapImage.sprite = mapTypeList[4];
+                break;
+                /*case "REMOVECARD":
+                    mapImage.sprite = mapTypeList[4];
+                    break;*/
+
+        }
+    }
     private bool CantEnter(int count, int id)
     {
         bool cantEnter = true;
@@ -116,7 +143,6 @@ public class UIMap : UIBase
     }
     private void EntryPoint(int count, int id)
     {
-        Debug.Log(count + "   " + id);
         if (CantEnter(count, id))
             return;
         MapManager.Instance.LevelID = id;

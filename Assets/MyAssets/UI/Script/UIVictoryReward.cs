@@ -117,20 +117,21 @@ public class UIVictoryReward : UIBase
         UI.SetActive(true);
         cardRewardMenu.SetActive(false);
         int id = MapManager.Instance.LevelID;
-        totalCount = DataManager.Instance.LevelList[id].RewardIDList.Count + 1;
+        int count = MapManager.Instance.LevelCount;
+        totalCount = MapManager.Instance.MapNodes[count][id].l.RewardIDList.Count + 1;
         for (int i = 0; i < rewardGroupTrans.childCount; i++)
         {
             Destroy(rewardGroupTrans.GetChild(i).gameObject);
         }
-        for (int i = 0; i < DataManager.Instance.LevelList[id].RewardIDList.Count; i++)
+        for (int i = 0; i < MapManager.Instance.MapNodes[count][id].l.RewardIDList.Count; i++)
         {
-            int rewardID = DataManager.Instance.LevelList[id].RewardIDList[i].Item1;
+            int rewardID = MapManager.Instance.MapNodes[count][id].l.RewardIDList[i].Item1;
             GameObject reward = Instantiate(rewardPrefab, rewardGroupTrans);
             rewardName = reward.transform.GetChild(0).GetComponent<Text>();
             rewardCount = reward.transform.GetChild(1).GetComponent<Text>();
             rewardName.text = DataManager.Instance.ItemList[rewardID].ItemName;
             rewardCount.text =
-                "X" + DataManager.Instance.LevelList[id].RewardIDList[i].Item2.ToString();
+                "X" +MapManager.Instance.MapNodes[count][id].l.RewardIDList[i].Item2.ToString();
             reward.GetComponent<Button>().onClick.AddListener(() => GetReward(rewardID, reward));
         }
         GameObject cardReward = Instantiate(rewardPrefab, rewardGroupTrans);

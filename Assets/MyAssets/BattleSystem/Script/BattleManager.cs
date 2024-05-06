@@ -233,6 +233,7 @@ public class BattleManager : Singleton<BattleManager>
         switch (MyBattleType)
         {
             case BattleType.None:
+               //UIManager.Instance.HideUI("UIBattle");
                 break;
             case BattleType.Explore:
                 Explore();
@@ -261,10 +262,11 @@ public class BattleManager : Singleton<BattleManager>
     }
     private void BattleInitial()
     {
-        CurrentLocationID = DataManager.Instance.LevelList[MapManager.Instance.LevelID].PlayerStartPos;
         int playerID = DataManager.Instance.PlayerID;
         int levelID = MapManager.Instance.LevelID;
         int skillID = DataManager.Instance.PlayerList[playerID].StartSkill;
+        int levelCount = MapManager.Instance.LevelCount;
+        CurrentLocationID = MapManager.Instance.MapNodes[levelCount][levelID].l.PlayerStartPos;
         DataManager.Instance.PlayerList[playerID].CurrentActionPoint = DataManager.Instance.PlayerList[playerID].MaxActionPoint;
         DataManager.Instance.PlayerList[playerID].Mana = 0;
         PlayerTrans.anchoredPosition = CheckerboardTrans.GetChild(GetCheckerboardPoint(CurrentLocationID)).localPosition;
@@ -272,16 +274,16 @@ public class BattleManager : Singleton<BattleManager>
         {
             CurrentAbilityList.Add(DataManager.Instance.SkillList[skillID].SkillContent[i].Item1, DataManager.Instance.SkillList[skillID].SkillContent[i].Item2);
         }
-        for (int i = 0; i < DataManager.Instance.LevelList[levelID].EnemyIDList.Count; i++)
+        for (int i = 0; i < MapManager.Instance.MapNodes[levelCount][levelID].l.EnemyIDList.Count; i++)
         {
-            int enemyID = DataManager.Instance.LevelList[levelID].EnemyIDList.ElementAt(i).Value;
-            string loactionID = DataManager.Instance.LevelList[levelID].EnemyIDList.ElementAt(i).Key;
+            int enemyID = MapManager.Instance.MapNodes[levelCount][levelID].l.EnemyIDList.ElementAt(i).Value;
+            string loactionID = MapManager.Instance.MapNodes[levelCount][levelID].l.EnemyIDList.ElementAt(i).Key;
             CurrentEnemyList.Add(loactionID, (EnemyData)DataManager.Instance.EnemyList[enemyID].Clone());
         }
-        for (int i = 0; i < DataManager.Instance.LevelList[levelID].TerrainIDList.Count; i++)
+        for (int i = 0; i < MapManager.Instance.MapNodes[levelCount][levelID].l.TerrainIDList.Count; i++)
         {
-            int terrainID = DataManager.Instance.LevelList[levelID].TerrainIDList.ElementAt(i).Value;
-            string loactionID = DataManager.Instance.LevelList[levelID].TerrainIDList.ElementAt(i).Key;
+            int terrainID = MapManager.Instance.MapNodes[levelCount][levelID].l.TerrainIDList.ElementAt(i).Value;
+            string loactionID = MapManager.Instance.MapNodes[levelCount][levelID].l.TerrainIDList.ElementAt(i).Key;
             CurrentTerrainList.Add(loactionID, DataManager.Instance.TerrainList[terrainID].Clone());
         }
         EventManager.Instance.DispatchEvent(EventDefinition.eventBattleInitial);

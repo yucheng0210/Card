@@ -29,7 +29,7 @@ public class UIExplore : UIBase
         base.Start();
         EventManager.Instance.AddEventRegister(EventDefinition.eventExplore, EventExplore);
         exitButton.onClick.AddListener(ExitExplore);
-        BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Explore);
+        BattleManager.Instance.ChangeTurn(BattleManager.BattleType.None);
     }
 
     private void HideAllUI()
@@ -57,7 +57,8 @@ public class UIExplore : UIBase
     private void Battle()
     {
         //BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Dialog);
-        Debug.Log("battle");
+        UIManager.Instance.ShowUI("UIBattle");
+        BattleManager.Instance.ChangeTurn(BattleManager.BattleType.BattleInitial);
         UI.SetActive(false);
     }
 
@@ -130,24 +131,24 @@ public class UIExplore : UIBase
     {
         int levelID = MapManager.Instance.LevelID;
         MapManager.Instance.MapNodes[MapManager.Instance.LevelCount][MapManager.Instance.LevelID].l.LevelPassed = true;
-        bool isSelectLevel = true;
-        for (int i = 0; i < DataManager.Instance.LevelList.Count; i++)
-        {
-            int id = DataManager.Instance.LevelList.ElementAt(i).Key;
-            for (int j = 0; j < DataManager.Instance.LevelList[id].LevelParentList.Count; j++)
-            {
-                if (DataManager.Instance.LevelList[id].LevelParentList.Count != DataManager.Instance.LevelList[levelID].LevelParentList.Count)
-                {
-                    isSelectLevel = false;
-                    break;
-                }
-                if (DataManager.Instance.LevelList[id].LevelParentList[j] != DataManager.Instance.LevelList[levelID].LevelParentList[j])
-                    isSelectLevel = false;
-            }
-            if (isSelectLevel)
-                DataManager.Instance.LevelList[id].LevelPassed = true;
-            isSelectLevel = true;
-        }
+        /*  bool isSelectLevel = true;
+          for (int i = 0; i < DataManager.Instance.LevelList.Count; i++)
+          {
+              int id = DataManager.Instance.LevelList.ElementAt(i).Key;
+              for (int j = 0; j < DataManager.Instance.LevelList[id].LevelParentList.Count; j++)
+              {
+                  if (DataManager.Instance.LevelList[id].LevelParentList.Count != DataManager.Instance.LevelList[levelID].LevelParentList.Count)
+                  {
+                      isSelectLevel = false;
+                      break;
+                  }
+                  if (DataManager.Instance.LevelList[id].LevelParentList[j] != DataManager.Instance.LevelList[levelID].LevelParentList[j])
+                      isSelectLevel = false;
+              }
+              if (isSelectLevel)
+                  DataManager.Instance.LevelList[id].LevelPassed = true;
+              isSelectLevel = true;
+          }*/
         switch (args[0])
         {
             case "DIALOG":

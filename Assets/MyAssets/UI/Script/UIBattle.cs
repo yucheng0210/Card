@@ -124,11 +124,18 @@ public class UIBattle : UIBase
         );
         EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
         EventManager.Instance.AddEventRegister(EventDefinition.eventEnemyTurn, EventEnemyTurn);
+        //Hide();
+        StartCoroutine(StartGame());
     }
 
     private void Update()
     {
         UpdateValue();
+    }
+    private IEnumerator StartGame()
+    {
+        yield return new WaitForSeconds(0.5f);
+        Hide();
     }
     private void CheckEnemyInfo()
     {
