@@ -14,6 +14,8 @@ public class MapManager : Singleton<MapManager>
     [SerializeField] EveryLevel[] levels;
     [SerializeField]
     private Transform mapTrans;
+    [SerializeField]
+    private Material lineMaterial;
     public MapNode[][] MapNodes { get { return mapNodes; } }
     public int LevelCount { get; set; }
     public int LevelID { get; set; }
@@ -25,6 +27,7 @@ public class MapManager : Singleton<MapManager>
 
     void Init()
     {
+        iSeed=UnityEngine.Random.Range(1,99999);
         random = new System.Random(iSeed);
         mapNodes = new MapNode[maxLevel][];
         int count = 0;
@@ -209,7 +212,7 @@ public class MapManager : Singleton<MapManager>
     {
         for (int i = 0; i < levels.Length; i++)
         {
-            int x = i * 100 + paddingX + leftPadding;
+            int x = i * 150 + paddingX + leftPadding;
             int y = paddingY;
             levels[i].gameObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(x, y);
             levels[i].SetRoomsPosition(random);
@@ -228,6 +231,7 @@ public class MapManager : Singleton<MapManager>
                         GameObject line = new GameObject();
                         line.transform.SetParent(mapTrans);
                         LineRenderer ren = line.AddComponent<LineRenderer>();
+                        ren.material=lineMaterial;
                         ren.useWorldSpace = false;
                         Vector3[] current = { mapNodes[i][j].transform.position, mapNodes[i][j].left.transform.position };
                         ren.SetPositions(current);
@@ -237,6 +241,7 @@ public class MapManager : Singleton<MapManager>
                         GameObject line = new GameObject();
                         line.transform.SetParent(mapTrans);
                         LineRenderer ren = line.AddComponent<LineRenderer>();
+                        ren.material=lineMaterial;
                         line.GetComponent<LineRenderer>().useWorldSpace = false;
                         Vector3[] current = { mapNodes[i][j].transform.position, mapNodes[i][j].right.transform.position };
                         ren.SetPositions(current);
