@@ -8,34 +8,50 @@ public class LevelTextCreater : MonoBehaviour
     private int maxY = 4;
     private void Start()
     {
+        string s = "";
         for (int i = 0; i < 40; i++)
         {
-            string s = "";
             int enemy = Random.Range(1, 4);
             int terrain = Random.Range(1, 6);
             List<int> removeXList = new List<int>();
             List<int> removeYList = new List<int>();
-            s += "敵人：";
+            s += "1001,小怪,";
             for (int j = 0; j < enemy; j++)
             {
-                int x = Random.Range(0, maxX + 1);
-                int y = Random.Range(0, maxY + 1);
+                int x = Random.Range(1, maxX + 1);
+                int y = Random.Range(1, maxY + 1);
                 if (removeXList.Contains(x) && removeYList.Contains(y))
+                {
+                    j--;
                     continue;
+                }
                 int enemyID = Random.Range(1001, 1006);
-                s += x + " " + y + "=" + enemyID + ";";
+                if (j == enemy - 1)
+                    s += x + " " + y + "=" + enemyID + ",";
+                else
+                    s += x + " " + y + "=" + enemyID + ";";
+                removeXList.Add(x);
+                removeYList.Add(y);
             }
-            s += "," + "地形：";
+            s += ",BATTLE,0 0,";
             for (int k = 0; k < terrain; k++)
             {
-                int x = Random.Range(0, maxX + 1);
-                int y = Random.Range(0, maxY + 1);
+                int x = Random.Range(1, maxX + 1);
+                int y = Random.Range(1, maxY + 1);
                 if (removeXList.Contains(x) && removeYList.Contains(y))
+                {
+                    k--;
                     continue;
+                }
                 int terrainID = Random.Range(1001, 1004);
-                s += x + " " + y + "=" + terrainID + ";";
+                if (k == terrain - 1)
+                    s += x + " " + y + "=" + terrainID + "\r\n";
+                else
+                    s += x + " " + y + "=" + terrainID + ";";
+                removeXList.Add(x);
+                removeYList.Add(y);
             }
-            Debug.Log(s);
         }
+        Debug.Log(s);
     }
 }

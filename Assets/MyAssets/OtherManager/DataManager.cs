@@ -346,7 +346,6 @@ public class DataManager : Singleton<DataManager>
     }
     private void StartGame()
     {
-        RandomLevel();
         MoneyCount = 0;
         PlayerID = 1001;
         CardData cardData;
@@ -366,18 +365,6 @@ public class DataManager : Singleton<DataManager>
         CardBag.Add(CardList[3001]);
         BackpackManager.Instance.AddItem(3001, Backpack);
         PotionBag.Add(ItemList[1001]);
-       // PlayerList[PlayerID].CharacterPos = LevelList[LevelID].PlayerStartPos;
-    }
-    private void RandomLevel()
-    {
-       /* for (int i = 1; i < 20; i++)
-        {
-            int randomIndex = UnityEngine.Random.Range(1001, 1010);
-            Level level = LevelTypeList[randomIndex];
-            level.LevelParentList = new List<int>();
-            level.LevelParentList.Add(i - 1);
-            //level.DialogName = "CHAPTER1_1";
-            LevelList.Add(i, level);
-        }*/
+        // PlayerList[PlayerID].CharacterPos = LevelList[LevelID].PlayerStartPos;
     }
 }

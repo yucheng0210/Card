@@ -27,7 +27,7 @@ public class MapManager : Singleton<MapManager>
 
     void Init()
     {
-        iSeed=UnityEngine.Random.Range(1,99999);
+        iSeed = UnityEngine.Random.Range(1, 99999);
         random = new System.Random(iSeed);
         mapNodes = new MapNode[maxLevel][];
         int count = 0;
@@ -231,7 +231,7 @@ public class MapManager : Singleton<MapManager>
                         GameObject line = new GameObject();
                         line.transform.SetParent(mapTrans);
                         LineRenderer ren = line.AddComponent<LineRenderer>();
-                        ren.material=lineMaterial;
+                        ren.material = lineMaterial;
                         ren.useWorldSpace = false;
                         Vector3[] current = { mapNodes[i][j].transform.position, mapNodes[i][j].left.transform.position };
                         ren.SetPositions(current);
@@ -241,7 +241,7 @@ public class MapManager : Singleton<MapManager>
                         GameObject line = new GameObject();
                         line.transform.SetParent(mapTrans);
                         LineRenderer ren = line.AddComponent<LineRenderer>();
-                        ren.material=lineMaterial;
+                        ren.material = lineMaterial;
                         line.GetComponent<LineRenderer>().useWorldSpace = false;
                         Vector3[] current = { mapNodes[i][j].transform.position, mapNodes[i][j].right.transform.position };
                         ren.SetPositions(current);

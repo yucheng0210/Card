@@ -134,7 +134,7 @@ public class UIBattle : UIBase
     }
     private IEnumerator StartGame()
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return null;
         Hide();
     }
     private void CheckEnemyInfo()
