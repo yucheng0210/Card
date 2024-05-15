@@ -9,18 +9,17 @@ public class LevelTextCreater : MonoBehaviour
     private void Start()
     {
         string s = "";
-        for (int i = 0; i < 40; i++)
+        List<Vector2> removeList = new List<Vector2>();
+        for (int i = 0; i < 999; i++)
         {
             int enemy = Random.Range(1, 4);
             int terrain = Random.Range(1, 6);
-            List<int> removeXList = new List<int>();
-            List<int> removeYList = new List<int>();
             s += "1001,小怪,";
             for (int j = 0; j < enemy; j++)
             {
                 int x = Random.Range(1, maxX + 1);
                 int y = Random.Range(1, maxY + 1);
-                if (removeXList.Contains(x) && removeYList.Contains(y))
+                if (removeList.Contains(new Vector2(x, y)))
                 {
                     j--;
                     continue;
@@ -30,15 +29,14 @@ public class LevelTextCreater : MonoBehaviour
                     s += x + " " + y + "=" + enemyID + ",";
                 else
                     s += x + " " + y + "=" + enemyID + ";";
-                removeXList.Add(x);
-                removeYList.Add(y);
+                removeList.Add(new Vector2(x, y));
             }
             s += ",BATTLE,0 0,";
             for (int k = 0; k < terrain; k++)
             {
                 int x = Random.Range(1, maxX + 1);
                 int y = Random.Range(1, maxY + 1);
-                if (removeXList.Contains(x) && removeYList.Contains(y))
+                if (removeList.Contains(new Vector2(x, y)))
                 {
                     k--;
                     continue;
@@ -48,9 +46,10 @@ public class LevelTextCreater : MonoBehaviour
                     s += x + " " + y + "=" + terrainID + "\r\n";
                 else
                     s += x + " " + y + "=" + terrainID + ";";
-                removeXList.Add(x);
-                removeYList.Add(y);
+                removeList.Add(new Vector2(x, y));
             }
+            removeList.Clear();
+            Debug.Log("log");
         }
         Debug.Log(s);
     }

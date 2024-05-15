@@ -10,6 +10,8 @@ public class UIExplore : UIBase
 {
     [SerializeField]
     private GameObject corpse;
+    [SerializeField]
+    private GameObject recover;
 
     [SerializeField]
     private Button removeCardButton;
@@ -22,6 +24,10 @@ public class UIExplore : UIBase
     [SerializeField]
     private Button exitButton;
     [SerializeField]
+    private Button restButton;
+    [SerializeField]
+    private Button recoverExitButton;
+    [SerializeField]
     private int currentRemoveID = -1;
 
     protected override void Start()
@@ -29,6 +35,7 @@ public class UIExplore : UIBase
         base.Start();
         EventManager.Instance.AddEventRegister(EventDefinition.eventExplore, EventExplore);
         exitButton.onClick.AddListener(ExitExplore);
+        recoverExitButton.onClick.AddListener(ExitExplore);
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.None);
     }
 
@@ -64,10 +71,11 @@ public class UIExplore : UIBase
 
     private void Recover()
     {
-        BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Dialog);
         int playerID = DataManager.Instance.PlayerID;
         int recoverCount = (int)(DataManager.Instance.PlayerList[playerID].MaxHealth * 0.35f);
-        DataManager.Instance.PlayerList[playerID].CurrentHealth += recoverCount;
+        recover.SetActive(true);
+        restButton.onClick.AddListener(() => DataManager.Instance.PlayerList[playerID].CurrentHealth += recoverCount);
+        restButton.onClick.AddListener(() => recoverExitButton.gameObject.SetActive(true));
     }
 
     private void Boss()
@@ -118,8 +126,10 @@ public class UIExplore : UIBase
     private void ExitExplore()
     {
         exitButton.gameObject.SetActive(false);
+        recoverExitButton.gameObject.SetActive(false);
         UIManager.Instance.ShowUI("UIMap");
         UIManager.Instance.HideUI("UICardMenu");
+        recover.SetActive(false);
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
     private void Shop()

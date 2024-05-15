@@ -68,7 +68,7 @@ public class UIMap : UIBase
                 int id = j;
                 int count = i;
                 int randomIndex = Random.Range(1001, 1001 + DataManager.Instance.LevelTypeList.Count);
-                if (removeList.Contains(randomIndex))
+                if (removeList.Contains(randomIndex) || (DataManager.Instance.LevelTypeList[randomIndex].LevelType != "BATTLE" && count == 0))
                 {
                     j--;
                     continue;
