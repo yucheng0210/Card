@@ -49,7 +49,6 @@ public class LevelTextCreater : MonoBehaviour
                 removeList.Add(new Vector2(x, y));
             }
             removeList.Clear();
-            Debug.Log("log");
         }
         Debug.Log(s);
     }

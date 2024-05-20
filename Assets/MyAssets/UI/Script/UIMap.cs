@@ -12,6 +12,14 @@ public class UIMap : UIBase
     private List<Sprite> mapTypeList = new List<Sprite>();
     private Sequence[][] effectList;
     private Button[][] mapList;
+    private Dictionary<string, int> levelProbabilities = new Dictionary<string, int>
+    {
+        { "BATTLE", 35 },
+        { "BOSS", 10 },
+        { "RANDOM", 20 },
+        { "RECOVER", 15 },
+        { "SHOP", 20 }
+    };
     protected override void Start()
     {
         base.Start();
@@ -67,7 +75,37 @@ public class UIMap : UIBase
             {
                 int id = j;
                 int count = i;
-                int randomIndex = Random.Range(1001, 1001 + DataManager.Instance.LevelTypeList.Count);
+                int randomIndex = Random.Range(1001, 1999); ;
+                for (int k = 0; k < levelProbabilities.Count; k++)
+                {
+                    int value = levelProbabilities.ElementAt(k).Value;
+                    string key = levelProbabilities.ElementAt(k).Key;
+                    int randomValue = Random.Range(0, 100);
+                    int cumulativeProbability = 0;
+                    if (value > randomValue)
+                    {
+                        cumulativeProbability += value;
+                        switch (key)
+                        {
+                            case "BATTLE":
+                                randomIndex = Random.Range(1001, 1999);
+                                break;
+                            case "BOSS":
+                                randomIndex = Random.Range(2001, 2001);
+                                break;
+                            case "RANDOM":
+                                randomIndex = Random.Range(3001, 3001);
+                                break;
+                            case "RECOVER":
+                                randomIndex = Random.Range(4001, 4001);
+                                break;
+                            case "SHOP":
+                                randomIndex = Random.Range(5001, 5001);
+                                break;
+                        }
+                        break;
+                    }
+                }
                 if (removeList.Contains(randomIndex) || (DataManager.Instance.LevelTypeList[randomIndex].LevelType != "BATTLE" && count == 0))
                 {
                     j--;
@@ -92,6 +130,7 @@ public class UIMap : UIBase
                 Image mapImage = MapManager.Instance.MapNodes[i][j].GetComponent<Image>();
                 string mapType = MapManager.Instance.MapNodes[i][j].l.LevelType;
                 SetMapTypeImage(mapImage, mapType);
+                Destroy(mapList[i][j].transform.GetChild(0).gameObject);
             }
         }
         CanEnterEffect();
@@ -101,16 +140,16 @@ public class UIMap : UIBase
     {
         switch (mapType)
         {
-            case "RANDOM":
+            case "BATTLE":
                 mapImage.sprite = mapTypeList[0];
                 break;
-            case "BATTLE":
+            case "BOSS":
                 mapImage.sprite = mapTypeList[1];
                 break;
-            case "RECOVER":
+            case "RANDOM":
                 mapImage.sprite = mapTypeList[2];
                 break;
-            case "BOSS":
+            case "RECOVER":
                 mapImage.sprite = mapTypeList[3];
                 break;
             case "SHOP":

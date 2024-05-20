@@ -5865,7 +5865,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.00023391671, y: 930.0405}
+  m_AnchoredPosition: {x: 0.00023391671, y: 930.04016}
   m_SizeDelta: {x: 0, y: 2010.04}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &303874182
@@ -16894,7 +16894,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 194137555}
   m_HandleRect: {fileID: 194137554}
   m_Direction: 2
-  m_Value: -0.000000525011
+  m_Value: -0.00000013125275
   m_Size: 0.53730273
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -33420,11 +33420,11 @@ MonoBehaviour:
   ui: {fileID: 1963996573}
   mapButtonsTrans: {fileID: 1022142737}
   mapTypeList:
-  - {fileID: 21300000, guid: 267d55b3250321544a12738310863504, type: 3}
   - {fileID: 21300000, guid: 890273370188d794685e987c45f946b3, type: 3}
-  - {fileID: 21300000, guid: 8bb4d00efe54bd6459f460c094c5e1d3, type: 3}
   - {fileID: 21300000, guid: 16667bc7953ed88469030f3f747a577f, type: 3}
-  - {fileID: 0}
+  - {fileID: 21300000, guid: 267d55b3250321544a12738310863504, type: 3}
+  - {fileID: 21300000, guid: 8bb4d00efe54bd6459f460c094c5e1d3, type: 3}
+  - {fileID: 21300000, guid: 267d55b3250321544a12738310863504, type: 3}
 --- !u!114 &2128855925
 MonoBehaviour:
   m_ObjectHideFlags: 0
