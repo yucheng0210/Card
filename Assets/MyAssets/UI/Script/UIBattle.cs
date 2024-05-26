@@ -10,12 +10,6 @@ public class UIBattle : UIBase
 {
     [Header("玩家")]
     [SerializeField]
-    private RectTransform playerHealthRect;
-
-    [SerializeField]
-    private RectTransform playerHurtRect;
-
-    [SerializeField]
     private Text actionPointText;
 
     [SerializeField]
@@ -25,7 +19,7 @@ public class UIBattle : UIBase
     private Text shieldText;
 
     [SerializeField]
-    private Slider healthSlider;
+    private Image health;
 
     [SerializeField]
     private Text healthText;
@@ -90,26 +84,6 @@ public class UIBattle : UIBase
     private Button potionPrefab;
     [SerializeField]
     private Transform potionClueMenu;
-    public Text ActionPointText
-    {
-        get { return actionPointText; }
-        set { actionPointText = value; }
-    }
-    public Text ShieldText
-    {
-        get { return shieldText; }
-        set { shieldText = value; }
-    }
-    public Slider HealthSlider
-    {
-        get { return healthSlider; }
-        set { healthSlider = value; }
-    }
-    public Text HealthText
-    {
-        get { return healthText; }
-        set { healthText = value; }
-    }
 
     protected override void Start()
     {
@@ -128,10 +102,6 @@ public class UIBattle : UIBase
         StartCoroutine(StartGame());
     }
 
-    private void Update()
-    {
-        UpdateValue();
-    }
     private IEnumerator StartGame()
     {
         yield return null;
@@ -163,24 +133,6 @@ public class UIBattle : UIBase
         enemyHealth.text = BattleManager.Instance.CurrentEnemyList[location].CurrentHealth.ToString()
         + "/" + BattleManager.Instance.CurrentEnemyList[location].MaxHealth.ToString();
         enemyShield.text = BattleManager.Instance.CurrentEnemyList[location].CurrentShield.ToString();
-    }
-
-    private void UpdateValue()
-    {
-        if (playerHurtRect == null || enemyHealthRect == null)
-            return;
-        enemyHurtRect.anchorMax = new Vector2(
-            Mathf.Lerp(enemyHurtRect.anchorMax.x, enemyHealthRect.anchorMax.x, Time.deltaTime * 5),
-            enemyHurtRect.anchorMax.y
-        );
-        playerHurtRect.anchorMax = new Vector2(
-            Mathf.Lerp(
-                playerHurtRect.anchorMax.x,
-                playerHealthRect.anchorMax.x,
-                Time.deltaTime * 5
-            ),
-            playerHurtRect.anchorMax.y
-        );
     }
 
     public void ChangeTurn()
@@ -328,27 +280,16 @@ public class UIBattle : UIBase
             )
             .SetEase(Ease.OutQuad);
         damageRect.DOScale(endScale, 1);
-        StartCoroutine(
-            UIManager.Instance.FadeOutIn(damageNum.GetComponent<CanvasGroup>(), 1f, 0, true)
-        );
+        StartCoroutine(UIManager.Instance.FadeOutIn(damageNum.GetComponent<CanvasGroup>(), 1f, 0, true));
     }
 
     private void EventRefreshUI(params object[] args)
     {
         int id = DataManager.Instance.PlayerID;
-        actionPointText.text =
-            DataManager.Instance.PlayerList[id].CurrentActionPoint.ToString()
-            + "/"
-            + DataManager.Instance.PlayerList[id].MaxActionPoint.ToString();
+        actionPointText.text = DataManager.Instance.PlayerList[id].CurrentActionPoint.ToString() + "/" + DataManager.Instance.PlayerList[id].MaxActionPoint.ToString();
         manaPointText.text = DataManager.Instance.PlayerList[id].Mana.ToString();
-        healthSlider.value = (float)(
-            (float)DataManager.Instance.PlayerList[id].CurrentHealth
-            / DataManager.Instance.PlayerList[id].MaxHealth
-        );
-        healthText.text =
-            DataManager.Instance.PlayerList[id].CurrentHealth.ToString()
-            + "/"
-            + DataManager.Instance.PlayerList[id].MaxHealth.ToString();
+        health.DOFillAmount((float)((float)DataManager.Instance.PlayerList[id].CurrentHealth / DataManager.Instance.PlayerList[id].MaxHealth), 0.5f);
+        healthText.text = DataManager.Instance.PlayerList[id].CurrentHealth.ToString() + "/" + DataManager.Instance.PlayerList[id].MaxHealth.ToString();
         shieldText.text = DataManager.Instance.PlayerList[id].CurrentShield.ToString();
         cardBagCountText.text = DataManager.Instance.CardBag.Count.ToString();
         usedCardBagCountText.text = DataManager.Instance.UsedCardBag.Count.ToString();

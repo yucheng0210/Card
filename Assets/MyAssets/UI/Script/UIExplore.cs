@@ -8,6 +8,7 @@ using UnityEngine.UI;
 
 public class UIExplore : UIBase
 {
+    [Header("隨機事件")]
     [SerializeField]
     private GameObject corpse;
     [SerializeField]
@@ -55,10 +56,20 @@ public class UIExplore : UIBase
 
     private void Random()
     {
-        BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Dialog);
-        corpse.SetActive(true);
+        //BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Dialog);
+        /*corpse.SetActive(true);
         corpse.GetComponent<Button>().onClick.AddListener(() => EventManager.Instance.DispatchEvent(EventDefinition.eventBattleWin));
-        corpse.GetComponent<Button>().onClick.AddListener(() => corpse.SetActive(false));
+        corpse.GetComponent<Button>().onClick.AddListener(() => corpse.SetActive(false));*/
+        int randomIndex = UnityEngine.Random.Range(0, 3);
+        switch (randomIndex)
+        {
+            case 0:
+                break;
+            case 1:
+                break;
+            case 2:
+                break;
+        }
     }
 
     private void Battle()
