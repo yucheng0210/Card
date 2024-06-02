@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using UnityEngine.SceneManagement;
 public class UIStartMenu : UIBase
 {
     [SerializeField]
@@ -22,6 +22,7 @@ public class UIStartMenu : UIBase
     private void StartGame()
     {
         startButton.onClick.RemoveAllListeners();
+        //SceneManager.LoadScene("Level1");
         StartCoroutine(SceneController.Instance.Transition("Level1"));
     }
     private void ExitGame()

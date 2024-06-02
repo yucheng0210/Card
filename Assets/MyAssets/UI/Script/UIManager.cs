@@ -163,7 +163,7 @@ public class UIManager : Singleton<UIManager>
         RectTransform checkerboardTrans = BattleManager.Instance.CheckerboardTrans;
         for (int i = 0; i < checkerboardTrans.childCount; i++)
         {
-            checkerboardTrans.GetChild(i).GetComponent<Image>().color = Color.white;
+            checkerboardTrans.GetChild(i).GetComponent<Image>().color = new Color(1, 1, 1, 0);
             if (canRemove)
                 checkerboardTrans.GetChild(i).GetComponent<Button>().onClick.RemoveAllListeners();
         }
