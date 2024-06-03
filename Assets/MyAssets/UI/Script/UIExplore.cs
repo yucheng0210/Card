@@ -12,7 +12,7 @@ public class UIExplore : UIBase
     [SerializeField]
     private GameObject corpse;
     [SerializeField]
-    private GameObject recover;
+    private GameObject recoverMenu;
 
     [SerializeField]
     private Button removeCardButton;
@@ -84,7 +84,7 @@ public class UIExplore : UIBase
     {
         int playerID = DataManager.Instance.PlayerID;
         int recoverCount = (int)(DataManager.Instance.PlayerList[playerID].MaxHealth * 0.35f);
-        recover.SetActive(true);
+        recoverMenu.SetActive(true);
         restButton.onClick.AddListener(() => DataManager.Instance.PlayerList[playerID].CurrentHealth += recoverCount);
         restButton.onClick.AddListener(() => recoverExitButton.gameObject.SetActive(true));
     }
@@ -140,7 +140,7 @@ public class UIExplore : UIBase
         recoverExitButton.gameObject.SetActive(false);
         UIManager.Instance.ShowUI("UIMap");
         UIManager.Instance.HideUI("UICardMenu");
-        recover.SetActive(false);
+        recoverMenu.SetActive(false);
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
     private void Shop()

@@ -40,6 +40,10 @@ public class CardCreater : MonoBehaviour
 
     [SerializeField]
     private GameObject roundTip;
+    [SerializeField]
+    private Sprite playerRound;
+    [SerializeField]
+    private Sprite enemyRound;
     private float currentPosX;
 
     private void Start()
@@ -218,14 +222,14 @@ public class CardCreater : MonoBehaviour
 
     private void EventBattleInitial(params object[] args)
     {
-        roundTip.GetComponentInChildren<Text>().text = "戰鬥開始";
+        roundTip.GetComponent<Image>().sprite = playerRound;
         CreateCard();
     }
 
     private void EventPlayerTurn(params object[] args)
     {
         currentPosX = startPosition.x;
-        roundTip.GetComponentInChildren<Text>().text = "我方回合";
+        roundTip.GetComponent<Image>().sprite = playerRound;
         StartCoroutine(PlayerDrawCard());
     }
 
@@ -262,8 +266,8 @@ public class CardCreater : MonoBehaviour
     {
         for (int i = 0; i < BattleManager.Instance.CurrentTrapList.Count; i++)
         {
-           // if (BattleManager.Instance.CurrentTrapList.ContainsKey(location))
-              //  EffectFactory.Instance.CreateEffect(BattleManager.Instance.CurrentTrapList[location]).ApplyEffect();
+            // if (BattleManager.Instance.CurrentTrapList.ContainsKey(location))
+            //  EffectFactory.Instance.CreateEffect(BattleManager.Instance.CurrentTrapList[location]).ApplyEffect();
         }
     }
     private IEnumerator EnemyAttack()
@@ -299,7 +303,7 @@ public class CardCreater : MonoBehaviour
                 );
                 newCurrentEnemyList.Add(newLocation, BattleManager.Instance.CurrentEnemyList[location]);
             }
-            else if (distance <= BattleManager.Instance.CurrentEnemyList[location].AlertDistance && !checkTerrainObstacles)
+            else if (/*distance <= BattleManager.Instance.CurrentEnemyList[location].AlertDistance &&*/ !checkTerrainObstacles)
             {
                 yield return new WaitForSecondsRealtime(0.5f);
                 float minDistance = 99;
@@ -335,8 +339,8 @@ public class CardCreater : MonoBehaviour
                 newCurrentEnemyList.Add(newLocation, BattleManager.Instance.CurrentEnemyList[location]);
                 movedLocationList.Add(newLocation);
             }
-            enemyTrans.GetComponent<Enemy>().EnemyAlert.enabled = BattleManager.Instance.GetDistance(newLocation)
-            <= BattleManager.Instance.CurrentEnemyList[location].AlertDistance && !checkTerrainObstacles;
+            enemyTrans.GetComponent<Enemy>().EnemyAlert.enabled = /*BattleManager.Instance.GetDistance(newLocation)
+            <= BattleManager.Instance.CurrentEnemyList[location].AlertDistance && !checkTerrainObstacles*/false;
 
             EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
             yield return new WaitForSecondsRealtime(1);
@@ -370,7 +374,7 @@ public class CardCreater : MonoBehaviour
         BattleManager.Instance.CardPositionList.Clear();
         BattleManager.Instance.CardAngleList.Clear();
         StartCoroutine(HideAllCards());
-        roundTip.GetComponentInChildren<Text>().text = "敵方回合";
+        roundTip.GetComponent<Image>().sprite = enemyRound;
         StartCoroutine(EnemyAttack());
     }
 

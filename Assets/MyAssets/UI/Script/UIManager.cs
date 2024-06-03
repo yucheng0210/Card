@@ -155,7 +155,7 @@ public class UIManager : Singleton<UIManager>
             , BattleManager.Instance.CurrentLocationID, BattleManager.CheckEmptyType.EnemyAttack);
 
             BattleManager.Instance.CurrentEnemyList.ElementAt(i).Value.EnemyTrans.GetComponent<Enemy>().EnemyAlert.enabled =
-            BattleManager.Instance.GetDistance(location) <= BattleManager.Instance.CurrentEnemyList[location].AlertDistance && !checkTerrainObstacles;
+            /*BattleManager.Instance.GetDistance(location) <= BattleManager.Instance.CurrentEnemyList[location].AlertDistance && !checkTerrainObstacles*/false;
         }
     }
     public void ClearMoveClue(bool canRemove)

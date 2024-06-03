@@ -25,8 +25,6 @@ public class UIVictoryReward : UIBase
     [SerializeField]
     private Transform cardRewardGroupTrans;
     private int totalCount;
-    private Text rewardName,
-        rewardCount;
 
     private void Awake()
     {
@@ -41,7 +39,7 @@ public class UIVictoryReward : UIBase
 
     private void NextLevel()
     {
-        BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Dialog);
+       // BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Dialog);
         UIManager.Instance.ShowUI("UIExplore");
         UI.SetActive(false);
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
@@ -127,16 +125,16 @@ public class UIVictoryReward : UIBase
         {
             int rewardID = MapManager.Instance.MapNodes[count][id].l.RewardIDList[i].Item1;
             GameObject reward = Instantiate(rewardPrefab, rewardGroupTrans);
-            rewardName = reward.transform.GetChild(0).GetComponent<Text>();
-            rewardCount = reward.transform.GetChild(1).GetComponent<Text>();
-            rewardName.text = DataManager.Instance.ItemList[rewardID].ItemName;
-            rewardCount.text =
-                "X" +MapManager.Instance.MapNodes[count][id].l.RewardIDList[i].Item2.ToString();
+            /* rewardName = reward.transform.GetChild(0).GetComponent<Text>();
+             rewardCount = reward.transform.GetChild(1).GetComponent<Text>();
+             rewardName.text = DataManager.Instance.ItemList[rewardID].ItemName;
+             rewardCount.text =
+                 "X" +MapManager.Instance.MapNodes[count][id].l.RewardIDList[i].Item2.ToString();*/
             reward.GetComponent<Button>().onClick.AddListener(() => GetReward(rewardID, reward));
         }
         GameObject cardReward = Instantiate(rewardPrefab, rewardGroupTrans);
-        rewardName = cardReward.transform.GetChild(0).GetComponent<Text>();
-        rewardName.text = "卡包";
+        /*rewardName = cardReward.transform.GetChild(0).GetComponent<Text>();
+        rewardName.text = "卡包";*/
         cardReward.GetComponent<Button>().onClick.AddListener(() => GetCardReward(cardReward));
     }
 }

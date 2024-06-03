@@ -109,15 +109,16 @@ public class UIBattle : UIBase
     }
     private void CheckEnemyInfo()
     {
+        UIManager.Instance.ClearMoveClue(false);
         for (int i = 0; i < checkerboardTrans.childCount; i++)
         {
             string location = BattleManager.Instance.ConvertCheckerboardPos(i);
-            checkerboardTrans.GetChild(i).GetComponent<Button>().onClick.AddListener(() => RefreshEnemyInfo(location));
+            RefreshEnemyInfo(location);
+            //checkerboardTrans.GetChild(i).GetComponent<Button>().onClick.AddListener(() => RefreshEnemyInfo(location));
         }
     }
     private void RefreshEnemyInfo(string location)
     {
-        UIManager.Instance.ClearMoveClue(false);
         if (!BattleManager.Instance.CurrentEnemyList.ContainsKey(location))
             return;
         UIManager.Instance.ChangeCheckerboardColor
@@ -240,8 +241,6 @@ public class UIBattle : UIBase
     private void EventPlayerTurn(params object[] args)
     {
         CheckEnemyInfo();
-        Text buttonText = changeTurnButton.GetComponentInChildren<Text>();
-        //buttonText.text = "結束回合";
     }
     private void EventEnemyTurn(params object[] args)
     {

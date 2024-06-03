@@ -222,10 +222,10 @@ public class DataManager : Singleton<DataManager>
                     level.EnemyIDList.Add(enemyID[0], int.Parse(enemyID[1]));
                 }
             }
+            level.RewardIDList = new List<(int, int)>();
             if (!string.IsNullOrEmpty(row[3]))
             {
                 string[] rewardIDs = row[3].Split(';');
-                level.RewardIDList = new List<(int, int)>();
                 for (int j = 0; j < rewardIDs.Length; j++)
                 {
                     string[] rewardID = rewardIDs[j].Split('=');
