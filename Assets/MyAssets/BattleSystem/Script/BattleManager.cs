@@ -118,7 +118,16 @@ public class BattleManager : Singleton<BattleManager>
     {
         List<string> emptyPlaceList = new();
         int[] pos = ConvertNormalPos(location);
-        int x = pos[0];
+        Vector2Int point = new Vector2Int(pos[0], pos[1]);
+        for (int x = point.x - stepCount; x <= point.x + stepCount; x++)
+        {
+            for (int y = point.y - stepCount; y <= point.y + stepCount; y++)
+            {
+                //if (Vector2Int.Distance(point, new Vector2Int(x, y)) <= stepCount)
+                    CheckPlaceEmpty(ConvertCheckerboardPos(x, y), emptyPlaceList, checkEmptyType);
+            }
+        }
+        /*int x = pos[0];
         int y = pos[1];
         string up = "", down = "", left = "", right = "", upRight = "", upLeft = "", downRight = "", downLeft = "";
         for (int i = 1; i <= stepCount; i++)
@@ -157,7 +166,7 @@ public class BattleManager : Singleton<BattleManager>
             downRight = CheckPlaceEmpty(downRight, emptyPlaceList, checkEmptyType);
             //左下
             downLeft = CheckPlaceEmpty(downLeft, emptyPlaceList, checkEmptyType);
-        }
+        }*/
         return emptyPlaceList;
     }
     public enum CheckEmptyType
