@@ -40,7 +40,9 @@ public class UIVictoryReward : UIBase
     private void NextLevel()
     {
        // BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Dialog);
-        UIManager.Instance.ShowUI("UIExplore");
+        MapManager.Instance.LevelCount++;
+        UIManager.Instance.ShowUI("UIMap");
+        UIManager.Instance.HideUI("UIBattle");
         UI.SetActive(false);
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }

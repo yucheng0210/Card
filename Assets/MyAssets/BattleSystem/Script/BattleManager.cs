@@ -58,16 +58,27 @@ public class BattleManager : Singleton<BattleManager>
         CurrentNegativeState = new List<NegativeState>();
         CurrentTrapList = new Dictionary<string, string>();
     }
-    public void TakeDamage(CharacterData defender, int damage, string loaction)
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            for (int i = 0; i < CurrentEnemyList.Count; i++)
+            {
+                CharacterData value = CurrentEnemyList.ElementAt(i).Value;
+                TakeDamage(value, 99, CurrentEnemyList.ElementAt(i).Key);
+            }
+        }
+    }
+    public void TakeDamage(CharacterData defender, int damage, string location)
     {
         int currentDamage = damage - defender.CurrentShield;
         if (currentDamage < 0)
             currentDamage = 0;
         defender.CurrentShield -= damage;
         defender.CurrentHealth -= currentDamage;
-        Vector2 pos = new(CheckerboardTrans.GetChild(GetCheckerboardPoint(loaction)).localPosition.x
-        , CheckerboardTrans.GetChild(GetCheckerboardPoint(loaction)).localPosition.y);
-        EventManager.Instance.DispatchEvent(EventDefinition.eventTakeDamage, pos, damage);
+        Vector2 pos = new(CheckerboardTrans.GetChild(GetCheckerboardPoint(location)).localPosition.x
+        , CheckerboardTrans.GetChild(GetCheckerboardPoint(location)).localPosition.y);
+        EventManager.Instance.DispatchEvent(EventDefinition.eventTakeDamage, pos, damage, location);
     }
 
     public void GetShield(CharacterData defender, int point)
@@ -233,7 +244,7 @@ public class BattleManager : Singleton<BattleManager>
         switch (MyBattleType)
         {
             case BattleType.None:
-               //UIManager.Instance.HideUI("UIBattle");
+                //UIManager.Instance.HideUI("UIBattle");
                 break;
             case BattleType.Explore:
                 Explore();
@@ -283,8 +294,8 @@ public class BattleManager : Singleton<BattleManager>
         for (int i = 0; i < MapManager.Instance.MapNodes[levelCount][levelID].l.TerrainIDList.Count; i++)
         {
             int terrainID = MapManager.Instance.MapNodes[levelCount][levelID].l.TerrainIDList.ElementAt(i).Value;
-            string loactionID = MapManager.Instance.MapNodes[levelCount][levelID].l.TerrainIDList.ElementAt(i).Key;
-            CurrentTerrainList.Add(loactionID, DataManager.Instance.TerrainList[terrainID].Clone());
+            string locationID = MapManager.Instance.MapNodes[levelCount][levelID].l.TerrainIDList.ElementAt(i).Key;
+            CurrentTerrainList.Add(locationID, DataManager.Instance.TerrainList[terrainID].Clone());
         }
         EventManager.Instance.DispatchEvent(EventDefinition.eventBattleInitial);
     }

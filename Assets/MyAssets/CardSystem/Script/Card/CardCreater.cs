@@ -191,8 +191,7 @@ public class CardCreater : MonoBehaviour
     {
         for (int i = 0; i < DataManager.Instance.UsedCardBag.Count; i++)
         {
-            StartCoroutine(UIManager.Instance.FadeIn(DataManager.Instance.UsedCardBag[i].GetComponent<CanvasGroup>(),
-            moveTime / 2));
+            StartCoroutine(UIManager.Instance.FadeIn(DataManager.Instance.UsedCardBag[i].GetComponent<CanvasGroup>(), moveTime / 2));
             yield return null;
         }
         yield return new WaitForSecondsRealtime(moveTime);
@@ -236,14 +235,8 @@ public class CardCreater : MonoBehaviour
 
     private IEnumerator PlayerDrawCard()
     {
-        yield return (
-            UIManager.Instance.FadeOutIn(roundTip.GetComponent<CanvasGroup>(), 0.5f, 1, false)
-        ); // 執行 UI 淡入淡出效果
-        StartCoroutine(
-            DrawCard(
-                DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].DefaultDrawCardCout
-            )
-        );
+        yield return (UIManager.Instance.FadeOutIn(roundTip.GetComponent<CanvasGroup>(), 0.5f, 1, false)); // 執行 UI 淡入淡出效果
+        StartCoroutine(DrawCard(DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].DefaultDrawCardCout));
     }
 
     private void AdjustCard()
@@ -303,7 +296,7 @@ public class CardCreater : MonoBehaviour
                 );
                 newCurrentEnemyList.Add(newLocation, BattleManager.Instance.CurrentEnemyList[location]);
             }
-            else if (/*distance <= BattleManager.Instance.CurrentEnemyList[location].AlertDistance &&*/ !checkTerrainObstacles)
+            else // (/*distance <= BattleManager.Instance.CurrentEnemyList[location].AlertDistance &&*/ !checkTerrainObstacles)
             {
                 yield return new WaitForSecondsRealtime(0.5f);
                 float minDistance = 99;
@@ -328,7 +321,7 @@ public class CardCreater : MonoBehaviour
                 if (minDistance == 1)
                     BattleManager.Instance.TakeDamage(DataManager.Instance.PlayerList[DataManager.Instance.PlayerID], BattleManager.Instance.CurrentEnemyList[location].CurrentAttack, BattleManager.Instance.CurrentLocationID);
             }
-            else
+            /*else
             {
                 yield return new WaitForSecondsRealtime(0.5f);
                 int randomIndex = UnityEngine.Random.Range(0, emptyPlaceList.Count);
@@ -338,7 +331,7 @@ public class CardCreater : MonoBehaviour
                 enemyTrans.DOAnchorPos(emptyPlace.localPosition, 0.5f);
                 newCurrentEnemyList.Add(newLocation, BattleManager.Instance.CurrentEnemyList[location]);
                 movedLocationList.Add(newLocation);
-            }
+            }*/
             enemyTrans.GetComponent<Enemy>().EnemyAlert.enabled = /*BattleManager.Instance.GetDistance(newLocation)
             <= BattleManager.Instance.CurrentEnemyList[location].AlertDistance && !checkTerrainObstacles*/false;
 
@@ -400,6 +393,7 @@ public class CardCreater : MonoBehaviour
         BattleManager.Instance.CardPositionList.Clear();
         BattleManager.Instance.CurrentEnemyList.Clear();
         BattleManager.Instance.CurrentAbilityList.Clear();
+        BattleManager.Instance.CurrentTerrainList.Clear();
         DataManager.Instance.HandCard.Clear();
         DataManager.Instance.UsedCardBag.Clear();
         DataManager.Instance.RemoveCardBag.Clear();

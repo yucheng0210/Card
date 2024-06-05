@@ -121,13 +121,16 @@ public class UIBattle : UIBase
     {
         if (!BattleManager.Instance.CurrentEnemyList.ContainsKey(location))
             return;
-        UIManager.Instance.ChangeCheckerboardColor
-        (Color.yellow, location, BattleManager.Instance.CurrentEnemyList[location].AlertDistance, BattleManager.CheckEmptyType.EnemyAttack);
-        UIManager.Instance.ChangeCheckerboardColor
-        (Color.red, location, BattleManager.Instance.CurrentEnemyList[location].StepCount, BattleManager.CheckEmptyType.EnemyAttack);
+        float distance = BattleManager.Instance.GetDistance(location);
+        bool checkTerrainObstacles = BattleManager.Instance.CheckTerrainObstacles(location, BattleManager.Instance.CurrentEnemyList[location].AlertDistance
+          , BattleManager.Instance.CurrentLocationID, BattleManager.CheckEmptyType.EnemyAttack);
+        if (distance <= BattleManager.Instance.CurrentEnemyList[location].AttackDistance && !checkTerrainObstacles)
+            UIManager.Instance.ChangeCheckerboardColor(Color.red, location, BattleManager.Instance.CurrentEnemyList[location].AttackDistance, BattleManager.CheckEmptyType.EnemyAttack);
+        else
+            UIManager.Instance.ChangeCheckerboardColor(Color.gray, location, BattleManager.Instance.CurrentEnemyList[location].StepCount, BattleManager.CheckEmptyType.EnemyAttack);
         int x = BattleManager.Instance.ConvertNormalPos(location)[0];
         int y = BattleManager.Instance.ConvertNormalPos(location)[1];
-        enemyInfo.SetActive(true);
+        //enemyInfo.SetActive(true);
         enemyName.text = BattleManager.Instance.CurrentEnemyList[location].CharacterName;
         enemyLocation.text = x.ToString() + "，" + y.ToString();
         enemyImage.sprite = Resources.Load<Sprite>(BattleManager.Instance.CurrentEnemyList[location].EnemyImagePath);
@@ -144,22 +147,14 @@ public class UIBattle : UIBase
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
 
-    private IEnumerator RemoveEnemy()
+    private void RemoveEnemy(string key)
     {
-        for (int i = BattleManager.Instance.CurrentEnemyList.Count - 1; i >= 0; i--)
+        if (BattleManager.Instance.CurrentEnemyList[key].CurrentHealth <= 0)
         {
-            string key = BattleManager.Instance.CurrentEnemyList.ElementAt(i).Key;
-            if (BattleManager.Instance.CurrentEnemyList[key].CurrentHealth <= 0)
-            {
-                Destroy(enemyTrans.GetChild(i).gameObject);
-                BattleManager.Instance.CurrentEnemyList.Remove(key);
-            }
-            yield return null;
+            Destroy(enemyTrans.GetChild(BattleManager.Instance.CurrentEnemyList.Values.ToList().IndexOf(BattleManager.Instance.CurrentEnemyList[key])).gameObject);
+            BattleManager.Instance.CurrentEnemyList.Remove(key);
         }
-        /*for (int i = 0; i < enemyTrans.childCount; i++)
-        {
-            enemyTrans.GetChild(i).GetComponent<Enemy>().EnemyLocation = i;
-        }*/
+
         if (BattleManager.Instance.CurrentEnemyList.Count == 0)
             BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Win);
     }
@@ -237,6 +232,7 @@ public class UIBattle : UIBase
         DataManager.Instance.PotionBag.RemoveAt(bagID);
         potionClueMenu.gameObject.SetActive(false);
         RefreshPotionBag();
+        EventRefreshUI();
     }
     private void EventPlayerTurn(params object[] args)
     {
@@ -248,7 +244,8 @@ public class UIBattle : UIBase
     }
     private void EventTakeDamage(params object[] args)
     {
-        StartCoroutine(RemoveEnemy());
+        if (BattleManager.Instance.CurrentLocationID != (string)args[2])
+            RemoveEnemy((string)args[2]);
         GameObject damageNum = Instantiate(damageNumPrefab, UI.transform);
         RectTransform damageRect = damageNum.GetComponent<RectTransform>();
         Text damageText = damageNum.GetComponentInChildren<Text>();

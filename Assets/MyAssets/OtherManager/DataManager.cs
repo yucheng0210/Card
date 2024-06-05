@@ -210,7 +210,7 @@ public class DataManager : Singleton<DataManager>
                 //DialogName = row[4],
                 LevelType = row[4],
                 PlayerStartPos = row[5],
-                LevelPassed = false
+                LevelActive = false
             };
             if (!string.IsNullOrEmpty(row[2]))
             {

@@ -15,10 +15,10 @@ public class UIMap : UIBase
     private Dictionary<string, int> levelProbabilities = new Dictionary<string, int>
     {
         { "BATTLE", 35 },
-        { "BOSS", 10 },
+        { "BOSS", 5 },
         { "RANDOM", 20 },
-        { "RECOVER", 15 },
-        { "SHOP", 20 }
+        { "RECOVER", 35 },
+        { "SHOP",5 }
     };
     protected override void Start()
     {
@@ -164,13 +164,10 @@ public class UIMap : UIBase
     private bool CantEnter(int count, int id)
     {
         bool cantEnter = true;
-        for (int i = 0; i < MapManager.Instance.MapNodes[MapManager.Instance.LevelCount][id].l.LevelParentList.Count; i++)
-        {
-            if (count == 0)
-                cantEnter = false;
-            else if (MapManager.Instance.MapNodes[count][i].l.LevelPassed)
-                cantEnter = false;
-        }
+        if ((MapManager.Instance.LevelCount == 0 && count == 0) || (MapManager.Instance.MapNodes[count][id].l.LevelActive && MapManager.Instance.LevelCount == count))
+            cantEnter = false;
+        else
+            cantEnter = true;
         return cantEnter;
     }
     private void CanEnterEffect()
@@ -179,6 +176,8 @@ public class UIMap : UIBase
         {
             for (int j = 0; j < MapManager.Instance.MapNodes[i].Length; j++)
             {
+                /*  if (i == 1)
+                      Debug.Log(i.ToString() + j.ToString() + ":" + !CantEnter(i, j));*/
                 if ((!CantEnter(i, j) && i == MapManager.Instance.LevelCount) || (MapManager.Instance.LevelCount == 0 && i == 0))
                     effectList[i][j].Play();
                 else
@@ -193,6 +192,10 @@ public class UIMap : UIBase
         MapManager.Instance.LevelID = id;
         MapManager.Instance.LevelCount = count;
         UIManager.Instance.HideUI("UIMap");
+        if (MapManager.Instance.MapNodes[count][id].left != null)
+            MapManager.Instance.MapNodes[count][id].left.l.LevelActive = true;
+        if (MapManager.Instance.MapNodes[count][id].right != null)
+            MapManager.Instance.MapNodes[count][id].right.l.LevelActive = true;
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Explore);
     }
 }

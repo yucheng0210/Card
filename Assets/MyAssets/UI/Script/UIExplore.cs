@@ -84,9 +84,11 @@ public class UIExplore : UIBase
     {
         int playerID = DataManager.Instance.PlayerID;
         int recoverCount = (int)(DataManager.Instance.PlayerList[playerID].MaxHealth * 0.35f);
+        UI.SetActive(true);
         recoverMenu.SetActive(true);
         restButton.onClick.AddListener(() => DataManager.Instance.PlayerList[playerID].CurrentHealth += recoverCount);
         restButton.onClick.AddListener(() => recoverExitButton.gameObject.SetActive(true));
+        restButton.onClick.AddListener(() => EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI));
     }
 
     private void Boss()
@@ -151,7 +153,6 @@ public class UIExplore : UIBase
     private void EventExplore(params object[] args)
     {
         int levelID = MapManager.Instance.LevelID;
-        MapManager.Instance.MapNodes[MapManager.Instance.LevelCount][MapManager.Instance.LevelID].l.LevelPassed = true;
         /*  bool isSelectLevel = true;
           for (int i = 0; i < DataManager.Instance.LevelList.Count; i++)
           {
