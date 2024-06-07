@@ -133,8 +133,7 @@ public class CardItem
                 space = pointerEnterReduceCount;
         }
         transform.SetAsLastSibling();
-        UIManager.Instance.ChangeCheckerboardColor
-        (Color.gray, BattleManager.Instance.CurrentLocationID, DataManager.Instance.CardList[CardID].CardAttackDistance, BattleManager.CheckEmptyType.PlayerAttack);
+        UIManager.Instance.ChangeCheckerboardColor(Color.red, BattleManager.Instance.CurrentLocationID, DataManager.Instance.CardList[CardID].CardAttackDistance, BattleManager.CheckEmptyType.PlayerAttack);
     }
 
     public void OnPointerExit(PointerEventData eventData)

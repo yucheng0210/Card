@@ -119,14 +119,26 @@ public class BattleManager : Singleton<BattleManager>
         List<string> emptyPlaceList = new();
         int[] pos = ConvertNormalPos(location);
         Vector2Int point = new Vector2Int(pos[0], pos[1]);
-        for (int x = point.x - stepCount; x <= point.x + stepCount; x++)
+        int minX = point.x - stepCount;
+        int maxX = point.x + stepCount;
+        int minY = point.y - stepCount;
+        int maxY = point.y + stepCount;
+        for (int x = minX + 1; x <= maxX - 1; x++)
         {
-            for (int y = point.y - stepCount; y <= point.y + stepCount; y++)
+            for (int y = minY + 1; y <= maxY - 1; y++)
             {
-                //if (Vector2Int.Distance(point, new Vector2Int(x, y)) <= stepCount)
+                CheckPlaceEmpty(ConvertCheckerboardPos(x, y), emptyPlaceList, checkEmptyType);
+            }
+        }
+        for (int x = minX; x <= maxX; x++)
+        {
+            for (int y = minY; y <= maxY; y++)
+            {
+                if ((x == minX && y == point.y) || (x == maxX && y == point.y) || (y == minY && x == point.x) || (y == maxY && x == point.x))
                     CheckPlaceEmpty(ConvertCheckerboardPos(x, y), emptyPlaceList, checkEmptyType);
             }
         }
+
         /*int x = pos[0];
         int y = pos[1];
         string up = "", down = "", left = "", right = "", upRight = "", upLeft = "", downRight = "", downLeft = "";
@@ -175,7 +187,7 @@ public class BattleManager : Singleton<BattleManager>
         EnemyAttack,
         Move
     }
-    private string CheckPlaceEmpty(string place, List<string> emptyPlaceList, CheckEmptyType checkEmptyType)
+    private void CheckPlaceEmpty(string place, List<string> emptyPlaceList, CheckEmptyType checkEmptyType)
     {
         bool isEmpty = false;
         if (CheckerboardList.ContainsKey(place))
@@ -198,12 +210,7 @@ public class BattleManager : Singleton<BattleManager>
             }
         }
         if (isEmpty)
-        {
             emptyPlaceList.Add(place);
-            return place;
-        }
-        else
-            return "CantMove";
     }
     public bool CheckTerrainObstacles(string location, int alertDistance, string target, CheckEmptyType checkEmptyType)
     {

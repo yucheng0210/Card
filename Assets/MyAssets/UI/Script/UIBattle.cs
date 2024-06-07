@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using System.Linq;
+using UnityEngine.EventSystems;
 
 public class UIBattle : UIBase
 {
@@ -53,11 +54,6 @@ public class UIBattle : UIBase
     private Text enemyShield;
     [SerializeField]
     private Text enemyHealth;
-    [SerializeField]
-    private RectTransform enemyHealthRect;
-
-    [SerializeField]
-    private RectTransform enemyHurtRect;
 
     [Header("傷害特效")]
     [SerializeField]
@@ -113,8 +109,8 @@ public class UIBattle : UIBase
         for (int i = 0; i < checkerboardTrans.childCount; i++)
         {
             string location = BattleManager.Instance.ConvertCheckerboardPos(i);
-            RefreshEnemyInfo(location);
-            //checkerboardTrans.GetChild(i).GetComponent<Button>().onClick.AddListener(() => RefreshEnemyInfo(location));
+            //checkerboardTrans.GetChild(i).GetComponent<Button>().onClick.RemoveAllListeners();
+            checkerboardTrans.GetChild(i).GetComponent<Button>().onClick.AddListener(() => RefreshEnemyInfo(location));
         }
     }
     private void RefreshEnemyInfo(string location)
@@ -127,7 +123,7 @@ public class UIBattle : UIBase
         if (distance <= BattleManager.Instance.CurrentEnemyList[location].AttackDistance && !checkTerrainObstacles)
             UIManager.Instance.ChangeCheckerboardColor(Color.red, location, BattleManager.Instance.CurrentEnemyList[location].AttackDistance, BattleManager.CheckEmptyType.EnemyAttack);
         else
-            UIManager.Instance.ChangeCheckerboardColor(Color.gray, location, BattleManager.Instance.CurrentEnemyList[location].StepCount, BattleManager.CheckEmptyType.EnemyAttack);
+            UIManager.Instance.ChangeCheckerboardColor(Color.yellow, location, BattleManager.Instance.CurrentEnemyList[location].StepCount, BattleManager.CheckEmptyType.EnemyAttack);
         int x = BattleManager.Instance.ConvertNormalPos(location)[0];
         int y = BattleManager.Instance.ConvertNormalPos(location)[1];
         //enemyInfo.SetActive(true);

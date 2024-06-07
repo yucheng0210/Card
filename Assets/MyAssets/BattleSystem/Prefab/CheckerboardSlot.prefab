@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4878678400145058162}
   - component: {fileID: 4878678400145058163}
   - component: {fileID: 4172690119380974229}
-  - component: {fileID: 4878678400145058172}
+  - component: {fileID: 251518758216232033}
   m_Layer: 5
   m_Name: CheckerboardSlot
   m_TagString: Untagged
@@ -122,18 +122,16 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &4878678400145058172
+--- !u!114 &251518758216232033
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4878678400145058174}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_EffectColor: {r: 0.9056604, g: 0.063225314, b: 0.063225314, a: 0.5}
-  m_EffectDistance: {x: 10, y: 10}
-  m_UseGraphicAlpha: 1
+  m_Delegates: []

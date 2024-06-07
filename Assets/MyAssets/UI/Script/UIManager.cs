@@ -170,6 +170,7 @@ public class UIManager : Singleton<UIManager>
     }
     public void ChangeCheckerboardColor(Color color, string location, int stepCount, BattleManager.CheckEmptyType checkEmptyType)
     {
+        ClearMoveClue(false);
         List<string> emptyPlaceList = BattleManager.Instance.GetEmptyPlace(location, stepCount, checkEmptyType);
         for (int i = 0; i < emptyPlaceList.Count; i++)
         {
