@@ -34,6 +34,7 @@ public class SceneController : Singleton<SceneController>
     {
         //EventManager.Instance.DispatchEvent(EventDefinition.eventSceneLoading);
         //GameObject fade = Instantiate(sceneFaderPrefab.gameObject);
+        progressSlider.gameObject.SetActive(true);
         progressSlider.value = 0.0f;
         yield return StartCoroutine(UIManager.Instance.FadeOut(sceneFaderPrefab, 1));
         //progressCanvas.SetActive(true);
@@ -54,5 +55,6 @@ public class SceneController : Singleton<SceneController>
         //progressCanvas.SetActive(false);
         async.allowSceneActivation = true;
         StartCoroutine(UIManager.Instance.FadeIn(sceneFaderPrefab, 1));
+        progressSlider.gameObject.SetActive(false);
     }
 }

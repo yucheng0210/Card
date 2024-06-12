@@ -7,13 +7,7 @@ using UnityEngine.UI;
 using DG.Tweening;
 using Unity.VisualScripting;
 
-public class CardItem
-    : MonoBehaviour,
-        IPointerEnterHandler,
-        IPointerExitHandler,
-        IDragHandler,
-        IEndDragHandler,
-        IPointerDownHandler
+public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IDragHandler, IEndDragHandler, IPointerDownHandler
 {
     private int index;
 
@@ -30,9 +24,6 @@ public class CardItem
     private Image cardImage;
 
     [SerializeField]
-    private GameObject collision;
-
-    [SerializeField]
     private float pointerEnterUpY;
 
     [SerializeField]
@@ -44,8 +35,7 @@ public class CardItem
     [SerializeField]
     private float moveTime;
 
-    private CardItem rightCard,
-        leftCard;
+    private CardItem rightCard, leftCard;
     private bool isAttackCard;
     private Enemy enemy;
     public int CardID { get; set; }
@@ -57,11 +47,6 @@ public class CardItem
     {
         get { return cardImage; }
         set { cardImage = value; }
-    }
-    public GameObject Collision
-    {
-        get { return collision; }
-        set { collision = value; }
     }
     public Text CardName
     {
@@ -96,9 +81,7 @@ public class CardItem
         CardCost.text = cardList[CardID].CardCost.ToString();
         CardRectTransform = transform.GetComponent<RectTransform>();
         Cost = DataManager.Instance.CardList[CardID].CardCost;
-        CardImage.sprite = Resources.Load<Sprite>(
-           DataManager.Instance.CardList[CardID].CardImagePath
-       );
+        CardImage.sprite = Resources.Load<Sprite>(DataManager.Instance.CardList[CardID].CardImagePath);
         outline = GetComponentInChildren<Outline>();
     }
     public void OnPointerEnter(PointerEventData eventData)
@@ -114,9 +97,7 @@ public class CardItem
         for (int i = index + 1; i < transform.parent.childCount; i++)
         {
             rightCard = transform.parent.GetChild(i).GetComponent<CardItem>();
-            rightCard
-                .GetComponent<RectTransform>()
-                .DOAnchorPosX(BattleManager.Instance.CardPositionList[i].x + space, moveTime);
+            rightCard.GetComponent<RectTransform>().DOAnchorPosX(BattleManager.Instance.CardPositionList[i].x + space, moveTime);
             space -= pointerEnterReduceCount;
             if (space <= 0)
                 space = pointerEnterReduceCount;
@@ -125,9 +106,7 @@ public class CardItem
         for (int i = index - 1; i >= 0; i--)
         {
             leftCard = transform.parent.GetChild(i).GetComponent<CardItem>();
-            leftCard
-                .GetComponent<RectTransform>()
-                .DOAnchorPosX(BattleManager.Instance.CardPositionList[i].x - space, moveTime);
+            leftCard.GetComponent<RectTransform>().DOAnchorPosX(BattleManager.Instance.CardPositionList[i].x - space, moveTime);
             space -= pointerEnterReduceCount;
             if (space <= 0)
                 space = pointerEnterReduceCount;
@@ -141,25 +120,18 @@ public class CardItem
         if (BattleManager.Instance.IsDrag && !isAttackCard || CantMove)
             return;
         transform.DOScale(1.5f, moveTime);
-        transform.DORotateQuaternion(
-            Quaternion.Euler(0, 0, BattleManager.Instance.CardAngleList[index]),
-            moveTime
-        );
+        transform.DORotateQuaternion(Quaternion.Euler(0, 0, BattleManager.Instance.CardAngleList[index]), moveTime);
         CardRectTransform.DOAnchorPos(BattleManager.Instance.CardPositionList[index], moveTime);
         transform.SetSiblingIndex(index);
         for (int i = index + 1; i < transform.parent.childCount; i++)
         {
             rightCard = transform.parent.GetChild(i).GetComponent<CardItem>();
-            rightCard
-                .GetComponent<RectTransform>()
-                .DOAnchorPosX(BattleManager.Instance.CardPositionList[i].x, moveTime);
+            rightCard.GetComponent<RectTransform>().DOAnchorPosX(BattleManager.Instance.CardPositionList[i].x, moveTime);
         }
         for (int i = index - 1; i >= 0; i--)
         {
             leftCard = transform.parent.GetChild(i).GetComponent<CardItem>();
-            leftCard
-                .GetComponent<RectTransform>()
-                .DOAnchorPosX(BattleManager.Instance.CardPositionList[i].x, moveTime);
+            leftCard.GetComponent<RectTransform>().DOAnchorPosX(BattleManager.Instance.CardPositionList[i].x, moveTime);
         }
         UIManager.Instance.ClearMoveClue(false);
     }
@@ -304,7 +276,7 @@ public class CardItem
     {
         if (DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].CurrentActionPoint >= Cost
         && DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].Mana >= DataManager.Instance.CardList[CardID].CardManaCost)
-            UIManager.Instance.ChangeOutline(outline, 6);
+            UIManager.Instance.ChangeOutline(outline, 10);
         else
             UIManager.Instance.ChangeOutline(outline, 0);
     }

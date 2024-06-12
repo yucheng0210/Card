@@ -267,9 +267,7 @@ public class CardCreater : MonoBehaviour
     {
         Dictionary<string, EnemyData> newCurrentEnemyList = new();
         List<string> movedLocationList = new();
-        yield return (
-            UIManager.Instance.FadeOutIn(roundTip.GetComponent<CanvasGroup>(), 0.5f, 1, false)
-        );
+        yield return (UIManager.Instance.FadeOutIn(roundTip.GetComponent<CanvasGroup>(), 0.5f, 1, false));
         yield return new WaitForSecondsRealtime(1);
         for (int i = 0; i < BattleManager.Instance.CurrentEnemyList.Count; i++)
         {
