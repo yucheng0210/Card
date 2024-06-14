@@ -88,10 +88,7 @@ public class UIBattle : UIBase
         BattleManager.Instance.CheckerboardTrans = checkerboardTrans;
         EventManager.Instance.AddEventRegister(EventDefinition.eventRefreshUI, EventRefreshUI);
         EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
-        EventManager.Instance.AddEventRegister(
-            EventDefinition.eventBattleInitial,
-            EventBattleInitial
-        );
+        EventManager.Instance.AddEventRegister(EventDefinition.eventBattleInitial, EventBattleInitial);
         EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
         EventManager.Instance.AddEventRegister(EventDefinition.eventEnemyTurn, EventEnemyTurn);
         //Hide();
@@ -109,14 +106,34 @@ public class UIBattle : UIBase
         for (int i = 0; i < checkerboardTrans.childCount; i++)
         {
             string location = BattleManager.Instance.ConvertCheckerboardPos(i);
-            //checkerboardTrans.GetChild(i).GetComponent<Button>().onClick.RemoveAllListeners();
-            checkerboardTrans.GetChild(i).GetComponent<Button>().onClick.AddListener(() => RefreshEnemyInfo(location));
+            if (!BattleManager.Instance.CurrentEnemyList.ContainsKey(location))
+                continue;
+            EventTrigger eventTrigger = checkerboardTrans.GetChild(i).GetComponent<EventTrigger>();
+            EnemyData enemyData = BattleManager.Instance.CurrentEnemyList[location];
+            EventTrigger.Entry entryEnter = new EventTrigger.Entry();
+            EventTrigger.Entry entryExit = new EventTrigger.Entry();
+            entryEnter.eventID = EventTriggerType.PointerEnter;
+            entryExit.eventID = EventTriggerType.PointerExit;
+            entryEnter.callback.AddListener((arg) => { RefreshEnemyInfo(location); });
+            entryExit.callback.AddListener((arg) =>
+            {
+                UIManager.Instance.ClearCheckerboardColor(location, enemyData.StepCount, BattleManager.CheckEmptyType.EnemyAttack);
+            });
+            eventTrigger.triggers.Add(entryEnter);
+            eventTrigger.triggers.Add(entryExit);
+            //checkerboardTrans.GetChild(i).GetComponent<Button>().onClick.AddListener(() => RefreshEnemyInfo(location));
+        }
+    }
+    private void ClearAllEventTriggers()
+    {
+        for (int i = 0; i < checkerboardTrans.childCount; i++)
+        {
+            EventTrigger eventTrigger = checkerboardTrans.GetChild(i).GetComponent<EventTrigger>();
+            eventTrigger.triggers.Clear();
         }
     }
     private void RefreshEnemyInfo(string location)
     {
-        if (!BattleManager.Instance.CurrentEnemyList.ContainsKey(location))
-            return;
         float distance = BattleManager.Instance.GetDistance(location);
         bool checkTerrainObstacles = BattleManager.Instance.CheckTerrainObstacles(location, BattleManager.Instance.CurrentEnemyList[location].AlertDistance
           , BattleManager.Instance.CurrentLocationID, BattleManager.CheckEmptyType.EnemyAttack);
@@ -237,6 +254,7 @@ public class UIBattle : UIBase
     private void EventEnemyTurn(params object[] args)
     {
         UIManager.Instance.ClearMoveClue(true);
+        ClearAllEventTriggers();
     }
     private void EventTakeDamage(params object[] args)
     {

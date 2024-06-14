@@ -20,14 +20,14 @@ public class MoveEffect : IEffect
             RectTransform emptyPlace = BattleManager.Instance.CheckerboardTrans
             .GetChild(BattleManager.Instance.GetCheckerboardPoint(emptyPlaceList[avoidClosure])).GetComponent<RectTransform>();
             UnityEngine.Events.UnityAction moveAction = () =>
-            Move(emptyPlace.localPosition, emptyPlaceList[avoidClosure]);
+            Move(emptyPlace.localPosition, emptyPlaceList[avoidClosure], value);
             emptyPlace.GetComponent<Button>().onClick.AddListener(moveAction);
             removeList.Add(moveAction);
             // Debug.Log("玩家可行走位置：" + emptyPlaceList[avoidClosure]);
         }
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.UsingEffect);
     }
-    private void Move(Vector2 destination, string loactionID)
+    private void Move(Vector2 destination, string loactionID, int value)
     {
         for (int i = 0; i < emptyPlaceList.Count; i++)
         {
@@ -37,7 +37,7 @@ public class MoveEffect : IEffect
         }
         BattleManager.Instance.CurrentLocationID = loactionID;
         BattleManager.Instance.PlayerTrans.DOAnchorPos(destination, 0.5f);
-        UIManager.Instance.ClearMoveClue(false);
+        UIManager.Instance.ClearCheckerboardColor(BattleManager.Instance.CurrentLocationID, value, BattleManager.CheckEmptyType.Move);
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Attack);
     }
 }

@@ -170,8 +170,20 @@ public class UIManager : Singleton<UIManager>
     }
     public void ChangeCheckerboardColor(Color color, string location, int stepCount, BattleManager.CheckEmptyType checkEmptyType)
     {
-        ClearMoveClue(false);
+        //ClearMoveClue(false);
         List<string> emptyPlaceList = BattleManager.Instance.GetEmptyPlace(location, stepCount, checkEmptyType);
+        for (int i = 0; i < emptyPlaceList.Count; i++)
+        {
+            RectTransform emptyPlace = BattleManager.Instance.CheckerboardTrans
+           .GetChild(BattleManager.Instance.GetCheckerboardPoint(emptyPlaceList[i])).GetComponent<RectTransform>();
+            emptyPlace.GetComponent<Image>().color = color;
+        }
+    }
+    public void ClearCheckerboardColor(string location, int stepCount, BattleManager.CheckEmptyType checkEmptyType)
+    {
+        //ClearMoveClue(false);
+        List<string> emptyPlaceList = BattleManager.Instance.GetEmptyPlace(location, stepCount, checkEmptyType);
+        Color color = new Color(1, 1, 1, 0);
         for (int i = 0; i < emptyPlaceList.Count; i++)
         {
             RectTransform emptyPlace = BattleManager.Instance.CheckerboardTrans
