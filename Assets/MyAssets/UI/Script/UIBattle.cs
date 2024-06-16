@@ -9,6 +9,8 @@ using UnityEngine.EventSystems;
 
 public class UIBattle : UIBase
 {
+    [SerializeField]
+    private List<EventTrigger> battleInfoList = new List<EventTrigger>();
     [Header("玩家")]
     [SerializeField]
     private Text actionPointText;
@@ -99,6 +101,21 @@ public class UIBattle : UIBase
     {
         yield return null;
         Hide();
+    }
+    private void CheckBattleInfo()
+    {
+        for (int i = 0; i < battleInfoList.Count; i++)
+        {
+            int id = i;
+            EventTrigger.Entry entryEnter = new EventTrigger.Entry();
+            EventTrigger.Entry entryExit = new EventTrigger.Entry();
+            entryEnter.eventID = EventTriggerType.PointerEnter;
+            entryExit.eventID = EventTriggerType.PointerExit;
+            entryEnter.callback.AddListener((arg) => { battleInfoList[id].transform.GetChild(0).gameObject.SetActive(true); });
+            entryExit.callback.AddListener((arg) => { battleInfoList[id].transform.GetChild(0).gameObject.SetActive(false); });
+            battleInfoList[id].triggers.Add(entryEnter);
+            battleInfoList[id].triggers.Add(entryExit);
+        }
     }
     private void CheckEnemyInfo()
     {
@@ -250,6 +267,7 @@ public class UIBattle : UIBase
     private void EventPlayerTurn(params object[] args)
     {
         CheckEnemyInfo();
+        CheckBattleInfo();
     }
     private void EventEnemyTurn(params object[] args)
     {
