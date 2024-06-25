@@ -27,7 +27,7 @@ public class MoveEffect : IEffect
         }
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.UsingEffect);
     }
-    private void Move(Vector2 destination, string loactionID, int value)
+    private void Move(Vector2 destination, string locationID, int value)
     {
         for (int i = 0; i < emptyPlaceList.Count; i++)
         {
@@ -35,9 +35,9 @@ public class MoveEffect : IEffect
             .GetChild(BattleManager.Instance.GetCheckerboardPoint(emptyPlaceList[i])).GetComponent<RectTransform>();
             emptyPlace.GetComponent<Button>().onClick.RemoveListener(removeList[i]);
         }
-        BattleManager.Instance.CurrentLocationID = loactionID;
-        BattleManager.Instance.PlayerTrans.DOAnchorPos(destination, 0.5f);
         UIManager.Instance.ClearCheckerboardColor(BattleManager.Instance.CurrentLocationID, value, BattleManager.CheckEmptyType.Move);
+        BattleManager.Instance.CurrentLocationID = locationID;
+        BattleManager.Instance.PlayerTrans.DOAnchorPos(destination, 0.5f);
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Attack);
     }
 }

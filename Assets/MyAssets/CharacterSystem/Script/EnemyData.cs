@@ -13,4 +13,6 @@ public class EnemyData : CharacterData
     public string EnemyLocation { get; set; }
     public int AlertDistance { get; set; }
     public int AttackDistance { get; set; }
+    public string[] AttackOrderStrs { get; set; }
+    public int CurrentAttackOrder { get; set; }
 }

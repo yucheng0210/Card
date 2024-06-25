@@ -206,15 +206,11 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         if (Physics.Raycast(ray, out hit, 10000, LayerMask.GetMask("Enemy")))
         {
             enemy = hit.transform.GetComponent<Enemy>();
-            enemy.OnSelect();
             if (onEnd && GetUseCardCondition() && CheckEnemyInAttackRange(enemy.EnemyLocation))
             {
-                enemy.OnUnSelect();
                 UseCard(enemy.EnemyLocation);
             }
         }
-        else if (enemy != null)
-            enemy.OnUnSelect();
     }
     private bool CheckEnemyInAttackRange(string enemyLocation)
     {

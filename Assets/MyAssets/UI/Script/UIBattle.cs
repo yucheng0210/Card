@@ -207,9 +207,7 @@ public class UIBattle : UIBase
             enemy.EnemyID = BattleManager.Instance.CurrentEnemyList[key].CharacterID;
             enemy.EnemyImage.sprite = Resources.Load<Sprite>(BattleManager.Instance.CurrentEnemyList[key].EnemyImagePath);
             BattleManager.Instance.CurrentEnemyList[key].EnemyTrans = enemy.GetComponent<RectTransform>();
-            BattleManager.Instance.CurrentEnemyList[key].CurrentHealth = DataManager
-                .Instance
-                .EnemyList[enemy.EnemyID].MaxHealth;
+            BattleManager.Instance.CurrentEnemyList[key].CurrentHealth = DataManager.Instance.EnemyList[enemy.EnemyID].MaxHealth;
             yield return null;
         }
         for (int i = 0; i < BattleManager.Instance.CurrentTerrainList.Count; i++)

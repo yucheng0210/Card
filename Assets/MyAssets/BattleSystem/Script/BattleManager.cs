@@ -340,7 +340,6 @@ public class BattleManager : Singleton<BattleManager>
         DataManager.Instance.PlayerList[playerID].MaxActionPoint;
         //DataManager.Instance.PlayerList[playerID].Mana++;
         DataManager.Instance.PlayerList[playerID].CurrentShield = 0;
-        CurrentNegativeState.Clear();
         for (int i = 0; i < CurrentAbilityList.Count; i++)
         {
             string effectID;
@@ -357,6 +356,7 @@ public class BattleManager : Singleton<BattleManager>
     private void EnemyTurn()
     {
         EventManager.Instance.DispatchEvent(EventDefinition.eventEnemyTurn);
+        CurrentNegativeState.Clear();
     }
 
     private void Win()
