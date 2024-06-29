@@ -14,7 +14,7 @@ public class EventDefinition
     public const string eventUseCard = "EVENT_USE_CARD";
     public const string eventTakeDamage = "EVENT_TAKE_DAMAGE";
     public const string eventDrawCard = "EVENT_DRAW_CARD";
-    public const string eventCardCantMove = "EVENT_CARD_CANT_MOVE";
+    public const string eventMove = "EVENT_MOVE";
 
     //探索相關
     public const string eventExplore = "EVENT_EXPLORE";
@@ -24,10 +24,10 @@ public class EventDefinition
     public const string eventAttackLine = "EVENT_ATTACKLINE";
 
     //物品相關
-    public const string eventOnClickedToBag="EVENT_ONCLICKED_TO_BAG";
-    public const string eventReviseMoneyToBag="EVENT_REVISE_MONEY_TO_BAG";
-    public const string eventRemoveItemToBag="EVENT_REMOVE_ITEM_TO_BAG";
-    public const string eventAddItemToBag="EVENT_ADD_ITEM_TO_BAG";
+    public const string eventOnClickedToBag = "EVENT_ONCLICKED_TO_BAG";
+    public const string eventReviseMoneyToBag = "EVENT_REVISE_MONEY_TO_BAG";
+    public const string eventRemoveItemToBag = "EVENT_REMOVE_ITEM_TO_BAG";
+    public const string eventAddItemToBag = "EVENT_ADD_ITEM_TO_BAG";
 
     //其他
     public const string eventStartGame = "EVENT_START_GAME";

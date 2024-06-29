@@ -9,6 +9,9 @@ public class MoveEffect : IEffect
 {
     private List<UnityEngine.Events.UnityAction> removeList = new();
     private List<string> emptyPlaceList;
+
+    public Sprite EffectIcon { get; private set; }
+
     public void ApplyEffect(int value, string target)
     {
         emptyPlaceList = BattleManager.Instance.GetEmptyPlace(BattleManager.Instance.CurrentLocationID, value, BattleManager.CheckEmptyType.Move);
@@ -23,21 +26,26 @@ public class MoveEffect : IEffect
             Move(emptyPlace.localPosition, emptyPlaceList[avoidClosure], value);
             emptyPlace.GetComponent<Button>().onClick.AddListener(moveAction);
             removeList.Add(moveAction);
-            // Debug.Log("玩家可行走位置：" + emptyPlaceList[avoidClosure]);
         }
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.UsingEffect);
     }
+
+    public void SetIcon()
+    {
+        throw new NotImplementedException();
+    }
+
     private void Move(Vector2 destination, string locationID, int value)
     {
         for (int i = 0; i < emptyPlaceList.Count; i++)
         {
-            RectTransform emptyPlace = BattleManager.Instance.CheckerboardTrans
-            .GetChild(BattleManager.Instance.GetCheckerboardPoint(emptyPlaceList[i])).GetComponent<RectTransform>();
+            RectTransform emptyPlace = BattleManager.Instance.CheckerboardTrans.GetChild(BattleManager.Instance.GetCheckerboardPoint(emptyPlaceList[i])).GetComponent<RectTransform>();
             emptyPlace.GetComponent<Button>().onClick.RemoveListener(removeList[i]);
         }
         UIManager.Instance.ClearCheckerboardColor(BattleManager.Instance.CurrentLocationID, value, BattleManager.CheckEmptyType.Move);
         BattleManager.Instance.CurrentLocationID = locationID;
         BattleManager.Instance.PlayerTrans.DOAnchorPos(destination, 0.5f);
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Attack);
+        EventManager.Instance.DispatchEvent(EventDefinition.eventMove);
     }
 }

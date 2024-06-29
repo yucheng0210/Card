@@ -5,4 +5,6 @@ using UnityEngine;
 public interface IEffect
 {
     void ApplyEffect(int value, string target);
+    Sprite EffectIcon { get; } 
+    void SetIcon();
 }

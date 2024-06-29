@@ -207,15 +207,14 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         {
             enemy = hit.transform.GetComponent<Enemy>();
             if (onEnd && GetUseCardCondition() && CheckEnemyInAttackRange(enemy.EnemyLocation))
-            {
                 UseCard(enemy.EnemyLocation);
-            }
         }
     }
     private bool CheckEnemyInAttackRange(string enemyLocation)
     {
-        List<string> emptyPlaceList = BattleManager.Instance
-        .GetEmptyPlace(BattleManager.Instance.CurrentLocationID, DataManager.Instance.CardList[CardID].CardAttackDistance, BattleManager.CheckEmptyType.PlayerAttack);
+        string id = BattleManager.Instance.CurrentLocationID;
+        int attackDistance = DataManager.Instance.CardList[CardID].CardAttackDistance;
+        List<string> emptyPlaceList = BattleManager.Instance.GetEmptyPlace(id, attackDistance, BattleManager.CheckEmptyType.PlayerAttack);
         bool inRangeBool = false;
         for (int i = 0; i < emptyPlaceList.Count; i++)
         {
@@ -276,33 +275,4 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         else
             UIManager.Instance.ChangeOutline(outline, 0);
     }
-    /*private void UseCard()
-    {
-        if (BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack)
-            return;
-        CardRectTransform.DOScale(1.5f, 0);
-        DataManager.Instance.HandCard.Remove(this);
-        BattleManager.Instance.ConsumeActionPoint(Cost);
-        BattleManager.Instance.ConsumeMana(DataManager.Instance.CardList[CardID].CardManaCost);
-        BattleManager.Instance.GetShield(
-            DataManager.Instance.PlayerList[DataManager.Instance.PlayerID],
-            DataManager.Instance.CardList[CardID].CardShield
-        );
-        EventManager.Instance.DispatchEvent(EventDefinition.eventUseCard, this);
-        for (int i = 0; i < DataManager.Instance.CardList[CardID].CardEffectList.Count; i++)
-        {
-            if (DataManager.Instance.CardList[CardID].CardType == "能力")
-            {
-                BattleManager.Instance.CurrentAbilityList.Add(CardID, "Player");
-                return;
-            }
-            string effectID;
-            int effectCount;
-            effectID = DataManager.Instance.CardList[CardID].CardEffectList[i].Item1;
-            effectCount = DataManager.Instance.CardList[CardID].CardEffectList[i].Item2;
-            EffectFactory.Instance.CreateEffect(effectID).ApplyEffect(effectCount, "Player");
-        }
-        EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
-        gameObject.SetActive(false);
-    }*/
 }

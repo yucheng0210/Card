@@ -11,9 +11,7 @@ public class Player : MonoBehaviour
     private void Start()
     {
         BattleManager.Instance.PlayerTrans = GetComponent<RectTransform>();
-        DataManager.Instance.PlayerList[currentPlayerID].CurrentHealth = DataManager
-            .Instance
-            .PlayerList[currentPlayerID].MaxHealth;
+        DataManager.Instance.PlayerList[currentPlayerID].CurrentHealth = DataManager.Instance.PlayerList[currentPlayerID].MaxHealth;
         EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
     }
 

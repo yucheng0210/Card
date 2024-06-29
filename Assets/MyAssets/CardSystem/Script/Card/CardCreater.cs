@@ -295,6 +295,7 @@ public class CardCreater : MonoBehaviour
                         BattleManager.Instance.CurrentLocationID);
                         break;
                     case "Shield":
+                        BattleManager.Instance.GetShield(enemyData, enemyData.CurrentAttack / 2);
                         break;
                     default:
                         EffectFactory.Instance.CreateEffect(enemyData.AttackOrderStrs[enemyData.CurrentAttackOrder].ToString()).ApplyEffect(1, "Player");
@@ -329,20 +330,7 @@ public class CardCreater : MonoBehaviour
                 movedLocationList.Add(newLocation);
                 yield return new WaitForSecondsRealtime(1);
             }
-            /*else
-            {
-                yield return new WaitForSecondsRealtime(0.5f);
-                int randomIndex = UnityEngine.Random.Range(0, emptyPlaceList.Count);
-                newLocation = emptyPlaceList[randomIndex];
-                RectTransform emptyPlace = BattleManager.Instance.CheckerboardTrans
-                .GetChild(BattleManager.Instance.GetCheckerboardPoint(newLocation)).GetComponent<RectTransform>();
-                enemyTrans.DOAnchorPos(emptyPlace.localPosition, 0.5f);
-                newCurrentEnemyList.Add(newLocation, BattleManager.Instance.CurrentEnemyList[location]);
-                movedLocationList.Add(newLocation);
-            }*/
-            enemyTrans.GetComponent<Enemy>().EnemyAlert.enabled = /*BattleManager.Instance.GetDistance(newLocation)
-            <= BattleManager.Instance.CurrentEnemyList[location].AlertDistance && !checkTerrainObstacles*/false;
-
+            enemyTrans.GetComponent<Enemy>().EnemyAlert.enabled = false;
             EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
             yield return new WaitForSecondsRealtime(1);
         }
@@ -363,12 +351,7 @@ public class CardCreater : MonoBehaviour
             DataManager.Instance.HandCard[i].gameObject.SetActive(true);
             DataManager.Instance.HandCard[i].CantMove = true;
             DataManager.Instance.HandCard[i].transform.SetParent(usedCardTrans);
-            DataManager.Instance.HandCard[i]
-                .GetComponent<RectTransform>()
-                .DOAnchorPos(
-                    usedCardTrans.GetComponent<RectTransform>().anchoredPosition,
-                    moveTime
-                );
+            DataManager.Instance.HandCard[i].GetComponent<RectTransform>().DOAnchorPos(usedCardTrans.GetComponent<RectTransform>().anchoredPosition, moveTime);
             DataManager.Instance.UsedCardBag.Add(DataManager.Instance.HandCard[i]);
         }
         DataManager.Instance.HandCard.Clear();

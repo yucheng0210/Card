@@ -49,8 +49,6 @@ public class UIBattle : UIBase
     [SerializeField]
     private Text enemyName;
     [SerializeField]
-    private Text enemyLocation;
-    [SerializeField]
     private Image enemyImage;
     [SerializeField]
     private Text enemyShield;
@@ -152,21 +150,18 @@ public class UIBattle : UIBase
     private void RefreshEnemyInfo(string location)
     {
         float distance = BattleManager.Instance.GetDistance(location);
-        bool checkTerrainObstacles = BattleManager.Instance.CheckTerrainObstacles(location, BattleManager.Instance.CurrentEnemyList[location].AlertDistance
-          , BattleManager.Instance.CurrentLocationID, BattleManager.CheckEmptyType.EnemyAttack);
-        if (distance <= BattleManager.Instance.CurrentEnemyList[location].AttackDistance && !checkTerrainObstacles)
-            UIManager.Instance.ChangeCheckerboardColor(Color.red, location, BattleManager.Instance.CurrentEnemyList[location].AttackDistance, BattleManager.CheckEmptyType.EnemyAttack);
+        EnemyData enemyData = BattleManager.Instance.CurrentEnemyList[location];
+        string playerLocation= BattleManager.Instance.CurrentLocationID;
+        bool checkTerrainObstacles = BattleManager.Instance.CheckTerrainObstacles(location, enemyData.AlertDistance,playerLocation, BattleManager.CheckEmptyType.EnemyAttack);
+        if (distance <= enemyData.AttackDistance && !checkTerrainObstacles)
+            UIManager.Instance.ChangeCheckerboardColor(Color.red, location, enemyData.AttackDistance, BattleManager.CheckEmptyType.EnemyAttack);
         else
-            UIManager.Instance.ChangeCheckerboardColor(Color.yellow, location, BattleManager.Instance.CurrentEnemyList[location].StepCount, BattleManager.CheckEmptyType.EnemyAttack);
-        int x = BattleManager.Instance.ConvertNormalPos(location)[0];
-        int y = BattleManager.Instance.ConvertNormalPos(location)[1];
-        //enemyInfo.SetActive(true);
-        enemyName.text = BattleManager.Instance.CurrentEnemyList[location].CharacterName;
-        enemyLocation.text = x.ToString() + "，" + y.ToString();
-        enemyImage.sprite = Resources.Load<Sprite>(BattleManager.Instance.CurrentEnemyList[location].EnemyImagePath);
-        enemyHealth.text = BattleManager.Instance.CurrentEnemyList[location].CurrentHealth.ToString()
-        + "/" + BattleManager.Instance.CurrentEnemyList[location].MaxHealth.ToString();
-        enemyShield.text = BattleManager.Instance.CurrentEnemyList[location].CurrentShield.ToString();
+            UIManager.Instance.ChangeCheckerboardColor(Color.yellow, location, enemyData.StepCount, BattleManager.CheckEmptyType.EnemyAttack);
+        enemyInfo.SetActive(true);
+        enemyName.text = enemyData.CharacterName;
+        enemyImage.sprite = Resources.Load<Sprite>(enemyData.EnemyImagePath);
+        enemyHealth.text = enemyData.CurrentHealth.ToString() + "/" + enemyData.MaxHealth.ToString();
+        enemyShield.text = enemyData.CurrentShield.ToString();
     }
 
     public void ChangeTurn()
@@ -214,13 +209,8 @@ public class UIBattle : UIBase
         {
             string key = BattleManager.Instance.CurrentTerrainList.ElementAt(i).Key;
             GameObject terrain = Instantiate(terrainPrefab, terrainTrans);
-            terrain.GetComponent<RectTransform>().anchoredPosition = BattleManager.Instance.CheckerboardTrans
-            .GetChild(BattleManager.Instance.GetCheckerboardPoint(key)).localPosition;
-            /*terrain.ImagePath.sprite = Resources.Load<Sprite>(BattleManager.Instance.CurrentEnemyList[key].EnemyImagePath);
-            BattleManager.Instance.CurrentEnemyList[key].EnemyTrans = enemy.GetComponent<RectTransform>();
-            BattleManager.Instance.CurrentEnemyList[key].CurrentHealth = DataManager
-                .Instance
-                .EnemyList[enemy.EnemyID].MaxHealth;*/
+            RectTransform terrainRect = terrain.GetComponent<RectTransform>();
+            terrainRect.anchoredPosition = BattleManager.Instance.CheckerboardTrans.GetChild(BattleManager.Instance.GetCheckerboardPoint(key)).localPosition;
             yield return null;
         }
         StartCoroutine(UIManager.Instance.RefreshEnemyAlert());
