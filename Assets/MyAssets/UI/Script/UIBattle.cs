@@ -151,8 +151,8 @@ public class UIBattle : UIBase
     {
         float distance = BattleManager.Instance.GetDistance(location);
         EnemyData enemyData = BattleManager.Instance.CurrentEnemyList[location];
-        string playerLocation= BattleManager.Instance.CurrentLocationID;
-        bool checkTerrainObstacles = BattleManager.Instance.CheckTerrainObstacles(location, enemyData.AlertDistance,playerLocation, BattleManager.CheckEmptyType.EnemyAttack);
+        string playerLocation = BattleManager.Instance.CurrentLocationID;
+        bool checkTerrainObstacles = BattleManager.Instance.CheckTerrainObstacles(location, enemyData.AlertDistance, playerLocation, BattleManager.CheckEmptyType.EnemyAttack);
         if (distance <= enemyData.AttackDistance && !checkTerrainObstacles)
             UIManager.Instance.ChangeCheckerboardColor(Color.red, location, enemyData.AttackDistance, BattleManager.CheckEmptyType.EnemyAttack);
         else
@@ -179,7 +179,7 @@ public class UIBattle : UIBase
             Destroy(enemyTrans.GetChild(BattleManager.Instance.CurrentEnemyList.Values.ToList().IndexOf(BattleManager.Instance.CurrentEnemyList[key])).gameObject);
             BattleManager.Instance.CurrentEnemyList.Remove(key);
         }
-
+        BattleManager.Instance.RefreshCheckerboardList();
         if (BattleManager.Instance.CurrentEnemyList.Count == 0)
             BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Win);
     }
@@ -195,10 +195,10 @@ public class UIBattle : UIBase
         for (int i = 0; i < BattleManager.Instance.CurrentEnemyList.Count; i++)
         {
             string key = BattleManager.Instance.CurrentEnemyList.ElementAt(i).Key;
+            int checkerboardPoint = BattleManager.Instance.GetCheckerboardPoint(key);
             Enemy enemy = Instantiate(enemyPrefab, enemyTrans);
             enemy.EnemyLocation = key;
-            enemy.GetComponent<RectTransform>().anchoredPosition = BattleManager.Instance.CheckerboardTrans
-            .GetChild(BattleManager.Instance.GetCheckerboardPoint(key)).localPosition;
+            enemy.GetComponent<RectTransform>().anchoredPosition = BattleManager.Instance.CheckerboardTrans.GetChild(checkerboardPoint).localPosition;
             enemy.EnemyID = BattleManager.Instance.CurrentEnemyList[key].CharacterID;
             enemy.EnemyImage.sprite = Resources.Load<Sprite>(BattleManager.Instance.CurrentEnemyList[key].EnemyImagePath);
             BattleManager.Instance.CurrentEnemyList[key].EnemyTrans = enemy.GetComponent<RectTransform>();
@@ -213,7 +213,6 @@ public class UIBattle : UIBase
             terrainRect.anchoredPosition = BattleManager.Instance.CheckerboardTrans.GetChild(BattleManager.Instance.GetCheckerboardPoint(key)).localPosition;
             yield return null;
         }
-        StartCoroutine(UIManager.Instance.RefreshEnemyAlert());
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Player);
     }
     private void RefreshPotionBag()

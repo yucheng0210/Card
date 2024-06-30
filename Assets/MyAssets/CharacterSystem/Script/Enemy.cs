@@ -9,26 +9,15 @@ using System.Linq;
 public class Enemy : MonoBehaviour
 {
     [SerializeField]
-    private Image alertImage;
-    [SerializeField]
-    private Slider enemyHealthSlider;
-
-    [SerializeField]
-    private Text enemyHealthText;
-
-    [SerializeField]
     private Text enemyAttackIntentText;
     [Header("攻擊意圖")]
     [SerializeField]
     private GameObject enemyAttack;
     [SerializeField]
     private GameObject enemyShield;
+    [SerializeField]
+    private GameObject enemyMove;
 
-    public Image EnemyAlert
-    {
-        get { return alertImage; }
-        set { alertImage = value; }
-    }
     public Image EnemyImage { get; set; }
     public int EnemyID { get; set; }
     public string EnemyLocation { get; set; }
@@ -40,10 +29,12 @@ public class Enemy : MonoBehaviour
         Shield,
         Effect
     }
-
     private void Awake()
     {
         EnemyImage = GetComponent<Image>();
+    }
+    private void Start()
+    {
         EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
         EventManager.Instance.AddEventRegister(EventDefinition.eventMove, EventMove);
     }
@@ -60,8 +51,13 @@ public class Enemy : MonoBehaviour
         {
             string location = BattleManager.Instance.CurrentEnemyList.ElementAt(i).Key;
             float distance = BattleManager.Instance.GetDistance(location);
-            RectTransform enemyTrans = enemyData.EnemyTrans;
-            bool checkTerrainObstacles = BattleManager.Instance.CheckTerrainObstacles(location, enemyData.AlertDistance, BattleManager.Instance.CurrentLocationID, BattleManager.CheckEmptyType.EnemyAttack);
+            string playerLocation = BattleManager.Instance.CurrentLocationID;
+            BattleManager.CheckEmptyType type = BattleManager.CheckEmptyType.EnemyAttack;
+            bool checkTerrainObstacles = BattleManager.Instance.CheckTerrainObstacles(location, enemyData.AlertDistance, playerLocation, type);
+            enemyAttack.SetActive(false);
+            enemyShield.SetActive(false);
+            enemyMove.SetActive(false);
+            enemyAttackIntentText.enabled = true;
             if (distance <= enemyData.AttackDistance && !checkTerrainObstacles)
             {
                 switch (enemyData.AttackOrderStrs[enemyData.CurrentAttackOrder])
@@ -69,10 +65,12 @@ public class Enemy : MonoBehaviour
                     case "Attack":
                         MyAttackType = AttackType.Attack;
                         enemyAttackIntentText.text = randomAttack.ToString();
+                        enemyAttack.SetActive(true);
                         break;
                     case "Shield":
                         MyAttackType = AttackType.Shield;
                         enemyAttackIntentText.text = (randomAttack / 2).ToString();
+                        enemyShield.SetActive(true);
                         break;
                     default:
                         MyAttackType = AttackType.Effect;
@@ -80,12 +78,17 @@ public class Enemy : MonoBehaviour
                 }
             }
             else
+            {
                 MyAttackType = AttackType.Move;
+                enemyAttackIntentText.enabled = false;
+                enemyMove.SetActive(true);
+            }
             EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
         }
     }
     private void EventPlayerTurn(params object[] args)
     {
+        BattleManager.Instance.RefreshCheckerboardList();
         RefrAttackIntent();
     }
     private void EventMove(params object[] args)

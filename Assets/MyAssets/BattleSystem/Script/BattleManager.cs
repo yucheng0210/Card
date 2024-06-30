@@ -189,29 +189,29 @@ public class BattleManager : Singleton<BattleManager>
     }
     private void CheckPlaceEmpty(string place, List<string> emptyPlaceList, CheckEmptyType checkEmptyType)
     {
+        // 檢查 CheckerboardList 是否包含該位置
+        if (!CheckerboardList.ContainsKey(place))
+            return;
+
+        // 取得該位置的狀態
+        string placeStatus = CheckerboardList[place];
         bool isEmpty = false;
-        if (CheckerboardList.ContainsKey(place))
+
+        // 判斷該位置是否空閒或可攻擊
+        if (placeStatus == "Empty")
+            isEmpty = true;
+        else
         {
-            if (CheckerboardList[place] == "Empty")
+            // 根據檢查類型進一步判斷
+            if ((checkEmptyType == CheckEmptyType.PlayerAttack && placeStatus == "Enemy") || (checkEmptyType == CheckEmptyType.EnemyAttack && placeStatus == "Player"))
                 isEmpty = true;
-            else
-            {
-                switch (checkEmptyType)
-                {
-                    case CheckEmptyType.PlayerAttack:
-                        if (CheckerboardList[place] == "Enemy")
-                            isEmpty = true;
-                        break;
-                    case CheckEmptyType.EnemyAttack:
-                        if (CheckerboardList[place] == "Player")
-                            isEmpty = true;
-                        break;
-                }
-            }
         }
+
+        // 如果位置空閒，將其添加到空閒位置列表中
         if (isEmpty)
             emptyPlaceList.Add(place);
     }
+
     public bool CheckTerrainObstacles(string location, int alertDistance, string target, CheckEmptyType checkEmptyType)
     {
         return !GetEmptyPlace(location, alertDistance, checkEmptyType).Contains(target);
@@ -220,8 +220,7 @@ public class BattleManager : Singleton<BattleManager>
     {
         int[] playerNormalPos = ConvertNormalPos(CurrentLocationID);
         int[] enemyNormalPos = ConvertNormalPos(location);
-        float distance = Mathf.Sqrt(Mathf.Pow(playerNormalPos[0] - enemyNormalPos[0], 2)
-         + Mathf.Pow(playerNormalPos[1] - enemyNormalPos[1], 2));
+        float distance = Mathf.Sqrt(Mathf.Pow(playerNormalPos[0] - enemyNormalPos[0], 2) + Mathf.Pow(playerNormalPos[1] - enemyNormalPos[1], 2));
         return distance;
     }
 
@@ -317,7 +316,8 @@ public class BattleManager : Singleton<BattleManager>
     }
     private void Attack()
     {
-        StartCoroutine(UIManager.Instance.RefreshEnemyAlert());
+        //StartCoroutine(UIManager.Instance.RefreshEnemyAlert());
+        RefreshCheckerboardList();
     }
     private void Explore()
     {

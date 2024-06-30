@@ -142,22 +142,6 @@ public class UIManager : Singleton<UIManager>
         }
     }
 
-    public IEnumerator RefreshEnemyAlert()
-    {
-        BattleManager.Instance.RefreshCheckerboardList();
-        yield return null;
-        for (int i = 0; i < BattleManager.Instance.CurrentEnemyList.Count; i++)
-        {
-            string location = BattleManager.Instance.CurrentEnemyList.ElementAt(i).Key;
-
-            bool checkTerrainObstacles = BattleManager.Instance.
-            CheckTerrainObstacles(location, BattleManager.Instance.CurrentEnemyList[location].AlertDistance
-            , BattleManager.Instance.CurrentLocationID, BattleManager.CheckEmptyType.EnemyAttack);
-
-            BattleManager.Instance.CurrentEnemyList.ElementAt(i).Value.EnemyTrans.GetComponent<Enemy>().EnemyAlert.enabled =
-            /*BattleManager.Instance.GetDistance(location) <= BattleManager.Instance.CurrentEnemyList[location].AlertDistance && !checkTerrainObstacles*/false;
-        }
-    }
     public void ClearMoveClue(bool canRemove)
     {
         RectTransform checkerboardTrans = BattleManager.Instance.CheckerboardTrans;
@@ -174,8 +158,8 @@ public class UIManager : Singleton<UIManager>
         List<string> emptyPlaceList = BattleManager.Instance.GetEmptyPlace(location, stepCount, checkEmptyType);
         for (int i = 0; i < emptyPlaceList.Count; i++)
         {
-            RectTransform emptyPlace = BattleManager.Instance.CheckerboardTrans
-           .GetChild(BattleManager.Instance.GetCheckerboardPoint(emptyPlaceList[i])).GetComponent<RectTransform>();
+            int checkerboardPoint = BattleManager.Instance.GetCheckerboardPoint(emptyPlaceList[i]);
+            RectTransform emptyPlace = BattleManager.Instance.CheckerboardTrans.GetChild(checkerboardPoint).GetComponent<RectTransform>();
             emptyPlace.GetComponent<Image>().color = color;
         }
     }
@@ -186,8 +170,8 @@ public class UIManager : Singleton<UIManager>
         Color color = new Color(1, 1, 1, 0);
         for (int i = 0; i < emptyPlaceList.Count; i++)
         {
-            RectTransform emptyPlace = BattleManager.Instance.CheckerboardTrans
-           .GetChild(BattleManager.Instance.GetCheckerboardPoint(emptyPlaceList[i])).GetComponent<RectTransform>();
+            int checkerboardPoint = BattleManager.Instance.GetCheckerboardPoint(emptyPlaceList[i]);
+            RectTransform emptyPlace = BattleManager.Instance.CheckerboardTrans.GetChild(checkerboardPoint).GetComponent<RectTransform>();
             emptyPlace.GetComponent<Image>().color = color;
         }
     }
