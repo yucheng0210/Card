@@ -4,15 +4,14 @@ using UnityEngine;
 
 public class CantMoveEffect : IEffect
 {
-    public Sprite EffectIcon { get; private set; }
-    
+
     public void ApplyEffect(int value, string target)
     {
         BattleManager.Instance.CurrentNegativeState.Add(BattleManager.NegativeState.CantMove);
     }
 
-    public void SetIcon()
+    public Sprite SetIcon()
     {
-       
+        return Resources.Load<Sprite>("");
     }
 }

@@ -4,14 +4,12 @@ using UnityEngine;
 
 public class BurnEffect : IEffect
 {
-    public Sprite EffectIcon { get; private set; }
-
     public void ApplyEffect(int value, string target)
     {
         BattleManager.Instance.TakeDamage(BattleManager.Instance.CurrentEnemyList[target], 2, target);
     }
 
-    public void SetIcon()
+    Sprite IEffect.SetIcon()
     {
         throw new System.NotImplementedException();
     }

@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class FireBallEffect : IEffect
 {
-    public Sprite EffectIcon { get; private set; }
-
     public void ApplyEffect(int value, string target)
     {
         int mana = DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].Mana;
@@ -15,7 +13,7 @@ public class FireBallEffect : IEffect
         BattleManager.Instance.ConsumeMana(mana);
     }
 
-    public void SetIcon()
+    Sprite IEffect.SetIcon()
     {
         throw new System.NotImplementedException();
     }

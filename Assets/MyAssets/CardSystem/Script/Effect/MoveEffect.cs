@@ -10,8 +10,6 @@ public class MoveEffect : IEffect
     private List<UnityEngine.Events.UnityAction> removeList = new();
     private List<string> emptyPlaceList;
 
-    public Sprite EffectIcon { get; private set; }
-
     public void ApplyEffect(int value, string target)
     {
         emptyPlaceList = BattleManager.Instance.GetEmptyPlace(BattleManager.Instance.CurrentLocationID, value, BattleManager.CheckEmptyType.Move);
@@ -29,11 +27,6 @@ public class MoveEffect : IEffect
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.UsingEffect);
     }
 
-    public void SetIcon()
-    {
-        throw new NotImplementedException();
-    }
-
     private void Move(Vector2 destination, string locationID, int value)
     {
         for (int i = 0; i < emptyPlaceList.Count; i++)
@@ -48,5 +41,10 @@ public class MoveEffect : IEffect
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Attack);
         EventManager.Instance.DispatchEvent(EventDefinition.eventMove);
         BattleManager.Instance.RefreshCheckerboardList();
+    }
+
+    Sprite IEffect.SetIcon()
+    {
+        throw new NotImplementedException();
     }
 }

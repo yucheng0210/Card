@@ -4,14 +4,12 @@ using UnityEngine;
 
 public class IncreaseManaEffect : IEffect
 {
-    public Sprite EffectIcon { get; private set; }
-
     public void ApplyEffect(int value, string target)
     {
         DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].Mana += value;
     }
 
-    public void SetIcon()
+    Sprite IEffect.SetIcon()
     {
         throw new System.NotImplementedException();
     }

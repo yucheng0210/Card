@@ -74,6 +74,7 @@ public class Enemy : MonoBehaviour
                         break;
                     default:
                         MyAttackType = AttackType.Effect;
+                        enemyAttackIntentText.enabled = false;
                         break;
                 }
             }

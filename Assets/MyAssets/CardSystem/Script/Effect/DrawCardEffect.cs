@@ -4,14 +4,12 @@ using UnityEngine;
 
 public class DrawCardEffect : IEffect
 {
-    public Sprite EffectIcon { get; private set; }
-
     public void ApplyEffect(int value, string target)
     {
         EventManager.Instance.DispatchEvent(EventDefinition.eventDrawCard, value);
     }
 
-    public void SetIcon()
+    Sprite IEffect.SetIcon()
     {
         throw new System.NotImplementedException();
     }

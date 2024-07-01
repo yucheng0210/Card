@@ -4,15 +4,12 @@ using UnityEngine;
 
 public class IncreaseHealth : IEffect
 {
-    public Sprite EffectIcon { get; private set; }
-
     public void ApplyEffect(int value, string target)
     {
         PlayerData playerData = DataManager.Instance.PlayerList[DataManager.Instance.PlayerID];
         playerData.CurrentHealth += playerData.MaxHealth * value / 100;
     }
-
-    public void SetIcon()
+    Sprite IEffect.SetIcon()
     {
         throw new System.NotImplementedException();
     }
