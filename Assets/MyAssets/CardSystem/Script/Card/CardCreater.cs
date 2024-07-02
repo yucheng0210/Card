@@ -273,7 +273,6 @@ public class CardCreater : MonoBehaviour
         {
             string location = BattleManager.Instance.CurrentEnemyList.ElementAt(i).Key;
             string newLocation = location;
-            float distance = BattleManager.Instance.GetDistance(location);
             EnemyData enemyData = BattleManager.Instance.CurrentEnemyList[location];
             int stepCount = enemyData.StepCount;
             RectTransform enemyTrans = enemyData.EnemyTrans;

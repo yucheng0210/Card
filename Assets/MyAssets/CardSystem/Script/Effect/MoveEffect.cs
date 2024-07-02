@@ -27,7 +27,7 @@ public class MoveEffect : IEffect
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.UsingEffect);
     }
 
-    private void Move(Vector2 destination, string locationID, int value)
+    private void Move(Vector3 destination, string locationID, int value)
     {
         for (int i = 0; i < emptyPlaceList.Count; i++)
         {

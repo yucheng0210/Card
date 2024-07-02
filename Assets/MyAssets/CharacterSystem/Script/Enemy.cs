@@ -5,12 +5,15 @@ using System.Net.NetworkInformation;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
+using UnityEditor.Animations;
 
 public class Enemy : MonoBehaviour
 {
     [SerializeField]
     private Text enemyAttackIntentText;
     [Header("攻擊意圖")]
+    [SerializeField]
+    private GameObject enemyEffect;
     [SerializeField]
     private GameObject enemyAttack;
     [SerializeField]
@@ -19,6 +22,7 @@ public class Enemy : MonoBehaviour
     private GameObject enemyMove;
 
     public Image EnemyImage { get; set; }
+    public Animator MyAnimator { get; set; }
     public int EnemyID { get; set; }
     public string EnemyLocation { get; set; }
     public AttackType MyAttackType { get; set; }
@@ -32,6 +36,7 @@ public class Enemy : MonoBehaviour
     private void Awake()
     {
         EnemyImage = GetComponent<Image>();
+        MyAnimator = GetComponent<Animator>();
     }
     private void Start()
     {
@@ -57,10 +62,12 @@ public class Enemy : MonoBehaviour
             enemyAttack.SetActive(false);
             enemyShield.SetActive(false);
             enemyMove.SetActive(false);
+            enemyEffect.SetActive(false);
             enemyAttackIntentText.enabled = true;
             if (distance <= enemyData.AttackDistance && !checkTerrainObstacles)
             {
-                switch (enemyData.AttackOrderStrs[enemyData.CurrentAttackOrder])
+                string attackOrder = enemyData.AttackOrderStrs[enemyData.CurrentAttackOrder];
+                switch (attackOrder)
                 {
                     case "Attack":
                         MyAttackType = AttackType.Attack;
@@ -75,6 +82,8 @@ public class Enemy : MonoBehaviour
                     default:
                         MyAttackType = AttackType.Effect;
                         enemyAttackIntentText.enabled = false;
+                        enemyEffect.GetComponent<Image>().sprite = EffectFactory.Instance.CreateEffect(attackOrder).SetIcon();
+                        enemyEffect.SetActive(true);
                         break;
                 }
             }

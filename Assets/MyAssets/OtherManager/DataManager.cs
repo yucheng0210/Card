@@ -136,7 +136,8 @@ public class DataManager : Singleton<DataManager>
                 StepCount = int.Parse(row[6]),
                 AttackDistance = int.Parse(row[7]),
                 AlertDistance = int.Parse(row[8]),
-                AttackOrderStrs = row[9].Split(";")
+                AttackOrderStrs = row[9].Split(";"),
+                EnemyAniPath = row[10]
             };
             EnemyList.Add(enemyData.CharacterID, enemyData);
         }

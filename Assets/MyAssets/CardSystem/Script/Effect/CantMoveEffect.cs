@@ -12,6 +12,6 @@ public class CantMoveEffect : IEffect
 
     public Sprite SetIcon()
     {
-        return Resources.Load<Sprite>("");
+        return Resources.Load<Sprite>("EffectImage/CantMove");
     }
 }

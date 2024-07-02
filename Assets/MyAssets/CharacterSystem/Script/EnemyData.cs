@@ -9,6 +9,7 @@ public class EnemyData : CharacterData
     public int CurrentAttack { get; set; }
     public int StepCount { get; set; }
     public string EnemyImagePath { get; set; }
+    public string EnemyAniPath { get; set; }
     public RectTransform EnemyTrans { get; set; }
     public string EnemyLocation { get; set; }
     public int AlertDistance { get; set; }

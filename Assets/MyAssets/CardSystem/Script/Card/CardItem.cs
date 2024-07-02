@@ -86,7 +86,7 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     }
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (BattleManager.Instance.IsDrag || CantMove)
+        if (BattleManager.Instance.IsDrag || CantMove || BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack)
             return;
         index = transform.GetSiblingIndex();
         Quaternion zeroRotation = Quaternion.Euler(0, 0, 0);
@@ -117,7 +117,7 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        if (BattleManager.Instance.IsDrag && !isAttackCard || CantMove)
+        if (BattleManager.Instance.IsDrag && !isAttackCard || CantMove || BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack)
             return;
         transform.DOScale(1.5f, moveTime);
         transform.DORotateQuaternion(Quaternion.Euler(0, 0, BattleManager.Instance.CardAngleList[index]), moveTime);
@@ -138,14 +138,14 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        if (CantMove)
+        if (CantMove || BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack)
             return;
         isAttackCard = DataManager.Instance.CardList[CardID].CardType == "攻擊" ? true : false;
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        if (CantMove)
+        if (CantMove || BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack)
             return;
         BattleManager.Instance.IsDrag = true;
         Cursor.visible = false;
@@ -175,7 +175,7 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        if (CantMove)
+        if (CantMove|| BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack)
             return;
         BattleManager.Instance.IsDrag = false;
         Cursor.visible = true;

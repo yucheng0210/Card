@@ -295,7 +295,7 @@ public class BattleManager : Singleton<BattleManager>
         CurrentLocationID = MapManager.Instance.MapNodes[levelCount][levelID].l.PlayerStartPos;
         DataManager.Instance.PlayerList[playerID].CurrentActionPoint = DataManager.Instance.PlayerList[playerID].MaxActionPoint;
         DataManager.Instance.PlayerList[playerID].Mana = 0;
-        PlayerTrans.anchoredPosition = CheckerboardTrans.GetChild(GetCheckerboardPoint(CurrentLocationID)).localPosition;
+        PlayerTrans.localPosition = CheckerboardTrans.GetChild(GetCheckerboardPoint(CurrentLocationID)).localPosition;
         for (int i = 0; i < DataManager.Instance.SkillList[skillID].SkillContent.Count; i++)
         {
             CurrentAbilityList.Add(DataManager.Instance.SkillList[skillID].SkillContent[i].Item1, DataManager.Instance.SkillList[skillID].SkillContent[i].Item2);
