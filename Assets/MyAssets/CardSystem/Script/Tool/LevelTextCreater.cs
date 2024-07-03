@@ -10,10 +10,10 @@ public class LevelTextCreater : MonoBehaviour
     {
         string s = "";
         List<Vector2> removeList = new List<Vector2>();
-        for (int i = 0; i < 999; i++)
+        for (int i = 0; i < 333; i++)
         {
-            int enemy = Random.Range(1, 4);
-            int terrain = Random.Range(1, 6);
+            int enemy = Random.Range(4, 6);
+            int terrain = Random.Range(3, 7);
             s += "1001,小怪,";
             for (int j = 0; j < enemy; j++)
             {
@@ -24,7 +24,7 @@ public class LevelTextCreater : MonoBehaviour
                     j--;
                     continue;
                 }
-                int enemyID = Random.Range(1001, 1006);
+                int enemyID = Random.Range(1001, 1005);
                 if (j == enemy - 1)
                     s += x + " " + y + "=" + enemyID + ",";
                 else

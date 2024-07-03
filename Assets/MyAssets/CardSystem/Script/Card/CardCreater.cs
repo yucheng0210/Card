@@ -273,6 +273,8 @@ public class CardCreater : MonoBehaviour
         {
             string location = BattleManager.Instance.CurrentEnemyList.ElementAt(i).Key;
             string newLocation = location;
+            int locationX = BattleManager.Instance.ConvertNormalPos(location)[0];
+            int playerLocationX = BattleManager.Instance.ConvertNormalPos(BattleManager.Instance.CurrentLocationID)[0];
             EnemyData enemyData = BattleManager.Instance.CurrentEnemyList[location];
             int stepCount = enemyData.StepCount;
             RectTransform enemyTrans = enemyData.EnemyTrans;
@@ -285,6 +287,10 @@ public class CardCreater : MonoBehaviour
                     emptyPlaceList.Remove(movedLocationList[j]);
             }
             yield return new WaitForSecondsRealtime(0.5f);
+            if (playerLocationX >= locationX)
+                enemyTrans.localRotation = Quaternion.Euler(0, 0, 0);
+            else
+                enemyTrans.localRotation = Quaternion.Euler(0, 180, 0);
             switch (enemy.MyAttackType)
             {
                 case Enemy.AttackType.Move:

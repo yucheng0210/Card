@@ -75,43 +75,51 @@ public class UIMap : UIBase
             {
                 int id = j;
                 int count = i;
-                int randomIndex = Random.Range(1001, 1999); ;
+                int simpleRandomIndex = Random.Range(1001, 1334);
+                int normalRandomIndex = Random.Range(1001, 1667);
+                int hardRandomIndex = Random.Range(1001, 2000);
+                int currentIndex = 0;
+                int cumulativeProbability = 0;
                 for (int k = 0; k < levelProbabilities.Count; k++)
                 {
                     int value = levelProbabilities.ElementAt(k).Value;
                     string key = levelProbabilities.ElementAt(k).Key;
                     int randomValue = Random.Range(0, 100);
-                    int cumulativeProbability = 0;
-                    if (value > randomValue)
+                    cumulativeProbability += value;
+                    if (cumulativeProbability > randomValue)
                     {
-                        cumulativeProbability += value;
                         switch (key)
                         {
                             case "BATTLE":
-                                randomIndex = Random.Range(1001, 1999);
+                                if (count > 10)
+                                    currentIndex = hardRandomIndex;
+                                else if (count > 5)
+                                    currentIndex = normalRandomIndex;
+                                else
+                                    currentIndex = simpleRandomIndex;
                                 break;
                             case "BOSS":
-                                randomIndex = Random.Range(2001, 2001);
+                                currentIndex = Random.Range(2001, 2003);
                                 break;
                             case "RANDOM":
-                                randomIndex = Random.Range(3001, 3001);
+                                currentIndex = 3001;
                                 break;
                             case "RECOVER":
-                                randomIndex = Random.Range(4001, 4001);
+                                currentIndex = 4001;
                                 break;
                             case "SHOP":
-                                randomIndex = Random.Range(5001, 5001);
+                                currentIndex = 5001;
                                 break;
                         }
                         break;
                     }
                 }
-                if (removeList.Contains(randomIndex) || (DataManager.Instance.LevelTypeList[randomIndex].LevelType != "BATTLE" && count == 0))
+                if (removeList.Contains(currentIndex) || (DataManager.Instance.LevelTypeList[currentIndex].LevelType != "BATTLE" && count == 0))
                 {
                     j--;
                     continue;
                 }
-                Level level = DataManager.Instance.LevelTypeList[randomIndex];
+                Level level = DataManager.Instance.LevelTypeList[currentIndex];
                 level.LevelParentList = new List<int>();
                 level.LevelID = i * 5 + j;
                 if (MapManager.Instance.MapNodes[i][j].left != null)
@@ -134,7 +142,6 @@ public class UIMap : UIBase
             }
         }
         CanEnterEffect();
-
     }
     private void SetMapTypeImage(Image mapImage, string mapType)
     {
@@ -166,8 +173,6 @@ public class UIMap : UIBase
         bool cantEnter = true;
         if ((MapManager.Instance.LevelCount == 0 && count == 0) || (MapManager.Instance.MapNodes[count][id].l.LevelActive && MapManager.Instance.LevelCount == count))
             cantEnter = false;
-        else
-            cantEnter = true;
         return cantEnter;
     }
     private void CanEnterEffect()
