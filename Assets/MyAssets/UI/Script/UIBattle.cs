@@ -37,6 +37,10 @@ public class UIBattle : UIBase
 
     [SerializeField]
     private Button changeTurnButton;
+    [SerializeField]
+    private Button playerMoveButton;
+    [SerializeField]
+    private Transform playerMoveGridTrans;
 
     [Header("敵人")]
     [SerializeField]
@@ -85,6 +89,7 @@ public class UIBattle : UIBase
     {
         base.Start();
         changeTurnButton.onClick.AddListener(ChangeTurn);
+        playerMoveButton.onClick.AddListener(PlayerMove);
         BattleManager.Instance.CheckerboardTrans = checkerboardTrans;
         EventManager.Instance.AddEventRegister(EventDefinition.eventRefreshUI, EventRefreshUI);
         EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
@@ -114,6 +119,7 @@ public class UIBattle : UIBase
             battleInfoList[id].triggers.Add(entryEnter);
             battleInfoList[id].triggers.Add(entryExit);
         }
+        BattleManager.Instance.PlayerMoveCount++;
     }
     private void CheckEnemyInfo()
     {
@@ -132,6 +138,8 @@ public class UIBattle : UIBase
             entryEnter.callback.AddListener((arg) => { RefreshEnemyInfo(location); });
             entryExit.callback.AddListener((arg) =>
             {
+                if (BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack)
+                    return;
                 UIManager.Instance.ClearCheckerboardColor(location, enemyData.StepCount, BattleManager.CheckEmptyType.EnemyAttack);
             });
             eventTrigger.triggers.Add(entryEnter);
@@ -149,6 +157,8 @@ public class UIBattle : UIBase
     }
     private void RefreshEnemyInfo(string location)
     {
+        if (BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack)
+            return;
         float distance = BattleManager.Instance.GetDistance(location);
         EnemyData enemyData = BattleManager.Instance.CurrentEnemyList[location];
         string playerLocation = BattleManager.Instance.CurrentLocationID;
@@ -164,14 +174,18 @@ public class UIBattle : UIBase
         enemyShield.text = enemyData.CurrentShield.ToString();
     }
 
-    public void ChangeTurn()
+    private void ChangeTurn()
     {
         if (BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack)
             return;
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Enemy);
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
-
+    private void PlayerMove()
+    {
+        BattleManager.Instance.ChangeTurn(BattleManager.BattleType.UsingEffect);
+        EffectFactory.Instance.CreateEffect("MoveEffect").ApplyEffect(BattleManager.Instance.PlayerMoveCount, "Player");
+    }
     private void RemoveEnemy(string key)
     {
         if (BattleManager.Instance.CurrentEnemyList[key].CurrentHealth <= 0)
@@ -214,6 +228,7 @@ public class UIBattle : UIBase
             terrainRect.anchoredPosition = BattleManager.Instance.CheckerboardTrans.GetChild(BattleManager.Instance.GetCheckerboardPoint(key)).localPosition;
             yield return null;
         }
+        BattleManager.Instance.PlayerMoveCount = 2;
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Player);
     }
     private void RefreshPotionBag()
@@ -310,5 +325,13 @@ public class UIBattle : UIBase
         cardBagCountText.text = DataManager.Instance.CardBag.Count.ToString();
         usedCardBagCountText.text = DataManager.Instance.UsedCardBag.Count.ToString();
         removeCardBagCountText.text = DataManager.Instance.RemoveCardBag.Count.ToString();
+        for (int i = 0; i < playerMoveGridTrans.childCount; i++)
+        {
+            playerMoveGridTrans.GetChild(i).gameObject.SetActive(false);
+        }
+        for (int i = 0; i < BattleManager.Instance.PlayerMoveCount; i++)
+        {
+            playerMoveGridTrans.GetChild(i).gameObject.SetActive(true);
+        }
     }
 }

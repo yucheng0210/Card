@@ -26,6 +26,17 @@ public class BattleManager : Singleton<BattleManager>
         CantMove
     }
     //玩家
+    private int playerMoveCount;
+    public int PlayerMoveCount
+    {
+        get { return playerMoveCount; }
+        set
+        {
+            playerMoveCount = value;
+            if (playerMoveCount > 2)
+                playerMoveCount = 2;
+        }
+    }
     public BattleType MyBattleType { get; set; }
     public List<NegativeState> CurrentNegativeState { get; set; }
     public List<CardItem> CardItemList { get; set; }

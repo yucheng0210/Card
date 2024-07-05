@@ -35,10 +35,12 @@ public class MoveEffect : IEffect
             RectTransform emptyPlace = BattleManager.Instance.CheckerboardTrans.GetChild(checkerboardPoint).GetComponent<RectTransform>();
             emptyPlace.GetComponent<Button>().onClick.RemoveListener(removeList[i]);
         }
+        BattleManager.Instance.PlayerMoveCount -= value;
         UIManager.Instance.ClearCheckerboardColor(BattleManager.Instance.CurrentLocationID, value, BattleManager.CheckEmptyType.Move);
         BattleManager.Instance.CurrentLocationID = locationID;
         BattleManager.Instance.PlayerTrans.DOAnchorPos(destination, 0.5f);
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Attack);
+        EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
         EventManager.Instance.DispatchEvent(EventDefinition.eventMove);
         BattleManager.Instance.RefreshCheckerboardList();
     }
