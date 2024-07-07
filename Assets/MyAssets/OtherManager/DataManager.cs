@@ -9,7 +9,6 @@ public class DataManager : Singleton<DataManager>
     private readonly string cardListPath = Application.streamingAssetsPath + "/CARDLIST.csv";
     private readonly string playerListPath = Application.streamingAssetsPath + "/PLAYERLIST.csv";
     private readonly string enemyListPath = Application.streamingAssetsPath + "/ENEMYLIST.csv";
-    private readonly string levelListPath = Application.streamingAssetsPath + "/LEVELLIST.csv";
     private readonly string levelTypeListPath = Application.streamingAssetsPath + "/LEVELTYPELIST.csv";
     private readonly string itemListPath = Application.streamingAssetsPath + "/ITEMLIST.csv";
     private readonly string dialogDataListPath = Application.streamingAssetsPath + "/DialogData";
@@ -351,20 +350,18 @@ public class DataManager : Singleton<DataManager>
         MoneyCount = 0;
         PlayerID = 1001;
         CardData cardData;
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < 6; i++)
         {
             cardData = CardList[1001];
             CardBag.Add(cardData);
+        }
+        for (int i = 0; i < 4; i++)
+        {
             cardData = CardList[1002];
-            CardBag.Add(cardData);
-            cardData = CardList[1004];
             CardBag.Add(cardData);
         }
         CardBag.Add(CardList[1003]);
         CardBag.Add(CardList[1003]);
-        CardBag.Add(CardList[1005]);
-        CardBag.Add(CardList[1005]);
-        CardBag.Add(CardList[3001]);
         BackpackManager.Instance.AddItem(3001, Backpack);
         PotionBag.Add(ItemList[1001]);
         // PlayerList[PlayerID].CharacterPos = LevelList[LevelID].PlayerStartPos;

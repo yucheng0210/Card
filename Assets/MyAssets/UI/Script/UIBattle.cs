@@ -161,9 +161,7 @@ public class UIBattle : UIBase
             return;
         float distance = BattleManager.Instance.GetDistance(location);
         EnemyData enemyData = BattleManager.Instance.CurrentEnemyList[location];
-        string playerLocation = BattleManager.Instance.CurrentLocationID;
-        bool checkTerrainObstacles = BattleManager.Instance.CheckTerrainObstacles(location, enemyData.AlertDistance, playerLocation, BattleManager.CheckEmptyType.EnemyAttack);
-        if (distance <= enemyData.AttackDistance && !checkTerrainObstacles)
+        if (distance <= enemyData.AttackDistance)
             UIManager.Instance.ChangeCheckerboardColor(Color.red, location, enemyData.AttackDistance, BattleManager.CheckEmptyType.EnemyAttack);
         else
             UIManager.Instance.ChangeCheckerboardColor(Color.yellow, location, enemyData.StepCount, BattleManager.CheckEmptyType.EnemyAttack);
@@ -183,6 +181,9 @@ public class UIBattle : UIBase
     }
     private void PlayerMove()
     {
+        if (BattleManager.Instance.PlayerMoveCount <= 0 || BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack
+        || BattleManager.Instance.CurrentNegativeState.Contains(BattleManager.NegativeState.CantMove))
+            return;
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.UsingEffect);
         EffectFactory.Instance.CreateEffect("MoveEffect").ApplyEffect(BattleManager.Instance.PlayerMoveCount, "Player");
     }
@@ -192,6 +193,9 @@ public class UIBattle : UIBase
         {
             Destroy(enemyTrans.GetChild(BattleManager.Instance.CurrentEnemyList.Values.ToList().IndexOf(BattleManager.Instance.CurrentEnemyList[key])).gameObject);
             BattleManager.Instance.CurrentEnemyList.Remove(key);
+            ClearAllEventTriggers();
+            CheckEnemyInfo();
+            CheckBattleInfo();
         }
         BattleManager.Instance.RefreshCheckerboardList();
         if (BattleManager.Instance.CurrentEnemyList.Count == 0)

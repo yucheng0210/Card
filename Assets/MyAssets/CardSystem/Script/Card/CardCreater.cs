@@ -235,7 +235,7 @@ public class CardCreater : MonoBehaviour
 
     private IEnumerator PlayerDrawCard()
     {
-        yield return (UIManager.Instance.FadeOutIn(roundTip.GetComponent<CanvasGroup>(), 0.5f, 1, false)); // 執行 UI 淡入淡出效果
+        yield return UIManager.Instance.FadeOutIn(roundTip.GetComponent<CanvasGroup>(), 0.5f, 1, false); // 執行 UI 淡入淡出效果
         StartCoroutine(DrawCard(DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].DefaultDrawCardCout));
     }
 
@@ -255,14 +255,7 @@ public class CardCreater : MonoBehaviour
                 );
         }
     }
-    private void CheckTrap(string location)
-    {
-        for (int i = 0; i < BattleManager.Instance.CurrentTrapList.Count; i++)
-        {
-            // if (BattleManager.Instance.CurrentTrapList.ContainsKey(location))
-            //  EffectFactory.Instance.CreateEffect(BattleManager.Instance.CurrentTrapList[location]).ApplyEffect();
-        }
-    }
+
     private IEnumerator EnemyAttack()
     {
         Dictionary<string, EnemyData> newCurrentEnemyList = new();
@@ -288,9 +281,9 @@ public class CardCreater : MonoBehaviour
             }
             yield return new WaitForSecondsRealtime(0.5f);
             if (playerLocationX >= locationX)
-                enemyTrans.localRotation = Quaternion.Euler(0, 0, 0);
+                enemy.EnemyImage.transform.localRotation = Quaternion.Euler(0, 0, 0);
             else
-                enemyTrans.localRotation = Quaternion.Euler(0, 180, 0);
+                enemy.EnemyImage.transform.localRotation = Quaternion.Euler(0, 180, 0);
             switch (enemy.MyAttackType)
             {
                 case Enemy.AttackType.Move:
@@ -313,7 +306,9 @@ public class CardCreater : MonoBehaviour
                     newCurrentEnemyList.Add(newLocation, enemyData);
                     movedLocationList.Add(newLocation);
                     enemyData.CurrentAttackOrder--;
-                    yield return new WaitForSecondsRealtime(1);
+                    enemy.MyAnimator.SetBool("isRunning", true);
+                    yield return new WaitForSecondsRealtime(0.5f);
+                    enemy.MyAnimator.SetBool("isRunning", false);
                     break;
                 case Enemy.AttackType.Attack:
                     BattleManager.Instance.TakeDamage(playerData, enemyData.CurrentAttack, BattleManager.Instance.CurrentLocationID);

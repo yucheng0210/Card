@@ -33,12 +33,7 @@ public class UIManager : Singleton<UIManager>
         }
     }
 
-    public IEnumerator FadeOutIn(
-        CanvasGroup canvasGroup,
-        float fadeTime,
-        float waitTime,
-        bool canDestroy
-    )
+    public IEnumerator FadeOutIn(CanvasGroup canvasGroup, float fadeTime, float waitTime, bool canDestroy)
     {
         while (canvasGroup.alpha < 1)
         {
@@ -75,9 +70,7 @@ public class UIManager : Singleton<UIManager>
 
     public Vector2 GetBezierCurve(Vector2 start, Vector2 mid, Vector2 end, float t)
     {
-        return Mathf.Pow(1.0f - t, 2) * start
-            + 2.0f * t * (1.0f - t) * mid
-            + Mathf.Pow(t, 2) * end;
+        return Mathf.Pow(1.0f - t, 2) * start + 2.0f * t * (1.0f - t) * mid + Mathf.Pow(t, 2) * end;
     }
     private void CreateNewItem(Item item, BackpackSlot slotPrefab, Transform slotGroupTrans)
     {
@@ -92,20 +85,7 @@ public class UIManager : Singleton<UIManager>
         newItem.SlotCount.text = item.ItemHeld.ToString();
     }
 
-    /*   private void CreateNewItem(Quest quest, QuestSlot slotPrefab, Transform slotGroupTrans)
-       {
-           QuestSlot newItem = Instantiate(slotPrefab, slotGroupTrans.position, Quaternion.identity);
-           newItem.gameObject.transform.SetParent(slotGroupTrans, false);
-           newItem.MyQuest = quest;
-           newItem.SlotName.text = quest.TheName;
-           newItem.NPCName.text = quest.NPC;
-       }*/
-
-    public void RefreshItem(
-        BackpackSlot slotPrefab,
-        Transform slotGroupTrans,
-        Dictionary<int, Item> inventory
-    )
+    public void RefreshItem(BackpackSlot slotPrefab, Transform slotGroupTrans, Dictionary<int, Item> inventory)
     {
         for (int i = 0; i < slotGroupTrans.childCount; i++)
             Destroy(slotGroupTrans.GetChild(i).gameObject);

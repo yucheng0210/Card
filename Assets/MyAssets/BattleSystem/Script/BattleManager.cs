@@ -134,62 +134,28 @@ public class BattleManager : Singleton<BattleManager>
         int maxX = point.x + stepCount;
         int minY = point.y - stepCount;
         int maxY = point.y + stepCount;
-        for (int x = minX + 1; x <= maxX - 1; x++)
-        {
-            for (int y = minY + 1; y <= maxY - 1; y++)
-            {
-                CheckPlaceEmpty(ConvertCheckerboardPos(x, y), emptyPlaceList, checkEmptyType);
-            }
-        }
+
         for (int x = minX; x <= maxX; x++)
         {
             for (int y = minY; y <= maxY; y++)
             {
-                if ((x == minX && y == point.y) || (x == maxX && y == point.y) || (y == minY && x == point.x) || (y == maxY && x == point.x))
-                    CheckPlaceEmpty(ConvertCheckerboardPos(x, y), emptyPlaceList, checkEmptyType);
+                // 跳過起始點
+                if (x == point.x && y == point.y)
+                    continue;
+
+                bool isInnerCircle = x > minX && x < maxX && y > minY && y < maxY;
+                bool isBoundary = (x == minX && y == point.y) || (x == maxX && y == point.y) || (y == minY && x == point.x) || (y == maxY && x == point.x);
+                if (isInnerCircle || isBoundary)
+                {
+                    string targetPos = ConvertCheckerboardPos(x, y);
+                    if (CheckPlaceEmpty(targetPos, checkEmptyType) && CheckUnBlock(location, targetPos))
+                    {
+                        emptyPlaceList.Add(targetPos);
+                    }
+                }
             }
         }
 
-        /*int x = pos[0];
-        int y = pos[1];
-        string up = "", down = "", left = "", right = "", upRight = "", upLeft = "", downRight = "", downLeft = "";
-        for (int i = 1; i <= stepCount; i++)
-        {
-            if (up != "CantMove")
-                up = ConvertCheckerboardPos(x, y + i);
-            if (down != "CantMove")
-                down = ConvertCheckerboardPos(x, y - i);
-            if (left != "CantMove")
-                left = ConvertCheckerboardPos(x - i, y);
-            if (right != "CantMove")
-                right = ConvertCheckerboardPos(x + i, y);
-            //上
-            up = CheckPlaceEmpty(up, emptyPlaceList, checkEmptyType);
-            //下
-            down = CheckPlaceEmpty(down, emptyPlaceList, checkEmptyType);
-            //左
-            left = CheckPlaceEmpty(left, emptyPlaceList, checkEmptyType);
-            //右
-            right = CheckPlaceEmpty(right, emptyPlaceList, checkEmptyType);
-            if (i == stepCount)
-                break;
-            if (upRight != "CantMove")
-                upRight = ConvertCheckerboardPos(x + i, y + i);
-            if (upLeft != "CantMove")
-                upLeft = ConvertCheckerboardPos(x - i, y + i);
-            if (downRight != "CantMove")
-                downRight = ConvertCheckerboardPos(x + i, y - i);
-            if (downLeft != "CantMove")
-                downLeft = ConvertCheckerboardPos(x - i, y - i);
-            //右上
-            upRight = CheckPlaceEmpty(upRight, emptyPlaceList, checkEmptyType);
-            //左上
-            upLeft = CheckPlaceEmpty(upLeft, emptyPlaceList, checkEmptyType);
-            //右下
-            downRight = CheckPlaceEmpty(downRight, emptyPlaceList, checkEmptyType);
-            //左下
-            downLeft = CheckPlaceEmpty(downLeft, emptyPlaceList, checkEmptyType);
-        }*/
         return emptyPlaceList;
     }
     public enum CheckEmptyType
@@ -198,34 +164,35 @@ public class BattleManager : Singleton<BattleManager>
         EnemyAttack,
         Move
     }
-    private void CheckPlaceEmpty(string place, List<string> emptyPlaceList, CheckEmptyType checkEmptyType)
+    private bool CheckPlaceEmpty(string place, CheckEmptyType checkEmptyType)
     {
-        // 檢查 CheckerboardList 是否包含該位置
         if (!CheckerboardList.ContainsKey(place))
-            return;
-
-        // 取得該位置的狀態
+            return false;
         string placeStatus = CheckerboardList[place];
-        bool isEmpty = false;
+        if ((checkEmptyType == CheckEmptyType.PlayerAttack && placeStatus == "Enemy") || (checkEmptyType == CheckEmptyType.EnemyAttack && placeStatus == "Player") || placeStatus == "Empty")
+            return true;
+        return false;
+    }
+    private bool CheckUnBlock(string fromLocation, string toLocation)
+    {
+        int[] fromPos = ConvertNormalPos(fromLocation);
+        int[] toPos = ConvertNormalPos(toLocation);
+        Vector2Int from = new Vector2Int(fromPos[0], fromPos[1]);
+        Vector2Int to = new Vector2Int(toPos[0], toPos[1]);
 
-        // 判斷該位置是否空閒或可攻擊
-        if (placeStatus == "Empty")
-            isEmpty = true;
-        else
+        int steps = Mathf.Max(Mathf.Abs(to.x - from.x), Mathf.Abs(to.y - from.y));
+        for (int i = 1; i < steps; i++)
         {
-            // 根據檢查類型進一步判斷
-            if ((checkEmptyType == CheckEmptyType.PlayerAttack && placeStatus == "Enemy") || (checkEmptyType == CheckEmptyType.EnemyAttack && placeStatus == "Player"))
-                isEmpty = true;
+            float t = (float)i / steps;
+            int x = Mathf.RoundToInt(Mathf.Lerp(from.x, to.x, t));
+            int y = Mathf.RoundToInt(Mathf.Lerp(from.y, to.y, t));
+            string intermediatePos = ConvertCheckerboardPos(x, y);
+
+            if (CheckerboardList.ContainsKey(intermediatePos) && CheckerboardList[intermediatePos] != "Empty")
+                return false;
         }
 
-        // 如果位置空閒，將其添加到空閒位置列表中
-        if (isEmpty)
-            emptyPlaceList.Add(place);
-    }
-
-    public bool CheckTerrainObstacles(string location, int alertDistance, string target, CheckEmptyType checkEmptyType)
-    {
-        return !GetEmptyPlace(location, alertDistance, checkEmptyType).Contains(target);
+        return true;
     }
     public float GetDistance(string location)
     {

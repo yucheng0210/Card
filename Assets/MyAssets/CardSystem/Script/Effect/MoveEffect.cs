@@ -19,15 +19,16 @@ public class MoveEffect : IEffect
         {
             int avoidClosure = i;
             int checkerboardPoint = BattleManager.Instance.GetCheckerboardPoint(emptyPlaceList[i]);
+            int moveCount = (int)BattleManager.Instance.GetDistance(emptyPlaceList[avoidClosure]);
             RectTransform emptyPlace = BattleManager.Instance.CheckerboardTrans.GetChild(checkerboardPoint).GetComponent<RectTransform>();
-            UnityEngine.Events.UnityAction moveAction = () => Move(emptyPlace.localPosition, emptyPlaceList[avoidClosure], value);
+            UnityEngine.Events.UnityAction moveAction = () => Move(emptyPlace.localPosition, emptyPlaceList[avoidClosure], value, moveCount);
             emptyPlace.GetComponent<Button>().onClick.AddListener(moveAction);
             removeList.Add(moveAction);
         }
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.UsingEffect);
     }
 
-    private void Move(Vector3 destination, string locationID, int value)
+    private void Move(Vector3 destination, string locationID, int value, int moveCount)
     {
         for (int i = 0; i < emptyPlaceList.Count; i++)
         {
@@ -35,13 +36,13 @@ public class MoveEffect : IEffect
             RectTransform emptyPlace = BattleManager.Instance.CheckerboardTrans.GetChild(checkerboardPoint).GetComponent<RectTransform>();
             emptyPlace.GetComponent<Button>().onClick.RemoveListener(removeList[i]);
         }
-        BattleManager.Instance.PlayerMoveCount -= value;
+        BattleManager.Instance.PlayerMoveCount -= moveCount;
         UIManager.Instance.ClearCheckerboardColor(BattleManager.Instance.CurrentLocationID, value, BattleManager.CheckEmptyType.Move);
         BattleManager.Instance.CurrentLocationID = locationID;
         BattleManager.Instance.PlayerTrans.DOAnchorPos(destination, 0.5f);
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Attack);
-        EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
         EventManager.Instance.DispatchEvent(EventDefinition.eventMove);
+        EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
         BattleManager.Instance.RefreshCheckerboardList();
     }
 
