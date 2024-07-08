@@ -113,7 +113,6 @@ public class CardCreater : MonoBehaviour
         BattleManager.Instance.CardAngleList.Clear();
         List<CardItem> handCard = DataManager.Instance.HandCard;
         int maxCardCount = handCard.Count + addCardCount;
-        int odd = maxCardCount % 2 != 0 ? 0 : 1;
         // 檢查卡片數量是否為奇數
         CalculatePositionAngle(maxCardCount);
         // 逐個處理每張手牌卡片
@@ -122,40 +121,24 @@ public class CardCreater : MonoBehaviour
             // 根據抽卡數量將卡片添加到手牌中
             handCard.Add(BattleManager.Instance.CardItemList[0]);
             yield return new WaitForSecondsRealtime(coolDown); // 等待冷卻時間
+            RectTransform handCardRect = handCard[i].GetComponent<RectTransform>();
             handCard[i].transform.SetParent(handCardTrans); // 將卡片設定為手牌的子物件
             handCard[i].gameObject.SetActive(true); // 啟用卡片物件
             EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
             yield return null;
             handCard[i].CantMove = false;
-            StartCoroutine(
-                UIManager.Instance.FadeOut(handCard[i].GetComponent<CanvasGroup>(), moveTime)
-            );
-            handCard[i].GetComponent<RectTransform>().DOAnchorPosX(currentPosX, moveTime); // 使用 DOTween 動畫設定卡片位置
-            handCard[i]
-                .GetComponent<RectTransform>()
-                .DOAnchorPosY(BattleManager.Instance.CardPositionList[i].y, moveTime);
-            handCard[i]
-                .GetComponent<RectTransform>()
-                .DORotateQuaternion(
-                    Quaternion.Euler(0, 0, BattleManager.Instance.CardAngleList[i]),
-                    moveTime
-                );
+            StartCoroutine(UIManager.Instance.FadeOut(handCard[i].GetComponent<CanvasGroup>(), moveTime));
+            handCardRect.DOAnchorPosX(currentPosX, moveTime); // 使用 DOTween 動畫設定卡片位置
+            handCardRect.DOAnchorPosY(BattleManager.Instance.CardPositionList[i].y, moveTime);
+            handCardRect.DORotateQuaternion(Quaternion.Euler(0, 0, BattleManager.Instance.CardAngleList[i]), moveTime);
 
             // 將前面的卡片向左偏移以創造重疊效果
             for (int j = i; j > 0; j--)
             {
-                handCard[j - 1]
-                    .GetComponent<RectTransform>()
-                    .DOAnchorPosX(currentPosX - (i - j + 1) * cardXSpacing, moveTime);
-                handCard[j - 1]
-                    .GetComponent<RectTransform>()
-                    .DOAnchorPosY(BattleManager.Instance.CardPositionList[j - 1].y, moveTime);
-                handCard[j - 1]
-                    .GetComponent<RectTransform>()
-                    .DORotateQuaternion(
-                        Quaternion.Euler(0, 0, BattleManager.Instance.CardAngleList[j - 1]),
-                        moveTime
-                    );
+                RectTransform lastHandCardRect = handCard[j - 1].GetComponent<RectTransform>();
+                lastHandCardRect.DOAnchorPosX(currentPosX - (i - j + 1) * cardXSpacing, moveTime);
+                lastHandCardRect.DOAnchorPosY(BattleManager.Instance.CardPositionList[j - 1].y, moveTime);
+                lastHandCardRect.DORotateQuaternion(Quaternion.Euler(0, 0, BattleManager.Instance.CardAngleList[j - 1]), moveTime);
             }
             currentPosX += cardXSpacing / 2; // 更新下一張卡片的起始位置
             // 設定卡片旋轉角度
@@ -244,15 +227,9 @@ public class CardCreater : MonoBehaviour
         List<CardItem> handCard = DataManager.Instance.HandCard;
         for (int i = 0; i < handCard.Count; i++)
         {
-            handCard[i]
-                .GetComponent<RectTransform>()
-                .DOAnchorPos(BattleManager.Instance.CardPositionList[i], moveTime);
-            handCard[i]
-                .GetComponent<RectTransform>()
-                .DORotateQuaternion(
-                    Quaternion.Euler(0, 0, BattleManager.Instance.CardAngleList[i]),
-                    moveTime
-                );
+            RectTransform handCardRect = handCard[i].GetComponent<RectTransform>();
+            handCardRect.DOAnchorPos(BattleManager.Instance.CardPositionList[i], moveTime);
+            handCardRect.DORotateQuaternion(Quaternion.Euler(0, 0, BattleManager.Instance.CardAngleList[i]), moveTime);
         }
     }
 

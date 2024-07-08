@@ -59,7 +59,6 @@ public class Enemy : MonoBehaviour
         enemyAttackIntentText.enabled = true;
         if (distance <= enemyData.AttackDistance)
         {
-            Debug.Log("change");
             string attackOrder = enemyData.AttackOrderStrs[enemyData.CurrentAttackOrder];
             switch (attackOrder)
             {

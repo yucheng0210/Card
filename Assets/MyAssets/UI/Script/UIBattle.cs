@@ -189,14 +189,17 @@ public class UIBattle : UIBase
     }
     private void RemoveEnemy(string key)
     {
-        if (BattleManager.Instance.CurrentEnemyList[key].CurrentHealth <= 0)
+        EnemyData enemyData = BattleManager.Instance.CurrentEnemyList[key];
+        if (enemyData.CurrentHealth <= 0)
         {
-            Destroy(enemyTrans.GetChild(BattleManager.Instance.CurrentEnemyList.Values.ToList().IndexOf(BattleManager.Instance.CurrentEnemyList[key])).gameObject);
+            enemyData.EnemyTrans.GetComponent<Enemy>().MyAnimator.SetTrigger("isDeath");
+            Destroy(enemyData.EnemyTrans.gameObject, 1);
             BattleManager.Instance.CurrentEnemyList.Remove(key);
             ClearAllEventTriggers();
             CheckEnemyInfo();
             CheckBattleInfo();
         }
+        enemyData.EnemyTrans.GetComponent<Enemy>().MyAnimator.SetTrigger("isHited");
         BattleManager.Instance.RefreshCheckerboardList();
         if (BattleManager.Instance.CurrentEnemyList.Count == 0)
             BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Win);
