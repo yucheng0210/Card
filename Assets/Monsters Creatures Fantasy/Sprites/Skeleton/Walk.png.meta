@@ -143,9 +143,9 @@ TextureImporter:
       name: Walk_0
       rect:
         serializedVersion: 2
-        x: 50
+        x: 25
         y: 50
-        width: 50
+        width: 100
         height: 50
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -164,9 +164,9 @@ TextureImporter:
       name: Walk_1
       rect:
         serializedVersion: 2
-        x: 200
+        x: 175
         y: 50
-        width: 50
+        width: 100
         height: 50
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -185,9 +185,9 @@ TextureImporter:
       name: Walk_2
       rect:
         serializedVersion: 2
-        x: 350
+        x: 325
         y: 50
-        width: 50
+        width: 100
         height: 50
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -206,9 +206,9 @@ TextureImporter:
       name: Walk_3
       rect:
         serializedVersion: 2
-        x: 500
+        x: 475
         y: 50
-        width: 50
+        width: 100
         height: 50
       alignment: 0
       pivot: {x: 0.5, y: 0.5}

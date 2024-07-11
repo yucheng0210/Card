@@ -284,10 +284,10 @@ public class CardCreater : MonoBehaviour
                     movedLocationList.Add(newLocation);
                     enemyData.CurrentAttackOrder--;
                     enemy.MyAnimator.SetBool("isRunning", true);
-                    yield return new WaitForSecondsRealtime(0.5f);
-                    enemy.MyAnimator.SetBool("isRunning", false);
                     break;
                 case Enemy.AttackType.Attack:
+                    enemy.MyAnimator.SetTrigger("isAttacking");
+                    yield return new WaitForSecondsRealtime(0.15f);
                     BattleManager.Instance.TakeDamage(playerData, enemyData.CurrentAttack, BattleManager.Instance.CurrentLocationID);
                     newCurrentEnemyList.Add(newLocation, BattleManager.Instance.CurrentEnemyList[location]);
                     break;
@@ -300,55 +300,13 @@ public class CardCreater : MonoBehaviour
                     newCurrentEnemyList.Add(newLocation, BattleManager.Instance.CurrentEnemyList[location]);
                     break;
             }
+            yield return new WaitForSecondsRealtime(0.5f);
+            enemy.MyAnimator.SetBool("isRunning", false);
             if (enemyData.CurrentAttackOrder >= enemyData.AttackOrderStrs.Length - 1)
                 enemyData.CurrentAttackOrder = 0;
             else
                 enemyData.CurrentAttackOrder++;
-            /* if (distance <= enemyData.AttackDistance && !checkTerrainObstacles)
-             {
-                 yield return new WaitForSecondsRealtime(0.5f);
-                 switch (enemyData.AttackOrderStrs[enemyData.CurrentAttackOrder])
-                 {
-                     case "Attack":
-                         BattleManager.Instance.TakeDamage(DataManager.Instance.PlayerList[DataManager.Instance.PlayerID], enemyData.CurrentAttack,
-                         BattleManager.Instance.CurrentLocationID);
-                         break;
-                     case "Shield":
-                         BattleManager.Instance.GetShield(enemyData, enemyData.CurrentAttack / 2);
-                         break;
-                     default:
-                         EffectFactory.Instance.CreateEffect(enemyData.AttackOrderStrs[enemyData.CurrentAttackOrder].ToString()).ApplyEffect(1, "Player");
-                         break;
-                 }
-                 if (enemyData.CurrentAttackOrder >= enemyData.AttackOrderStrs.Length - 1)
-                     enemyData.CurrentAttackOrder = 0;
-                 else
-                     enemyData.CurrentAttackOrder++;
-                 newCurrentEnemyList.Add(newLocation, BattleManager.Instance.CurrentEnemyList[location]);
-             }
-             else
-             {
-                 yield return new WaitForSecondsRealtime(0.5f);
-                 float minDistance = 99;
-                 int[] minPoint = new int[2];
-                 for (int j = 0; j < emptyPlaceList.Count; j++)
-                 {
-                     int[] targetPoint = BattleManager.Instance.ConvertNormalPos(emptyPlaceList[j]);
-                     float targetDistance = BattleManager.Instance.GetDistance(emptyPlaceList[j]);
-                     if (targetDistance < minDistance)
-                     {
-                         minDistance = targetDistance;
-                         minPoint = targetPoint;
-                     }
-                 }
-                 newLocation = BattleManager.Instance.ConvertCheckerboardPos(minPoint[0], minPoint[1]);
-                 RectTransform emptyPlace = BattleManager.Instance.CheckerboardTrans
-                 .GetChild(BattleManager.Instance.GetCheckerboardPoint(newLocation)).GetComponent<RectTransform>();
-                 enemyTrans.DOAnchorPos(emptyPlace.localPosition, 0.5f);
-                 newCurrentEnemyList.Add(newLocation, enemyData);
-                 movedLocationList.Add(newLocation);
-                 yield return new WaitForSecondsRealtime(1);
-             }*/
+
             EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
             yield return new WaitForSecondsRealtime(1);
         }
