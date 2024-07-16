@@ -352,4 +352,12 @@ public class BattleManager : Singleton<BattleManager>
             DataManager.Instance.CardBag[i] = temp;
         }
     }
+    public void NextLevel(string hideMenu)
+    {
+        // BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Dialog);
+        MapManager.Instance.LevelCount++;
+        UIManager.Instance.ShowUI("UIMap");
+        UIManager.Instance.HideUI(hideMenu);
+        EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
+    }
 }

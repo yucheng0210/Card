@@ -28,7 +28,8 @@ public class UIVictoryReward : UIBase
 
     private void Awake()
     {
-        skipButton.onClick.AddListener(NextLevel);
+        skipButton.onClick.AddListener(() => BattleManager.Instance.NextLevel("UIBattle"));
+        skipButton.onClick.AddListener(() => UIManager.Instance.HideUI("UIVictoryReward"));
     }
 
     protected override void Start()
@@ -37,15 +38,7 @@ public class UIVictoryReward : UIBase
         EventManager.Instance.AddEventRegister(EventDefinition.eventBattleWin, EventBattleWin);
     }
 
-    private void NextLevel()
-    {
-       // BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Dialog);
-        MapManager.Instance.LevelCount++;
-        UIManager.Instance.ShowUI("UIMap");
-        UIManager.Instance.HideUI("UIBattle");
-        UI.SetActive(false);
-        EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
-    }
+
 
     private void GetReward(int rewardID, GameObject reward)
     {
@@ -109,7 +102,10 @@ public class UIVictoryReward : UIBase
     {
         totalCount--;
         if (totalCount == 0)
-            NextLevel();
+        {
+            BattleManager.Instance.NextLevel("UIBattle");
+            UIManager.Instance.HideUI("UIVictoryReward");
+        }
     }
 
     private void EventBattleWin(params object[] args)

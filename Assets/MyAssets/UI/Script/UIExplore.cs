@@ -13,9 +13,6 @@ public class UIExplore : UIBase
     private GameObject corpse;
     [SerializeField]
     private GameObject recoverMenu;
-
-    [SerializeField]
-    private Button removeCardButton;
     [SerializeField]
     private CardItem cardPrefab;
     [SerializeField]
@@ -24,8 +21,15 @@ public class UIExplore : UIBase
     private Button applyButton;
     [SerializeField]
     private Button exitButton;
+    [Header("休息")]
     [SerializeField]
     private Button restButton;
+    [SerializeField]
+    private Button removeCardButton;
+    [SerializeField]
+    private GameObject restMenu;
+    [SerializeField]
+    private Button restConfirmButton;
     [SerializeField]
     private Button recoverExitButton;
     [SerializeField]
@@ -86,9 +90,11 @@ public class UIExplore : UIBase
         int recoverCount = (int)(DataManager.Instance.PlayerList[playerID].MaxHealth * 0.35f);
         UI.SetActive(true);
         recoverMenu.SetActive(true);
-        restButton.onClick.AddListener(() => DataManager.Instance.PlayerList[playerID].CurrentHealth += recoverCount);
-        restButton.onClick.AddListener(() => recoverExitButton.gameObject.SetActive(true));
-        restButton.onClick.AddListener(() => EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI));
+        restButton.onClick.AddListener(() => restMenu.SetActive(true));
+        removeCardButton.onClick.AddListener(() => StartCoroutine(RemoveCard()));
+        restConfirmButton.onClick.AddListener(() => DataManager.Instance.PlayerList[playerID].CurrentHealth += recoverCount);
+        restConfirmButton.onClick.AddListener(() => recoverExitButton.gameObject.SetActive(true));
+        restConfirmButton.onClick.AddListener(() => EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI));
     }
 
     private void Boss()
@@ -135,15 +141,15 @@ public class UIExplore : UIBase
         }
         removeCardButton.onClick.RemoveAllListeners();
         removeCardButton.gameObject.SetActive(false);
+        ExitExplore();
     }
     private void ExitExplore()
     {
         exitButton.gameObject.SetActive(false);
         recoverExitButton.gameObject.SetActive(false);
-        UIManager.Instance.ShowUI("UIMap");
-        UIManager.Instance.HideUI("UICardMenu");
+        restButton.gameObject.SetActive(false);
         recoverMenu.SetActive(false);
-        EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
+        BattleManager.Instance.NextLevel("UICardMenu");
     }
     private void Shop()
     {
@@ -152,25 +158,6 @@ public class UIExplore : UIBase
     }
     private void EventExplore(params object[] args)
     {
-        int levelID = MapManager.Instance.LevelID;
-        /*  bool isSelectLevel = true;
-          for (int i = 0; i < DataManager.Instance.LevelList.Count; i++)
-          {
-              int id = DataManager.Instance.LevelList.ElementAt(i).Key;
-              for (int j = 0; j < DataManager.Instance.LevelList[id].LevelParentList.Count; j++)
-              {
-                  if (DataManager.Instance.LevelList[id].LevelParentList.Count != DataManager.Instance.LevelList[levelID].LevelParentList.Count)
-                  {
-                      isSelectLevel = false;
-                      break;
-                  }
-                  if (DataManager.Instance.LevelList[id].LevelParentList[j] != DataManager.Instance.LevelList[levelID].LevelParentList[j])
-                      isSelectLevel = false;
-              }
-              if (isSelectLevel)
-                  DataManager.Instance.LevelList[id].LevelPassed = true;
-              isSelectLevel = true;
-          }*/
         switch (args[0])
         {
             case "DIALOG":
@@ -188,11 +175,7 @@ public class UIExplore : UIBase
             case "BOSS":
                 Boss();
                 break;
-            case "REMOVECARD":
-                removeCardButton.gameObject.SetActive(true);
-                currentRemoveID = -1;
-                removeCardButton.onClick.AddListener(() => StartCoroutine(RemoveCard()));
-                break;
+
             case "SHOP":
                 Shop();
                 break;
