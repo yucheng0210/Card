@@ -15,4 +15,8 @@ public class Level
     public string PlayerStartPos { get; set; }
     public bool LevelActive { get; set; }
     public List<int> LevelParentList { get; set; }
+    public Level Clone()
+    {
+        return (Level)MemberwiseClone();
+    }
 }

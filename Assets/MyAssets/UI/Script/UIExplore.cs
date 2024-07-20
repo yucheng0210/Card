@@ -39,9 +39,9 @@ public class UIExplore : UIBase
     {
         base.Start();
         EventManager.Instance.AddEventRegister(EventDefinition.eventExplore, EventExplore);
-        exitButton.onClick.AddListener(ExitExplore);
-        recoverExitButton.onClick.AddListener(ExitExplore);
+        // exitButton.onClick.AddListener(ExitExplore);
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.None);
+        RecoverInitialize();
     }
 
     private void HideAllUI()
@@ -83,18 +83,27 @@ public class UIExplore : UIBase
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.BattleInitial);
         UI.SetActive(false);
     }
-
-    private void Recover()
+    private void RecoverInitialize()
     {
         int playerID = DataManager.Instance.PlayerID;
         int recoverCount = (int)(DataManager.Instance.PlayerList[playerID].MaxHealth * 0.35f);
-        UI.SetActive(true);
-        recoverMenu.SetActive(true);
         restButton.onClick.AddListener(() => restMenu.SetActive(true));
+        restButton.onClick.AddListener(() => restButton.gameObject.SetActive(false));
+        restButton.onClick.AddListener(() => removeCardButton.gameObject.SetActive(false));
         removeCardButton.onClick.AddListener(() => StartCoroutine(RemoveCard()));
         restConfirmButton.onClick.AddListener(() => DataManager.Instance.PlayerList[playerID].CurrentHealth += recoverCount);
         restConfirmButton.onClick.AddListener(() => recoverExitButton.gameObject.SetActive(true));
+        restConfirmButton.onClick.AddListener(() => restMenu.SetActive(false));
         restConfirmButton.onClick.AddListener(() => EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI));
+        recoverExitButton.onClick.AddListener(() => recoverMenu.SetActive(false));
+        recoverExitButton.onClick.AddListener(ExitExplore);
+    }
+    private void Recover()
+    {
+        UI.SetActive(true);
+        recoverMenu.SetActive(true);
+        restButton.gameObject.SetActive(true);
+        removeCardButton.gameObject.SetActive(true);
     }
 
     private void Boss()
@@ -116,7 +125,7 @@ public class UIExplore : UIBase
     private void RefreshRemoveID(int removeID)
     {
         applyButton.gameObject.SetActive(true);
-        exitButton.gameObject.SetActive(true);
+        // exitButton.gameObject.SetActive(true);
         currentRemoveID = removeID;
         applyButton.onClick.RemoveAllListeners();
         for (int i = 0; i < contentTrans.childCount; i++)
@@ -141,14 +150,12 @@ public class UIExplore : UIBase
         }
         removeCardButton.onClick.RemoveAllListeners();
         removeCardButton.gameObject.SetActive(false);
+        recoverMenu.SetActive(false);
         ExitExplore();
+        EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
     private void ExitExplore()
     {
-        exitButton.gameObject.SetActive(false);
-        recoverExitButton.gameObject.SetActive(false);
-        restButton.gameObject.SetActive(false);
-        recoverMenu.SetActive(false);
         BattleManager.Instance.NextLevel("UICardMenu");
     }
     private void Shop()

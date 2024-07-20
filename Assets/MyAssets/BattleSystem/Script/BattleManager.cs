@@ -314,8 +314,7 @@ public class BattleManager : Singleton<BattleManager>
     private void PlayerTurn()
     {
         int playerID = DataManager.Instance.PlayerID;
-        DataManager.Instance.PlayerList[playerID].CurrentActionPoint =
-        DataManager.Instance.PlayerList[playerID].MaxActionPoint;
+        DataManager.Instance.PlayerList[playerID].CurrentActionPoint = DataManager.Instance.PlayerList[playerID].MaxActionPoint;
         //DataManager.Instance.PlayerList[playerID].Mana++;
         DataManager.Instance.PlayerList[playerID].CurrentShield = 0;
         for (int i = 0; i < CurrentAbilityList.Count; i++)

@@ -1,7 +1,7 @@
 ﻿標示,名稱,類型,背景圖路徑,消耗費用,屬性,特效,描述,攻擊,護盾,效果,稀有度,攻擊距離,魔力消耗,是否消耗
 1001,魔力彈,攻擊,CardImage/MagicBullet,1,無,null,造成6點傷害。,6,0,,基本,2,1,FALSE
 1002,魔力盾,防禦,CardImage/MagicShield,1,無,null,獲得5點護盾。,0,5,,基本,0,1,FALSE
-1003,衝擊波,攻擊,CardImage/MagicBullet,2,,null,造成10點傷害。[擊退],10,0,,基本,1,3,FALSE
+1003,衝擊波,攻擊,CardImage/MagicBullet,2,,null,造成10點傷害。[擊退],10,0,KnockBackEffect=1,基本,1,3,FALSE
 1004,聚魔,增益,CardImage/GatherMagic,1,無,null,獲得5點魔力。,0,0,IncreaseManaEffect=5,普通,0,0,FALSE
 1005,移動,移動,CardImage/NormalMove,1,無,null,移動一格。,0,0,MoveEffect=1,普通,0,0,FALSE
 1006,至尊平A,攻擊,CardImage/PhysicalAttack,1,無,null,造成8點傷害。,8,0,,普通,1,0,FALSE

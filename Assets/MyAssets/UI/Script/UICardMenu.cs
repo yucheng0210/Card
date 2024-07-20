@@ -7,6 +7,8 @@ public class UICardMenu : UIBase
 {
     [SerializeField]
     private Button cardMenuButton;
+    [SerializeField]
+    private Button battleCardMenuButton;
 
     [SerializeField]
     private Button usedCardMenuButton;

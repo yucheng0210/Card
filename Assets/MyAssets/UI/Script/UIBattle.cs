@@ -28,6 +28,8 @@ public class UIBattle : UIBase
     private Text healthText;
 
     [SerializeField]
+    private Text battleCardBagCountText;
+    [SerializeField]
     private Text cardBagCountText;
 
     [SerializeField]
@@ -96,6 +98,7 @@ public class UIBattle : UIBase
         EventManager.Instance.AddEventRegister(EventDefinition.eventBattleInitial, EventBattleInitial);
         EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
         EventManager.Instance.AddEventRegister(EventDefinition.eventEnemyTurn, EventEnemyTurn);
+        EventManager.Instance.AddEventRegister(EventDefinition.eventMove, EventMove);
         //Hide();
         StartCoroutine(StartGame());
     }
@@ -103,6 +106,7 @@ public class UIBattle : UIBase
     private IEnumerator StartGame()
     {
         yield return null;
+        EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
         Hide();
     }
     private void CheckBattleInfo()
@@ -202,9 +206,18 @@ public class UIBattle : UIBase
         enemyData.EnemyTrans.GetComponent<Enemy>().MyAnimator.SetTrigger("isHited");
         BattleManager.Instance.RefreshCheckerboardList();
         if (BattleManager.Instance.CurrentEnemyList.Count == 0)
+        {
             BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Win);
+            RemoveAllTerrian();
+        }
     }
-
+    private void RemoveAllTerrian()
+    {
+        for (int i = 0; i < terrainTrans.childCount; i++)
+        {
+            Destroy(terrainTrans.GetChild(i).gameObject);
+        }
+    }
     private void EventBattleInitial(params object[] args)
     {
         StartCoroutine(BattleInitial());
@@ -284,6 +297,13 @@ public class UIBattle : UIBase
         UIManager.Instance.ClearMoveClue(true);
         ClearAllEventTriggers();
     }
+    private void EventMove(params object[] args)
+    {
+        UIManager.Instance.ClearMoveClue(true);
+        ClearAllEventTriggers();
+        CheckEnemyInfo();
+        CheckBattleInfo();
+    }
     private void EventTakeDamage(params object[] args)
     {
         if (BattleManager.Instance.CurrentLocationID != (string)args[2])
@@ -329,6 +349,7 @@ public class UIBattle : UIBase
         health.DOFillAmount((float)((float)DataManager.Instance.PlayerList[id].CurrentHealth / DataManager.Instance.PlayerList[id].MaxHealth), 0.5f);
         healthText.text = DataManager.Instance.PlayerList[id].CurrentHealth.ToString() + "/" + DataManager.Instance.PlayerList[id].MaxHealth.ToString();
         shieldText.text = DataManager.Instance.PlayerList[id].CurrentShield.ToString();
+        battleCardBagCountText.text = DataManager.Instance.CardBag.Count.ToString();
         cardBagCountText.text = DataManager.Instance.CardBag.Count.ToString();
         usedCardBagCountText.text = DataManager.Instance.UsedCardBag.Count.ToString();
         removeCardBagCountText.text = DataManager.Instance.RemoveCardBag.Count.ToString();

@@ -53,10 +53,7 @@ public class CardCreater : MonoBehaviour
         EventManager.Instance.AddEventRegister(EventDefinition.eventEnemyTurn, EventEnemyTurn);
         EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
         EventManager.Instance.AddEventRegister(EventDefinition.eventBattleWin, EventBattleWin);
-        EventManager.Instance.AddEventRegister(
-            EventDefinition.eventBattleInitial,
-            EventBattleInitial
-        );
+        EventManager.Instance.AddEventRegister(EventDefinition.eventBattleInitial, EventBattleInitial);
         EventManager.Instance.AddEventRegister(EventDefinition.eventDrawCard, EventDrawCard);
     }
 

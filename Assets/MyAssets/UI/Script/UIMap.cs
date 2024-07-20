@@ -4,13 +4,14 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
 using DG.Tweening;
+using Unity.VisualScripting;
 public class UIMap : UIBase
 {
     [SerializeField]
     private Transform mapButtonsTrans;
     [SerializeField]
     private List<Sprite> mapTypeList = new List<Sprite>();
-    private Sequence[][] effectList;
+    private DG.Tweening.Sequence[][] effectList;
     private Button[][] mapList;
     private Dictionary<string, int> levelProbabilities = new Dictionary<string, int>
     {
@@ -33,12 +34,12 @@ public class UIMap : UIBase
     private void StartGame()
     {
         mapList = new Button[MapManager.Instance.MapNodes.Length][];
-        effectList = new Sequence[MapManager.Instance.MapNodes.Length][];
+        effectList = new DG.Tweening.Sequence[MapManager.Instance.MapNodes.Length][];
         List<int> removeList = new List<int>();
         for (int i = MapManager.Instance.MapNodes.Length - 1; i >= 0; i--)
         {
             mapList[i] = new Button[MapManager.Instance.MapNodes[i].Length];
-            effectList[i] = new Sequence[MapManager.Instance.MapNodes[i].Length];
+            effectList[i] = new DG.Tweening.Sequence[MapManager.Instance.MapNodes[i].Length];
             for (int j = 0; j < MapManager.Instance.MapNodes[i].Length; j++)
             {
                 int id = j;
@@ -87,7 +88,7 @@ public class UIMap : UIBase
                     j--;
                     continue;
                 }
-                Level level = DataManager.Instance.LevelTypeList[currentIndex];
+                Level level = DataManager.Instance.LevelTypeList[currentIndex].Clone();
                 level.LevelParentList = new List<int>();
                 level.LevelID = i * 5 + j;
                 if (MapManager.Instance.MapNodes[i][j].left != null)
@@ -97,7 +98,7 @@ public class UIMap : UIBase
                 MapManager.Instance.MapNodes[i][j].l = level;
                 mapList[i][j] = mapButtonsTrans.GetChild(i).GetChild(j).GetComponent<Button>();
                 mapList[i][j].onClick.AddListener(() => EntryPoint(count, id));
-                Sequence scaleSequence = DOTween.Sequence();
+                DG.Tweening.Sequence scaleSequence = DOTween.Sequence();
                 scaleSequence.Append(mapList[i][j].transform.DOScale(new Vector3(1.25f, 1.25f, 1.25f), 0.5f));
                 scaleSequence.Append(mapList[i][j].transform.DOScale(new Vector3(1f, 1f, 1f), 0.5f));
                 scaleSequence.SetLoops(-1);
@@ -138,10 +139,9 @@ public class UIMap : UIBase
     }
     private bool CantEnter(int count, int id)
     {
-        bool cantEnter = true;
         if ((MapManager.Instance.LevelCount == 0 && count == 0) || (MapManager.Instance.MapNodes[count][id].l.LevelActive && MapManager.Instance.LevelCount == count))
-            cantEnter = false;
-        return cantEnter;
+            return false;
+        return true;
     }
     private void CanEnterEffect()
     {
@@ -151,12 +151,16 @@ public class UIMap : UIBase
             {
                 /*  if (i == 1)
                       Debug.Log(i.ToString() + j.ToString() + ":" + !CantEnter(i, j));*/
-                if ((!CantEnter(i, j) && i == MapManager.Instance.LevelCount) || (MapManager.Instance.LevelCount == 0 && i == 0))
+                if (!CantEnter(i, j))
+                {
                     effectList[i][j].Play();
+                    Debug.Log("Count:" + i + "  " + "ID:" + j);
+                }
                 else
                     effectList[i][j].Pause();
             }
         }
+        Debug.Log("CurrentLevel: " + MapManager.Instance.LevelCount);
     }
     private void EntryPoint(int count, int id)
     {
