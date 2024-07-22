@@ -57,7 +57,7 @@ public class Enemy : MonoBehaviour
         enemyMove.SetActive(false);
         enemyEffect.SetActive(false);
         enemyAttackIntentText.enabled = true;
-        if (distance <= enemyData.AttackDistance)
+        if (distance <= enemyData.AttackDistance && BattleManager.Instance.CheckUnBlock(EnemyLocation, BattleManager.Instance.CurrentLocationID))
         {
             string attackOrder = enemyData.AttackOrderStrs[enemyData.CurrentAttackOrder];
             switch (attackOrder)

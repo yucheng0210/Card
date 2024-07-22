@@ -25,6 +25,7 @@ public class UICardMenu : UIBase
     {
         base.Start();
         cardMenuButton.onClick.AddListener(() => UIManager.Instance.RefreshCardBag(contentTrans, cardPrefab));
+        battleCardMenuButton.onClick.AddListener(() => UIManager.Instance.RefreshCardBag(contentTrans, cardPrefab));
         hideButton.onClick.AddListener(Hide);
         usedCardMenuButton.onClick.AddListener(RefreshUsedCardBag);
     }

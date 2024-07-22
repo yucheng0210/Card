@@ -18,11 +18,13 @@ public class KnockBackEffect : IEffect
             return;
         int checkerboardPoint = BattleManager.Instance.GetCheckerboardPoint(locationID);
         Vector3 destination = BattleManager.Instance.CheckerboardTrans.GetChild(checkerboardPoint).GetComponent<RectTransform>().localPosition;
+        BattleManager.Instance.CurrentEnemyList.Add(locationID, enemyData);
+        BattleManager.Instance.CurrentEnemyList.Remove(target);
+        enemyData = BattleManager.Instance.CurrentEnemyList[locationID];
         enemyData.EnemyTrans.DOAnchorPos(destination, 0.2f);
-        enemyData.EnemyLocation = locationID;
+        enemyData.EnemyTrans.GetComponent<Enemy>().EnemyLocation = locationID;
         EventManager.Instance.DispatchEvent(EventDefinition.eventMove);
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
-        BattleManager.Instance.RefreshCheckerboardList();
     }
 
     public Sprite SetIcon()

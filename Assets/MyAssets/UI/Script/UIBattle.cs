@@ -299,6 +299,7 @@ public class UIBattle : UIBase
     }
     private void EventMove(params object[] args)
     {
+        BattleManager.Instance.RefreshCheckerboardList();
         UIManager.Instance.ClearMoveClue(true);
         ClearAllEventTriggers();
         CheckEnemyInfo();

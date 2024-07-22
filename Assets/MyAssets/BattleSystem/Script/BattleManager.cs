@@ -87,8 +87,8 @@ public class BattleManager : Singleton<BattleManager>
             currentDamage = 0;
         defender.CurrentShield -= damage;
         defender.CurrentHealth -= currentDamage;
-        Vector2 pos = new(CheckerboardTrans.GetChild(GetCheckerboardPoint(location)).localPosition.x
-        , CheckerboardTrans.GetChild(GetCheckerboardPoint(location)).localPosition.y);
+        int point = GetCheckerboardPoint(location);
+        Vector2 pos = new(CheckerboardTrans.GetChild(point).localPosition.x, CheckerboardTrans.GetChild(point).localPosition.y);
         EventManager.Instance.DispatchEvent(EventDefinition.eventTakeDamage, pos, damage, location);
     }
 
@@ -149,9 +149,7 @@ public class BattleManager : Singleton<BattleManager>
                 {
                     string targetPos = ConvertCheckerboardPos(x, y);
                     if (CheckPlaceEmpty(targetPos, checkEmptyType) && CheckUnBlock(location, targetPos))
-                    {
                         emptyPlaceList.Add(targetPos);
-                    }
                 }
             }
         }
@@ -173,7 +171,7 @@ public class BattleManager : Singleton<BattleManager>
             return true;
         return false;
     }
-    private bool CheckUnBlock(string fromLocation, string toLocation)
+    public bool CheckUnBlock(string fromLocation, string toLocation)
     {
         int[] fromPos = ConvertNormalPos(fromLocation);
         int[] toPos = ConvertNormalPos(toLocation);
@@ -272,7 +270,7 @@ public class BattleManager : Singleton<BattleManager>
         int levelCount = MapManager.Instance.LevelCount;
         CurrentLocationID = MapManager.Instance.MapNodes[levelCount][levelID].l.PlayerStartPos;
         DataManager.Instance.PlayerList[playerID].CurrentActionPoint = DataManager.Instance.PlayerList[playerID].MaxActionPoint;
-        DataManager.Instance.PlayerList[playerID].Mana = 0;
+        DataManager.Instance.PlayerList[playerID].Mana = 10;
         PlayerTrans.localPosition = CheckerboardTrans.GetChild(GetCheckerboardPoint(CurrentLocationID)).localPosition;
         for (int i = 0; i < DataManager.Instance.SkillList[skillID].SkillContent.Count; i++)
         {

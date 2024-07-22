@@ -19,7 +19,7 @@ public class MoveEffect : IEffect
         {
             int avoidClosure = i;
             int checkerboardPoint = BattleManager.Instance.GetCheckerboardPoint(emptyPlaceList[i]);
-            int moveCount = (int)BattleManager.Instance.GetDistance(emptyPlaceList[avoidClosure]);
+            int moveCount = (int)BattleManager.Instance.GetDistance(emptyPlaceList[avoidClosure]) + 1;
             RectTransform emptyPlace = BattleManager.Instance.CheckerboardTrans.GetChild(checkerboardPoint).GetComponent<RectTransform>();
             UnityEngine.Events.UnityAction moveAction = () => Move(emptyPlace.localPosition, emptyPlaceList[avoidClosure], value, moveCount);
             emptyPlace.GetComponent<Button>().onClick.AddListener(moveAction);
@@ -43,7 +43,6 @@ public class MoveEffect : IEffect
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Attack);
         EventManager.Instance.DispatchEvent(EventDefinition.eventMove);
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
-        BattleManager.Instance.RefreshCheckerboardList();
     }
 
     Sprite IEffect.SetIcon()
