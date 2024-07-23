@@ -175,7 +175,7 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        if (CantMove|| BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack)
+        if (CantMove || BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack)
             return;
         BattleManager.Instance.IsDrag = false;
         Cursor.visible = true;
@@ -233,7 +233,7 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         if (BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack)
             return;
         CardData cardData = DataManager.Instance.CardList[CardID];
-        if (BattleManager.Instance.CurrentNegativeState.Contains(BattleManager.NegativeState.CantMove) && cardData.CardType == "移動")
+        if (BattleManager.Instance.CurrentNegativeState.ContainsKey(nameof(CantMoveEffect)) && cardData.CardType == "移動")
             return;
         CardRectTransform.DOScale(1.5f, 0);
         DataManager.Instance.HandCard.Remove(this);

@@ -43,6 +43,10 @@ public class UIBattle : UIBase
     private Button playerMoveButton;
     [SerializeField]
     private Transform playerMoveGridTrans;
+    [SerializeField]
+    private Transform negativeGroupTrans;
+    [SerializeField]
+    private GameObject negativePrefab;
 
     [Header("敵人")]
     [SerializeField]
@@ -186,7 +190,7 @@ public class UIBattle : UIBase
     private void PlayerMove()
     {
         if (BattleManager.Instance.PlayerMoveCount <= 0 || BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack
-        || BattleManager.Instance.CurrentNegativeState.Contains(BattleManager.NegativeState.CantMove))
+        || BattleManager.Instance.CurrentNegativeState.ContainsKey(nameof(CantMoveEffect)))
             return;
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.UsingEffect);
         EffectFactory.Instance.CreateEffect("MoveEffect").ApplyEffect(BattleManager.Instance.PlayerMoveCount, "Player");
@@ -361,6 +365,17 @@ public class UIBattle : UIBase
         for (int i = 0; i < BattleManager.Instance.PlayerMoveCount; i++)
         {
             playerMoveGridTrans.GetChild(i).gameObject.SetActive(true);
+        }
+        for (int i = 0; i < negativeGroupTrans.childCount; i++)
+        {
+            Destroy(negativeGroupTrans.GetChild(i).gameObject);
+        }
+        for (int i = 0; i < BattleManager.Instance.CurrentNegativeState.Count; i++)
+        {
+            string key = BattleManager.Instance.CurrentNegativeState.ElementAt(i).Key;
+            GameObject negative = Instantiate(negativePrefab, negativeGroupTrans);
+            negative.GetComponentInChildren<Image>().sprite = EffectFactory.Instance.CreateEffect(key).SetIcon();
+            negative.GetComponentInChildren<Text>().text = BattleManager.Instance.CurrentNegativeState[key].ToString();
         }
     }
 }

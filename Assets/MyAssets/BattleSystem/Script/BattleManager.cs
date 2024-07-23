@@ -21,10 +21,6 @@ public class BattleManager : Singleton<BattleManager>
         Victory,
         Loss
     }
-    public enum NegativeState
-    {
-        CantMove
-    }
     //玩家
     private int playerMoveCount;
     public int PlayerMoveCount
@@ -38,10 +34,10 @@ public class BattleManager : Singleton<BattleManager>
         }
     }
     public BattleType MyBattleType { get; set; }
-    public List<NegativeState> CurrentNegativeState { get; set; }
     public List<CardItem> CardItemList { get; set; }
     public List<Vector2> CardPositionList { get; set; }
     public List<float> CardAngleList { get; set; }
+    public Dictionary<string, int> CurrentNegativeState { get; set; }
     public Dictionary<string, int> CurrentAbilityList { get; set; }
     public Dictionary<string, string> CurrentTrapList { get; set; }
     public List<string> StateEventList { get; set; }
@@ -66,7 +62,7 @@ public class BattleManager : Singleton<BattleManager>
         CurrentAbilityList = new Dictionary<string, int>();
         CheckerboardList = new Dictionary<string, string>();
         CurrentTerrainList = new Dictionary<string, Terrain>();
-        CurrentNegativeState = new List<NegativeState>();
+        CurrentNegativeState = new Dictionary<string, int>();
         CurrentTrapList = new Dictionary<string, string>();
     }
     private void Update()
@@ -325,13 +321,19 @@ public class BattleManager : Singleton<BattleManager>
 
         }
         EventManager.Instance.DispatchEvent(EventDefinition.eventPlayerTurn);
-        EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
 
     private void EnemyTurn()
     {
+        for (int i = 0; i < CurrentNegativeState.Count; i++)
+        {
+            string negativeState = CurrentNegativeState.ElementAt(i).Key;
+            CurrentNegativeState[negativeState]--;
+            if (CurrentNegativeState[negativeState] <= 0)
+                CurrentNegativeState.Remove(negativeState);
+        }
+        EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
         EventManager.Instance.DispatchEvent(EventDefinition.eventEnemyTurn);
-        CurrentNegativeState.Clear();
     }
 
     private void Win()
