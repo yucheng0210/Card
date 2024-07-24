@@ -108,7 +108,8 @@ public class UIExplore : UIBase
 
     private void Boss()
     {
-        BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Dialog);
+        UIManager.Instance.ShowUI("UIBattle");
+        BattleManager.Instance.ChangeTurn(BattleManager.BattleType.BattleInitial);
         UI.SetActive(false);
     }
     private IEnumerator RemoveCard()

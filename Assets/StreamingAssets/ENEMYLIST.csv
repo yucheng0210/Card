@@ -3,6 +3,6 @@
 1002,骷髏人,50,3,10,EnemyImage/Skeleton,2,2,99,CantMoveEffect;Attack;Shield,EnemyAnimation/Skeleton
 1003,大眼怪,6,10,15,EnemyImage/FlyingEye,2,2,99,CantMoveEffect;Attack;Shield,EnemyAnimation/FlyingEye
 1004,菇,6,10,15,EnemyImage/Mushroom,2,2,99,CantMoveEffect;Attack;Shield,EnemyAnimation/Mushroom
-1005,沙漠狂獸,6,3,10,EnemyImage/Dog,2,2,99,CantMoveEffect;Attack;Shield,EnemyAnimation/Goblin
-1006,毒刃劍蠍,6,10,15,EnemyImage/Dog,2,2,99,CantMoveEffect;Attack;Shield,EnemyAnimation/Goblin
-1007,風沙追獵者,6,10,15,EnemyImage/Dog,2,2,99,CantMoveEffect;Attack;Shield,EnemyAnimation/Goblin
+1005,沙漠狂獸,6,3,10,EnemyImage/Dog,2,2,99,CantMoveEffect;Attack;Shield,EnemyAnimation/Dog
+1006,毒刃劍蠍,6,10,15,EnemyImage/Dog,2,2,99,CantMoveEffect;Attack;Shield,EnemyAnimation/Scorpion
+1007,風沙追獵者,6,10,15,EnemyImage/Dog,2,2,99,CantMoveEffect;Attack;Shield,EnemyAnimation/Dog
