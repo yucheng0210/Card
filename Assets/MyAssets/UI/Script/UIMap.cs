@@ -35,7 +35,6 @@ public class UIMap : UIBase
     {
         mapList = new Button[MapManager.Instance.MapNodes.Length][];
         effectList = new DG.Tweening.Sequence[MapManager.Instance.MapNodes.Length][];
-        List<int> removeList = new List<int>();
         for (int i = MapManager.Instance.MapNodes.Length - 1; i >= 0; i--)
         {
             mapList[i] = new Button[MapManager.Instance.MapNodes[i].Length];
@@ -83,7 +82,7 @@ public class UIMap : UIBase
                         break;
                     }
                 }
-                if (removeList.Contains(currentIndex) || (DataManager.Instance.LevelTypeList[currentIndex].LevelType != "BATTLE" && count == 0))
+                if (DataManager.Instance.LevelTypeList[currentIndex].LevelType != "BATTLE" && count == 0)
                 {
                     j--;
                     continue;

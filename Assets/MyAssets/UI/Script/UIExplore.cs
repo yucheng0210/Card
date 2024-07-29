@@ -68,8 +68,10 @@ public class UIExplore : UIBase
         switch (randomIndex)
         {
             case 0:
+                Recover();
                 break;
             case 1:
+                Battle();
                 break;
             case 2:
                 break;

@@ -31,7 +31,14 @@ public class EnglishTest : MonoBehaviour
     "publicly","frequently","directory","peculiar","inhale","symptom","abstract","cavity","counterfeit","afterwards","conduct","associate","evidently",
     "eventually","prospective","imply","modify","undertake","undergo","deficit","relevant","afford","behavior","flatter","mumble","legal","applicant",
     "pay","benefit","suffer","relieve","destination","handle","whole","annoying","ingredient","effectiveness","anticipate","aim","financial","invest",
-    "tune","competition","host","fomer","department","apply","saving","reduction" };
+    "tune","competition","host","former","department","apply","saving","reduction","governor","file","involve","administration","manufacture","adverse","publicity",
+    "divulge","measure", "entire","authority","predict","investigate","robbery","worth","arrest","experience","significant","extremely","recover","warning",
+    "effect","hazardous","bulletin","southbound","clog","head","moderate","commuter","stick","detour","artery","board", "cabin", "complimentary", "pleasant",
+    "encounter", "turbulence", "momentarily", "fasten", "immigration", "claim", "customs", "declaration", "transit", "approximately", "rise", "suburban",
+    "rapid", "halt", "further", "detail", "serve", "assigned", "itinerary", "assemble", "valuables", "precaution", "liable", "property", "unattended",
+    "ticket", "tow", "domestic", "page", "contact", "identify", "close", "refrain", "litter", "scenic", "facility", "steadily", "reinforce", "nationwide",
+     "recognition", "evacuate", "injured", "emergency", "auditorium", "award", "honor", "round", "applause", "following", "branch", "representative",
+     "shortly", "acknowledge", "organize", "attend", "gratitude", "merchandise", "reputation", "tarnish", "avoid"};
     private void Start()
     {
         for (int i = 0; i < 50; i++)
