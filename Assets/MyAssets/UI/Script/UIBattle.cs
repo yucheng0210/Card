@@ -293,6 +293,8 @@ public class UIBattle : UIBase
     }
     private void EventPlayerTurn(params object[] args)
     {
+        BattleManager.Instance.ManaMultiplier = 1;
+        BattleManager.Instance.CurrentConsumeMana = 0;
         CheckEnemyInfo();
         CheckBattleInfo();
     }

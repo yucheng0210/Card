@@ -6,7 +6,11 @@ public class IncreaseManaEffect : IEffect
 {
     public void ApplyEffect(int value, string target)
     {
-        DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].Mana += value;
+        int currentMana = value;
+        if (value == -1)
+            currentMana = BattleManager.Instance.CurrentConsumeMana;
+        currentMana *= BattleManager.Instance.ManaMultiplier;
+        DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].Mana += currentMana;
     }
 
     Sprite IEffect.SetIcon()

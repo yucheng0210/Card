@@ -41,6 +41,8 @@ public class BattleManager : Singleton<BattleManager>
     public Dictionary<string, int> CurrentAbilityList { get; set; }
     public Dictionary<string, string> CurrentTrapList { get; set; }
     public List<string> StateEventList { get; set; }
+    public int ManaMultiplier { get; set; }
+    public int CurrentConsumeMana { get; set; }
     //敵人
     public Dictionary<string, EnemyData> CurrentEnemyList { get; set; }
     public bool IsDrag { get; set; }
@@ -224,6 +226,7 @@ public class BattleManager : Singleton<BattleManager>
     public void ConsumeMana(int consumeMana)
     {
         DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].Mana -= consumeMana;
+        CurrentConsumeMana += consumeMana;
     }
     public void ChangeTurn(BattleType type)
     {

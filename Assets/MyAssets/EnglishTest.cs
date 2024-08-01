@@ -38,7 +38,9 @@ public class EnglishTest : MonoBehaviour
     "rapid", "halt", "further", "detail", "serve", "assigned", "itinerary", "assemble", "valuables", "precaution", "liable", "property", "unattended",
     "ticket", "tow", "domestic", "page", "contact", "identify", "close", "refrain", "litter", "scenic", "facility", "steadily", "reinforce", "nationwide",
      "recognition", "evacuate", "injured", "emergency", "auditorium", "award", "honor", "round", "applause", "following", "branch", "representative",
-     "shortly", "acknowledge", "organize", "attend", "gratitude", "merchandise", "reputation", "tarnish", "avoid"};
+     "shortly", "acknowledge", "organize", "attend", "gratitude", "merchandise", "reputation", "tarnish", "avoid","elect","obscene","constitutional",
+     "guarantee","review","strategy","minimal","objective","achieve","affect","remind","reserve","commitment","dedication","inspiration","surpass","gulf",
+     "altitude","punctual","grocery","renovation","ward","condense","dismiss","infinite","dwindle","diagnose","speculate"};
     private void Start()
     {
         for (int i = 0; i < 50; i++)

@@ -61,9 +61,7 @@ public class UIExplore : UIBase
     private void Random()
     {
         //BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Dialog);
-        /*corpse.SetActive(true);
-        corpse.GetComponent<Button>().onClick.AddListener(() => EventManager.Instance.DispatchEvent(EventDefinition.eventBattleWin));
-        corpse.GetComponent<Button>().onClick.AddListener(() => corpse.SetActive(false));*/
+
         int randomIndex = UnityEngine.Random.Range(0, 3);
         switch (randomIndex)
         {
@@ -74,6 +72,9 @@ public class UIExplore : UIBase
                 Battle();
                 break;
             case 2:
+                corpse.SetActive(true);
+                corpse.GetComponentInChildren<Button>().onClick.AddListener(() => EventManager.Instance.DispatchEvent(EventDefinition.eventBattleWin));
+                corpse.GetComponentInChildren<Button>().onClick.AddListener(() => corpse.SetActive(false));
                 break;
         }
     }
