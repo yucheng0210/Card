@@ -6707,7 +6707,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.00023391671, y: 930.0402}
+  m_AnchoredPosition: {x: 0.00023391671, y: 930.0401}
   m_SizeDelta: {x: 0, y: 2010.04}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &303874182
@@ -18970,8 +18970,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 194137555}
   m_HandleRect: {fileID: 194137554}
   m_Direction: 2
-  m_Value: -0.0000002625055
-  m_Size: 0.53728855
+  m_Value: 0
+  m_Size: 0.5373011
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -37910,15 +37910,11 @@ MonoBehaviour:
   corpse: {fileID: 238827767}
   recoverMenu: {fileID: 2042818348}
   cardPrefab: {fileID: 524259916357414313, guid: 0b5874506f49ccf47b373a2dd736234d, type: 3}
-  contentTrans: {fileID: 106443712}
-  applyButton: {fileID: 1526879642}
-  exitButton: {fileID: 0}
   restButton: {fileID: 1920300207}
   removeCardButton: {fileID: 1738468475}
   restMenu: {fileID: 306090933}
   restConfirmButton: {fileID: 73784600}
   recoverExitButton: {fileID: 2121142601}
-  currentRemoveID: -1
 --- !u!114 &2128855926
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -37938,6 +37934,7 @@ MonoBehaviour:
   hideButton: {fileID: 1151715400}
   cardPrefab: {fileID: 524259916357414313, guid: 0b5874506f49ccf47b373a2dd736234d, type: 3}
   contentTrans: {fileID: 106443712}
+  applyButton: {fileID: 1526879642}
 --- !u!114 &2128855927
 MonoBehaviour:
   m_ObjectHideFlags: 0

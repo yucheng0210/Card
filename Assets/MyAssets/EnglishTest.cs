@@ -40,7 +40,9 @@ public class EnglishTest : MonoBehaviour
      "recognition", "evacuate", "injured", "emergency", "auditorium", "award", "honor", "round", "applause", "following", "branch", "representative",
      "shortly", "acknowledge", "organize", "attend", "gratitude", "merchandise", "reputation", "tarnish", "avoid","elect","obscene","constitutional",
      "guarantee","review","strategy","minimal","objective","achieve","affect","remind","reserve","commitment","dedication","inspiration","surpass","gulf",
-     "altitude","punctual","grocery","renovation","ward","condense","dismiss","infinite","dwindle","diagnose","speculate"};
+     "altitude","punctual","grocery","renovation","ward","condense","dismiss","infinite","dwindle","diagnose","speculate","abide", "adhere", "endorse", 
+     "cease", "denounce", "exert", "expire", "exploit", "extract", "scribble", "infer", "influence", "interfere", "prevail", "proceed", "sacrifice", "resist",
+      "spread", "swell", "yield", "solicit", "accommodate", "confess", "pretend"};
     private void Start()
     {
         for (int i = 0; i < 50; i++)

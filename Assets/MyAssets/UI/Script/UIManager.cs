@@ -5,10 +5,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
+using System;
 public class UIManager : Singleton<UIManager>
 {
     public Dictionary<string, UIBase> UIDict { get; set; }
-
+    public int CurrentRemoveID { get; set; }
     protected override void Awake()
     {
         base.Awake();
@@ -74,11 +75,7 @@ public class UIManager : Singleton<UIManager>
     }
     private void CreateNewItem(Item item, BackpackSlot slotPrefab, Transform slotGroupTrans)
     {
-        BackpackSlot newItem = Instantiate(
-            slotPrefab,
-            slotGroupTrans.position,
-            Quaternion.identity
-        );
+        BackpackSlot newItem = Instantiate(slotPrefab, slotGroupTrans.position, Quaternion.identity);
         newItem.gameObject.transform.SetParent(slotGroupTrans, false);
         newItem.SlotItem = item;
         newItem.SlotImage.sprite = Resources.Load<Sprite>(item.ItemImagePath);
@@ -87,35 +84,48 @@ public class UIManager : Singleton<UIManager>
 
     public void RefreshItem(BackpackSlot slotPrefab, Transform slotGroupTrans, Dictionary<int, Item> inventory)
     {
+        // 清空現有的子物件
         for (int i = 0; i < slotGroupTrans.childCount; i++)
-            Destroy(slotGroupTrans.GetChild(i).gameObject);
-        foreach (KeyValuePair<int, Item> i in inventory)
         {
-            if (i.Value.ItemHeld == 0)
+            Destroy(slotGroupTrans.GetChild(i).gameObject);
+        }
+
+        // 使用鍵值對數組進行循環
+        var keys = new List<int>(inventory.Keys);
+        for (int i = 0; i < keys.Count; i++)
+        {
+            int key = keys[i];
+            Item item = inventory[key];
+
+            if (item.ItemHeld == 0)
             {
-                inventory.Remove(i.Key);
+                // 移除物品並遞歸刷新
+                inventory.Remove(key);
                 RefreshItem(slotPrefab, slotGroupTrans, inventory);
                 break;
             }
             else
-                CreateNewItem(i.Value, slotPrefab, slotGroupTrans);
+            {
+                // 創建新的物品槽
+                CreateNewItem(item, slotPrefab, slotGroupTrans);
+            }
         }
     }
     public void ChangeOutline(Outline outline, float length)
     {
         outline.effectDistance = new Vector2(length, length);
     }
-    public void RefreshCardBag(Transform contentTrans, CardItem cardPrefab)
+    public void RefreshCardBag()
     {
         ShowUI("UICardMenu");
         List<CardData> cardBag = DataManager.Instance.CardBag;
-        for (int i = 0; i < contentTrans.childCount; i++)
+        for (int i = 0; i < BattleManager.Instance.CardBagTrans.childCount; i++)
         {
-            Destroy(contentTrans.GetChild(i).gameObject);
+            Destroy(BattleManager.Instance.CardBagTrans.GetChild(i).gameObject);
         }
         for (int i = 0; i < cardBag.Count; i++)
         {
-            CardItem cardItem = Instantiate(cardPrefab, contentTrans);
+            CardItem cardItem = Instantiate(BattleManager.Instance.CardPrefab, BattleManager.Instance.CardBagTrans);
             cardItem.GetComponent<CanvasGroup>().alpha = 1;
             cardItem.CardID = cardBag[i].CardID;
             cardItem.CantMove = true;
@@ -155,4 +165,31 @@ public class UIManager : Singleton<UIManager>
             emptyPlace.GetComponent<Image>().color = color;
         }
     }
+    public void SelectCard(UnityEngine.Events.UnityAction unityAction)
+    {
+        RefreshCardBag();
+        for (int i = 0; i < BattleManager.Instance.CardBagTrans.childCount; i++)
+        {
+            int avoidClosure = i;
+            Button cardButton = BattleManager.Instance.CardBagTrans.GetChild(i).gameObject.AddComponent<Button>();
+            cardButton.onClick.AddListener(() => RefreshCardSelect(avoidClosure, unityAction));
+        }
+    }
+    private void RefreshCardSelect(int removeID, UnityEngine.Events.UnityAction unityAction)
+    {
+        BattleManager.Instance.CardBagApplyButton.gameObject.SetActive(true);
+        // exitButton.gameObject.SetActive(true);
+        CurrentRemoveID = removeID;
+        BattleManager.Instance.CardBagApplyButton.onClick.RemoveAllListeners();
+        for (int i = 0; i < BattleManager.Instance.CardBagTrans.childCount; i++)
+        {
+            ChangeOutline(BattleManager.Instance.CardBagTrans.GetChild(i).GetComponentInChildren<Outline>(), 0);
+        }
+        if (CurrentRemoveID < BattleManager.Instance.CardBagTrans.childCount && CurrentRemoveID != -1)
+        {
+            ChangeOutline(BattleManager.Instance.CardBagTrans.GetChild(CurrentRemoveID).GetComponentInChildren<Outline>(), 6);
+            BattleManager.Instance.CardBagApplyButton.onClick.AddListener(unityAction);
+        }
+    }
+
 }

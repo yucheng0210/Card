@@ -12,4 +12,5 @@
 2001,瞬閃,移動,CardImage/Spring,1,無,null,移動兩格。,0,0,MoveEffect=2,稀有,0,0,FALSE
 2002,魔能增幅,技能,CardImage/FireBall,1,無,null,本回合獲得魔力翻倍。,0,0,SetManaMultiplierEffect=2,稀有,0,3,TRUE
 2003,漩渦,技能,CardImage/Spring,1,無,null,獲得本回合內消耗魔力/2的魔力。,0,0,IncreaseManaEffect=-1,稀有,0,0,FALSE
+2004,彈回,技能,CardImage/Spring,1,無,null,產生5點護盾，並將一張卡牌返回抽卡堆。,0,5,ReturnCardBag=1,稀有,0,4,FALSE
 3001,毀滅射線,攻擊,CardImage/FireBall,1,無,null,消耗所有魔力，造成魔力x2+總魔力/5點平方傷害。,0,0,FireBallEffect=0,史詩,2,0,FALSE

@@ -15,12 +15,7 @@ public class UIExplore : UIBase
     private GameObject recoverMenu;
     [SerializeField]
     private CardItem cardPrefab;
-    [SerializeField]
-    private Transform contentTrans;
-    [SerializeField]
-    private Button applyButton;
-    [SerializeField]
-    private Button exitButton;
+
     [Header("休息")]
     [SerializeField]
     private Button restButton;
@@ -32,8 +27,6 @@ public class UIExplore : UIBase
     private Button restConfirmButton;
     [SerializeField]
     private Button recoverExitButton;
-    [SerializeField]
-    private int currentRemoveID = -1;
 
     protected override void Start()
     {
@@ -90,10 +83,13 @@ public class UIExplore : UIBase
     {
         int playerID = DataManager.Instance.PlayerID;
         int recoverCount = (int)(DataManager.Instance.PlayerList[playerID].MaxHealth * 0.35f);
+        int currentRemoveID = UIManager.Instance.CurrentRemoveID;
+        UnityEngine.Events.UnityAction unityAction = () => RemoveSuccess(currentRemoveID, BattleManager.Instance.CardBagTrans.GetChild(currentRemoveID).gameObject);
         restButton.onClick.AddListener(() => restMenu.SetActive(true));
         restButton.onClick.AddListener(() => restButton.gameObject.SetActive(false));
         restButton.onClick.AddListener(() => removeCardButton.gameObject.SetActive(false));
-        removeCardButton.onClick.AddListener(() => StartCoroutine(RemoveCard()));
+        //removeCardButton.onClick.AddListener(() => UIManager.Instance.RefreshCardBag());
+        removeCardButton.onClick.AddListener(() => UIManager.Instance.SelectCard(unityAction));
         restConfirmButton.onClick.AddListener(() => DataManager.Instance.PlayerList[playerID].CurrentHealth += recoverCount);
         restConfirmButton.onClick.AddListener(() => recoverExitButton.gameObject.SetActive(true));
         restConfirmButton.onClick.AddListener(() => restMenu.SetActive(false));
@@ -115,42 +111,15 @@ public class UIExplore : UIBase
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.BattleInitial);
         UI.SetActive(false);
     }
-    private IEnumerator RemoveCard()
-    {
-        UIManager.Instance.RefreshCardBag(contentTrans, cardPrefab);
-        yield return null;
-        for (int i = 0; i < contentTrans.childCount; i++)
-        {
-            int avoidClosure = i;
-            Button cardButton = contentTrans.GetChild(i).AddComponent<Button>();
-            cardButton.onClick.AddListener(() => RefreshRemoveID(avoidClosure));
-        }
-    }
-    private void RefreshRemoveID(int removeID)
-    {
-        applyButton.gameObject.SetActive(true);
-        // exitButton.gameObject.SetActive(true);
-        currentRemoveID = removeID;
-        applyButton.onClick.RemoveAllListeners();
-        for (int i = 0; i < contentTrans.childCount; i++)
-        {
-            UIManager.Instance.ChangeOutline(contentTrans.GetChild(i).GetComponentInChildren<Outline>(), 0);
-        }
-        if (currentRemoveID < contentTrans.childCount && currentRemoveID != -1)
-        {
-            UIManager.Instance.ChangeOutline(contentTrans.GetChild(currentRemoveID).GetComponentInChildren<Outline>(), 6);
-            applyButton.onClick.AddListener(() => RemoveSuccess(currentRemoveID, contentTrans.GetChild(currentRemoveID).gameObject));
-        }
-    }
     private void RemoveSuccess(int removeID, GameObject removeCard)
     {
-        applyButton.onClick.RemoveAllListeners();
-        applyButton.gameObject.SetActive(false);
+        BattleManager.Instance.CardBagApplyButton.onClick.RemoveAllListeners();
+        BattleManager.Instance.CardBagApplyButton.gameObject.SetActive(false);
         DataManager.Instance.CardBag.RemoveAt(removeID);
         Destroy(removeCard);
-        for (int i = 0; i < contentTrans.childCount; i++)
+        for (int i = 0; i < BattleManager.Instance.CardBagTrans.childCount; i++)
         {
-            contentTrans.GetChild(i).GetComponent<Button>().onClick.RemoveAllListeners();
+            BattleManager.Instance.CardBagTrans.GetChild(i).GetComponent<Button>().onClick.RemoveAllListeners();
         }
         removeCardButton.onClick.RemoveAllListeners();
         removeCardButton.gameObject.SetActive(false);

@@ -361,6 +361,7 @@ public class DataManager : Singleton<DataManager>
             CardBag.Add(cardData);
         }
         CardBag.Add(CardList[1003]);
+        CardBag.Add(CardList[2004]);
         BackpackManager.Instance.AddItem(3001, Backpack);
         PotionBag.Add(ItemList[1001]);
         // PlayerList[PlayerID].CharacterPos = LevelList[LevelID].PlayerStartPos;

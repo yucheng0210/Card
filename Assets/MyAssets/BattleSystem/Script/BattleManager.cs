@@ -34,6 +34,9 @@ public class BattleManager : Singleton<BattleManager>
         }
     }
     public BattleType MyBattleType { get; set; }
+    public Transform CardBagTrans { get; set; }
+    public Button CardBagApplyButton { get; set; }
+    public CardItem CardPrefab { get; set; }
     public List<CardItem> CardItemList { get; set; }
     public List<Vector2> CardPositionList { get; set; }
     public List<float> CardAngleList { get; set; }

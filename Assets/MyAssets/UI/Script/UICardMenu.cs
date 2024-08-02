@@ -20,14 +20,19 @@ public class UICardMenu : UIBase
 
     [SerializeField]
     private Transform contentTrans;
+    [SerializeField]
+    private Button applyButton;
 
     protected override void Start()
     {
         base.Start();
-        cardMenuButton.onClick.AddListener(() => UIManager.Instance.RefreshCardBag(contentTrans, cardPrefab));
-        battleCardMenuButton.onClick.AddListener(() => UIManager.Instance.RefreshCardBag(contentTrans, cardPrefab));
-        hideButton.onClick.AddListener(Hide);
+        cardMenuButton.onClick.AddListener(() => UIManager.Instance.RefreshCardBag());
+        battleCardMenuButton.onClick.AddListener(() => UIManager.Instance.RefreshCardBag());
         usedCardMenuButton.onClick.AddListener(RefreshUsedCardBag);
+        hideButton.onClick.AddListener(Hide);
+        BattleManager.Instance.CardBagTrans = contentTrans;
+        BattleManager.Instance.CardBagApplyButton = applyButton;
+        BattleManager.Instance.CardPrefab = cardPrefab;
     }
 
     private void RefreshUsedCardBag()
