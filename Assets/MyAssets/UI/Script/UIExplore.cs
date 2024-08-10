@@ -84,12 +84,12 @@ public class UIExplore : UIBase
         int playerID = DataManager.Instance.PlayerID;
         int recoverCount = (int)(DataManager.Instance.PlayerList[playerID].MaxHealth * 0.35f);
         int currentRemoveID = UIManager.Instance.CurrentRemoveID;
-        UnityEngine.Events.UnityAction unityAction = () => RemoveSuccess(currentRemoveID, BattleManager.Instance.CardBagTrans.GetChild(currentRemoveID).gameObject);
+        UnityEngine.Events.UnityAction unityAction = () => RemoveSuccess(BattleManager.Instance.CardMenuTrans.GetChild(currentRemoveID).gameObject);
         restButton.onClick.AddListener(() => restMenu.SetActive(true));
         restButton.onClick.AddListener(() => restButton.gameObject.SetActive(false));
         restButton.onClick.AddListener(() => removeCardButton.gameObject.SetActive(false));
         //removeCardButton.onClick.AddListener(() => UIManager.Instance.RefreshCardBag());
-        removeCardButton.onClick.AddListener(() => UIManager.Instance.SelectCard(unityAction));
+        removeCardButton.onClick.AddListener(() => UIManager.Instance.SelectCard(unityAction, false));
         restConfirmButton.onClick.AddListener(() => DataManager.Instance.PlayerList[playerID].CurrentHealth += recoverCount);
         restConfirmButton.onClick.AddListener(() => recoverExitButton.gameObject.SetActive(true));
         restConfirmButton.onClick.AddListener(() => restMenu.SetActive(false));
@@ -111,17 +111,11 @@ public class UIExplore : UIBase
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.BattleInitial);
         UI.SetActive(false);
     }
-    private void RemoveSuccess(int removeID, GameObject removeCard)
+    private void RemoveSuccess(GameObject removeCard)
     {
-        BattleManager.Instance.CardBagApplyButton.onClick.RemoveAllListeners();
         BattleManager.Instance.CardBagApplyButton.gameObject.SetActive(false);
-        DataManager.Instance.CardBag.RemoveAt(removeID);
+        DataManager.Instance.CardBag.RemoveAt(UIManager.Instance.CurrentRemoveID);
         Destroy(removeCard);
-        for (int i = 0; i < BattleManager.Instance.CardBagTrans.childCount; i++)
-        {
-            BattleManager.Instance.CardBagTrans.GetChild(i).GetComponent<Button>().onClick.RemoveAllListeners();
-        }
-        removeCardButton.onClick.RemoveAllListeners();
         removeCardButton.gameObject.SetActive(false);
         recoverMenu.SetActive(false);
         ExitExplore();

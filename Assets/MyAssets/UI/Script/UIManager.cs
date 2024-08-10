@@ -119,19 +119,34 @@ public class UIManager : Singleton<UIManager>
     {
         ShowUI("UICardMenu");
         List<CardData> cardBag = DataManager.Instance.CardBag;
-        for (int i = 0; i < BattleManager.Instance.CardBagTrans.childCount; i++)
+        for (int i = 0; i < BattleManager.Instance.CardMenuTrans.childCount; i++)
         {
-            Destroy(BattleManager.Instance.CardBagTrans.GetChild(i).gameObject);
+            Destroy(BattleManager.Instance.CardMenuTrans.GetChild(i).gameObject);
         }
         for (int i = 0; i < cardBag.Count; i++)
         {
-            CardItem cardItem = Instantiate(BattleManager.Instance.CardPrefab, BattleManager.Instance.CardBagTrans);
+            CardItem cardItem = Instantiate(BattleManager.Instance.CardPrefab, BattleManager.Instance.CardMenuTrans);
             cardItem.GetComponent<CanvasGroup>().alpha = 1;
             cardItem.CardID = cardBag[i].CardID;
             cardItem.CantMove = true;
         }
     }
-
+    public void RefreshUseCardBag()
+    {
+        ShowUI("UICardMenu");
+        List<CardItem> cardBag = DataManager.Instance.UsedCardBag;
+        for (int i = 0; i < BattleManager.Instance.CardMenuTrans.childCount; i++)
+        {
+            Destroy(BattleManager.Instance.CardMenuTrans.GetChild(i).gameObject);
+        }
+        for (int i = 0; i < cardBag.Count; i++)
+        {
+            CardItem cardItem = Instantiate(BattleManager.Instance.CardPrefab, BattleManager.Instance.CardMenuTrans);
+            cardItem.GetComponent<CanvasGroup>().alpha = 1;
+            cardItem.CardID = cardBag[i].CardID;
+            cardItem.CantMove = true;
+        }
+    }
     public void ClearMoveClue(bool canRemove)
     {
         RectTransform checkerboardTrans = BattleManager.Instance.CheckerboardTrans;
@@ -165,13 +180,17 @@ public class UIManager : Singleton<UIManager>
             emptyPlace.GetComponent<Image>().color = color;
         }
     }
-    public void SelectCard(UnityEngine.Events.UnityAction unityAction)
+    public void SelectCard(UnityEngine.Events.UnityAction unityAction, bool isRefreshUseBag)
     {
-        RefreshCardBag();
-        for (int i = 0; i < BattleManager.Instance.CardBagTrans.childCount; i++)
+        if (isRefreshUseBag)
+            RefreshUseCardBag();
+        else
+            RefreshCardBag();
+        for (int i = 0; i < BattleManager.Instance.CardMenuTrans.childCount; i++)
         {
             int avoidClosure = i;
-            Button cardButton = BattleManager.Instance.CardBagTrans.GetChild(i).gameObject.AddComponent<Button>();
+            Button cardButton = BattleManager.Instance.CardMenuTrans.GetChild(i).gameObject.AddComponent<Button>();
+            cardButton.onClick.RemoveAllListeners();
             cardButton.onClick.AddListener(() => RefreshCardSelect(avoidClosure, unityAction));
         }
     }
@@ -181,13 +200,13 @@ public class UIManager : Singleton<UIManager>
         // exitButton.gameObject.SetActive(true);
         CurrentRemoveID = removeID;
         BattleManager.Instance.CardBagApplyButton.onClick.RemoveAllListeners();
-        for (int i = 0; i < BattleManager.Instance.CardBagTrans.childCount; i++)
+        for (int i = 0; i < BattleManager.Instance.CardMenuTrans.childCount; i++)
         {
-            ChangeOutline(BattleManager.Instance.CardBagTrans.GetChild(i).GetComponentInChildren<Outline>(), 0);
+            ChangeOutline(BattleManager.Instance.CardMenuTrans.GetChild(i).GetComponentInChildren<Outline>(), 0);
         }
-        if (CurrentRemoveID < BattleManager.Instance.CardBagTrans.childCount && CurrentRemoveID != -1)
+        if (CurrentRemoveID < BattleManager.Instance.CardMenuTrans.childCount && CurrentRemoveID != -1)
         {
-            ChangeOutline(BattleManager.Instance.CardBagTrans.GetChild(CurrentRemoveID).GetComponentInChildren<Outline>(), 6);
+            ChangeOutline(BattleManager.Instance.CardMenuTrans.GetChild(CurrentRemoveID).GetComponentInChildren<Outline>(), 6);
             BattleManager.Instance.CardBagApplyButton.onClick.AddListener(unityAction);
         }
     }

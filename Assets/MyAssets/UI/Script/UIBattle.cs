@@ -249,6 +249,7 @@ public class UIBattle : UIBase
             string key = BattleManager.Instance.CurrentTerrainList.ElementAt(i).Key;
             GameObject terrain = Instantiate(terrainPrefab, terrainTrans);
             RectTransform terrainRect = terrain.GetComponent<RectTransform>();
+            terrain.GetComponent<Image>().sprite = Resources.Load<Sprite>(BattleManager.Instance.CurrentTerrainList[key].ImagePath);
             terrainRect.anchoredPosition = BattleManager.Instance.CheckerboardTrans.GetChild(BattleManager.Instance.GetCheckerboardPoint(key)).localPosition;
             yield return null;
         }

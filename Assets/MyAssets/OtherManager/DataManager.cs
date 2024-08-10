@@ -311,7 +311,7 @@ public class DataManager : Singleton<DataManager>
                 MinAttack = int.Parse(row[3]),
                 MaxAttack = int.Parse(row[4]),
                 AttackDistance = int.Parse(row[5]),
-                //ImagePath=row[6]
+                ImagePath = row[6]
             };
             TerrainList.Add(terrain.TerrainID, terrain);
         }

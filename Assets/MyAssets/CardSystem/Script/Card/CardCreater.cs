@@ -55,6 +55,7 @@ public class CardCreater : MonoBehaviour
         EventManager.Instance.AddEventRegister(EventDefinition.eventBattleWin, EventBattleWin);
         EventManager.Instance.AddEventRegister(EventDefinition.eventBattleInitial, EventBattleInitial);
         EventManager.Instance.AddEventRegister(EventDefinition.eventDrawCard, EventDrawCard);
+        BattleManager.Instance.CardBagTrans = transform;
     }
 
     private void CreateCard()
@@ -160,8 +161,7 @@ public class CardCreater : MonoBehaviour
         for (int j = 0; j < BattleManager.Instance.CardItemList.Count; j++)
         {
             BattleManager.Instance.CardItemList[j].transform.SetParent(transform);
-            BattleManager.Instance.CardItemList[j].GetComponent<RectTransform>().anchoredPosition =
-                transform.position;
+            BattleManager.Instance.CardItemList[j].GetComponent<RectTransform>().anchoredPosition = transform.position;
         }
         DataManager.Instance.UsedCardBag.Clear();
         BattleManager.Instance.Shuffle();

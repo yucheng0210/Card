@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class EnglishTest : MonoBehaviour
 {
-    private List<string> englishList = new List<string> { "passenger","ascend","climb","ladder","face","opposite","pedestrian","pavement","sweep","messy",
+    private List<string> englishList = new List<string> 
+    { "passenger","ascend","climb","ladder","face","opposite","pedestrian","pavement","sweep","messy",
     "reach","cupboard","walk","leash","operate","lawn","observe","compete","insert","drawer","kneel","fireplace","survey","blossom","awning","curb",
     "sidewalk","countless","scatter","hang","railing","instrument","lean","diagonally","thin","trunk","numerous","locate","lead","fountain","stretch",
     "path","various","flier","bin","contain","immediately","surround","statue","barn","podium","hide","facade","plaque","mural","attire","tripod","infant",
@@ -40,9 +41,13 @@ public class EnglishTest : MonoBehaviour
      "recognition", "evacuate", "injured", "emergency", "auditorium", "award", "honor", "round", "applause", "following", "branch", "representative",
      "shortly", "acknowledge", "organize", "attend", "gratitude", "merchandise", "reputation", "tarnish", "avoid","elect","obscene","constitutional",
      "guarantee","review","strategy","minimal","objective","achieve","affect","remind","reserve","commitment","dedication","inspiration","surpass","gulf",
-     "altitude","punctual","grocery","renovation","ward","condense","dismiss","infinite","dwindle","diagnose","speculate","abide", "adhere", "endorse", 
+     "altitude","punctual","grocery","renovation","ward","condense","dismiss","infinite","dwindle","diagnose","speculate","abide", "adhere", "endorse",
      "cease", "denounce", "exert", "expire", "exploit", "extract", "scribble", "infer", "influence", "interfere", "prevail", "proceed", "sacrifice", "resist",
-      "spread", "swell", "yield", "solicit", "accommodate", "confess", "pretend"};
+      "spread", "swell", "yield", "solicit", "accommodate", "confess", "pretend","eliminate", "collide", "divorce", "postpone", "frighten", "calculate", "commence",
+       "penetrate", "deduct", "intervene", "emphasize", "abuse", "argument", "capital", "climate", "coalition", "compassion", "remark", "currency", "interruption",
+       "insight", "drawback", "drought", "excursion","foundation", "institution", "defendant", "disorder", "intermission", "instinct", "outbreak", "principal",
+        "pharmacy", "politician", "hemisphere", "surgeon", "remedy", "utensil", "treaty", "prejudice", "sequence", "heritage", "faculty", "offspring", "abrupt",
+        "administrative", "hectic", "ashamed", "bilateral", "commemorative"};
     private void Start()
     {
         for (int i = 0; i < 50; i++)

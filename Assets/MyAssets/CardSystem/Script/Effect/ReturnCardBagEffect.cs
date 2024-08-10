@@ -7,7 +7,8 @@ public class ReturnCardBag : IEffect
     public void ApplyEffect(int value, string target)
     {
         UnityEngine.Events.UnityAction unityAction = Return;
-        BattleManager.Instance.CardBagApplyButton.onClick.AddListener(() => UIManager.Instance.SelectCard(unityAction));
+        UIManager.Instance.SelectCard(unityAction, true);
+        // BattleManager.Instance.CardBagApplyButton.onClick.AddListener(() => UIManager.Instance.SelectCard(unityAction, true));
     }
     public Sprite SetIcon()
     {
@@ -15,11 +16,16 @@ public class ReturnCardBag : IEffect
     }
     private void Return()
     {
-      /*  BattleManager.Instance.CardBagApplyButton.onClick.RemoveAllListeners();
         BattleManager.Instance.CardBagApplyButton.gameObject.SetActive(false);
+        int id = DataManager.Instance.UsedCardBag[UIManager.Instance.CurrentRemoveID].CardID;
+        CardItem cardItem = DataManager.Instance.UsedCardBag[UIManager.Instance.CurrentRemoveID];
+        cardItem.transform.SetParent(BattleManager.Instance.CardBagTrans);
+        cardItem.GetComponent<RectTransform>().anchoredPosition = BattleManager.Instance.CardBagTrans.position;
+        DataManager.Instance.CardBag.Insert(0, DataManager.Instance.CardList[id]);
+        BattleManager.Instance.CardItemList.Insert(0, cardItem);
         DataManager.Instance.UsedCardBag.RemoveAt(UIManager.Instance.CurrentRemoveID);
-        DataManager.Instance.CardBag.Insert(0, DataManager.Instance.CardBag[UIManager.Instance.CurrentRemoveID]);
-        EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);*/
+        UIManager.Instance.HideUI("UICardMenu");
+        EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
 
 }

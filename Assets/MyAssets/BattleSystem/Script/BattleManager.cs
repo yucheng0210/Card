@@ -34,6 +34,7 @@ public class BattleManager : Singleton<BattleManager>
         }
     }
     public BattleType MyBattleType { get; set; }
+    public Transform CardMenuTrans { get; set; }
     public Transform CardBagTrans { get; set; }
     public Button CardBagApplyButton { get; set; }
     public CardItem CardPrefab { get; set; }
