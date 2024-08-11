@@ -47,7 +47,9 @@ public class EnglishTest : MonoBehaviour
        "penetrate", "deduct", "intervene", "emphasize", "abuse", "argument", "capital", "climate", "coalition", "compassion", "remark", "currency", "interruption",
        "insight", "drawback", "drought", "excursion","foundation", "institution", "defendant", "disorder", "intermission", "instinct", "outbreak", "principal",
         "pharmacy", "politician", "hemisphere", "surgeon", "remedy", "utensil", "treaty", "prejudice", "sequence", "heritage", "faculty", "offspring", "abrupt",
-        "administrative", "hectic", "ashamed", "bilateral", "commemorative"};
+        "administrative", "hectic", "ashamed", "bilateral", "commemorative","concise", "considerate", "tragic", "dense", "eligible", "equivalent", "extinct", 
+        "industrious", "furious", "bankrupt", "mutual", "outstanding", "essential", "anxious", "flimsy", "fiscal", "subsidiary", "confidential", "precisely",
+         "unanimously", "furthermore", "completely", "thus", "practically"};
     private void Start()
     {
         for (int i = 0; i < 50; i++)
