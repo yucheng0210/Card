@@ -49,7 +49,10 @@ public class EnglishTest : MonoBehaviour
         "pharmacy", "politician", "hemisphere", "surgeon", "remedy", "utensil", "treaty", "prejudice", "sequence", "heritage", "faculty", "offspring", "abrupt",
         "administrative", "hectic", "ashamed", "bilateral", "commemorative","concise", "considerate", "tragic", "dense", "eligible", "equivalent", "extinct", 
         "industrious", "furious", "bankrupt", "mutual", "outstanding", "essential", "anxious", "flimsy", "fiscal", "subsidiary", "confidential", "precisely",
-         "unanimously", "furthermore", "completely", "thus", "practically"};
+         "unanimously", "furthermore", "completely", "thus", "practically","definitely", "nonetheless", "enormously", "drastically", "continually", "adequately", 
+         "lubricant", "satisfy", "lodge", "violate", "specialize", "expand", "underutilized", "extensive", "consist", "depend", "transmission", "acquaint", 
+         "refreshment", "vary", "identical", "production", "disruption", "avert", "transition", "succeed", "construction", "concentrate", "appreciate", "rely", 
+         "initiate", "comprehensive"};
     private void Start()
     {
         for (int i = 0; i < 50; i++)

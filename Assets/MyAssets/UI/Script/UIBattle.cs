@@ -212,6 +212,7 @@ public class UIBattle : UIBase
         if (BattleManager.Instance.CurrentEnemyList.Count == 0)
         {
             BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Win);
+            BattleManager.Instance.CurrentFightingSpiritCount = 0;
             RemoveAllTerrian();
         }
     }

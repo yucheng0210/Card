@@ -44,9 +44,9 @@ public class BattleManager : Singleton<BattleManager>
     public Dictionary<string, int> CurrentNegativeState { get; set; }
     public Dictionary<string, int> CurrentAbilityList { get; set; }
     public Dictionary<string, string> CurrentTrapList { get; set; }
-    public List<string> StateEventList { get; set; }
     public int ManaMultiplier { get; set; }
     public int CurrentConsumeMana { get; set; }
+    public int CurrentFightingSpiritCount { get; set; }
     //敵人
     public Dictionary<string, EnemyData> CurrentEnemyList { get; set; }
     public bool IsDrag { get; set; }

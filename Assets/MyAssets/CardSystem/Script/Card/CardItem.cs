@@ -262,6 +262,8 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             {
                 BattleManager.Instance.CurrentTrapList.Add(BattleManager.Instance.CurrentLocationID, effectID);
             }
+            if (BattleManager.Instance.CurrentNegativeState.ContainsKey(nameof(CantIncreaseManaEffect)) && effectID == nameof(IncreaseManaEffect))
+                continue;
             EffectFactory.Instance.CreateEffect(effectID).ApplyEffect(effectCount, target);
         }
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
