@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
-
+using DG.Tweening;
 public class UIExplore : UIBase
 {
     [Header("隨機事件")]
@@ -13,9 +13,6 @@ public class UIExplore : UIBase
     private GameObject corpse;
     [SerializeField]
     private GameObject recoverMenu;
-    [SerializeField]
-    private CardItem cardPrefab;
-
     [Header("休息")]
     [SerializeField]
     private Button restButton;
@@ -27,6 +24,16 @@ public class UIExplore : UIBase
     private Button restConfirmButton;
     [SerializeField]
     private Button recoverExitButton;
+    [Header("玩家")]
+    [SerializeField]
+    private Text cardBagCountText;
+    [SerializeField]
+    private Image health;
+
+    [SerializeField]
+    private Text healthText;
+    [SerializeField]
+    private Text moneyText;
 
     protected override void Start()
     {
@@ -35,6 +42,7 @@ public class UIExplore : UIBase
         // exitButton.onClick.AddListener(ExitExplore);
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.None);
         RecoverInitialize();
+        EventManager.Instance.AddEventRegister(EventDefinition.eventRefreshUI, EventRefreshUI);
     }
 
     private void HideAllUI()
@@ -155,5 +163,13 @@ public class UIExplore : UIBase
                 break;
 
         }
+    }
+    private void EventRefreshUI(params object[] args)
+    {
+        int id = DataManager.Instance.PlayerID;
+        cardBagCountText.text = DataManager.Instance.CardBag.Count.ToString();
+        health.DOFillAmount((float)((float)DataManager.Instance.PlayerList[id].CurrentHealth / DataManager.Instance.PlayerList[id].MaxHealth), 0.5f);
+        healthText.text = DataManager.Instance.PlayerList[id].CurrentHealth.ToString() + "/" + DataManager.Instance.PlayerList[id].MaxHealth.ToString();
+        moneyText.text = DataManager.Instance.MoneyCount.ToString();
     }
 }

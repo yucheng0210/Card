@@ -29,8 +29,6 @@ public class UIBattle : UIBase
 
     [SerializeField]
     private Text battleCardBagCountText;
-    [SerializeField]
-    private Text cardBagCountText;
 
     [SerializeField]
     private Text usedCardBagCountText;
@@ -189,8 +187,10 @@ public class UIBattle : UIBase
     }
     private void PlayerMove()
     {
-        if (BattleManager.Instance.PlayerMoveCount <= 0 || BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack
-        || BattleManager.Instance.CurrentNegativeState.ContainsKey(nameof(CantMoveEffect)))
+        bool playerCantMove = BattleManager.Instance.PlayerMoveCount <= 0;
+        bool notInAttack = BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack;
+        bool containsCantMoveEffect = BattleManager.Instance.CurrentNegativeState.ContainsKey(nameof(CantMoveEffect));
+        if (playerCantMove || notInAttack || containsCantMoveEffect)
             return;
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.UsingEffect);
         EffectFactory.Instance.CreateEffect("MoveEffect").ApplyEffect(BattleManager.Instance.PlayerMoveCount, "Player");
@@ -359,7 +359,6 @@ public class UIBattle : UIBase
         healthText.text = DataManager.Instance.PlayerList[id].CurrentHealth.ToString() + "/" + DataManager.Instance.PlayerList[id].MaxHealth.ToString();
         shieldText.text = DataManager.Instance.PlayerList[id].CurrentShield.ToString();
         battleCardBagCountText.text = DataManager.Instance.CardBag.Count.ToString();
-        cardBagCountText.text = DataManager.Instance.CardBag.Count.ToString();
         usedCardBagCountText.text = DataManager.Instance.UsedCardBag.Count.ToString();
         removeCardBagCountText.text = DataManager.Instance.RemoveCardBag.Count.ToString();
         for (int i = 0; i < playerMoveGridTrans.childCount; i++)

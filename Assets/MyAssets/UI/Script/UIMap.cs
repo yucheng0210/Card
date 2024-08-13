@@ -15,11 +15,11 @@ public class UIMap : UIBase
     private Button[][] mapList;
     private Dictionary<string, int> levelProbabilities = new Dictionary<string, int>
     {
-        { "BATTLE", 35 },
+        { "BATTLE", 5 },
         { "BOSS", 5 },
-        { "RANDOM", 20 },
-        { "RECOVER", 35 },
-        { "SHOP",5 }
+        { "RANDOM", 5 },
+        { "RECOVER", 5 },
+        { "SHOP",80 }
     };
     protected override void Start()
     {
@@ -94,9 +94,7 @@ public class UIMap : UIBase
         int currentIndex = GetCurrentIndex(i, simpleRandomIndex, normalRandomIndex, hardRandomIndex);
 
         if (DataManager.Instance.LevelTypeList[currentIndex].LevelType != "BATTLE" && i == 0)
-        {
             return false;
-        }
 
         Level level = CreateLevel(i, j, currentIndex);
         MapManager.Instance.MapNodes[i][j].l = level;

@@ -80,6 +80,11 @@ public class DataManager : Singleton<DataManager>
                 CardDescription = row[7],
                 CardAttack = int.Parse(row[8]),
                 CardShield = int.Parse(row[9]),
+                CardRarity = row[11],
+                CardAttackDistance = int.Parse(row[12]),
+                CardManaCost = int.Parse(row[13]),
+                CardRemove = bool.Parse(row[14]),
+                CardBuyPrice = int.Parse(row[15]),
                 CardEffectList = new List<(string, int)>()
             };
             if (row[10] != "")
@@ -94,10 +99,6 @@ public class DataManager : Singleton<DataManager>
                         cardData.CardEffectList.Add(new ValueTuple<string, int>(id, count));
                 }
             }
-            cardData.CardRarity = row[11];
-            cardData.CardAttackDistance = int.Parse(row[12]);
-            cardData.CardManaCost = int.Parse(row[13]);
-            cardData.CardRemove = bool.Parse(row[14]);
             CardList.Add(cardData.CardID, cardData);
         }
         #endregion
@@ -348,7 +349,7 @@ public class DataManager : Singleton<DataManager>
     }
     private void StartGame()
     {
-        MoneyCount = 0;
+        MoneyCount = 99;
         PlayerID = 1001;
         CardData cardData;
         for (int i = 0; i < 6; i++)
@@ -368,7 +369,7 @@ public class DataManager : Singleton<DataManager>
     }
     private void StartGame_FightingSpiritEffect()
     {
-        MoneyCount = 0;
+        MoneyCount = 99;
         PlayerID = 1001;
         CardData cardData;
         for (int i = 0; i < 10; i++)
