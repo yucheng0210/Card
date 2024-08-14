@@ -34,6 +34,9 @@ public class UIExplore : UIBase
     private Text healthText;
     [SerializeField]
     private Text moneyText;
+    [Header("寶藏")]
+    [SerializeField]
+    private GameObject treasure;
 
     protected override void Start()
     {
@@ -138,6 +141,12 @@ public class UIExplore : UIBase
         UIManager.Instance.ShowUI("UIShop");
         UI.SetActive(false);
     }
+    private void Treasure()
+    {
+        treasure.SetActive(true);
+        treasure.GetComponentInChildren<Button>().onClick.AddListener(() => EventManager.Instance.DispatchEvent(EventDefinition.eventBattleWin));
+        treasure.GetComponentInChildren<Button>().onClick.AddListener(() => treasure.SetActive(false));
+    }
     private void EventExplore(params object[] args)
     {
         switch (args[0])
@@ -157,9 +166,11 @@ public class UIExplore : UIBase
             case "BOSS":
                 Boss();
                 break;
-
             case "SHOP":
                 Shop();
+                break;
+            case "TREASURE":
+                Treasure();
                 break;
 
         }

@@ -93,6 +93,11 @@ public class MapManager : Singleton<MapManager>
         //如果x是这一行最后一个点，或者nextLevelLeftPoint是下一行的最后一个点，自然就不能连接{x+1，y+1}，也就是右边的点不能连接，所以canRight=false
         //同样的，如果x是这一行的第一个点，左边也是不能连接的，canLeft=false；
         //然后判断可以选择的点有几个，直接产生两个随机数，然后连接，再nextLevelLeftPoint += secondNum，也就是让nextLevelLeftPoint移动到所有被连接的点的最右边，即可连接点的左边界
+        if (currentLevel == maxLevel - 2)
+        {
+            ProcessLastLevel(currentLevel);
+            return;
+        }
         MapNode beUsedNode;
         bool canLeft = true;
         bool canRight = true;
@@ -153,7 +158,22 @@ public class MapManager : Singleton<MapManager>
         }
     }
 
+    void ProcessLastLevel(int currentLevel)
+    {
+        // 設定最後一個 level 只有一個節點
+        int lastNodeIndex = 2;
+        mapNodes[currentLevel + 1][lastNodeIndex].isUsed = true;
 
+        // 將前一個 level 的所有節點都連接到這個單一節點
+        for (int i = 0; i < maxCount; i++)
+        {
+            if (mapNodes[currentLevel][i].isUsed)
+            {
+                mapNodes[currentLevel][i].left = mapNodes[currentLevel + 1][lastNodeIndex];
+                mapNodes[currentLevel][i].right = null; // 確保只有一個連接
+            }
+        }
+    }
     void CreateTheFirstLevel()
     {
         // int thisLevelCount = random.Next(maxCount);
@@ -214,7 +234,7 @@ public class MapManager : Singleton<MapManager>
         {
             int x = i * 150 + paddingX + leftPadding;
             int y = paddingY;
-            levels[i].gameObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(x, y);
+            levels[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(x, y);
             levels[i].SetRoomsPosition(random);
         }
     }

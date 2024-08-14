@@ -19,7 +19,8 @@ public class UIMap : UIBase
         { "BOSS", 5 },
         { "RANDOM", 5 },
         { "RECOVER", 5 },
-        { "SHOP",80 }
+        { "SHOP",5 },
+        {"TREASURE",75}
     };
     protected override void Start()
     {
@@ -105,6 +106,11 @@ public class UIMap : UIBase
     {
         int currentIndex = 0;
         int cumulativeProbability = 0;
+        if (count == 14)
+        {
+            currentIndex = 7001;
+            return currentIndex;
+        }
         for (int k = 0; k < levelProbabilities.Count; k++)
         {
             int value = levelProbabilities.ElementAt(k).Value;
@@ -134,6 +140,9 @@ public class UIMap : UIBase
                         break;
                     case "SHOP":
                         currentIndex = 5001;
+                        break;
+                    case "TREASURE":
+                        currentIndex = 6001;
                         break;
                 }
                 break;
@@ -204,6 +213,12 @@ public class UIMap : UIBase
                 break;
             case "SHOP":
                 mapImage.sprite = mapTypeList[4];
+                break;
+            case "TREASURE":
+                mapImage.sprite = mapTypeList[5];
+                break;
+            case "FINALBOSS":
+                mapImage.sprite = mapTypeList[6];
                 break;
                 /*case "REMOVECARD":
                     mapImage.sprite = mapTypeList[4];
