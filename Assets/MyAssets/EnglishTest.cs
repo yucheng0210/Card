@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EnglishTest : MonoBehaviour
 {
-    private List<string> englishList = new List<string> 
+    private List<string> englishList = new List<string>
     { "passenger","ascend","climb","ladder","face","opposite","pedestrian","pavement","sweep","messy",
     "reach","cupboard","walk","leash","operate","lawn","observe","compete","insert","drawer","kneel","fireplace","survey","blossom","awning","curb",
     "sidewalk","countless","scatter","hang","railing","instrument","lean","diagonally","thin","trunk","numerous","locate","lead","fountain","stretch",
@@ -47,12 +47,15 @@ public class EnglishTest : MonoBehaviour
        "penetrate", "deduct", "intervene", "emphasize", "abuse", "argument", "capital", "climate", "coalition", "compassion", "remark", "currency", "interruption",
        "insight", "drawback", "drought", "excursion","foundation", "institution", "defendant", "disorder", "intermission", "instinct", "outbreak", "principal",
         "pharmacy", "politician", "hemisphere", "surgeon", "remedy", "utensil", "treaty", "prejudice", "sequence", "heritage", "faculty", "offspring", "abrupt",
-        "administrative", "hectic", "ashamed", "bilateral", "commemorative","concise", "considerate", "tragic", "dense", "eligible", "equivalent", "extinct", 
+        "administrative", "hectic", "ashamed", "bilateral", "commemorative","concise", "considerate", "tragic", "dense", "eligible", "equivalent", "extinct",
         "industrious", "furious", "bankrupt", "mutual", "outstanding", "essential", "anxious", "flimsy", "fiscal", "subsidiary", "confidential", "precisely",
-         "unanimously", "furthermore", "completely", "thus", "practically","definitely", "nonetheless", "enormously", "drastically", "continually", "adequately", 
-         "lubricant", "satisfy", "lodge", "violate", "specialize", "expand", "underutilized", "extensive", "consist", "depend", "transmission", "acquaint", 
-         "refreshment", "vary", "identical", "production", "disruption", "avert", "transition", "succeed", "construction", "concentrate", "appreciate", "rely", 
-         "initiate", "comprehensive"};
+         "unanimously", "furthermore", "completely", "thus", "practically","definitely", "nonetheless", "enormously", "drastically", "continually", "adequately",
+         "lubricant", "satisfy", "lodge", "violate", "specialize", "expand", "underutilized", "extensive", "consist", "depend", "transmission", "acquaint",
+         "refreshment", "vary", "identical", "production", "disruption", "avert", "transition", "succeed", "construction", "concentrate", "appreciate", "rely",
+         "initiate", "comprehensive","certify", "certificate", "certification", "certified", "criticize", "critic", "criticism", "critical", "destroy",
+          "destroyer", "destruction", "destructive", "detect", "detection", "detective", "detector", "dominate", "dominant", "dominance", "domination",
+           "intense", "intensive", "intensify", "intensity", "legislate", "legislation", "legislative", "legislature", "sensible", "sensitive", "sensory",
+            "sensation", "stimulate", "stimulus", "stimulation", "stimulative"};
     private void Start()
     {
         for (int i = 0; i < 50; i++)

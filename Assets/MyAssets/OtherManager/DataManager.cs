@@ -58,7 +58,8 @@ public class DataManager : Singleton<DataManager>
     private void Start()
     {
         //StartGame();
-        StartGame_FightingSpiritEffect();
+        //StartGame_FightingSpiritEffect();
+        StartGame_ExtinctionRayEffect();
     }
 
     private void LoadData()
@@ -85,6 +86,7 @@ public class DataManager : Singleton<DataManager>
                 CardManaCost = int.Parse(row[13]),
                 CardRemove = bool.Parse(row[14]),
                 CardBuyPrice = int.Parse(row[15]),
+                CardFreeze = bool.Parse(row[16]),
                 CardEffectList = new List<(string, int)>()
             };
             if (row[10] != "")
@@ -380,5 +382,23 @@ public class DataManager : Singleton<DataManager>
         BackpackManager.Instance.AddItem(3001, Backpack);
         PotionBag.Add(ItemList[1001]);
         // PlayerList[PlayerID].CharacterPos = LevelList[LevelID].PlayerStartPos;
+    }
+    private void StartGame_ExtinctionRayEffect()
+    {
+        MoneyCount = 99;
+        PlayerID = 1001;
+        CardData cardData;
+        cardData = CardList[3001];
+        CardBag.Add(cardData);
+        cardData = CardList[2002];
+        CardBag.Add(cardData);
+        cardData = CardList[2003];
+        CardBag.Add(cardData);
+        cardData = CardList[2004];
+        CardBag.Add(cardData);
+        cardData = CardList[1011];
+        CardBag.Add(cardData);
+        cardData = CardList[1010];
+        CardBag.Add(cardData);
     }
 }

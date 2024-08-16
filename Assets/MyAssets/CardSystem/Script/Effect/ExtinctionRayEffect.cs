@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FireBallEffect : IEffect
+public class ExtinctionRayEffect : IEffect
 {
     public void ApplyEffect(int value, string target)
     {

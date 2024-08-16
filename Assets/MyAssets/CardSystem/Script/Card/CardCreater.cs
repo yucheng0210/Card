@@ -15,9 +15,6 @@ public class CardCreater : MonoBehaviour
     private Vector2 startPosition = new Vector2(878, -20);
 
     [SerializeField]
-    private CardItem cardPrefab;
-
-    [SerializeField]
     private Transform handCardTrans;
 
     [SerializeField]
@@ -64,7 +61,7 @@ public class CardCreater : MonoBehaviour
         BattleManager.Instance.Shuffle(); // 在這之前將卡片順序洗牌
         for (int i = 0; i < cardBag.Count; i++)
         {
-            CardItem cardItem = Instantiate(cardPrefab, transform);
+            CardItem cardItem = Instantiate(BattleManager.Instance.CardPrefab, transform);
             cardItem.CardID = cardBag[i].CardID;
             cardItem.gameObject.SetActive(false);
             BattleManager.Instance.CardItemList.Add(cardItem);
@@ -318,8 +315,15 @@ public class CardCreater : MonoBehaviour
     }
     private void EventEnemyTurn(params object[] args)
     {
+        List<CardItem> freezeCardList = new List<CardItem>();
+
         for (int i = 0; i < DataManager.Instance.HandCard.Count; i++)
         {
+            if (DataManager.Instance.CardList[DataManager.Instance.HandCard[i].CardID].CardFreeze)
+            {
+                freezeCardList.Add(DataManager.Instance.HandCard[i]);
+                continue;
+            }
             DataManager.Instance.HandCard[i].gameObject.SetActive(true);
             DataManager.Instance.HandCard[i].CantMove = true;
             DataManager.Instance.HandCard[i].transform.SetParent(usedCardTrans);
@@ -327,6 +331,8 @@ public class CardCreater : MonoBehaviour
             DataManager.Instance.UsedCardBag.Add(DataManager.Instance.HandCard[i]);
         }
         DataManager.Instance.HandCard.Clear();
+        DataManager.Instance.HandCard = freezeCardList;
+        AdjustCard();
         BattleManager.Instance.CardPositionList.Clear();
         BattleManager.Instance.CardAngleList.Clear();
         StartCoroutine(HideAllCards());
@@ -340,12 +346,24 @@ public class CardCreater : MonoBehaviour
         {
             BattleManager.Instance.CardItemList.Add(DataManager.Instance.HandCard[i]);
             int index = DataManager.Instance.HandCard[i].CardID;
+            if (DataManager.Instance.CardList[index].CardType == "詛咒")
+                continue;
             DataManager.Instance.CardBag.Add(DataManager.Instance.CardList[index]);
         }
         for (int j = 0; j < DataManager.Instance.UsedCardBag.Count; j++)
         {
             BattleManager.Instance.CardItemList.Add(DataManager.Instance.UsedCardBag[j]);
             int index = DataManager.Instance.UsedCardBag[j].CardID;
+            if (DataManager.Instance.CardList[index].CardType == "詛咒")
+                continue;
+            DataManager.Instance.CardBag.Add(DataManager.Instance.CardList[index]);
+        }
+        for (int j = 0; j < DataManager.Instance.RemoveCardBag.Count; j++)
+        {
+            BattleManager.Instance.CardItemList.Add(DataManager.Instance.RemoveCardBag[j]);
+            int index = DataManager.Instance.RemoveCardBag[j].CardID;
+            if (DataManager.Instance.CardList[index].CardType == "詛咒")
+                continue;
             DataManager.Instance.CardBag.Add(DataManager.Instance.CardList[index]);
         }
         for (int j = 0; j < BattleManager.Instance.CardItemList.Count; j++)

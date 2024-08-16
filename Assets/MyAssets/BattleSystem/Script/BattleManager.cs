@@ -366,4 +366,15 @@ public class BattleManager : Singleton<BattleManager>
         UIManager.Instance.HideUI(hideMenu);
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
+    public CardItem AddCard(int id)
+    {
+        CardItem cardItem = Instantiate(CardPrefab, CardBagTrans);
+        cardItem.transform.SetParent(CardBagTrans);
+        cardItem.GetComponent<RectTransform>().anchoredPosition = CardBagTrans.position;
+        cardItem.CardID = id;
+        cardItem.gameObject.SetActive(false);
+        DataManager.Instance.CardBag.Insert(0, DataManager.Instance.CardList[id]);
+        CardItemList.Insert(0, cardItem);
+        return cardItem;
+    }
 }

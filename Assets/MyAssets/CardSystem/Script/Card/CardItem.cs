@@ -181,12 +181,7 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         Cursor.visible = true;
         if (isAttackCard)
         {
-            EventManager.Instance.DispatchEvent(
-                EventDefinition.eventAttackLine,
-                false,
-                CardRectTransform.anchoredPosition,
-                CardRectTransform.anchoredPosition
-            );
+            EventManager.Instance.DispatchEvent(EventDefinition.eventAttackLine, false, CardRectTransform.anchoredPosition, CardRectTransform.anchoredPosition);
             CheckRayToEnemy(true);
             return;
         }
@@ -240,7 +235,7 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         BattleManager.Instance.ConsumeActionPoint(Cost);
         BattleManager.Instance.ConsumeMana(cardData.CardManaCost);
         BattleManager.Instance.GetShield(DataManager.Instance.PlayerList[DataManager.Instance.PlayerID], cardData.CardShield);
-        if (cardData.CardAttack != 0)
+        if (cardData.CardAttack != 0 && cardData.CardType != "詛咒")
             BattleManager.Instance.TakeDamage(BattleManager.Instance.CurrentEnemyList[target], cardData.CardAttack, target);
         if (!cardData.CardRemove)
             DataManager.Instance.UsedCardBag.Add(this);

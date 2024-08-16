@@ -44,6 +44,8 @@ public class UIBattle : UIBase
     [SerializeField]
     private Transform negativeGroupTrans;
     [SerializeField]
+    private Transform positiveGroupTrans;
+    [SerializeField]
     private GameObject negativePrefab;
 
     [Header("敵人")]
@@ -380,5 +382,8 @@ public class UIBattle : UIBase
             negative.GetComponentInChildren<Image>().sprite = EffectFactory.Instance.CreateEffect(key).SetIcon();
             negative.GetComponentInChildren<Text>().text = BattleManager.Instance.CurrentNegativeState[key].ToString();
         }
+        /*GameObject positive = Instantiate(negativePrefab, negativeGroupTrans);
+        positive.GetComponentInChildren<Image>().sprite = EffectFactory.Instance.CreateEffect(BattleManager.Instance.ManaMultiplier).SetIcon();
+        positive.GetComponentInChildren<Text>().text = BattleManager.Instance.CurrentNegativeState[key].ToString();*/
     }
 }

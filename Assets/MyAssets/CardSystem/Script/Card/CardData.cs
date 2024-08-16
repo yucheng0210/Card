@@ -54,4 +54,5 @@ public class CardData
     public int CardManaCost { get; set; }
     public bool CardRemove { get; set; }
     public int CardBuyPrice { get; set; }
+    public bool CardFreeze { get; set;}
 }

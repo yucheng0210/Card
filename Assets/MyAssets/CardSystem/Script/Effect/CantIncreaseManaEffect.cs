@@ -15,6 +15,6 @@ public class CantIncreaseManaEffect : IEffect
 
     public Sprite SetIcon()
     {
-        throw new System.NotImplementedException();
+        return Resources.Load<Sprite>("EffectImage/CantMove");
     }
 }
