@@ -192,7 +192,6 @@ public class CardCreater : MonoBehaviour
         currentPosX -= cardXSpacing / 2;
         CardItem cardItem = (CardItem)args[0];
         cardItem.transform.SetParent(usedCardTrans);
-        CalculatePositionAngle(DataManager.Instance.HandCard.Count);
         AdjustCard();
     }
 
@@ -218,6 +217,7 @@ public class CardCreater : MonoBehaviour
 
     private void AdjustCard()
     {
+        CalculatePositionAngle(DataManager.Instance.HandCard.Count);
         List<CardItem> handCard = DataManager.Instance.HandCard;
         for (int i = 0; i < handCard.Count; i++)
         {
@@ -281,7 +281,7 @@ public class CardCreater : MonoBehaviour
                     break;
                 case Enemy.AttackType.Attack:
                     enemy.MyAnimator.SetTrigger("isAttacking");
-                    yield return new WaitForSecondsRealtime(0.15f);
+                    yield return new WaitForSecondsRealtime(0.25f);
                     BattleManager.Instance.TakeDamage(playerData, enemyData.CurrentAttack, BattleManager.Instance.CurrentLocationID);
                     newCurrentEnemyList.Add(newLocation, BattleManager.Instance.CurrentEnemyList[location]);
                     break;
@@ -316,7 +316,6 @@ public class CardCreater : MonoBehaviour
     private void EventEnemyTurn(params object[] args)
     {
         List<CardItem> freezeCardList = new List<CardItem>();
-
         for (int i = 0; i < DataManager.Instance.HandCard.Count; i++)
         {
             if (DataManager.Instance.CardList[DataManager.Instance.HandCard[i].CardID].CardFreeze)
@@ -332,9 +331,9 @@ public class CardCreater : MonoBehaviour
         }
         DataManager.Instance.HandCard.Clear();
         DataManager.Instance.HandCard = freezeCardList;
-        AdjustCard();
         BattleManager.Instance.CardPositionList.Clear();
         BattleManager.Instance.CardAngleList.Clear();
+        AdjustCard();
         StartCoroutine(HideAllCards());
         roundTip.GetComponent<Image>().sprite = enemyRound;
         StartCoroutine(EnemyAttack());

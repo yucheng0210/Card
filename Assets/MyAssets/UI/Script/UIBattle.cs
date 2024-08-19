@@ -203,13 +203,20 @@ public class UIBattle : UIBase
         if (enemyData.CurrentHealth <= 0)
         {
             enemyData.EnemyTrans.GetComponent<Enemy>().MyAnimator.SetTrigger("isDeath");
-            Destroy(enemyData.EnemyTrans.gameObject, 1);
-            BattleManager.Instance.CurrentEnemyList.Remove(key);
-            ClearAllEventTriggers();
-            CheckEnemyInfo();
-            CheckBattleInfo();
+            if (enemyData.PassiveSkills.Contains("ResurrectionEffect") && !enemyData.EnemyTrans.GetComponent<Enemy>().IsDeath)
+                EffectFactory.Instance.CreateEffect("ResurrectionEffect").ApplyEffect(50, key);
+            else
+            {
+                BattleManager.Instance.CurrentEnemyList.Remove(key);
+                Destroy(enemyData.EnemyTrans.gameObject, 1);
+                ClearAllEventTriggers();
+                CheckBattleInfo();
+                CheckEnemyInfo();
+            }
+            enemyData.EnemyTrans.GetComponent<Enemy>().IsDeath = true;
         }
-        enemyData.EnemyTrans.GetComponent<Enemy>().MyAnimator.SetTrigger("isHited");
+        else
+            enemyData.EnemyTrans.GetComponent<Enemy>().MyAnimator.SetTrigger("isHited");
         BattleManager.Instance.RefreshCheckerboardList();
         if (BattleManager.Instance.CurrentEnemyList.Count == 0)
         {

@@ -55,7 +55,9 @@ public class EnglishTest : MonoBehaviour
          "initiate", "comprehensive","certify", "certificate", "certification", "certified", "criticize", "critic", "criticism", "critical", "destroy",
           "destroyer", "destruction", "destructive", "detect", "detection", "detective", "detector", "dominate", "dominant", "dominance", "domination",
            "intense", "intensive", "intensify", "intensity", "legislate", "legislation", "legislative", "legislature", "sensible", "sensitive", "sensory",
-            "sensation", "stimulate", "stimulus", "stimulation", "stimulative"};
+            "sensation", "stimulate", "stimulus", "stimulation", "stimulative","boost", "morale", "productivity", "current", "exceed", "disappear", "profit",
+            "thought", "enclose", "utility", "commission", "authority", "restructure", "residential", "competitive", "necessitate", "ballot", "proxy", "quantity",
+             "generic", "issue", "verify", "nullify", "prevent"};
     private void Start()
     {
         for (int i = 0; i < 50; i++)

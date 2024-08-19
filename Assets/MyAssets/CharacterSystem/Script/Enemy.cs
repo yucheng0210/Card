@@ -30,6 +30,7 @@ public class Enemy : MonoBehaviour
     public int EnemyID { get; set; }
     public string EnemyLocation { get; set; }
     public AttackType MyAttackType { get; set; }
+    public bool IsDeath { get; set; }
     public enum AttackType
     {
         Move,

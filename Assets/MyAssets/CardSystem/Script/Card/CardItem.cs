@@ -254,9 +254,7 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                 continue;
             }
             if (cardData.CardType == "陷阱")
-            {
                 BattleManager.Instance.CurrentTrapList.Add(BattleManager.Instance.CurrentLocationID, effectID);
-            }
             if (BattleManager.Instance.CurrentNegativeState.ContainsKey(nameof(CantIncreaseManaEffect)) && effectID == nameof(IncreaseManaEffect))
                 continue;
             EffectFactory.Instance.CreateEffect(effectID).ApplyEffect(effectCount, target);

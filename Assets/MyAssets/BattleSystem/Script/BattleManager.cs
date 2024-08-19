@@ -93,6 +93,13 @@ public class BattleManager : Singleton<BattleManager>
         Vector2 pos = new(CheckerboardTrans.GetChild(point).localPosition.x, CheckerboardTrans.GetChild(point).localPosition.y);
         EventManager.Instance.DispatchEvent(EventDefinition.eventTakeDamage, pos, damage, location);
     }
+    public void Recover(CharacterData defender, int damage, string location)
+    {
+        defender.CurrentHealth += damage;
+        int point = GetCheckerboardPoint(location);
+        Vector2 pos = new(CheckerboardTrans.GetChild(point).localPosition.x, CheckerboardTrans.GetChild(point).localPosition.y);
+        EventManager.Instance.DispatchEvent(EventDefinition.eventTakeDamage, pos, damage, location);
+    }
 
     public void GetShield(CharacterData defender, int point)
     {

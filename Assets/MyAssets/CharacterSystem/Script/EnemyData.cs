@@ -15,4 +15,5 @@ public class EnemyData : CharacterData
     public int AttackDistance { get; set; }
     public string[] AttackOrderStrs { get; set; }
     public int CurrentAttackOrder { get; set; }
+    public List<string> PassiveSkills { get; set; }
 }

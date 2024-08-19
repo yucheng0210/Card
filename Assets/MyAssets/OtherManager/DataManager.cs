@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using System;
+using System.Linq;
 
 public class DataManager : Singleton<DataManager>
 {
@@ -58,8 +59,8 @@ public class DataManager : Singleton<DataManager>
     private void Start()
     {
         //StartGame();
-        //StartGame_FightingSpiritEffect();
-        StartGame_ExtinctionRayEffect();
+        StartGame_FightingSpiritEffect();
+        //StartGame_ExtinctionRayEffect();
     }
 
     private void LoadData()
@@ -140,7 +141,8 @@ public class DataManager : Singleton<DataManager>
                 AttackDistance = int.Parse(row[7]),
                 AlertDistance = int.Parse(row[8]),
                 AttackOrderStrs = row[9].Split(";"),
-                EnemyAniPath = row[10]
+                EnemyAniPath = row[10],
+                PassiveSkills = row[11].Split(";").ToList(),
             };
             EnemyList.Add(enemyData.CharacterID, enemyData);
         }
