@@ -112,7 +112,9 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                 space = pointerEnterReduceCount;
         }
         transform.SetAsLastSibling();
-        UIManager.Instance.ChangeCheckerboardColor(Color.red, BattleManager.Instance.CurrentLocationID, DataManager.Instance.CardList[CardID].CardAttackDistance, BattleManager.CheckEmptyType.PlayerAttack);
+        string id = BattleManager.Instance.CurrentLocationID;
+        int cardAttackDistance = DataManager.Instance.CardList[CardID].CardAttackDistance;
+        UIManager.Instance.ChangeCheckerboardColor(false, id, cardAttackDistance, BattleManager.CheckEmptyType.PlayerAttack);
     }
 
     public void OnPointerExit(PointerEventData eventData)

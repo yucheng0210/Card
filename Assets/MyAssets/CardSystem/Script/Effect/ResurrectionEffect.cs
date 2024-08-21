@@ -11,7 +11,7 @@ public class ResurrectionEffect : IEffect
     public void ApplyEffect(int value, string target)
     {
         enemyData = BattleManager.Instance.CurrentEnemyList[target];
-        recoverCount = 1;
+        recoverCount = enemyData.MaxHealth / 2;
         id = target;
         EventManager.Instance.AddEventRegister(EventDefinition.eventEnemyTurn, EventEnemyTurn);
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
@@ -22,6 +22,7 @@ public class ResurrectionEffect : IEffect
         if (reciprocalCount <= 0)
         {
             Enemy enemy = enemyData.EnemyTrans.GetComponent<Enemy>();
+            enemy.IsDeath = false;
             BattleManager.Instance.Recover(enemyData, recoverCount, id);
             enemy.MyAnimator.SetTrigger("isResurrection");
             EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);

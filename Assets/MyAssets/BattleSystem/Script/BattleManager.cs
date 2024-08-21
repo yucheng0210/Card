@@ -44,9 +44,9 @@ public class BattleManager : Singleton<BattleManager>
     public Dictionary<string, int> CurrentNegativeState { get; set; }
     public Dictionary<string, int> CurrentAbilityList { get; set; }
     public Dictionary<string, string> CurrentTrapList { get; set; }
+    public Dictionary<string, int> CurrentOnceBattlePositiveList { get; set; }
     public int ManaMultiplier { get; set; }
     public int CurrentConsumeMana { get; set; }
-    public int CurrentFightingSpiritCount { get; set; }
     //敵人
     public Dictionary<string, EnemyData> CurrentEnemyList { get; set; }
     public bool IsDrag { get; set; }
@@ -70,6 +70,7 @@ public class BattleManager : Singleton<BattleManager>
         CurrentTerrainList = new Dictionary<string, Terrain>();
         CurrentNegativeState = new Dictionary<string, int>();
         CurrentTrapList = new Dictionary<string, string>();
+        CurrentOnceBattlePositiveList = new Dictionary<string, int>();
     }
     private void Update()
     {
@@ -91,16 +92,24 @@ public class BattleManager : Singleton<BattleManager>
         defender.CurrentHealth -= currentDamage;
         int point = GetCheckerboardPoint(location);
         Vector2 pos = new(CheckerboardTrans.GetChild(point).localPosition.x, CheckerboardTrans.GetChild(point).localPosition.y);
-        EventManager.Instance.DispatchEvent(EventDefinition.eventTakeDamage, pos, damage, location);
+        Color color = Color.red;
+        EventManager.Instance.DispatchEvent(EventDefinition.eventTakeDamage, pos, damage, location, color);
     }
     public void Recover(CharacterData defender, int damage, string location)
     {
         defender.CurrentHealth += damage;
         int point = GetCheckerboardPoint(location);
         Vector2 pos = new(CheckerboardTrans.GetChild(point).localPosition.x, CheckerboardTrans.GetChild(point).localPosition.y);
-        EventManager.Instance.DispatchEvent(EventDefinition.eventTakeDamage, pos, damage, location);
+        Color color = Color.green;
+        EventManager.Instance.DispatchEvent(EventDefinition.eventTakeDamage, pos, damage, location, color);
     }
-
+    public void Recover(CharacterData defender, int damage)
+    {
+        defender.CurrentHealth += damage;
+        Vector2 screenCenter = new Vector2(Screen.width / 2, Screen.height / 2);
+        Color color = Color.green;
+        EventManager.Instance.DispatchEvent(EventDefinition.eventTakeDamage, screenCenter, damage, CurrentLocationID, color);
+    }
     public void GetShield(CharacterData defender, int point)
     {
         defender.CurrentShield += point;

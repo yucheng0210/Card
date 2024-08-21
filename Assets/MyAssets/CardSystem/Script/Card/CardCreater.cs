@@ -371,9 +371,6 @@ public class CardCreater : MonoBehaviour
         }
         BattleManager.Instance.CardAngleList.Clear();
         BattleManager.Instance.CardPositionList.Clear();
-        BattleManager.Instance.CurrentEnemyList.Clear();
-        BattleManager.Instance.CurrentAbilityList.Clear();
-        BattleManager.Instance.CurrentTerrainList.Clear();
         DataManager.Instance.HandCard.Clear();
         DataManager.Instance.UsedCardBag.Clear();
         DataManager.Instance.RemoveCardBag.Clear();

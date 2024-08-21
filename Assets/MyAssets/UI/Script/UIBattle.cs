@@ -170,9 +170,9 @@ public class UIBattle : UIBase
         float distance = BattleManager.Instance.GetDistance(location);
         EnemyData enemyData = BattleManager.Instance.CurrentEnemyList[location];
         if (distance <= enemyData.AttackDistance)
-            UIManager.Instance.ChangeCheckerboardColor(Color.red, location, enemyData.AttackDistance, BattleManager.CheckEmptyType.EnemyAttack);
+            UIManager.Instance.ChangeCheckerboardColor(false, location, enemyData.AttackDistance, BattleManager.CheckEmptyType.EnemyAttack);
         else
-            UIManager.Instance.ChangeCheckerboardColor(Color.yellow, location, enemyData.StepCount, BattleManager.CheckEmptyType.EnemyAttack);
+            UIManager.Instance.ChangeCheckerboardColor(true, location, enemyData.StepCount, BattleManager.CheckEmptyType.EnemyAttack);
         enemyInfo.SetActive(true);
         enemyName.text = enemyData.CharacterName;
         enemyImage.sprite = Resources.Load<Sprite>(enemyData.EnemyImagePath);
@@ -200,11 +200,16 @@ public class UIBattle : UIBase
     private void RemoveEnemy(string key)
     {
         EnemyData enemyData = BattleManager.Instance.CurrentEnemyList[key];
-        if (enemyData.CurrentHealth <= 0)
+        Enemy enemy = enemyData.EnemyTrans.GetComponent<Enemy>();
+        if (enemyData.CurrentHealth <= 0 && !enemyData.EnemyTrans.GetComponent<Enemy>().IsDeath)
         {
-            enemyData.EnemyTrans.GetComponent<Enemy>().MyAnimator.SetTrigger("isDeath");
-            if (enemyData.PassiveSkills.Contains("ResurrectionEffect") && !enemyData.EnemyTrans.GetComponent<Enemy>().IsDeath)
+            enemy.IsDeath = true;
+            enemy.MyAnimator.SetTrigger("isDeath");
+            if (enemyData.PassiveSkills.Contains("ResurrectionEffect"))
+            {
+                enemyData.PassiveSkills.Remove("ResurrectionEffect");
                 EffectFactory.Instance.CreateEffect("ResurrectionEffect").ApplyEffect(50, key);
+            }
             else
             {
                 BattleManager.Instance.CurrentEnemyList.Remove(key);
@@ -213,15 +218,18 @@ public class UIBattle : UIBase
                 CheckBattleInfo();
                 CheckEnemyInfo();
             }
-            enemyData.EnemyTrans.GetComponent<Enemy>().IsDeath = true;
         }
         else
-            enemyData.EnemyTrans.GetComponent<Enemy>().MyAnimator.SetTrigger("isHited");
+            enemy.MyAnimator.SetTrigger("isHited");
         BattleManager.Instance.RefreshCheckerboardList();
         if (BattleManager.Instance.CurrentEnemyList.Count == 0)
         {
             BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Win);
-            BattleManager.Instance.CurrentFightingSpiritCount = 0;
+            BattleManager.Instance.CurrentNegativeState.Clear();
+            BattleManager.Instance.CurrentEnemyList.Clear();
+            BattleManager.Instance.CurrentAbilityList.Clear();
+            BattleManager.Instance.CurrentTerrainList.Clear();
+            BattleManager.Instance.CurrentOnceBattlePositiveList.Clear();
             RemoveAllTerrian();
         }
     }
@@ -330,7 +338,8 @@ public class UIBattle : UIBase
         RectTransform damageRect = damageNum.GetComponent<RectTransform>();
         Text damageText = damageNum.GetComponentInChildren<Text>();
         damageText.text = args[1].ToString();
-        damageText.DOColor(new Color(60f / 255f, 0, 0), 0.75f);
+        Color color = (Color)args[3];
+        damageText.DOColor(color, 0.75f);
         int direction = Random.Range(0, 2);
         if (direction == 0)
             xOffset *= -1;
@@ -338,23 +347,11 @@ public class UIBattle : UIBase
         Vector2 endPoint = new(startPoint.x + xOffset, -540);
         Vector2 midPoint = new(startPoint.x + xOffset / 2, startPoint.y + curveHeight);
         Vector2 endScale = new(0.5f, 0.5f);
-        DOTween
-            .To(
-                (t) =>
-                {
-                    Vector2 position = UIManager.Instance.GetBezierCurve(
-                        startPoint,
-                        midPoint,
-                        endPoint,
-                        t
-                    );
-                    damageRect.anchoredPosition = position;
-                },
-                0,
-                1,
-                1
-            )
-            .SetEase(Ease.OutQuad);
+        DOTween.To((t) =>
+        {
+            Vector2 position = UIManager.Instance.GetBezierCurve(startPoint, midPoint, endPoint, t);
+            damageRect.anchoredPosition = position;
+        }, 0, 1, 1).SetEase(Ease.OutQuad);
         damageRect.DOScale(endScale, 1);
         StartCoroutine(UIManager.Instance.FadeOutIn(damageNum.GetComponent<CanvasGroup>(), 1f, 0, true));
     }
@@ -386,11 +383,24 @@ public class UIBattle : UIBase
         {
             string key = BattleManager.Instance.CurrentNegativeState.ElementAt(i).Key;
             GameObject negative = Instantiate(negativePrefab, negativeGroupTrans);
-            negative.GetComponentInChildren<Image>().sprite = EffectFactory.Instance.CreateEffect(key).SetIcon();
-            negative.GetComponentInChildren<Text>().text = BattleManager.Instance.CurrentNegativeState[key].ToString();
+            Image negativeImage = negative.GetComponentInChildren<Image>();
+            Text negativeText = negative.GetComponentInChildren<Text>();
+            negativeImage.sprite = EffectFactory.Instance.CreateEffect(key).SetIcon();
+            negativeText.text = BattleManager.Instance.CurrentNegativeState[key].ToString();
         }
-        /*GameObject positive = Instantiate(negativePrefab, negativeGroupTrans);
-        positive.GetComponentInChildren<Image>().sprite = EffectFactory.Instance.CreateEffect(BattleManager.Instance.ManaMultiplier).SetIcon();
-        positive.GetComponentInChildren<Text>().text = BattleManager.Instance.CurrentNegativeState[key].ToString();*/
+        for (int i = 0; i < positiveGroupTrans.childCount; i++)
+        {
+            Destroy(positiveGroupTrans.GetChild(i).gameObject);
+        }
+        for (int i = 0; i < BattleManager.Instance.CurrentOnceBattlePositiveList.Count; i++)
+        {
+            string key = BattleManager.Instance.CurrentOnceBattlePositiveList.ElementAt(i).Key;
+            GameObject positive = Instantiate(negativePrefab, positiveGroupTrans);
+            Image positiveImage = positive.GetComponentInChildren<Image>();
+            Text positiveText = positive.GetComponentInChildren<Text>();
+            positiveImage.sprite = EffectFactory.Instance.CreateEffect(key).SetIcon();
+            positiveText.text = BattleManager.Instance.CurrentOnceBattlePositiveList[key].ToString();
+        }
+
     }
 }

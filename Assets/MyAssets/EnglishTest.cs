@@ -15,12 +15,12 @@ public class EnglishTest : MonoBehaviour
     "occupy","save","parallel","intersect","prescription","rarely","exhibition","controversial","distinguish","subtle","huge","brightly","confident",
     "particularly","revise","generous","aisle","available","rest","solve","treat","respect","bulky","fragile","doubt","moody","invade","disturb",
     "knowledge","clue","present","errand","furniture","donate","brochure","stack","pension","retirement","replace","similar","far-fetched","desperate",
-    "agonize","awful","hire","executive","renew","contract","turnout","disappointing","effort","promation","negotiate","substantial","intend","fire",
+    "agonize","awful","hire","executive","renew","contract","turnout","disappointing","effort","promotion","negotiate","substantial","intend","fire",
     "purpose","lawsuit","competitor","resemble","procedure","permit","figure","estimate","hinder","progress","updated","detain","attorney","reliable",
     "accept","transfer","install","equipment","screen","potential","book","decline","sue","lawyer","justify","inform","balk","ambiguous","appear","ban",
     "beat","cheer","envy","fear","mend","obey","deny","utilize","melt","blame","crop","ache","estate","fluid","gauge","habit","headquarters","leak","length",
     "load","mercy","mischief","prank","cough","appearance","status","usage","vacant","temporary","entertaining","persuade","approve","expect","correct","accurate"
-    ,"extra","detergent","amount","especially","belongings","intact","disarray","hate","electrician","ceiling","fix","company","ointment","smell","oad",
+    ,"extra","detergent","amount","especially","belongings","intact","disarray","hate","electrician","ceiling","fix","company","ointment","smell","odd",
     "price","neighbor","allow","assume","prohibit","slip","exchange","purchase","refund","realize","fare","prior","departure","result","diet","intake","consume",
     "impress","performance","improve","gradually","insurance","coverage","spouse","slightly","cause","device","malfunction","jam","calculator","prepare","expense",
     "actually","drench","strenuous","workout","bet","headline","concerning","obstruction","justice","determine","previous","sort","reward","reimbursement","bill",
@@ -57,7 +57,9 @@ public class EnglishTest : MonoBehaviour
            "intense", "intensive", "intensify", "intensity", "legislate", "legislation", "legislative", "legislature", "sensible", "sensitive", "sensory",
             "sensation", "stimulate", "stimulus", "stimulation", "stimulative","boost", "morale", "productivity", "current", "exceed", "disappear", "profit",
             "thought", "enclose", "utility", "commission", "authority", "restructure", "residential", "competitive", "necessitate", "ballot", "proxy", "quantity",
-             "generic", "issue", "verify", "nullify", "prevent"};
+             "generic", "issue", "verify", "nullify", "prevent","naturally", "growth", "additional", "securities", "run", "consecutive", "accounting", "boardroom",
+              "murder", "throughout", "disguise", "ordinary", "gather", "identity", "fellow", "reveal", "guess", "prize", "plant", "turf", "rake", "sod", "fertilizer",
+               "earth", "lay", "firmly", "flush", "moisten", "mow"};
     private void Start()
     {
         for (int i = 0; i < 50; i++)

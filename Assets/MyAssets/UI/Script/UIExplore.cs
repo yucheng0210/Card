@@ -101,7 +101,7 @@ public class UIExplore : UIBase
         restButton.onClick.AddListener(() => removeCardButton.gameObject.SetActive(false));
         //removeCardButton.onClick.AddListener(() => UIManager.Instance.RefreshCardBag());
         removeCardButton.onClick.AddListener(() => UIManager.Instance.SelectCard(unityAction, false));
-        restConfirmButton.onClick.AddListener(() => DataManager.Instance.PlayerList[playerID].CurrentHealth += recoverCount);
+        restConfirmButton.onClick.AddListener(() => BattleManager.Instance.Recover(DataManager.Instance.PlayerList[playerID], recoverCount));
         restConfirmButton.onClick.AddListener(() => recoverExitButton.gameObject.SetActive(true));
         restConfirmButton.onClick.AddListener(() => restMenu.SetActive(false));
         restConfirmButton.onClick.AddListener(() => EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI));

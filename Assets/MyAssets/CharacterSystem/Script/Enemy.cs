@@ -46,6 +46,7 @@ public class Enemy : MonoBehaviour
     private void OnDisable()
     {
         EventManager.Instance.RemoveEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
+        EventManager.Instance.RemoveEventRegister(EventDefinition.eventMove, EventMove);
     }
     private void RefrAttackIntent()
     {

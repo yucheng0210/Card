@@ -150,22 +150,30 @@ public class UIManager : Singleton<UIManager>
     public void ClearMoveClue(bool canRemove)
     {
         RectTransform checkerboardTrans = BattleManager.Instance.CheckerboardTrans;
+        Color color = new Color(1, 1, 1, 0);
         for (int i = 0; i < checkerboardTrans.childCount; i++)
         {
-            checkerboardTrans.GetChild(i).GetComponent<Image>().color = new Color(1, 1, 1, 0);
+            Image checkerboardImage = checkerboardTrans.GetChild(i).GetComponent<Image>();
+            checkerboardImage.color = color;
             if (canRemove)
-                checkerboardTrans.GetChild(i).GetComponent<Button>().onClick.RemoveAllListeners();
+            {
+                Button checkerboardButton = checkerboardTrans.GetChild(i).GetComponent<Button>();
+                checkerboardButton.onClick.RemoveAllListeners();
+            }
         }
     }
-    public void ChangeCheckerboardColor(Color color, string location, int stepCount, BattleManager.CheckEmptyType checkEmptyType)
+    public void ChangeCheckerboardColor(bool isMove, string location, int stepCount, BattleManager.CheckEmptyType checkEmptyType)
     {
         //ClearMoveClue(false);
         List<string> emptyPlaceList = BattleManager.Instance.GetEmptyPlace(location, stepCount, checkEmptyType);
+        Color color = new Color(1, 1, 1, 1);
         for (int i = 0; i < emptyPlaceList.Count; i++)
         {
             int checkerboardPoint = BattleManager.Instance.GetCheckerboardPoint(emptyPlaceList[i]);
-            RectTransform emptyPlace = BattleManager.Instance.CheckerboardTrans.GetChild(checkerboardPoint).GetComponent<RectTransform>();
-            emptyPlace.GetComponent<Image>().color = color;
+            CheckerboardSlot emptySlot = BattleManager.Instance.CheckerboardTrans.GetChild(checkerboardPoint).GetComponent<CheckerboardSlot>();
+            Image emptyImage = BattleManager.Instance.CheckerboardTrans.GetChild(checkerboardPoint).GetComponent<Image>();
+            emptyImage.sprite = isMove ? emptySlot.BlueClueImage : emptySlot.RedClueImage;
+            emptyImage.color = color;
         }
     }
     public void ClearCheckerboardColor(string location, int stepCount, BattleManager.CheckEmptyType checkEmptyType)
@@ -176,8 +184,8 @@ public class UIManager : Singleton<UIManager>
         for (int i = 0; i < emptyPlaceList.Count; i++)
         {
             int checkerboardPoint = BattleManager.Instance.GetCheckerboardPoint(emptyPlaceList[i]);
-            RectTransform emptyPlace = BattleManager.Instance.CheckerboardTrans.GetChild(checkerboardPoint).GetComponent<RectTransform>();
-            emptyPlace.GetComponent<Image>().color = color;
+            Image emptyImage = BattleManager.Instance.CheckerboardTrans.GetChild(checkerboardPoint).GetComponent<Image>();
+            emptyImage.color = color;
         }
     }
     public void SelectCard(UnityEngine.Events.UnityAction unityAction, bool isRefreshUseBag)
