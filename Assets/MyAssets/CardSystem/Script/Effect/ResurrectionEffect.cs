@@ -25,12 +25,13 @@ public class ResurrectionEffect : IEffect
             enemy.IsDeath = false;
             BattleManager.Instance.Recover(enemyData, recoverCount, id);
             enemy.MyAnimator.SetTrigger("isResurrection");
+            EventManager.Instance.DispatchEvent(EventDefinition.eventMove);
             EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
             EventManager.Instance.RemoveEventRegister(EventDefinition.eventEnemyTurn, EventEnemyTurn);
         }
     }
     public Sprite SetIcon()
     {
-        throw new System.NotImplementedException();
+        return Resources.Load<Sprite>("EffectImage/Resurrection");
     }
 }

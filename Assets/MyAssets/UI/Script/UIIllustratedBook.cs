@@ -7,32 +7,34 @@ using Unity.VisualScripting;
 public class UIIllustratedBook : UIBase
 {
     [SerializeField]
-    private Button illustratedBookButton;
+    private List<GameObject> allBackgroundList = new List<GameObject>();
     [SerializeField]
-    private Transform illustratedBookTrans;
+    private List<Button> allLabelList = new List<Button>();
     [SerializeField]
-    private CardItem cardPrefab;
+    private Button showButton;
     [SerializeField]
-    private Button closeButton;
+    private Button exitButton;
     private void Awake()
     {
-        illustratedBookButton.onClick.AddListener(() => RefreshIllustratedBook(illustratedBookTrans, cardPrefab));
-        closeButton.onClick.AddListener(Hide);
+        Initialize();
     }
-    private void RefreshIllustratedBook(Transform contentTrans, CardItem cardPrefab)
+    private void Initialize()
     {
-        Show();
-        Dictionary<int, CardData> illustratedBook = DataManager.Instance.CardList;
-        for (int i = 0; i < contentTrans.childCount; i++)
+        showButton.onClick.AddListener(Show);
+        exitButton.onClick.AddListener(Hide);
+        for (int i = 0; i < allLabelList.Count; i++)
         {
-            Destroy(contentTrans.gameObject);
-        }
-        for (int i = 0; i < illustratedBook.Count; i++)
-        {
-            CardItem cardItem = Instantiate(cardPrefab, contentTrans);
-            cardItem.GetComponent<CanvasGroup>().alpha = 1;
-            cardItem.CardID = illustratedBook.ElementAt(i).Key;
-            cardItem.CantMove = true;
+            int id = i;
+            allLabelList[i].onClick.AddListener(() => Refresh(allBackgroundList[id]));
         }
     }
+    private void Refresh(GameObject background)
+    {
+        for (int i = 0; i < allBackgroundList.Count; i++)
+        {
+            allBackgroundList[i].SetActive(false);
+        }
+        background.SetActive(true);
+    }
+
 }

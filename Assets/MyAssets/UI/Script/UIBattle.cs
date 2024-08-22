@@ -201,7 +201,9 @@ public class UIBattle : UIBase
     {
         EnemyData enemyData = BattleManager.Instance.CurrentEnemyList[key];
         Enemy enemy = enemyData.EnemyTrans.GetComponent<Enemy>();
-        if (enemyData.CurrentHealth <= 0 && !enemyData.EnemyTrans.GetComponent<Enemy>().IsDeath)
+        GameObject enemyEffect = enemy.EnemyEffectImage;
+        Image enemyEffectImage = enemyEffect.GetComponent<Image>();
+        if (enemyData.CurrentHealth <= 0 && !enemy.IsDeath)
         {
             enemy.IsDeath = true;
             enemy.MyAnimator.SetTrigger("isDeath");
@@ -209,6 +211,8 @@ public class UIBattle : UIBase
             {
                 enemyData.PassiveSkills.Remove("ResurrectionEffect");
                 EffectFactory.Instance.CreateEffect("ResurrectionEffect").ApplyEffect(50, key);
+                enemyEffectImage.sprite = EffectFactory.Instance.CreateEffect("ResurrectionEffect").SetIcon();
+                enemyEffect.SetActive(true);
             }
             else
             {

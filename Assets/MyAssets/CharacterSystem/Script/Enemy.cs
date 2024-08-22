@@ -24,8 +24,8 @@ public class Enemy : MonoBehaviour
     private GameObject enemyShield;
     [SerializeField]
     private GameObject enemyMove;
-
     public Image EnemyImage { get { return enemyImage; } set { enemyImage = value; } }
+    public GameObject EnemyEffectImage { get { return enemyEffect; } set { enemyEffect = value; } }
     public Animator MyAnimator { get { return myAnimator; } set { myAnimator = value; } }
     public int EnemyID { get; set; }
     public string EnemyLocation { get; set; }
@@ -75,9 +75,10 @@ public class Enemy : MonoBehaviour
                     enemyShield.SetActive(true);
                     break;
                 default:
+                    Image enemyEffectImage = enemyEffect.GetComponent<Image>();
                     MyAttackType = AttackType.Effect;
                     enemyAttackIntentText.enabled = false;
-                    enemyEffect.GetComponent<Image>().sprite = EffectFactory.Instance.CreateEffect(attackOrder).SetIcon();
+                    enemyEffectImage.sprite = EffectFactory.Instance.CreateEffect(attackOrder).SetIcon();
                     enemyEffect.SetActive(true);
                     break;
             }

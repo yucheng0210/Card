@@ -316,11 +316,9 @@ public class BattleManager : Singleton<BattleManager>
     }
     private void Explore()
     {
+        string levelType = MapManager.Instance.MapNodes[MapManager.Instance.LevelCount][MapManager.Instance.LevelID].l.LevelType;
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
-        EventManager.Instance.DispatchEvent(
-            EventDefinition.eventExplore,
-            MapManager.Instance.MapNodes[MapManager.Instance.LevelCount][MapManager.Instance.LevelID].l.LevelType
-        );
+        EventManager.Instance.DispatchEvent(EventDefinition.eventExplore, levelType);
     }
 
     private void Dialog()
