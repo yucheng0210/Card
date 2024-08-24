@@ -42,6 +42,8 @@ public class Enemy : MonoBehaviour
     {
         EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
         EventManager.Instance.AddEventRegister(EventDefinition.eventMove, EventMove);
+        EnemyData enemyData = BattleManager.Instance.CurrentEnemyList[EnemyLocation];
+        enemyData.CurrentAttack = enemyData.MaxAttack;
     }
     private void OnDisable()
     {
@@ -50,9 +52,7 @@ public class Enemy : MonoBehaviour
     }
     private void RefrAttackIntent()
     {
-        int randomAttack = UnityEngine.Random.Range(DataManager.Instance.EnemyList[EnemyID].MinAttack, DataManager.Instance.EnemyList[EnemyID].MaxAttack + 1);
         EnemyData enemyData = BattleManager.Instance.CurrentEnemyList[EnemyLocation];
-        enemyData.CurrentAttack = randomAttack;
         float distance = BattleManager.Instance.GetDistance(EnemyLocation);
         enemyAttack.SetActive(false);
         enemyShield.SetActive(false);
@@ -66,12 +66,12 @@ public class Enemy : MonoBehaviour
             {
                 case "Attack":
                     MyAttackType = AttackType.Attack;
-                    enemyAttackIntentText.text = randomAttack.ToString();
+                    enemyAttackIntentText.text = enemyData.CurrentAttack.ToString();
                     enemyAttack.SetActive(true);
                     break;
                 case "Shield":
                     MyAttackType = AttackType.Shield;
-                    enemyAttackIntentText.text = (randomAttack / 2).ToString();
+                    enemyAttackIntentText.text = (enemyData.CurrentAttack / 2).ToString();
                     enemyShield.SetActive(true);
                     break;
                 default:

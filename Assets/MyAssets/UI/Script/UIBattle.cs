@@ -201,20 +201,10 @@ public class UIBattle : UIBase
     {
         EnemyData enemyData = BattleManager.Instance.CurrentEnemyList[key];
         Enemy enemy = enemyData.EnemyTrans.GetComponent<Enemy>();
-        GameObject enemyEffect = enemy.EnemyEffectImage;
-        Image enemyEffectImage = enemyEffect.GetComponent<Image>();
         if (enemyData.CurrentHealth <= 0 && !enemy.IsDeath)
         {
-            enemy.IsDeath = true;
             enemy.MyAnimator.SetTrigger("isDeath");
-            if (enemyData.PassiveSkills.Contains("ResurrectionEffect"))
-            {
-                enemyData.PassiveSkills.Remove("ResurrectionEffect");
-                EffectFactory.Instance.CreateEffect("ResurrectionEffect").ApplyEffect(50, key);
-                enemyEffectImage.sprite = EffectFactory.Instance.CreateEffect("ResurrectionEffect").SetIcon();
-                enemyEffect.SetActive(true);
-            }
-            else
+            if (!enemyData.PassiveSkills.Contains("ResurrectionEffect"))
             {
                 BattleManager.Instance.CurrentEnemyList.Remove(key);
                 Destroy(enemyData.EnemyTrans.gameObject, 1);
@@ -222,6 +212,7 @@ public class UIBattle : UIBase
                 CheckBattleInfo();
                 CheckEnemyInfo();
             }
+            enemy.IsDeath = true;
         }
         else
             enemy.MyAnimator.SetTrigger("isHited");
@@ -336,8 +327,17 @@ public class UIBattle : UIBase
     }
     private void EventTakeDamage(params object[] args)
     {
-        if (BattleManager.Instance.CurrentLocationID != (string)args[2])
-            RemoveEnemy((string)args[2]);
+        string locationID = (string)args[2];
+        if (BattleManager.Instance.CurrentLocationID != locationID)
+        {
+            RemoveEnemy(locationID);
+            EnemyData enemyData = BattleManager.Instance.CurrentEnemyList[locationID];
+            for (int i = 0; i < enemyData.PassiveSkills.Count; i++)
+            {
+                EffectFactory.Instance.CreateEffect(enemyData.PassiveSkills[i]).ApplyEffect(0, locationID);
+            }
+        }
+
         GameObject damageNum = Instantiate(damageNumPrefab, UI.transform);
         RectTransform damageRect = damageNum.GetComponent<RectTransform>();
         Text damageText = damageNum.GetComponentInChildren<Text>();

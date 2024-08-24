@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class ResurrectionEffect : IEffect
 {
     private int reciprocalCount = 1;
@@ -11,10 +11,19 @@ public class ResurrectionEffect : IEffect
     public void ApplyEffect(int value, string target)
     {
         enemyData = BattleManager.Instance.CurrentEnemyList[target];
-        recoverCount = enemyData.MaxHealth / 2;
-        id = target;
-        EventManager.Instance.AddEventRegister(EventDefinition.eventEnemyTurn, EventEnemyTurn);
-        EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
+        Enemy enemy = enemyData.EnemyTrans.GetComponent<Enemy>();
+        GameObject enemyEffect = enemy.EnemyEffectImage;
+        Image enemyEffectImage = enemyEffect.GetComponent<Image>();
+        if (enemyData.CurrentHealth <= 0)
+        {
+            enemyData.PassiveSkills.Remove("ResurrectionEffect");
+            enemyEffectImage.sprite = EffectFactory.Instance.CreateEffect("ResurrectionEffect").SetIcon();
+            enemyEffect.SetActive(true);
+            recoverCount = enemyData.MaxHealth / 2;
+            id = target;
+            EventManager.Instance.AddEventRegister(EventDefinition.eventEnemyTurn, EventEnemyTurn);
+            EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
+        }
     }
     private void EventEnemyTurn(params object[] args)
     {

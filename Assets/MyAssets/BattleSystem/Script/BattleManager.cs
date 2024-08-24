@@ -79,7 +79,7 @@ public class BattleManager : Singleton<BattleManager>
             for (int i = 0; i < CurrentEnemyList.Count; i++)
             {
                 CharacterData value = CurrentEnemyList.ElementAt(i).Value;
-                TakeDamage(value, 99, CurrentEnemyList.ElementAt(i).Key);
+                TakeDamage(value, 20, CurrentEnemyList.ElementAt(i).Key);
             }
         }
     }
@@ -117,8 +117,9 @@ public class BattleManager : Singleton<BattleManager>
 
     public void ConsumeActionPoint(int point)
     {
-        if (DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].CurrentActionPoint >= point)
-            DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].CurrentActionPoint -= point;
+        int currentPoint = DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].CurrentActionPoint;
+        if (currentPoint >= point)
+            currentPoint -= point;
     }
     public int[] ConvertNormalPos(string location)
     {
@@ -185,7 +186,9 @@ public class BattleManager : Singleton<BattleManager>
         if (!CheckerboardList.ContainsKey(place))
             return false;
         string placeStatus = CheckerboardList[place];
-        if ((checkEmptyType == CheckEmptyType.PlayerAttack && placeStatus == "Enemy") || (checkEmptyType == CheckEmptyType.EnemyAttack && placeStatus == "Player") || placeStatus == "Empty")
+        bool playerAttackCondition = checkEmptyType == CheckEmptyType.PlayerAttack && placeStatus == "Enemy";
+        bool enemyAttackCondition = checkEmptyType == CheckEmptyType.EnemyAttack && placeStatus == "Player";
+        if (playerAttackCondition || enemyAttackCondition || placeStatus == "Empty")
             return true;
         return false;
     }
