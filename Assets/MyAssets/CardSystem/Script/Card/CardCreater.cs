@@ -113,6 +113,8 @@ public class CardCreater : MonoBehaviour
         // 逐個處理每張手牌卡片
         for (int i = handCard.Count; i < maxCardCount; i++)
         {
+            if (DataManager.Instance.CardBag.Count == 0)
+                DrawnAllCards();
             // 根據抽卡數量將卡片添加到手牌中
             handCard.Add(BattleManager.Instance.CardItemList[0]);
             yield return new WaitForSecondsRealtime(coolDown); // 等待冷卻時間
@@ -140,8 +142,6 @@ public class CardCreater : MonoBehaviour
             DataManager.Instance.CardBag.RemoveAt(0);
             BattleManager.Instance.CardItemList.RemoveAt(0);
             EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
-            if (DataManager.Instance.CardBag.Count == 0)
-                DrawnAllCards();
         }
         yield return new WaitForSecondsRealtime(moveTime);
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Attack);
@@ -212,13 +212,13 @@ public class CardCreater : MonoBehaviour
     private IEnumerator PlayerDrawCard()
     {
         yield return UIManager.Instance.FadeOutIn(roundTip.GetComponent<CanvasGroup>(), 0.5f, 1, false); // 執行 UI 淡入淡出效果
-        StartCoroutine(DrawCard(DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].DefaultDrawCardCout));
+        StartCoroutine(DrawCard(BattleManager.Instance.CurrentPlayerData.DefaultDrawCardCout));
     }
 
     private void AdjustCard()
     {
-        CalculatePositionAngle(DataManager.Instance.HandCard.Count);
         List<CardItem> handCard = DataManager.Instance.HandCard;
+        CalculatePositionAngle(handCard.Count);
         for (int i = 0; i < handCard.Count; i++)
         {
             RectTransform handCardRect = handCard[i].GetComponent<RectTransform>();
@@ -244,7 +244,7 @@ public class CardCreater : MonoBehaviour
             RectTransform enemyTrans = enemyData.EnemyTrans;
             List<string> emptyPlaceList = BattleManager.Instance.GetEmptyPlace(location, stepCount, BattleManager.CheckEmptyType.Move);
             Enemy enemy = enemyTrans.GetComponent<Enemy>();
-            PlayerData playerData = DataManager.Instance.PlayerList[DataManager.Instance.PlayerID];
+            PlayerData playerData = BattleManager.Instance.CurrentPlayerData;
             for (int j = 0; j < movedLocationList.Count; j++)//因為不是立即更新棋盤的空白位置
             {
                 if (emptyPlaceList.Contains(movedLocationList[j]))
@@ -282,7 +282,7 @@ public class CardCreater : MonoBehaviour
                 case Enemy.AttackType.Attack:
                     enemy.MyAnimator.SetTrigger("isAttacking");
                     yield return new WaitForSecondsRealtime(0.25f);
-                    BattleManager.Instance.TakeDamage(playerData, enemyData.CurrentAttack, BattleManager.Instance.CurrentLocationID);
+                    BattleManager.Instance.TakeDamage(enemyData, playerData, enemyData.CurrentAttack, BattleManager.Instance.CurrentLocationID);
                     newCurrentEnemyList.Add(newLocation, BattleManager.Instance.CurrentEnemyList[location]);
                     break;
                 case Enemy.AttackType.Shield:
@@ -290,7 +290,7 @@ public class CardCreater : MonoBehaviour
                     newCurrentEnemyList.Add(newLocation, BattleManager.Instance.CurrentEnemyList[location]);
                     break;
                 case Enemy.AttackType.Effect:
-                    EffectFactory.Instance.CreateEffect(enemyData.AttackOrderStrs[enemyData.CurrentAttackOrder].ToString()).ApplyEffect(1, "Player");
+                    EffectFactory.Instance.CreateEffect(enemyData.AttackOrderStrs[enemyData.CurrentAttackOrder].ToString()).ApplyEffect(1, location);
                     newCurrentEnemyList.Add(newLocation, BattleManager.Instance.CurrentEnemyList[location]);
                     break;
             }

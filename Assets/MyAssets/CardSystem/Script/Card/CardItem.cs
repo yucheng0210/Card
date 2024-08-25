@@ -222,7 +222,7 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     }
     private bool GetUseCardCondition()
     {
-        PlayerData playerData = DataManager.Instance.PlayerList[DataManager.Instance.PlayerID];
+        PlayerData playerData = BattleManager.Instance.CurrentPlayerData;
         return playerData.CurrentActionPoint >= Cost && playerData.Mana >= DataManager.Instance.CardList[CardID].CardManaCost;
     }
     private void UseCard(string target)
@@ -236,9 +236,9 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         DataManager.Instance.HandCard.Remove(this);
         BattleManager.Instance.ConsumeActionPoint(Cost);
         BattleManager.Instance.ConsumeMana(cardData.CardManaCost);
-        BattleManager.Instance.GetShield(DataManager.Instance.PlayerList[DataManager.Instance.PlayerID], cardData.CardShield);
+        BattleManager.Instance.GetShield(BattleManager.Instance.CurrentPlayerData, cardData.CardShield);
         if (cardData.CardAttack != 0 && cardData.CardType != "詛咒")
-            BattleManager.Instance.TakeDamage(BattleManager.Instance.CurrentEnemyList[target], cardData.CardAttack, target);
+            BattleManager.Instance.TakeDamage(BattleManager.Instance.CurrentPlayerData, BattleManager.Instance.CurrentEnemyList[target], cardData.CardAttack, target);
         if (!cardData.CardRemove)
             DataManager.Instance.UsedCardBag.Add(this);
         else
@@ -266,8 +266,7 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     }
     private void EventRefreshUI(params object[] args)
     {
-        if (DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].CurrentActionPoint >= Cost
-        && DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].Mana >= DataManager.Instance.CardList[CardID].CardManaCost)
+        if (BattleManager.Instance.CurrentPlayerData.CurrentActionPoint >= Cost && BattleManager.Instance.CurrentPlayerData.Mana >= DataManager.Instance.CardList[CardID].CardManaCost)
             UIManager.Instance.ChangeOutline(outline, 10);
         else
             UIManager.Instance.ChangeOutline(outline, 0);

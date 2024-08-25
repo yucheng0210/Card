@@ -10,7 +10,6 @@ public class FuriousEffect : IEffect
         if (enemyData.CurrentHealth <= enemyData.MaxHealth / 2)
         {
             enemyData.CurrentAttack = enemyData.MaxAttack * 2;
-            Debug.Log(enemyData.CurrentAttack);
         }
     }
 

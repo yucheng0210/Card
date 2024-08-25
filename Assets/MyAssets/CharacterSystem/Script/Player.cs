@@ -11,13 +11,13 @@ public class Player : MonoBehaviour
     private void Start()
     {
         BattleManager.Instance.PlayerTrans = GetComponent<RectTransform>();
-        DataManager.Instance.PlayerList[currentPlayerID].CurrentHealth = DataManager.Instance.PlayerList[currentPlayerID].MaxHealth;
+        BattleManager.Instance.CurrentPlayerData.CurrentHealth = BattleManager.Instance.CurrentPlayerData.MaxHealth;
         EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
     }
 
     private void EventTakeDamage(params object[] args)
     {
-        if (DataManager.Instance.PlayerList[currentPlayerID].CurrentHealth <= 0)
+        if (BattleManager.Instance.CurrentPlayerData.CurrentHealth <= 0)
             Destroy(gameObject);
     }
 }

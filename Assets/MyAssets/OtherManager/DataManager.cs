@@ -369,6 +369,7 @@ public class DataManager : Singleton<DataManager>
         CardBag.Add(CardList[1003]);
         BackpackManager.Instance.AddItem(3001, Backpack);
         PotionBag.Add(ItemList[1001]);
+        BattleManager.Instance.CurrentPlayerData = PlayerList[PlayerID];
         // PlayerList[PlayerID].CharacterPos = LevelList[LevelID].PlayerStartPos;
     }
     private void StartGame_FightingSpiritEffect()
@@ -384,6 +385,7 @@ public class DataManager : Singleton<DataManager>
         BackpackManager.Instance.AddItem(3001, Backpack);
         PotionBag.Add(ItemList[1001]);
         // PlayerList[PlayerID].CharacterPos = LevelList[LevelID].PlayerStartPos;
+        BattleManager.Instance.CurrentPlayerData = PlayerList[PlayerID];
     }
     private void StartGame_ExtinctionRayEffect()
     {
@@ -402,5 +404,6 @@ public class DataManager : Singleton<DataManager>
         CardBag.Add(cardData);
         cardData = CardList[1010];
         CardBag.Add(cardData);
+        BattleManager.Instance.CurrentPlayerData = PlayerList[PlayerID];
     }
 }

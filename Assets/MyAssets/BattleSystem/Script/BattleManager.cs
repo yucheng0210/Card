@@ -47,6 +47,7 @@ public class BattleManager : Singleton<BattleManager>
     public Dictionary<string, int> CurrentOnceBattlePositiveList { get; set; }
     public int ManaMultiplier { get; set; }
     public int CurrentConsumeMana { get; set; }
+    public PlayerData CurrentPlayerData { get; set; }
     //敵人
     public Dictionary<string, EnemyData> CurrentEnemyList { get; set; }
     public bool IsDrag { get; set; }
@@ -79,11 +80,11 @@ public class BattleManager : Singleton<BattleManager>
             for (int i = 0; i < CurrentEnemyList.Count; i++)
             {
                 CharacterData value = CurrentEnemyList.ElementAt(i).Value;
-                TakeDamage(value, 20, CurrentEnemyList.ElementAt(i).Key);
+                TakeDamage(CurrentPlayerData, value, 20, CurrentEnemyList.ElementAt(i).Key);
             }
         }
     }
-    public void TakeDamage(CharacterData defender, int damage, string location)
+    public void TakeDamage(CharacterData attacker, CharacterData defender, int damage, string location)
     {
         int currentDamage = damage - defender.CurrentShield;
         if (currentDamage < 0)
@@ -93,7 +94,7 @@ public class BattleManager : Singleton<BattleManager>
         int point = GetCheckerboardPoint(location);
         Vector2 pos = new(CheckerboardTrans.GetChild(point).localPosition.x, CheckerboardTrans.GetChild(point).localPosition.y);
         Color color = Color.red;
-        EventManager.Instance.DispatchEvent(EventDefinition.eventTakeDamage, pos, damage, location, color);
+        EventManager.Instance.DispatchEvent(EventDefinition.eventTakeDamage, pos, damage, location, color, attacker);
     }
     public void Recover(CharacterData defender, int damage, string location)
     {
@@ -117,7 +118,7 @@ public class BattleManager : Singleton<BattleManager>
 
     public void ConsumeActionPoint(int point)
     {
-        int currentPoint = DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].CurrentActionPoint;
+        int currentPoint = CurrentPlayerData.CurrentActionPoint;
         if (currentPoint >= point)
             currentPoint -= point;
     }
@@ -248,7 +249,7 @@ public class BattleManager : Singleton<BattleManager>
     }
     public void ConsumeMana(int consumeMana)
     {
-        DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].Mana -= consumeMana;
+        CurrentPlayerData.Mana -= consumeMana;
         CurrentConsumeMana += consumeMana;
     }
     public void ChangeTurn(BattleType type)
@@ -288,11 +289,11 @@ public class BattleManager : Singleton<BattleManager>
     {
         int playerID = DataManager.Instance.PlayerID;
         int levelID = MapManager.Instance.LevelID;
-        int skillID = DataManager.Instance.PlayerList[playerID].StartSkill;
+        int skillID = CurrentPlayerData.StartSkill;
         int levelCount = MapManager.Instance.LevelCount;
         CurrentLocationID = MapManager.Instance.MapNodes[levelCount][levelID].l.PlayerStartPos;
-        DataManager.Instance.PlayerList[playerID].CurrentActionPoint = DataManager.Instance.PlayerList[playerID].MaxActionPoint;
-        DataManager.Instance.PlayerList[playerID].Mana = 10;
+        CurrentPlayerData.CurrentActionPoint = CurrentPlayerData.MaxActionPoint;
+        CurrentPlayerData.Mana = 10;
         PlayerTrans.localPosition = CheckerboardTrans.GetChild(GetCheckerboardPoint(CurrentLocationID)).localPosition;
         for (int i = 0; i < DataManager.Instance.SkillList[skillID].SkillContent.Count; i++)
         {
@@ -332,9 +333,9 @@ public class BattleManager : Singleton<BattleManager>
     private void PlayerTurn()
     {
         int playerID = DataManager.Instance.PlayerID;
-        DataManager.Instance.PlayerList[playerID].CurrentActionPoint = DataManager.Instance.PlayerList[playerID].MaxActionPoint;
+        CurrentPlayerData.CurrentActionPoint = CurrentPlayerData.MaxActionPoint;
         //DataManager.Instance.PlayerList[playerID].Mana++;
-        DataManager.Instance.PlayerList[playerID].CurrentShield = 0;
+        CurrentPlayerData.CurrentShield = 0;
         for (int i = 0; i < CurrentAbilityList.Count; i++)
         {
             string effectID;

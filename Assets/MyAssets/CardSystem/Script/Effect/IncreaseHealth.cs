@@ -6,7 +6,7 @@ public class IncreaseHealth : IEffect
 {
     public void ApplyEffect(int value, string target)
     {
-        PlayerData playerData = DataManager.Instance.PlayerList[DataManager.Instance.PlayerID];
+        PlayerData playerData = BattleManager.Instance.CurrentPlayerData;
         BattleManager.Instance.Recover(playerData, playerData.MaxHealth * value / 100, BattleManager.Instance.CurrentLocationID);
     }
     Sprite IEffect.SetIcon()

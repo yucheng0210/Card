@@ -1,8 +1,8 @@
 ﻿標籤,名稱,總血量,最低攻擊力,最高攻擊力,圖片位置,移動步數,攻擊距離,警戒距離,攻擊順序,動畫位置,被動技能
-1001,沙漠哥布林,35,12,12,EnemyImage/Goblin,3,1,99,CantMoveEffect;Attack;Attack,EnemyAnimation/Goblin,FuriousEffect
-1002,骷髏人,55,5,5,EnemyImage/Skeleton,2,2,99,Shield;Attack;DeadlineCurseEffect,EnemyAnimation/Skeleton,ResurrectionEffect
-1003,大眼怪,6,10,15,EnemyImage/FlyingEye,2,2,99,CantMoveEffect;Attack;Shield,EnemyAnimation/FlyingEye,
-1004,菇,6,10,15,EnemyImage/Mushroom,2,2,99,CantMoveEffect;Attack;Shield,EnemyAnimation/Mushroom,
+1001,沙漠哥布林,32,12,12,EnemyImage/Goblin,3,1,99,CantMoveEffect;Attack;Attack,EnemyAnimation/Goblin,FuriousEffect
+1002,骷髏人,55,5,5,EnemyImage/Skeleton,2,2,99,Shield;ThornsEffect;Attack,EnemyAnimation/Skeleton,ResurrectionEffect
+1003,大眼怪,47,10,15,EnemyImage/FlyingEye,2,2,99,CantMoveEffect;Attack;Shield,EnemyAnimation/FlyingEye,
+1004,菇,88,10,15,EnemyImage/Mushroom,2,2,99,CantMoveEffect;Attack;Shield,EnemyAnimation/Mushroom,
 1005,沙漠狂獸,6,3,10,EnemyImage/Dog,2,2,99,CantMoveEffect;Attack;Shield,EnemyAnimation/Dog,
 1006,毒刃劍蠍,6,10,15,EnemyImage/Dog,2,2,99,CantMoveEffect;Attack;Shield,EnemyAnimation/Scorpion,
 1007,風沙追獵者,6,10,15,EnemyImage/Dog,2,2,99,CantMoveEffect;Attack;Shield,EnemyAnimation/Dog,

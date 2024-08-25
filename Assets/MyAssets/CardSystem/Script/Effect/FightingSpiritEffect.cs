@@ -6,12 +6,13 @@ public class FightingSpiritEffect : IEffect
 {
     public void ApplyEffect(int value, string target)
     {
-        if (BattleManager.Instance.CurrentOnceBattlePositiveList.ContainsKey(GetType().Name))
-            BattleManager.Instance.CurrentOnceBattlePositiveList[GetType().Name]++;
+        Dictionary<string, int> currentOnceBattlePositiveList = BattleManager.Instance.CurrentOnceBattlePositiveList;
+        if (currentOnceBattlePositiveList.ContainsKey(GetType().Name))
+            currentOnceBattlePositiveList[GetType().Name]++;
         else
-            BattleManager.Instance.CurrentOnceBattlePositiveList.Add(GetType().Name, 1);
-        int damage = 8 * BattleManager.Instance.CurrentOnceBattlePositiveList[GetType().Name];
-        BattleManager.Instance.TakeDamage(BattleManager.Instance.CurrentEnemyList[target], damage, target);
+            currentOnceBattlePositiveList.Add(GetType().Name, 1);
+        int damage = 8 * currentOnceBattlePositiveList[GetType().Name];
+        BattleManager.Instance.TakeDamage(BattleManager.Instance.CurrentPlayerData, BattleManager.Instance.CurrentEnemyList[target], damage, target);
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
 

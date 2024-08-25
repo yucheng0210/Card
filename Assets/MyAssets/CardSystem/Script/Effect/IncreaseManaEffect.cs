@@ -10,7 +10,7 @@ public class IncreaseManaEffect : IEffect
         if (value == -1)
             currentMana = BattleManager.Instance.CurrentConsumeMana;
         currentMana *= BattleManager.Instance.ManaMultiplier;
-        DataManager.Instance.PlayerList[DataManager.Instance.PlayerID].Mana += currentMana;
+        BattleManager.Instance.CurrentPlayerData.Mana += currentMana;
     }
 
     Sprite IEffect.SetIcon()

@@ -19,8 +19,9 @@ public class DeadlineCurseEffect : IEffect
             if (DataManager.Instance.HandCard.Contains(cardItem))
             {
                 string locationID = BattleManager.Instance.CurrentLocationID;
-                PlayerData playerData = DataManager.Instance.PlayerList[DataManager.Instance.PlayerID];
-                BattleManager.Instance.TakeDamage(playerData, DataManager.Instance.CardList[5001].CardAttack, locationID);
+                PlayerData playerData = BattleManager.Instance.CurrentPlayerData;
+                EnemyData enemyData = BattleManager.Instance.CurrentEnemyList[locationID];
+                BattleManager.Instance.TakeDamage(enemyData, playerData, DataManager.Instance.CardList[5001].CardAttack, locationID);
                 DataManager.Instance.HandCard.Remove(cardItem);
                 DataManager.Instance.RemoveCardBag.Add(cardItem);
                 cardItem.gameObject.SetActive(false);

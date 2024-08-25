@@ -93,7 +93,7 @@ public class UIExplore : UIBase
     private void RecoverInitialize()
     {
         int playerID = DataManager.Instance.PlayerID;
-        int recoverCount = (int)(DataManager.Instance.PlayerList[playerID].MaxHealth * 0.35f);
+        int recoverCount = (int)(BattleManager.Instance.CurrentPlayerData.MaxHealth * 0.35f);
         int currentRemoveID = UIManager.Instance.CurrentRemoveID;
         UnityEngine.Events.UnityAction unityAction = () => RemoveSuccess(BattleManager.Instance.CardMenuTrans.GetChild(currentRemoveID).gameObject);
         restButton.onClick.AddListener(() => restMenu.SetActive(true));
@@ -101,7 +101,7 @@ public class UIExplore : UIBase
         restButton.onClick.AddListener(() => removeCardButton.gameObject.SetActive(false));
         //removeCardButton.onClick.AddListener(() => UIManager.Instance.RefreshCardBag());
         removeCardButton.onClick.AddListener(() => UIManager.Instance.SelectCard(unityAction, false));
-        restConfirmButton.onClick.AddListener(() => BattleManager.Instance.Recover(DataManager.Instance.PlayerList[playerID], recoverCount));
+        restConfirmButton.onClick.AddListener(() => BattleManager.Instance.Recover(BattleManager.Instance.CurrentPlayerData, recoverCount));
         restConfirmButton.onClick.AddListener(() => recoverExitButton.gameObject.SetActive(true));
         restConfirmButton.onClick.AddListener(() => restMenu.SetActive(false));
         restConfirmButton.onClick.AddListener(() => EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI));
@@ -179,8 +179,8 @@ public class UIExplore : UIBase
     {
         int id = DataManager.Instance.PlayerID;
         cardBagCountText.text = DataManager.Instance.CardBag.Count.ToString();
-        health.DOFillAmount((float)((float)DataManager.Instance.PlayerList[id].CurrentHealth / DataManager.Instance.PlayerList[id].MaxHealth), 0.5f);
-        healthText.text = DataManager.Instance.PlayerList[id].CurrentHealth.ToString() + "/" + DataManager.Instance.PlayerList[id].MaxHealth.ToString();
+        health.DOFillAmount((float)((float)BattleManager.Instance.CurrentPlayerData.CurrentHealth / BattleManager.Instance.CurrentPlayerData.MaxHealth), 0.5f);
+        healthText.text = BattleManager.Instance.CurrentPlayerData.CurrentHealth.ToString() + "/" + BattleManager.Instance.CurrentPlayerData.MaxHealth.ToString();
         moneyText.text = DataManager.Instance.MoneyCount.ToString();
     }
 }

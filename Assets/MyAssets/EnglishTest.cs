@@ -24,7 +24,7 @@ public class EnglishTest : MonoBehaviour
     "price","neighbor","allow","assume","prohibit","slip","exchange","purchase","refund","realize","fare","prior","departure","result","diet","intake","consume",
     "impress","performance","improve","gradually","insurance","coverage","spouse","slightly","cause","device","malfunction","jam","calculator","prepare","expense",
     "actually","drench","strenuous","workout","bet","headline","concerning","obstruction","justice","determine","previous","sort","reward","reimbursement","bill",
-    "submit","form","government","cost","billion","bid","suppose","accompany","commentary","editorial","immitate","budget","specify","increase","swamp","possibly",
+    "submit","form","government","cost","billion","bid","suppose","accompany","commentary","editorial","imitate","budget","specify","increase","swamp","possibly",
     "overtime","sync","quit","unexpected","graduate","degree","celebration","attract","crowd","nephew","roughly","plumbing","setback","require","relocate",
     "operation","nearby","considerably","author","admire","work","pity","omit","belong","conclusion","vague","raise","wonder","demanding","rewarding",
     "reluctant","prefer","incredibly","concerned","deserve","credit","content","complain","willing","protest","brave","belief","appoint","committee",
@@ -61,7 +61,9 @@ public class EnglishTest : MonoBehaviour
     "murder", "throughout", "disguise", "ordinary", "gather", "identity", "fellow", "reveal", "guess", "prize", "plant", "turf", "rake", "sod", "fertilizer",
     "earth", "lay", "firmly", "flush", "moisten", "mow","lid", "chest", "separately", "hinge", "glue", "drive", "nail", "varnish", "place", "latch", "remove",
     "loosen", "tilt", "drain", "sufficient", "rag", "disposal", "proper", "pour", "skillet", "grab", "burn", "cake", "surface", "scrub", "vigorously", "scour",
-    "rinse", "rust"};
+    "rinse", "rust","decade", "registration", "forecast", "shape", "session", "opportunity", "barrier", "finance", "transportation", "ride", "conference",
+    "distance", "variation", "exact", "overall", "maintain", "federal", "statistics", "release", "unemployment", "population", "seek", "consider", "actively",
+    "dice", "coarsely", "remaining", "store", "airtight", "refrigerate", "decrease", "suit"};
     private void Start()
     {
         for (int i = 0; i < 50; i++)

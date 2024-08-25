@@ -31,6 +31,7 @@ public class Enemy : MonoBehaviour
     public string EnemyLocation { get; set; }
     public AttackType MyAttackType { get; set; }
     public bool IsDeath { get; set; }
+    public Dictionary<string, int> EnemyOnceBattlePositiveList { get; set; }
     public enum AttackType
     {
         Move,
@@ -44,6 +45,7 @@ public class Enemy : MonoBehaviour
         EventManager.Instance.AddEventRegister(EventDefinition.eventMove, EventMove);
         EnemyData enemyData = BattleManager.Instance.CurrentEnemyList[EnemyLocation];
         enemyData.CurrentAttack = enemyData.MaxAttack;
+        EnemyOnceBattlePositiveList = new Dictionary<string, int>();
     }
     private void OnDisable()
     {

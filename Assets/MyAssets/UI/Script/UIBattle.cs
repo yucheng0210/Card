@@ -331,10 +331,13 @@ public class UIBattle : UIBase
         if (BattleManager.Instance.CurrentLocationID != locationID)
         {
             RemoveEnemy(locationID);
-            EnemyData enemyData = BattleManager.Instance.CurrentEnemyList[locationID];
-            for (int i = 0; i < enemyData.PassiveSkills.Count; i++)
+            if (BattleManager.Instance.CurrentEnemyList.ContainsKey(locationID))
             {
-                EffectFactory.Instance.CreateEffect(enemyData.PassiveSkills[i]).ApplyEffect(0, locationID);
+                EnemyData enemyData = BattleManager.Instance.CurrentEnemyList[locationID];
+                for (int i = 0; i < enemyData.PassiveSkills.Count; i++)
+                {
+                    EffectFactory.Instance.CreateEffect(enemyData.PassiveSkills[i]).ApplyEffect(0, locationID);
+                }
             }
         }
 
@@ -363,11 +366,11 @@ public class UIBattle : UIBase
     private void EventRefreshUI(params object[] args)
     {
         int id = DataManager.Instance.PlayerID;
-        actionPointText.text = DataManager.Instance.PlayerList[id].CurrentActionPoint.ToString() + "/" + DataManager.Instance.PlayerList[id].MaxActionPoint.ToString();
-        manaPointText.text = DataManager.Instance.PlayerList[id].Mana.ToString();
-        health.DOFillAmount((float)((float)DataManager.Instance.PlayerList[id].CurrentHealth / DataManager.Instance.PlayerList[id].MaxHealth), 0.5f);
-        healthText.text = DataManager.Instance.PlayerList[id].CurrentHealth.ToString() + "/" + DataManager.Instance.PlayerList[id].MaxHealth.ToString();
-        shieldText.text = DataManager.Instance.PlayerList[id].CurrentShield.ToString();
+        actionPointText.text = BattleManager.Instance.CurrentPlayerData.CurrentActionPoint.ToString() + "/" + BattleManager.Instance.CurrentPlayerData.MaxActionPoint.ToString();
+        manaPointText.text = BattleManager.Instance.CurrentPlayerData.Mana.ToString();
+        health.DOFillAmount((float)((float)BattleManager.Instance.CurrentPlayerData.CurrentHealth / BattleManager.Instance.CurrentPlayerData.MaxHealth), 0.5f);
+        healthText.text = BattleManager.Instance.CurrentPlayerData.CurrentHealth.ToString() + "/" + BattleManager.Instance.CurrentPlayerData.MaxHealth.ToString();
+        shieldText.text = BattleManager.Instance.CurrentPlayerData.CurrentShield.ToString();
         battleCardBagCountText.text = DataManager.Instance.CardBag.Count.ToString();
         usedCardBagCountText.text = DataManager.Instance.UsedCardBag.Count.ToString();
         removeCardBagCountText.text = DataManager.Instance.RemoveCardBag.Count.ToString();
