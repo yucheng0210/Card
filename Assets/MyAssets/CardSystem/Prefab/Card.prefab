@@ -572,7 +572,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -851,6 +851,7 @@ MonoBehaviour:
   cardCost: {fileID: 7393482972847160317}
   cardDescription: {fileID: 3691884552657327479}
   cardImage: {fileID: 3090578253488050216}
+  cardBackground: {fileID: 6644801660954765168}
   pointerEnterUpY: 80
   pointerEnterSpacing: 150
   pointerEnterReduceCount: 50

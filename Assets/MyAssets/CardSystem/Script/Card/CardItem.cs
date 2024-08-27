@@ -22,6 +22,8 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     [SerializeField]
     private Image cardImage;
+    [SerializeField]
+    private Image cardBackground;
 
     [SerializeField]
     private float pointerEnterUpY;
@@ -47,6 +49,11 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         get { return cardImage; }
         set { cardImage = value; }
+    }
+    public Image CardBackground
+    {
+        get { return cardBackground; }
+        set { cardBackground = value; }
     }
     public Text CardName
     {
@@ -135,7 +142,8 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             leftCard = transform.parent.GetChild(i).GetComponent<CardItem>();
             leftCard.GetComponent<RectTransform>().DOAnchorPosX(BattleManager.Instance.CardPositionList[i].x, moveTime);
         }
-        UIManager.Instance.ClearCheckerboardColor(BattleManager.Instance.CurrentLocationID, DataManager.Instance.CardList[CardID].CardAttackDistance, BattleManager.CheckEmptyType.PlayerAttack);
+        string id = BattleManager.Instance.CurrentLocationID;
+        UIManager.Instance.ClearCheckerboardColor(id, DataManager.Instance.CardList[CardID].CardAttackDistance, BattleManager.CheckEmptyType.PlayerAttack);
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -152,23 +160,12 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         BattleManager.Instance.IsDrag = true;
         Cursor.visible = false;
         Vector2 dragPosition;
-        if (
-            !RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                transform.parent.GetComponent<RectTransform>(),
-                eventData.position,
-                eventData.pressEventCamera,
-                out dragPosition
-            )
-        )
+        RectTransform parentRect = transform.parent.GetComponent<RectTransform>();
+        if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(parentRect, eventData.position, eventData.pressEventCamera, out dragPosition))
             return;
         if (isAttackCard)
         {
-            EventManager.Instance.DispatchEvent(
-                EventDefinition.eventAttackLine,
-                true,
-                CardRectTransform.anchoredPosition,
-                dragPosition
-            );
+            EventManager.Instance.DispatchEvent(EventDefinition.eventAttackLine, true, CardRectTransform.anchoredPosition, dragPosition);
             CheckRayToEnemy(false);
             return;
         }

@@ -70,6 +70,8 @@ public class CardCreater : MonoBehaviour
 
     private void CalculatePositionAngle(int cardCount)
     {
+        BattleManager.Instance.CardPositionList.Clear();
+        BattleManager.Instance.CardAngleList.Clear();
         int odd = cardCount % 2 != 0 ? 0 : 1;
         float startAngle = (cardCount / 2 - odd) * minCardAngle;
         Vector2 cardPos = startPosition;
@@ -104,8 +106,7 @@ public class CardCreater : MonoBehaviour
 
     private IEnumerator DrawCard(int addCardCount)
     {
-        BattleManager.Instance.CardPositionList.Clear();
-        BattleManager.Instance.CardAngleList.Clear();
+        BattleManager.Instance.ChangeTurn(BattleManager.BattleType.DrawCard);
         List<CardItem> handCard = DataManager.Instance.HandCard;
         int maxCardCount = handCard.Count + addCardCount;
         // 檢查卡片數量是否為奇數
@@ -120,6 +121,7 @@ public class CardCreater : MonoBehaviour
             yield return new WaitForSecondsRealtime(coolDown); // 等待冷卻時間
             RectTransform handCardRect = handCard[i].GetComponent<RectTransform>();
             handCard[i].transform.SetParent(handCardTrans); // 將卡片設定為手牌的子物件
+            handCard[i].CardBackground.raycastTarget = false;
             handCard[i].gameObject.SetActive(true); // 啟用卡片物件
             EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
             yield return null;
@@ -144,9 +146,18 @@ public class CardCreater : MonoBehaviour
             EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
         }
         yield return new WaitForSecondsRealtime(moveTime);
+        HandCardRaycast();
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Attack);
     }
 
+    private void HandCardRaycast()
+    {
+        List<CardItem> handCard = DataManager.Instance.HandCard;
+        for (int i = 0; i < handCard.Count; i++)
+        {
+            handCard[i].CardBackground.raycastTarget = true;
+        }
+    }
     private void DrawnAllCards()
     {
         for (int j = 0; j < DataManager.Instance.UsedCardBag.Count; j++)
@@ -187,8 +198,6 @@ public class CardCreater : MonoBehaviour
 
     private void EventUseCard(params object[] args)
     {
-        BattleManager.Instance.CardPositionList.Clear();
-        BattleManager.Instance.CardAngleList.Clear();
         currentPosX -= cardXSpacing / 2;
         CardItem cardItem = (CardItem)args[0];
         cardItem.transform.SetParent(usedCardTrans);
@@ -331,8 +340,6 @@ public class CardCreater : MonoBehaviour
         }
         DataManager.Instance.HandCard.Clear();
         DataManager.Instance.HandCard = freezeCardList;
-        BattleManager.Instance.CardPositionList.Clear();
-        BattleManager.Instance.CardAngleList.Clear();
         AdjustCard();
         StartCoroutine(HideAllCards());
         roundTip.GetComponent<Image>().sprite = enemyRound;

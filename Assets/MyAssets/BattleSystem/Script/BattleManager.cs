@@ -12,6 +12,7 @@ public class BattleManager : Singleton<BattleManager>
         None,
         Explore,
         BattleInitial,
+        DrawCard,
         Dialog,
         Player,
         Attack,
