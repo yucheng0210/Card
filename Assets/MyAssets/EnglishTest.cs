@@ -63,7 +63,10 @@ public class EnglishTest : MonoBehaviour
     "loosen", "tilt", "drain", "sufficient", "rag", "disposal", "proper", "pour", "skillet", "grab", "burn", "cake", "surface", "scrub", "vigorously", "scour",
     "rinse", "rust","decade", "registration", "forecast", "shape", "session", "opportunity", "barrier", "finance", "transportation", "ride", "conference",
     "distance", "variation", "exact", "overall", "maintain", "federal", "statistics", "release", "unemployment", "population", "seek", "consider", "actively",
-    "dice", "coarsely", "remaining", "store", "airtight", "refrigerate", "decrease", "suit"};
+    "dice", "coarsely", "remaining", "store", "airtight", "refrigerate", "decrease", "suit","proposal", "indeed", "detailed", "discuss", "revision", "audience", 
+    "projection", "personnel", "regret", "china", "fault", "responsibility", "alternate", "unfortunate", "transaction", "satisfactory", "exhibit", "therefore", 
+    "notify", "candidate", "eminently", "qualified", "resume", "delay", "express", "provide", "unfamiliar", "recommend", "expert", "sophisticated", "flawless", 
+    "participant"};
     private void Start()
     {
         for (int i = 0; i < 50; i++)

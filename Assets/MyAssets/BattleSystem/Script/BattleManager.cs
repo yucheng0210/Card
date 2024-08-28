@@ -112,6 +112,14 @@ public class BattleManager : Singleton<BattleManager>
         Color color = Color.green;
         EventManager.Instance.DispatchEvent(EventDefinition.eventTakeDamage, screenCenter, damage, CurrentLocationID, color);
     }
+    public void TriggerEnemyPassiveSkill(string locationID)
+    {
+        EnemyData enemyData = CurrentEnemyList[locationID];
+        for (int i = 0; i < enemyData.PassiveSkills.Count; i++)
+        {
+            EffectFactory.Instance.CreateEffect(enemyData.PassiveSkills[i]).ApplyEffect(0, locationID);
+        }
+    }
     public void GetShield(CharacterData defender, int point)
     {
         defender.CurrentShield += point;

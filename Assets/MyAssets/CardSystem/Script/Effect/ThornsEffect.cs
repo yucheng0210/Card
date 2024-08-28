@@ -9,6 +9,7 @@ public class ThornsEffect : IEffect
     private string counterattackTargetID;
     private CharacterData counterattacker;
     private int counterattackDamage;
+    private int counterattackDamageMultiplier;
     public void ApplyEffect(int value, string target)
     {
         Dictionary<string, int> currentOnceBattlePositiveList;
@@ -24,16 +25,18 @@ public class ThornsEffect : IEffect
             counterattacker = BattleManager.Instance.CurrentEnemyList[target];
         }
         if (currentOnceBattlePositiveList.ContainsKey(GetType().Name))
-            currentOnceBattlePositiveList[GetType().Name] += 2;
+            currentOnceBattlePositiveList[GetType().Name] += 5;
         else
-            currentOnceBattlePositiveList.Add(GetType().Name, 2);
+            currentOnceBattlePositiveList.Add(GetType().Name, 5);
+        counterattackDamageMultiplier = currentOnceBattlePositiveList[GetType().Name];
         counterattackerID = target;
-        counterattackDamage = currentOnceBattlePositiveList[GetType().Name];
         EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
     }
     private void EventTakeDamage(params object[] args)
     {
+        int damage = (int)args[1];
         string locationID = (string)args[2];
+        counterattackDamage = damage / 100 * counterattackDamageMultiplier;
         CharacterData counterattackTarget = (CharacterData)args[4];
         counterattackTargetID = BattleManager.Instance.CurrentEnemyList.FirstOrDefault(x => x.Value == counterattackTarget).Key;
         if (counterattackTargetID == null)

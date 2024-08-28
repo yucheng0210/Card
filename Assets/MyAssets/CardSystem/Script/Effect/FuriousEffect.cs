@@ -8,9 +8,7 @@ public class FuriousEffect : IEffect
     {
         EnemyData enemyData = BattleManager.Instance.CurrentEnemyList[target];
         if (enemyData.CurrentHealth <= enemyData.MaxHealth / 2)
-        {
             enemyData.CurrentAttack = enemyData.MaxAttack * 2;
-        }
     }
 
     public Sprite SetIcon()

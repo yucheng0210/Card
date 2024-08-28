@@ -229,6 +229,8 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         CardData cardData = DataManager.Instance.CardList[CardID];
         if (BattleManager.Instance.CurrentNegativeState.ContainsKey(nameof(CantMoveEffect)) && cardData.CardType == "移動")
             return;
+        if (cardData.CardCost < 0)
+            return;
         CardRectTransform.DOScale(1.5f, 0);
         DataManager.Instance.HandCard.Remove(this);
         BattleManager.Instance.ConsumeActionPoint(Cost);

@@ -255,6 +255,7 @@ public class UIBattle : UIBase
             enemy.MyAnimator.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>(BattleManager.Instance.CurrentEnemyList[key].EnemyAniPath);
             BattleManager.Instance.CurrentEnemyList[key].EnemyTrans = enemy.GetComponent<RectTransform>();
             BattleManager.Instance.CurrentEnemyList[key].CurrentHealth = DataManager.Instance.EnemyList[enemy.EnemyID].MaxHealth;
+            BattleManager.Instance.TriggerEnemyPassiveSkill(enemy.EnemyLocation);
             yield return null;
         }
         for (int i = 0; i < BattleManager.Instance.CurrentTerrainList.Count; i++)
@@ -262,7 +263,8 @@ public class UIBattle : UIBase
             string key = BattleManager.Instance.CurrentTerrainList.ElementAt(i).Key;
             GameObject terrain = Instantiate(terrainPrefab, terrainTrans);
             RectTransform terrainRect = terrain.GetComponent<RectTransform>();
-            terrain.GetComponent<Image>().sprite = Resources.Load<Sprite>(BattleManager.Instance.CurrentTerrainList[key].ImagePath);
+            Image terrainImage = terrain.GetComponent<Image>();
+            terrainImage.sprite = Resources.Load<Sprite>(BattleManager.Instance.CurrentTerrainList[key].ImagePath);
             terrainRect.anchoredPosition = BattleManager.Instance.CheckerboardTrans.GetChild(BattleManager.Instance.GetCheckerboardPoint(key)).localPosition;
             yield return null;
         }
@@ -332,13 +334,7 @@ public class UIBattle : UIBase
         {
             RemoveEnemy(locationID);
             if (BattleManager.Instance.CurrentEnemyList.ContainsKey(locationID))
-            {
-                EnemyData enemyData = BattleManager.Instance.CurrentEnemyList[locationID];
-                for (int i = 0; i < enemyData.PassiveSkills.Count; i++)
-                {
-                    EffectFactory.Instance.CreateEffect(enemyData.PassiveSkills[i]).ApplyEffect(0, locationID);
-                }
-            }
+                BattleManager.Instance.TriggerEnemyPassiveSkill(locationID);
         }
 
         GameObject damageNum = Instantiate(damageNumPrefab, UI.transform);

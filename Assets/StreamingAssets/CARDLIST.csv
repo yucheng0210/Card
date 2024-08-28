@@ -15,4 +15,5 @@
 2003,漩渦,技能,CardImage/Spring,1,無,null,獲得本回合內消耗魔力/2的魔力。,0,0,IncreaseManaEffect=-1,稀有,0,0,FALSE,50,FALSE
 2004,彈回,技能,CardImage/Spring,1,無,null,產生5點護盾，並將一張卡牌返回抽卡堆。,0,5,ReturnCardBag=1,稀有,0,4,FALSE,50,FALSE
 3001,毀滅射線,攻擊,CardImage/FireBall,1,無,null,消耗所有魔力，造成魔力x2+總魔力/5點平方傷害。,0,0,ExtinctionRayEffect=0,史詩,2,0,FALSE,50,FALSE
-5001,死亡倒數計時,詛咒,CardImage/FireBall,2,無,null,造成20點傷害。,20,0,,普通,0,0,TRUE,0,TRUE
+5001,死亡倒數,詛咒,CardImage/FireBall,2,無,null,造成20點傷害。,20,0,,普通,0,0,TRUE,0,TRUE
+5002,寄生孢子,詛咒,CardImage/FireBall,-1,無,null,每回合造成最大生命2%的傷害，並回復宿主相等傷害。,0,0,,普通,0,0,FALSE,0,FALSE
