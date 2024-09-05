@@ -299,13 +299,15 @@ public class CardCreater : MonoBehaviour
                     newCurrentEnemyList.Add(newLocation, BattleManager.Instance.CurrentEnemyList[location]);
                     break;
                 case Enemy.AttackType.Effect:
-                    EffectFactory.Instance.CreateEffect(enemyData.AttackOrderStrs[enemyData.CurrentAttackOrder].ToString()).ApplyEffect(1, location);
+                    string key = enemyData.AttackOrderStrs.ElementAt(enemyData.CurrentAttackOrder).Key;
+                    int value = enemyData.AttackOrderStrs.ElementAt(enemyData.CurrentAttackOrder).Value;
+                    EffectFactory.Instance.CreateEffect(key).ApplyEffect(value, location);
                     newCurrentEnemyList.Add(newLocation, BattleManager.Instance.CurrentEnemyList[location]);
                     break;
             }
             yield return new WaitForSecondsRealtime(0.5f);
             enemy.MyAnimator.SetBool("isRunning", false);
-            if (enemyData.CurrentAttackOrder >= enemyData.AttackOrderStrs.Length - 1)
+            if (enemyData.CurrentAttackOrder >= enemyData.AttackOrderStrs.Count - 1)
                 enemyData.CurrentAttackOrder = 0;
             else
                 enemyData.CurrentAttackOrder++;

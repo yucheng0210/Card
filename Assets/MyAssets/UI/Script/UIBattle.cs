@@ -204,7 +204,7 @@ public class UIBattle : UIBase
         if (enemyData.CurrentHealth <= 0 && !enemy.IsDeath)
         {
             enemy.MyAnimator.SetTrigger("isDeath");
-            if (!enemyData.PassiveSkills.Contains("ResurrectionEffect"))
+            if (!enemyData.PassiveSkills.ContainsKey("ResurrectionEffect"))
             {
                 BattleManager.Instance.CurrentEnemyList.Remove(key);
                 Destroy(enemyData.EnemyTrans.gameObject, 1);

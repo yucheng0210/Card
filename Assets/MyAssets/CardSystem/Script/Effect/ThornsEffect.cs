@@ -25,9 +25,9 @@ public class ThornsEffect : IEffect
             counterattacker = BattleManager.Instance.CurrentEnemyList[target];
         }
         if (currentOnceBattlePositiveList.ContainsKey(GetType().Name))
-            currentOnceBattlePositiveList[GetType().Name] += 5;
+            currentOnceBattlePositiveList[GetType().Name] += value;
         else
-            currentOnceBattlePositiveList.Add(GetType().Name, 5);
+            currentOnceBattlePositiveList.Add(GetType().Name, value);
         counterattackDamageMultiplier = currentOnceBattlePositiveList[GetType().Name];
         counterattackerID = target;
         EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);

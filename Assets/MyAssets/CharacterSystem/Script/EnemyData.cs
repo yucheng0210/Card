@@ -13,7 +13,7 @@ public class EnemyData : CharacterData
     public RectTransform EnemyTrans { get; set; }
     public int AlertDistance { get; set; }
     public int AttackDistance { get; set; }
-    public string[] AttackOrderStrs { get; set; }
+    public Dictionary<string, int> AttackOrderStrs { get; set; }
     public int CurrentAttackOrder { get; set; }
-    public List<string> PassiveSkills { get; set; }
+    public Dictionary<string, int> PassiveSkills { get; set; }
 }

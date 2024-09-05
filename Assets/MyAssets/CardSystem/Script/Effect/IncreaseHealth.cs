@@ -6,8 +6,12 @@ public class IncreaseHealth : IEffect
 {
     public void ApplyEffect(int value, string target)
     {
-        PlayerData playerData = BattleManager.Instance.CurrentPlayerData;
-        BattleManager.Instance.Recover(playerData, playerData.MaxHealth * value / 100, BattleManager.Instance.CurrentLocationID);
+        CharacterData recoverData;
+        if (target == BattleManager.Instance.CurrentLocationID)
+            recoverData = BattleManager.Instance.CurrentPlayerData;
+        else
+            recoverData = BattleManager.Instance.CurrentEnemyList[target];
+        BattleManager.Instance.Recover(recoverData, recoverData.MaxHealth * value / 100, BattleManager.Instance.CurrentLocationID);
     }
     Sprite IEffect.SetIcon()
     {

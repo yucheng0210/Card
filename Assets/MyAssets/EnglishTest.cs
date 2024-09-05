@@ -63,13 +63,17 @@ public class EnglishTest : MonoBehaviour
     "loosen", "tilt", "drain", "sufficient", "rag", "disposal", "proper", "pour", "skillet", "grab", "burn", "cake", "surface", "scrub", "vigorously", "scour",
     "rinse", "rust","decade", "registration", "forecast", "shape", "session", "opportunity", "barrier", "finance", "transportation", "ride", "conference",
     "distance", "variation", "exact", "overall", "maintain", "federal", "statistics", "release", "unemployment", "population", "seek", "consider", "actively",
-    "dice", "coarsely", "remaining", "store", "airtight", "refrigerate", "decrease", "suit","proposal", "indeed", "detailed", "discuss", "revision", "audience", 
-    "projection", "personnel", "regret", "china", "fault", "responsibility", "alternate", "unfortunate", "transaction", "satisfactory", "exhibit", "therefore", 
-    "notify", "candidate", "eminently", "qualified", "resume", "delay", "express", "provide", "unfamiliar", "recommend", "expert", "sophisticated", "flawless", 
-    "participant"};
+    "dice", "coarsely", "remaining", "store", "airtight", "refrigerate", "decrease", "suit","proposal", "indeed", "detailed", "discuss", "revision", "audience",
+    "projection", "personnel", "regret", "china", "fault", "responsibility", "alternate", "unfortunate", "transaction", "satisfactory", "exhibit", "therefore",
+    "notify", "candidate", "eminently", "qualified", "resume", "delay", "express", "provide", "unfamiliar", "recommend", "expert", "sophisticated", "flawless",
+    "participant","gracious","explore","distinct","flavor","generation","desert","enjoyable","subscribe","dwelling","disability","attendant","duty","bathing",
+    "allergy","strength","wheelchair","incorporated","attractive","aid","harmful","ultraviolet","appropriate","darken","attain","protection","serious","avid",
+    "aspect","abreast","feature","pick","confuse","existence","sight","ramp","collapse","occur","apparently","machinery","sag","rubble","obituary","senior",
+    "county","residence","disease","deceased","survive","funeral","compulsory","encourage","subsequently","consideration","offender","stiff","fine","suspension"
+    ,"indicate","recession","consumer","burden","debt","portion","income","enrich","limited"};
     private void Start()
     {
-        for (int i = 0; i < 50; i++)
+        for (int i = 0; i < 55; i++)
         {
             int randomIndex = Random.Range(0, englishList.Count);
             Debug.Log(englishList[randomIndex]);

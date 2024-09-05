@@ -117,7 +117,8 @@ public class BattleManager : Singleton<BattleManager>
         EnemyData enemyData = CurrentEnemyList[locationID];
         for (int i = 0; i < enemyData.PassiveSkills.Count; i++)
         {
-            EffectFactory.Instance.CreateEffect(enemyData.PassiveSkills[i]).ApplyEffect(0, locationID);
+            string key = enemyData.PassiveSkills.ElementAt(i).Key;
+            EffectFactory.Instance.CreateEffect(key).ApplyEffect(enemyData.PassiveSkills[key], locationID);
         }
     }
     public void GetShield(CharacterData defender, int point)

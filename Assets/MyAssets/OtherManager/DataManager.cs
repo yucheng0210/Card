@@ -58,8 +58,8 @@ public class DataManager : Singleton<DataManager>
 
     private void Start()
     {
-        //StartGame();
-        StartGame_FightingSpiritEffect();
+        StartGame();
+        //StartGame_FightingSpiritEffect();
         //StartGame_ExtinctionRayEffect();
     }
 
@@ -140,10 +140,32 @@ public class DataManager : Singleton<DataManager>
                 StepCount = int.Parse(row[6]),
                 AttackDistance = int.Parse(row[7]),
                 AlertDistance = int.Parse(row[8]),
-                AttackOrderStrs = row[9].Split(";"),
+                AttackOrderStrs = new Dictionary<string, int>(),
                 EnemyAniPath = row[10],
-                PassiveSkills = row[11].Split(";").ToList(),
+                PassiveSkills = new Dictionary<string, int>(),
             };
+            if (!string.IsNullOrEmpty(row[9]))
+            {
+                string[] attackOrders = row[9].Split(';');
+                for (int j = 0; j < attackOrders.Length; j++)
+                {
+                    string[] orderParts = attackOrders[j].Split('=');
+                    if (orderParts.Length == 2)
+                        enemyData.AttackOrderStrs.Add(orderParts[0], int.Parse(orderParts[1]));
+                }
+            }
+            if (!string.IsNullOrEmpty(row[11]))
+            {
+                string[] passiveSkills = row[11].Split(';');
+                for (int j = 0; j < passiveSkills.Length; j++)
+                {
+                    string[] skillParts = passiveSkills[j].Split('=');
+                    if (skillParts.Length == 2)
+                    {
+                        enemyData.PassiveSkills.Add(skillParts[0], int.Parse(skillParts[1]));
+                    }
+                }
+            }
             EnemyList.Add(enemyData.CharacterID, enemyData);
         }
 

@@ -19,7 +19,7 @@ public class ResurrectionEffect : IEffect
             enemyData.PassiveSkills.Remove("ResurrectionEffect");
             enemyEffectImage.sprite = EffectFactory.Instance.CreateEffect("ResurrectionEffect").SetIcon();
             enemyEffect.SetActive(true);
-            recoverCount = enemyData.MaxHealth / 2;
+            recoverCount = enemyData.MaxHealth * value / 100;
             id = target;
             EventManager.Instance.AddEventRegister(EventDefinition.eventEnemyTurn, EventEnemyTurn);
             EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);

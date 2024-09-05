@@ -8,9 +8,9 @@ public class CantMoveEffect : IEffect
     public void ApplyEffect(int value, string target)
     {
         if (BattleManager.Instance.CurrentNegativeState.ContainsKey(GetType().Name))
-            BattleManager.Instance.CurrentNegativeState[GetType().Name]++;
+            BattleManager.Instance.CurrentNegativeState[GetType().Name] += value;
         else
-            BattleManager.Instance.CurrentNegativeState.Add(GetType().Name, 1);
+            BattleManager.Instance.CurrentNegativeState.Add(GetType().Name, value);
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
 
