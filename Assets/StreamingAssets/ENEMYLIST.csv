@@ -1,8 +1,8 @@
 ﻿標籤,名稱,總血量,最低攻擊力,最高攻擊力,圖片位置,移動步數,攻擊距離,警戒距離,攻擊順序,動畫位置,被動技能
 1001,沙漠哥布林,32,12,12,EnemyImage/Goblin,3,1,99,CantMoveEffect=2;Attack=1;Attack=1,EnemyAnimation/Goblin,FuriousEffect=50
 1002,骷髏人,55,5,5,EnemyImage/Skeleton,2,2,99,Shield=12;ThornsEffect=5;Attack=1,EnemyAnimation/Skeleton,ResurrectionEffect=30
-1003,大眼怪,47,20,20,EnemyImage/FlyingEye,2,3,99,KnockBackEffect,EnemyAnimation/FlyingEye,SniperEffect=50
-1004,菇,84,10,10,EnemyImage/Mushroom,2,2,99,Attack;Attack;IncreaseHealth,EnemyAnimation/Mushroom,ParasiticEffect
-1005,沙漠狂獸,6,3,10,EnemyImage/Dog,2,2,99,CantMoveEffect;Attack;Shield,EnemyAnimation/Dog,
-1006,毒刃劍蠍,6,10,15,EnemyImage/Dog,2,2,99,CantMoveEffect;Attack;Shield,EnemyAnimation/Scorpion,
-1007,風沙追獵者,6,10,15,EnemyImage/Dog,2,2,99,CantMoveEffect;Attack;Shield,EnemyAnimation/Dog,
+1003,大眼怪,47,20,20,EnemyImage/FlyingEye,2,3,99,Attack=1,EnemyAnimation/FlyingEye,SniperEffect=50
+1004,菇,84,10,10,EnemyImage/Mushroom,2,2,99,Attack=1;Attack=1;IncreaseHealth=20,EnemyAnimation/Mushroom,ParasiticEffect=0
+1005,沙漠狂獸,6,3,10,EnemyImage/Dog,2,2,99,Attack=1;Attack=1;IncreaseHealth=21,EnemyAnimation/Dog,ParasiticEffect=1
+1006,毒刃劍蠍,6,10,15,EnemyImage/Dog,2,2,99,Attack=1;Attack=1;IncreaseHealth=22,EnemyAnimation/Scorpion,ParasiticEffect=2
+1007,風沙追獵者,6,10,15,EnemyImage/Dog,2,2,99,Attack=1;Attack=1;IncreaseHealth=23,EnemyAnimation/Dog,ParasiticEffect=3

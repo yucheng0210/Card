@@ -140,7 +140,7 @@ public class DataManager : Singleton<DataManager>
                 StepCount = int.Parse(row[6]),
                 AttackDistance = int.Parse(row[7]),
                 AlertDistance = int.Parse(row[8]),
-                AttackOrderStrs = new Dictionary<string, int>(),
+                AttackOrderStrs = new List<(string, int)>(),
                 EnemyAniPath = row[10],
                 PassiveSkills = new Dictionary<string, int>(),
             };
@@ -151,7 +151,9 @@ public class DataManager : Singleton<DataManager>
                 {
                     string[] orderParts = attackOrders[j].Split('=');
                     if (orderParts.Length == 2)
-                        enemyData.AttackOrderStrs.Add(orderParts[0], int.Parse(orderParts[1]));
+                    {
+                        enemyData.AttackOrderStrs.Add((orderParts[0], int.Parse(orderParts[1])));
+                    }
                 }
             }
             if (!string.IsNullOrEmpty(row[11]))

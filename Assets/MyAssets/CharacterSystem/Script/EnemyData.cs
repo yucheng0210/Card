@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System;
 public class EnemyData : CharacterData
 {
     public int MinAttack { get; set; }
@@ -13,7 +13,7 @@ public class EnemyData : CharacterData
     public RectTransform EnemyTrans { get; set; }
     public int AlertDistance { get; set; }
     public int AttackDistance { get; set; }
-    public Dictionary<string, int> AttackOrderStrs { get; set; }
+    public List<ValueTuple<string, int>> AttackOrderStrs { get; set; }
     public int CurrentAttackOrder { get; set; }
     public Dictionary<string, int> PassiveSkills { get; set; }
 }

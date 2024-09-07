@@ -299,8 +299,8 @@ public class CardCreater : MonoBehaviour
                     newCurrentEnemyList.Add(newLocation, BattleManager.Instance.CurrentEnemyList[location]);
                     break;
                 case Enemy.AttackType.Effect:
-                    string key = enemyData.AttackOrderStrs.ElementAt(enemyData.CurrentAttackOrder).Key;
-                    int value = enemyData.AttackOrderStrs.ElementAt(enemyData.CurrentAttackOrder).Value;
+                    string key = enemyData.AttackOrderStrs.ElementAt(enemyData.CurrentAttackOrder).Item1;
+                    int value = enemyData.AttackOrderStrs.ElementAt(enemyData.CurrentAttackOrder).Item2;
                     EffectFactory.Instance.CreateEffect(key).ApplyEffect(value, location);
                     newCurrentEnemyList.Add(newLocation, BattleManager.Instance.CurrentEnemyList[location]);
                     break;
