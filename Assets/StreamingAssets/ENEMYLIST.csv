@@ -1,8 +1,9 @@
-﻿標籤,名稱,總血量,最低攻擊力,最高攻擊力,圖片位置,移動步數,攻擊距離,警戒距離,攻擊順序,動畫位置,被動技能
-1001,沙漠哥布林,32,12,12,EnemyImage/Goblin,3,1,99,CantMoveEffect=2;Attack=1;Attack=1,EnemyAnimation/Goblin,FuriousEffect=50
-1002,骷髏人,55,5,5,EnemyImage/Skeleton,2,2,99,Shield=12;ThornsEffect=5;Attack=1,EnemyAnimation/Skeleton,ResurrectionEffect=30
-1003,大眼怪,47,20,20,EnemyImage/FlyingEye,2,3,99,Attack=1,EnemyAnimation/FlyingEye,SniperEffect=50
-1004,菇,84,10,10,EnemyImage/Mushroom,2,2,99,Attack=1;Attack=1;IncreaseHealth=20,EnemyAnimation/Mushroom,ParasiticEffect=0
-1005,沙漠狂獸,6,3,10,EnemyImage/Dog,2,2,99,Attack=1;Attack=1;IncreaseHealth=21,EnemyAnimation/Dog,ParasiticEffect=1
-1006,毒刃劍蠍,6,10,15,EnemyImage/Dog,2,2,99,Attack=1;Attack=1;IncreaseHealth=22,EnemyAnimation/Scorpion,ParasiticEffect=2
-1007,風沙追獵者,6,10,15,EnemyImage/Dog,2,2,99,Attack=1;Attack=1;IncreaseHealth=23,EnemyAnimation/Dog,ParasiticEffect=3
+﻿標籤,名稱,總血量,最低攻擊力,最高攻擊力,圖片位置,移動步數,攻擊距離,警戒距離,攻擊順序,動畫位置,被動技能,減傷率
+1001,沙漠哥布林,32,12,12,EnemyImage/Goblin,3,1,99,CantMoveEffect=2;Attack=1;Attack=1,EnemyAnimation/Goblin,FuriousEffect=50,0
+1002,骷髏人,55,5,5,EnemyImage/Skeleton,2,2,99,Shield=12;ThornsEffect=5;Attack=1,EnemyAnimation/Skeleton,ResurrectionEffect=30,0
+1003,大眼怪,47,20,20,EnemyImage/FlyingEye,2,3,99,Attack=1,EnemyAnimation/FlyingEye,SniperEffect=50,0
+1004,菇,84,10,10,EnemyImage/Mushroom,2,2,99,Attack=1;Attack=1;IncreaseHealth=20,EnemyAnimation/Mushroom,ParasiticEffect=0,0
+1005,沙漠狂獸,143,13,13,EnemyImage/Dog,2,2,99,Attack=1;Attack=1;IncreaseHealth=21,EnemyAnimation/Dog,GroupEffect=2005;BleedEffect=5,0
+1006,毒刃劍蠍,6,10,15,EnemyImage/Dog,2,2,99,Attack=1;Attack=1;IncreaseHealth=22,EnemyAnimation/Scorpion,ParasiticEffect=2,0
+1007,風沙追獵者,6,10,15,EnemyImage/Dog,2,2,99,Attack=1;Attack=1;IncreaseHealth=23,EnemyAnimation/Dog,ParasiticEffect=3,0
+2005,沙漠利爪,43,15,15,EnemyImage/Dog,2,2,99,Attack=1;Attack=1;IncreaseHealth=24,EnemyAnimation/Dog,BleedEffect=3,0

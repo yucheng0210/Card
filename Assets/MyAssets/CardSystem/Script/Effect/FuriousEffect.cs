@@ -4,26 +4,26 @@ using UnityEngine;
 
 public class FuriousEffect : IEffect
 {
-    private string id;
+    private string targetLocation;
     private int attackIncreaseCount;
     private EnemyData enemyData;
     public void ApplyEffect(int value, string target)
     {
         enemyData = BattleManager.Instance.CurrentEnemyList[target];
-        id = target;
+        targetLocation = target;
         attackIncreaseCount = enemyData.CurrentAttack * value / 100;
         enemyData.PassiveSkills.Remove(GetType().Name);
         EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
     }
     private void EventTakeDamage(params object[] args)
     {
-        string attacker = (string)args[4];
-        if (!BattleManager.Instance.CurrentEnemyList.ContainsKey(attacker))
+        CharacterData attacker = (CharacterData)args[4];
+        if (!BattleManager.Instance.CurrentEnemyList.ContainsKey(targetLocation))
         {
             EventManager.Instance.RemoveEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
             return;
         }
-        if (id == attacker)
+        if (BattleManager.Instance.CurrentEnemyList[targetLocation] == attacker)
             enemyData.CurrentAttack += attackIncreaseCount;
     }
     public Sprite SetIcon()

@@ -87,7 +87,7 @@ public class BattleManager : Singleton<BattleManager>
     }
     public void TakeDamage(CharacterData attacker, CharacterData defender, int damage, string location)
     {
-        int currentDamage = damage - defender.CurrentShield;
+        int currentDamage = damage * (100 - defender.DamageReduction) / 100 - defender.CurrentShield;
         if (currentDamage < 0)
             currentDamage = 0;
         defender.CurrentShield -= damage;
@@ -404,5 +404,16 @@ public class BattleManager : Singleton<BattleManager>
         DataManager.Instance.CardBag.Insert(0, DataManager.Instance.CardList[id]);
         CardItemList.Insert(0, cardItem);
         return cardItem;
+    }
+    public int GetEneemyIDCount(int id)
+    {
+        int count = 0;
+        for (int i = 0; i < CurrentEnemyList.Count; i++)
+        {
+            EnemyData enemyData = CurrentEnemyList.ElementAt(i).Value;
+            if (enemyData.CharacterID == id)
+                count++;
+        }
+        return count;
     }
 }
