@@ -111,6 +111,8 @@ public class UIBattle : UIBase
     {
         yield return null;
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
+        BattleManager.Instance.EnemyPrefab = enemyPrefab;
+        BattleManager.Instance.EnemyTrans = enemyTrans;
         Hide();
     }
     private void CheckBattleInfo()
@@ -225,6 +227,7 @@ public class UIBattle : UIBase
             BattleManager.Instance.CurrentAbilityList.Clear();
             BattleManager.Instance.CurrentTerrainList.Clear();
             BattleManager.Instance.CurrentOnceBattlePositiveList.Clear();
+            BattleManager.Instance.CurrentMinionsList.Clear();
             RemoveAllTerrian();
         }
     }

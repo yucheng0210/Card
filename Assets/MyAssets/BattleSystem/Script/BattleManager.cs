@@ -34,6 +34,7 @@ public class BattleManager : Singleton<BattleManager>
                 playerMoveCount = 2;
         }
     }
+    public int CurrentDrawCardCount { get; set; }
     public BattleType MyBattleType { get; set; }
     public Transform CardMenuTrans { get; set; }
     public Transform CardBagTrans { get; set; }
@@ -51,6 +52,9 @@ public class BattleManager : Singleton<BattleManager>
     public PlayerData CurrentPlayerData { get; set; }
     //敵人
     public Dictionary<string, EnemyData> CurrentEnemyList { get; set; }
+    public Dictionary<string, EnemyData> CurrentMinionsList { get; set; }
+    public Enemy EnemyPrefab { get; set; }
+    public Transform EnemyTrans { get; set; }
     public bool IsDrag { get; set; }
     //棋盤
     public string CurrentLocationID { get; set; }
@@ -67,6 +71,7 @@ public class BattleManager : Singleton<BattleManager>
         CardPositionList = new List<Vector2>();
         CardAngleList = new List<float>();
         CurrentEnemyList = new Dictionary<string, EnemyData>();
+        CurrentMinionsList = new Dictionary<string, EnemyData>();
         CurrentAbilityList = new Dictionary<string, int>();
         CheckerboardList = new Dictionary<string, string>();
         CurrentTerrainList = new Dictionary<string, Terrain>();
@@ -95,7 +100,7 @@ public class BattleManager : Singleton<BattleManager>
         int point = GetCheckerboardPoint(location);
         Vector2 pos = new(CheckerboardTrans.GetChild(point).localPosition.x, CheckerboardTrans.GetChild(point).localPosition.y);
         Color color = Color.red;
-        EventManager.Instance.DispatchEvent(EventDefinition.eventTakeDamage, pos, damage, location, color, attacker);
+        EventManager.Instance.DispatchEvent(EventDefinition.eventTakeDamage, pos, damage, location, color, attacker, defender);
     }
     public void Recover(CharacterData defender, int damage, string location)
     {
@@ -297,7 +302,6 @@ public class BattleManager : Singleton<BattleManager>
     }
     private void BattleInitial()
     {
-        int playerID = DataManager.Instance.PlayerID;
         int levelID = MapManager.Instance.LevelID;
         int skillID = CurrentPlayerData.StartSkill;
         int levelCount = MapManager.Instance.LevelCount;
@@ -305,6 +309,7 @@ public class BattleManager : Singleton<BattleManager>
         CurrentPlayerData.CurrentActionPoint = CurrentPlayerData.MaxActionPoint;
         CurrentPlayerData.Mana = 10;
         PlayerTrans.localPosition = CheckerboardTrans.GetChild(GetCheckerboardPoint(CurrentLocationID)).localPosition;
+        CurrentDrawCardCount = CurrentPlayerData.DefaultDrawCardCount;
         for (int i = 0; i < DataManager.Instance.SkillList[skillID].SkillContent.Count; i++)
         {
             CurrentAbilityList.Add(DataManager.Instance.SkillList[skillID].SkillContent[i].Item1, DataManager.Instance.SkillList[skillID].SkillContent[i].Item2);
@@ -405,7 +410,30 @@ public class BattleManager : Singleton<BattleManager>
         CardItemList.Insert(0, cardItem);
         return cardItem;
     }
-    public int GetEneemyIDCount(int id)
+    public void AddMinions(int enemyID, int count, string location)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            List<string> emptyPlaceList = GetEmptyPlace(location, 2, CheckEmptyType.Move);
+            int randomIndex = Random.Range(0, emptyPlaceList.Count);
+            CurrentMinionsList.Add(emptyPlaceList[randomIndex], DataManager.Instance.EnemyList[enemyID]);
+        }
+        for (int i = 0; i < CurrentMinionsList.Count; i++)
+        {
+            string key = CurrentMinionsList.ElementAt(i).Key;
+            int checkerboardPoint = GetCheckerboardPoint(key);
+            Enemy enemy = Instantiate(EnemyPrefab, EnemyTrans);
+            enemy.EnemyLocation = key;
+            enemy.GetComponent<RectTransform>().anchoredPosition = CheckerboardTrans.GetChild(checkerboardPoint).localPosition;
+            enemy.EnemyID = CurrentMinionsList[key].CharacterID;
+            enemy.EnemyImage.sprite = Resources.Load<Sprite>(CurrentMinionsList[key].EnemyImagePath);
+            enemy.MyAnimator.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>(CurrentMinionsList[key].EnemyAniPath);
+            CurrentMinionsList[key].EnemyTrans = enemy.GetComponent<RectTransform>();
+            CurrentMinionsList[key].CurrentHealth = DataManager.Instance.EnemyList[enemy.EnemyID].MaxHealth;
+            TriggerEnemyPassiveSkill(enemy.EnemyLocation);
+        }
+    }
+    public int GetMinionsIDCount(int id)
     {
         int count = 0;
         for (int i = 0; i < CurrentEnemyList.Count; i++)
@@ -416,4 +444,5 @@ public class BattleManager : Singleton<BattleManager>
         }
         return count;
     }
+
 }

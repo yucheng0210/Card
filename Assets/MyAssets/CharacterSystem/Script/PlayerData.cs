@@ -16,5 +16,5 @@ public class PlayerData : CharacterData
     }
     public int CurrentActionPoint { get; set; }
     public int Mana { get; set; }
-    public int DefaultDrawCardCout { get; set; }
+    public int DefaultDrawCardCount { get; set; }
 }

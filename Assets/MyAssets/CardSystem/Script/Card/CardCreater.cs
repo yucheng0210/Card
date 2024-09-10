@@ -221,7 +221,7 @@ public class CardCreater : MonoBehaviour
     private IEnumerator PlayerDrawCard()
     {
         yield return UIManager.Instance.FadeOutIn(roundTip.GetComponent<CanvasGroup>(), 0.5f, 1, false); // 執行 UI 淡入淡出效果
-        StartCoroutine(DrawCard(BattleManager.Instance.CurrentPlayerData.DefaultDrawCardCout));
+        StartCoroutine(DrawCard(BattleManager.Instance.CurrentDrawCardCount));
     }
 
     private void AdjustCard()
