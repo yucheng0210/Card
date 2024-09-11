@@ -4,18 +4,23 @@ using UnityEngine;
 
 public class CantMoveEffect : IEffect
 {
-
     public void ApplyEffect(int value, string target)
     {
-        if (BattleManager.Instance.CurrentNegativeState.ContainsKey(GetType().Name))
-            BattleManager.Instance.CurrentNegativeState[GetType().Name] += value;
+        var negativeState = BattleManager.Instance.CurrentNegativeState;
+        string effectName = GetType().Name;
+
+        if (negativeState.ContainsKey(effectName))
+            negativeState[effectName] += value;
         else
-            BattleManager.Instance.CurrentNegativeState.Add(GetType().Name, value);
+            negativeState.Add(effectName, value);
+
+        // 發送 UI 更新事件
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
 
     public Sprite SetIcon()
     {
+        // 加載並返回效果圖標
         return Resources.Load<Sprite>("EffectImage/CantMove");
     }
 }

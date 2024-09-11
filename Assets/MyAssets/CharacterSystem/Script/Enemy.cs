@@ -44,8 +44,8 @@ public class Enemy : MonoBehaviour
         EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
         EventManager.Instance.AddEventRegister(EventDefinition.eventMove, EventMove);
         EnemyData enemyData = BattleManager.Instance.CurrentEnemyList[EnemyLocation];
-        enemyData.CurrentAttack = enemyData.MinAttack;
         EnemyOnceBattlePositiveList = new Dictionary<string, int>();
+        RefrAttackIntent();
     }
     private void OnDisable()
     {

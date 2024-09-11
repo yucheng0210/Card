@@ -16,4 +16,17 @@ public class EnemyData : CharacterData
     public List<ValueTuple<string, int>> AttackOrderStrs { get; set; }
     public int CurrentAttackOrder { get; set; }
     public Dictionary<string, int> PassiveSkills { get; set; }
+
+    public EnemyData DeepClone()
+    {
+        EnemyData clone = (EnemyData)this.MemberwiseClone();
+
+        // 深拷贝 AttackOrderStrs
+        clone.AttackOrderStrs = new List<ValueTuple<string, int>>(this.AttackOrderStrs);
+
+        // 深拷贝 PassiveSkills
+        clone.PassiveSkills = new Dictionary<string, int>(this.PassiveSkills);
+
+        return clone;
+    }
 }

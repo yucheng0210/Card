@@ -240,40 +240,60 @@ public class UIBattle : UIBase
     }
     private void EventBattleInitial(params object[] args)
     {
-        StartCoroutine(BattleInitial());
+        BattleInitial();
     }
 
-    private IEnumerator BattleInitial()
+    private void BattleInitial()
     {
         RefreshPotionBag();
-        for (int i = 0; i < BattleManager.Instance.CurrentEnemyList.Count; i++)
+
+        // 获取当前的敌人列表和地形列表
+        var enemyList = BattleManager.Instance.CurrentEnemyList;
+        var terrainList = BattleManager.Instance.CurrentTerrainList;
+        var checkerboardTrans = BattleManager.Instance.CheckerboardTrans;
+
+        // 处理敌人列表
+        for (int i = 0; i < enemyList.Count; i++)
         {
-            string key = BattleManager.Instance.CurrentEnemyList.ElementAt(i).Key;
+            string key = enemyList.ElementAt(i).Key;
+            EnemyData enemyData = enemyList.ElementAt(i).Value;
+
             int checkerboardPoint = BattleManager.Instance.GetCheckerboardPoint(key);
             Enemy enemy = Instantiate(enemyPrefab, enemyTrans);
+            RectTransform enemyRect = enemy.GetComponent<RectTransform>();
+
             enemy.EnemyLocation = key;
-            enemy.GetComponent<RectTransform>().anchoredPosition = BattleManager.Instance.CheckerboardTrans.GetChild(checkerboardPoint).localPosition;
-            enemy.EnemyID = BattleManager.Instance.CurrentEnemyList[key].CharacterID;
-            enemy.EnemyImage.sprite = Resources.Load<Sprite>(BattleManager.Instance.CurrentEnemyList[key].EnemyImagePath);
-            enemy.MyAnimator.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>(BattleManager.Instance.CurrentEnemyList[key].EnemyAniPath);
-            BattleManager.Instance.CurrentEnemyList[key].EnemyTrans = enemy.GetComponent<RectTransform>();
-            BattleManager.Instance.CurrentEnemyList[key].CurrentHealth = DataManager.Instance.EnemyList[enemy.EnemyID].MaxHealth;
+            enemyRect.anchoredPosition = checkerboardTrans.GetChild(checkerboardPoint).localPosition;
+            enemy.EnemyID = enemyData.CharacterID;
+            enemy.EnemyImage.sprite = Resources.Load<Sprite>(enemyData.EnemyImagePath);
+            enemy.MyAnimator.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>(enemyData.EnemyAniPath);
+
+            enemyData.CurrentAttack = enemyData.MinAttack;
+            enemyData.EnemyTrans = enemyRect;
+            enemyData.CurrentHealth = DataManager.Instance.EnemyList[enemy.EnemyID].MaxHealth;
+
             BattleManager.Instance.TriggerEnemyPassiveSkill(enemy.EnemyLocation);
-            yield return null;
         }
-        for (int i = 0; i < BattleManager.Instance.CurrentTerrainList.Count; i++)
+
+        // 处理地形列表
+        for (int i = 0; i < terrainList.Count; i++)
         {
-            string key = BattleManager.Instance.CurrentTerrainList.ElementAt(i).Key;
+            string key = terrainList.ElementAt(i).Key;
+            Terrain terrainData = terrainList.ElementAt(i).Value;
+
             GameObject terrain = Instantiate(terrainPrefab, terrainTrans);
             RectTransform terrainRect = terrain.GetComponent<RectTransform>();
             Image terrainImage = terrain.GetComponent<Image>();
-            terrainImage.sprite = Resources.Load<Sprite>(BattleManager.Instance.CurrentTerrainList[key].ImagePath);
-            terrainRect.anchoredPosition = BattleManager.Instance.CheckerboardTrans.GetChild(BattleManager.Instance.GetCheckerboardPoint(key)).localPosition;
-            yield return null;
+
+            terrainImage.sprite = Resources.Load<Sprite>(terrainData.ImagePath);
+            terrainRect.anchoredPosition = checkerboardTrans.GetChild(BattleManager.Instance.GetCheckerboardPoint(key)).localPosition;
         }
+
+        // 初始化玩家回合
         BattleManager.Instance.PlayerMoveCount = 2;
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Player);
     }
+
     private void RefreshPotionBag()
     {
         for (int i = 0; i < potionGroupTrans.childCount; i++)
@@ -304,7 +324,7 @@ public class UIBattle : UIBase
     }
     private void UsePotionEffect(string effectName, int value, int bagID)
     {
-        EffectFactory.Instance.CreateEffect(effectName).ApplyEffect(value, "Player");
+        EffectFactory.Instance.CreateEffect(effectName).ApplyEffect(value, BattleManager.Instance.CurrentLocationID);
         DataManager.Instance.PotionBag.RemoveAt(bagID);
         potionClueMenu.gameObject.SetActive(false);
         RefreshPotionBag();
@@ -314,6 +334,7 @@ public class UIBattle : UIBase
     {
         BattleManager.Instance.ManaMultiplier = 1;
         BattleManager.Instance.CurrentConsumeMana = 0;
+        ClearAllEventTriggers();
         CheckEnemyInfo();
         CheckBattleInfo();
     }
@@ -346,9 +367,7 @@ public class UIBattle : UIBase
         damageText.text = args[1].ToString();
         Color color = (Color)args[3];
         damageText.DOColor(color, 0.75f);
-        int direction = Random.Range(0, 2);
-        if (direction == 0)
-            xOffset *= -1;
+        xOffset *= -1;
         Vector2 startPoint = (Vector2)args[0];
         Vector2 endPoint = new(startPoint.x + xOffset, -540);
         Vector2 midPoint = new(startPoint.x + xOffset / 2, startPoint.y + curveHeight);
@@ -364,49 +383,59 @@ public class UIBattle : UIBase
 
     private void EventRefreshUI(params object[] args)
     {
-        int id = DataManager.Instance.PlayerID;
-        actionPointText.text = BattleManager.Instance.CurrentPlayerData.CurrentActionPoint.ToString() + "/" + BattleManager.Instance.CurrentPlayerData.MaxActionPoint.ToString();
-        manaPointText.text = BattleManager.Instance.CurrentPlayerData.Mana.ToString();
-        health.DOFillAmount((float)((float)BattleManager.Instance.CurrentPlayerData.CurrentHealth / BattleManager.Instance.CurrentPlayerData.MaxHealth), 0.5f);
-        healthText.text = BattleManager.Instance.CurrentPlayerData.CurrentHealth.ToString() + "/" + BattleManager.Instance.CurrentPlayerData.MaxHealth.ToString();
-        shieldText.text = BattleManager.Instance.CurrentPlayerData.CurrentShield.ToString();
-        battleCardBagCountText.text = DataManager.Instance.CardBag.Count.ToString();
-        usedCardBagCountText.text = DataManager.Instance.UsedCardBag.Count.ToString();
-        removeCardBagCountText.text = DataManager.Instance.RemoveCardBag.Count.ToString();
+        // 提取局部变量
+        var playerData = BattleManager.Instance.CurrentPlayerData;
+        var cardBag = DataManager.Instance.CardBag;
+        var usedCardBag = DataManager.Instance.UsedCardBag;
+        var removeCardBag = DataManager.Instance.RemoveCardBag;
+        var negativeState = BattleManager.Instance.CurrentNegativeState;
+        var positiveList = BattleManager.Instance.CurrentOnceBattlePositiveList;
+
+        // 更新UI文本
+        actionPointText.text = $"{playerData.CurrentActionPoint}/{playerData.MaxActionPoint}";
+        manaPointText.text = playerData.Mana.ToString();
+        health.DOFillAmount((float)playerData.CurrentHealth / playerData.MaxHealth, 0.5f);
+        healthText.text = $"{playerData.CurrentHealth}/{playerData.MaxHealth}";
+        shieldText.text = playerData.CurrentShield.ToString();
+        battleCardBagCountText.text = cardBag.Count.ToString();
+        usedCardBagCountText.text = usedCardBag.Count.ToString();
+        removeCardBagCountText.text = removeCardBag.Count.ToString();
+
+        // 更新玩家移动网格
+        int playerMoveCount = BattleManager.Instance.PlayerMoveCount;
         for (int i = 0; i < playerMoveGridTrans.childCount; i++)
         {
-            playerMoveGridTrans.GetChild(i).gameObject.SetActive(false);
-        }
-        for (int i = 0; i < BattleManager.Instance.PlayerMoveCount; i++)
-        {
-            playerMoveGridTrans.GetChild(i).gameObject.SetActive(true);
-        }
-        for (int i = 0; i < negativeGroupTrans.childCount; i++)
-        {
-            Destroy(negativeGroupTrans.GetChild(i).gameObject);
-        }
-        for (int i = 0; i < BattleManager.Instance.CurrentNegativeState.Count; i++)
-        {
-            string key = BattleManager.Instance.CurrentNegativeState.ElementAt(i).Key;
-            GameObject negative = Instantiate(negativePrefab, negativeGroupTrans);
-            Image negativeImage = negative.GetComponentInChildren<Image>();
-            Text negativeText = negative.GetComponentInChildren<Text>();
-            negativeImage.sprite = EffectFactory.Instance.CreateEffect(key).SetIcon();
-            negativeText.text = BattleManager.Instance.CurrentNegativeState[key].ToString();
-        }
-        for (int i = 0; i < positiveGroupTrans.childCount; i++)
-        {
-            Destroy(positiveGroupTrans.GetChild(i).gameObject);
-        }
-        for (int i = 0; i < BattleManager.Instance.CurrentOnceBattlePositiveList.Count; i++)
-        {
-            string key = BattleManager.Instance.CurrentOnceBattlePositiveList.ElementAt(i).Key;
-            GameObject positive = Instantiate(negativePrefab, positiveGroupTrans);
-            Image positiveImage = positive.GetComponentInChildren<Image>();
-            Text positiveText = positive.GetComponentInChildren<Text>();
-            positiveImage.sprite = EffectFactory.Instance.CreateEffect(key).SetIcon();
-            positiveText.text = BattleManager.Instance.CurrentOnceBattlePositiveList[key].ToString();
+            playerMoveGridTrans.GetChild(i).gameObject.SetActive(i < playerMoveCount);
         }
 
+        // 更新负面状态
+        UpdateStateUI(negativeGroupTrans, negativeState, negativePrefab);
+
+        // 更新正面状态
+        UpdateStateUI(positiveGroupTrans, positiveList, negativePrefab);
     }
+
+    private void UpdateStateUI(Transform groupTrans, Dictionary<string, int> stateList, GameObject prefab)
+    {
+        // 清空当前状态
+        for (int i = groupTrans.childCount - 1; i >= 0; i--)
+        {
+            Destroy(groupTrans.GetChild(i).gameObject);
+        }
+
+        // 重新生成状态图标
+        for (int i = 0; i < stateList.Count; i++)
+        {
+            string key = stateList.ElementAt(i).Key;
+            int value = stateList[key];
+
+            GameObject stateObject = Instantiate(prefab, groupTrans);
+            Image stateImage = stateObject.GetComponentInChildren<Image>();
+            Text stateText = stateObject.GetComponentInChildren<Text>();
+
+            stateImage.sprite = EffectFactory.Instance.CreateEffect(key).SetIcon();
+            stateText.text = value.ToString();
+        }
+    }
+
 }

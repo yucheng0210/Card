@@ -2,43 +2,54 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+
 public class ResurrectionEffect : IEffect
 {
     private int reciprocalCount = 1;
     private int recoverCount;
-    private string id;
     private EnemyData enemyData;
+    private Enemy enemy;
+    private Image enemyEffectImage;
+    private string targetLocation;
+
     public void ApplyEffect(int value, string target)
     {
-        enemyData = BattleManager.Instance.CurrentEnemyList[target];
-        Enemy enemy = enemyData.EnemyTrans.GetComponent<Enemy>();
-        GameObject enemyEffect = enemy.EnemyEffectImage;
-        Image enemyEffectImage = enemyEffect.GetComponent<Image>();
-        if (enemyData.CurrentHealth <= 0)
-        {
-            enemyData.PassiveSkills.Remove("ResurrectionEffect");
-            enemyEffectImage.sprite = EffectFactory.Instance.CreateEffect("ResurrectionEffect").SetIcon();
-            enemyEffect.SetActive(true);
-            recoverCount = enemyData.MaxHealth * value / 100;
-            id = target;
-            EventManager.Instance.AddEventRegister(EventDefinition.eventEnemyTurn, EventEnemyTurn);
-            EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
-        }
+        if (!BattleManager.Instance.CurrentEnemyList.TryGetValue(target, out enemyData) || enemyData.CurrentHealth > 0)
+            return;
+        targetLocation = target;
+        recoverCount = Mathf.RoundToInt(enemyData.MaxHealth * (value / 100f));
+        enemy = enemyData.EnemyTrans.GetComponent<Enemy>();
+        enemyEffectImage = enemy.EnemyEffectImage.GetComponent<Image>();
+
+        // 移除被动技能并设置复活效果图标
+        enemyData.PassiveSkills.Remove(GetType().Name);
+        enemyEffectImage.sprite = SetIcon();
+        enemy.EnemyEffectImage.SetActive(true);
+
+        // 注册敌人回合结束事件
+        EventManager.Instance.AddEventRegister(EventDefinition.eventEnemyTurn, EventEnemyTurn);
+        EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
+
     private void EventEnemyTurn(params object[] args)
     {
-        reciprocalCount--;
-        if (reciprocalCount <= 0)
-        {
-            Enemy enemy = enemyData.EnemyTrans.GetComponent<Enemy>();
-            enemy.IsDeath = false;
-            BattleManager.Instance.Recover(enemyData, recoverCount, id);
-            enemy.MyAnimator.SetTrigger("isResurrection");
-            EventManager.Instance.DispatchEvent(EventDefinition.eventMove);
-            EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
-            EventManager.Instance.RemoveEventRegister(EventDefinition.eventEnemyTurn, EventEnemyTurn);
-        }
+        if (--reciprocalCount > 0) return;
+
+        // 敌人复活
+        enemy.IsDeath = false;
+        BattleManager.Instance.Recover(enemyData, recoverCount, targetLocation);
+
+        // 播放复活动画
+        enemy.MyAnimator.SetTrigger("isResurrection");
+
+        // 触发其他必要的事件
+        EventManager.Instance.DispatchEvent(EventDefinition.eventMove);
+        EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
+
+        // 移除事件注册
+        EventManager.Instance.RemoveEventRegister(EventDefinition.eventEnemyTurn, EventEnemyTurn);
     }
+
     public Sprite SetIcon()
     {
         return Resources.Load<Sprite>("EffectImage/Resurrection");

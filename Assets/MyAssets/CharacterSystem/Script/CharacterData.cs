@@ -48,9 +48,4 @@ public abstract class CharacterData
     }
     public int StartSkill { get; set; }
     public int DamageReduction { get; set; }
-
-    public CharacterData Clone()
-    {
-        return (CharacterData)MemberwiseClone();
-    }
 }

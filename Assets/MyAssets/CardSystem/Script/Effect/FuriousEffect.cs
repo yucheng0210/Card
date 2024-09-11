@@ -4,31 +4,48 @@ using UnityEngine;
 
 public class FuriousEffect : IEffect
 {
-    private string targetLocation;
     private int attackIncreaseCount;
     private EnemyData enemyData;
+    private Dictionary<string, EnemyData> enemyList;
+
     public void ApplyEffect(int value, string target)
     {
-        enemyData = BattleManager.Instance.CurrentEnemyList[target];
-        targetLocation = target;
-        attackIncreaseCount = enemyData.CurrentAttack * value / 100;
-        enemyData.PassiveSkills.Remove(GetType().Name);
-        EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
+        enemyList = BattleManager.Instance.CurrentEnemyList;
+
+        if (enemyList.TryGetValue(target, out enemyData))
+        {
+            attackIncreaseCount = Mathf.RoundToInt(enemyData.CurrentAttack * (value / 100f));
+            // 移除被動技能
+            enemyData.PassiveSkills.Remove(GetType().Name);
+
+            // 註冊事件
+            EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
+        }
     }
+
     private void EventTakeDamage(params object[] args)
     {
-        CharacterData attacker = (CharacterData)args[4];
-        if (!BattleManager.Instance.CurrentEnemyList.ContainsKey(targetLocation))
+        if (!enemyList.ContainsValue(enemyData))
         {
+            // 移除事件監聽
             EventManager.Instance.RemoveEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
             return;
         }
-        if (BattleManager.Instance.CurrentEnemyList[targetLocation] == attacker)
+        if (args.Length < 5)
+            return;
+        // 獲取攻擊者
+        CharacterData attacker = (CharacterData)args[4];
+
+        // 如果攻擊者是目標敵人，增加攻擊力
+        if (enemyData == attacker)
+        {
             enemyData.CurrentAttack += attackIncreaseCount;
-    }
-    public Sprite SetIcon()
-    {
-        throw new System.NotImplementedException();
+        }
     }
 
+    public Sprite SetIcon()
+    {
+        // 這裡可以根據需要返回一個效果圖標
+        throw new System.NotImplementedException();
+    }
 }

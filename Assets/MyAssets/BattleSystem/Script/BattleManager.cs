@@ -133,9 +133,7 @@ public class BattleManager : Singleton<BattleManager>
 
     public void ConsumeActionPoint(int point)
     {
-        int currentPoint = CurrentPlayerData.CurrentActionPoint;
-        if (currentPoint >= point)
-            currentPoint -= point;
+        CurrentPlayerData.CurrentActionPoint -= point;
     }
     public int[] ConvertNormalPos(string location)
     {
@@ -318,7 +316,7 @@ public class BattleManager : Singleton<BattleManager>
         {
             int enemyID = MapManager.Instance.MapNodes[levelCount][levelID].l.EnemyIDList.ElementAt(i).Value;
             string loactionID = MapManager.Instance.MapNodes[levelCount][levelID].l.EnemyIDList.ElementAt(i).Key;
-            CurrentEnemyList.Add(loactionID, (EnemyData)DataManager.Instance.EnemyList[enemyID].Clone());
+            CurrentEnemyList.Add(loactionID, DataManager.Instance.EnemyList[enemyID].DeepClone());
         }
         for (int i = 0; i < MapManager.Instance.MapNodes[levelCount][levelID].l.TerrainIDList.Count; i++)
         {
@@ -347,7 +345,6 @@ public class BattleManager : Singleton<BattleManager>
 
     private void PlayerTurn()
     {
-        int playerID = DataManager.Instance.PlayerID;
         CurrentPlayerData.CurrentActionPoint = CurrentPlayerData.MaxActionPoint;
         //DataManager.Instance.PlayerList[playerID].Mana++;
         CurrentPlayerData.CurrentShield = 0;
@@ -357,7 +354,7 @@ public class BattleManager : Singleton<BattleManager>
             int effectCount;
             effectID = CurrentAbilityList.ElementAt(i).Key;
             effectCount = CurrentAbilityList.ElementAt(i).Value;
-            EffectFactory.Instance.CreateEffect(effectID).ApplyEffect(effectCount, "Player");
+            EffectFactory.Instance.CreateEffect(effectID).ApplyEffect(effectCount, CurrentLocationID);
 
         }
         EventManager.Instance.DispatchEvent(EventDefinition.eventPlayerTurn);
