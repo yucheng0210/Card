@@ -15,10 +15,10 @@ public class UIMap : UIBase
     private Button[][] mapList;
     private Dictionary<string, int> levelProbabilities = new Dictionary<string, int>
     {
-        { "BATTLE", 5 },
+        { "BATTLE", 75 },
         { "BOSS", 5 },
         { "RANDOM", 5 },
-        { "RECOVER", 75 },
+        { "RECOVER", 5 },
         { "SHOP",5 },
         {"TREASURE",5}
     };
@@ -90,8 +90,8 @@ public class UIMap : UIBase
     private bool SetupNode(int i, int j)
     {
         int simpleRandomIndex = Random.Range(1001, 1334);
-        int normalRandomIndex = Random.Range(1001, 1667);
-        int hardRandomIndex = Random.Range(1001, 2000);
+        int normalRandomIndex = Random.Range(1334, 1667);
+        int hardRandomIndex = Random.Range(1667, 2000);
         int currentIndex = GetCurrentIndex(i, simpleRandomIndex, normalRandomIndex, hardRandomIndex);
 
         if (DataManager.Instance.LevelTypeList[currentIndex].LevelType != "BATTLE" && i == 0)
@@ -122,12 +122,12 @@ public class UIMap : UIBase
                 switch (key)
                 {
                     case "BATTLE":
-                        if (count > 10)
+                       /* if (count > 10)
                             currentIndex = hardRandomIndex;
-                        else if (count > 5)
+                        else if (count > 5)*/
                             currentIndex = normalRandomIndex;
-                        else
-                            currentIndex = simpleRandomIndex;
+                       /* else
+                            currentIndex = simpleRandomIndex;*/
                         break;
                     case "BOSS":
                         currentIndex = Random.Range(2001, 2003);

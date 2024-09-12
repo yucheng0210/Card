@@ -155,9 +155,9 @@ TextureImporter:
       name: Flight_0
       rect:
         serializedVersion: 2
-        x: 50
+        x: 25
         y: 50
-        width: 50
+        width: 100
         height: 50
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -176,9 +176,9 @@ TextureImporter:
       name: Flight_1
       rect:
         serializedVersion: 2
-        x: 200
+        x: 175
         y: 50
-        width: 50
+        width: 100
         height: 50
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -197,9 +197,9 @@ TextureImporter:
       name: Flight_2
       rect:
         serializedVersion: 2
-        x: 350
+        x: 325
         y: 50
-        width: 50
+        width: 100
         height: 50
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -218,9 +218,9 @@ TextureImporter:
       name: Flight_3
       rect:
         serializedVersion: 2
-        x: 500
+        x: 475
         y: 50
-        width: 50
+        width: 100
         height: 50
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -239,9 +239,9 @@ TextureImporter:
       name: Flight_4
       rect:
         serializedVersion: 2
-        x: 650
+        x: 625
         y: 50
-        width: 50
+        width: 100
         height: 50
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -260,9 +260,9 @@ TextureImporter:
       name: Flight_5
       rect:
         serializedVersion: 2
-        x: 800
+        x: 775
         y: 50
-        width: 50
+        width: 100
         height: 50
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -281,9 +281,9 @@ TextureImporter:
       name: Flight_6
       rect:
         serializedVersion: 2
-        x: 950
+        x: 925
         y: 50
-        width: 50
+        width: 100
         height: 50
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -302,9 +302,9 @@ TextureImporter:
       name: Flight_7
       rect:
         serializedVersion: 2
-        x: 1100
+        x: 1075
         y: 50
-        width: 50
+        width: 100
         height: 50
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
