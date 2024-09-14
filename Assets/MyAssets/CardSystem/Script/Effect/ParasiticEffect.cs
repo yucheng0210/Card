@@ -1,31 +1,44 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 public class ParasiticEffect : IEffect
 {
     private EnemyData parasite;
     private PlayerData host;
-    private string recoverTargetID;
     private int damage;
+    private int sporeCount;
+
     public void ApplyEffect(int value, string target)
     {
-        parasite = BattleManager.Instance.CurrentEnemyList[target];
-        recoverTargetID = target;
-        host = BattleManager.Instance.CurrentPlayerData;
-        parasite.PassiveSkills.Remove(GetType().Name);
-        EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
-    }
-    private void EventTakeDamage(params object[] args)
-    {
-        if (!BattleManager.Instance.CurrentEnemyList.ContainsValue(parasite))
+        if (!BattleManager.Instance.CurrentEnemyList.TryGetValue(target, out parasite))
         {
-            EventManager.Instance.RemoveEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
+            Debug.LogWarning($"Target {target} not found in CurrentEnemyList.");
             return;
         }
-        BattleManager.Instance.AddCard(5002);
-        damage = host.MaxHealth / 100 * 2;
+        host = BattleManager.Instance.CurrentPlayerData;
+        damage = Mathf.RoundToInt(value * (host.MaxHealth / 100f));
+        parasite.PassiveSkills.Remove(GetType().Name);
+        EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
+        // Register enemy turn event
         EventManager.Instance.AddEventRegister(EventDefinition.eventEnemyTurn, EventEnemyTurn);
     }
+
+    private void EventTakeDamage(params object[] args)
+    {
+        if (args.Length >= 5 && (CharacterData)args[4] == parasite)
+        {
+            if (!BattleManager.Instance.CurrentEnemyList.ContainsValue(parasite))
+            {
+                EventManager.Instance.RemoveEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
+                return;
+            }
+
+            // Trigger card addition
+            BattleManager.Instance.AddCard(5002);
+        }
+    }
+
     private void EventEnemyTurn(params object[] args)
     {
         if (!BattleManager.Instance.CurrentEnemyList.ContainsValue(parasite))
@@ -33,11 +46,22 @@ public class ParasiticEffect : IEffect
             EventManager.Instance.RemoveEventRegister(EventDefinition.eventEnemyTurn, EventEnemyTurn);
             return;
         }
-        BattleManager.Instance.Recover(parasite, damage, recoverTargetID);
+        if (sporeCount == 0)
+        {
+            sporeCount++;
+            return;
+        }
+        int currentDamage = damage * sporeCount;
+        string enemyLocation = parasite.EnemyTrans.GetComponent<Enemy>().EnemyLocation;
+        sporeCount++;
+        // Recover parasite and damage host
+        BattleManager.Instance.Recover(parasite, damage, enemyLocation);
         BattleManager.Instance.TakeDamage(parasite, host, damage, BattleManager.Instance.CurrentLocationID);
     }
+
     public Sprite SetIcon()
     {
-        throw new System.NotImplementedException();
+        // Placeholder icon loading, can be modified as needed
+        return Resources.Load<Sprite>("EffectImage/CantMove");
     }
 }
