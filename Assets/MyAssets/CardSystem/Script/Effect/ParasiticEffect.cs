@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 
 public class ParasiticEffect : IEffect
 {
@@ -46,17 +47,15 @@ public class ParasiticEffect : IEffect
             EventManager.Instance.RemoveEventRegister(EventDefinition.eventEnemyTurn, EventEnemyTurn);
             return;
         }
+        sporeCount = BattleManager.Instance.GetCardCount(5002);
         if (sporeCount == 0)
-        {
-            sporeCount++;
             return;
-        }
         int currentDamage = damage * sporeCount;
         string enemyLocation = parasite.EnemyTrans.GetComponent<Enemy>().EnemyLocation;
-        sporeCount++;
+        CharacterData parasiteRepresent = new EnemyData();
         // Recover parasite and damage host
-        BattleManager.Instance.Recover(parasite, damage, enemyLocation);
-        BattleManager.Instance.TakeDamage(parasite, host, damage, BattleManager.Instance.CurrentLocationID);
+        BattleManager.Instance.Recover(parasite, currentDamage, enemyLocation);
+        BattleManager.Instance.TakeDamage(parasiteRepresent, host, currentDamage, BattleManager.Instance.CurrentLocationID);
     }
 
     public Sprite SetIcon()

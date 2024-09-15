@@ -441,5 +441,21 @@ public class BattleManager : Singleton<BattleManager>
         }
         return count;
     }
-
+    public int GetCardCount(int id)
+    {
+        int count = 0;
+        for (int i = 0; i < CardItemList.Count; i++)
+        {
+            CardItem cardItem = CardItemList[i];
+            if (cardItem.CardID == id)
+                count++;
+        }
+        for (int i = 0; i < DataManager.Instance.UsedCardBag.Count; i++)
+        {
+            CardItem cardItem = DataManager.Instance.UsedCardBag[i];
+            if (cardItem.CardID == id)
+                count++;
+        }
+        return count;
+    }
 }

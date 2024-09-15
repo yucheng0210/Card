@@ -129,7 +129,6 @@ public class UIBattle : UIBase
             battleInfoList[id].triggers.Add(entryEnter);
             battleInfoList[id].triggers.Add(entryExit);
         }
-        BattleManager.Instance.PlayerMoveCount++;
     }
     private void CheckEnemyInfo()
     {
@@ -334,6 +333,7 @@ public class UIBattle : UIBase
     {
         BattleManager.Instance.ManaMultiplier = 1;
         BattleManager.Instance.CurrentConsumeMana = 0;
+        BattleManager.Instance.PlayerMoveCount++;
         ClearAllEventTriggers();
         CheckEnemyInfo();
         CheckBattleInfo();
