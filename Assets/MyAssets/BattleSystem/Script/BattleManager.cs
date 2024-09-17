@@ -129,6 +129,7 @@ public class BattleManager : Singleton<BattleManager>
     public void GetShield(CharacterData defender, int point)
     {
         defender.CurrentShield += point;
+        EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
 
     public void ConsumeActionPoint(int point)

@@ -73,7 +73,7 @@ public class EnglishTest : MonoBehaviour
     ,"indicate","recession","consumer","burden","debt","portion","income","enrich","limited"};
     private void Start()
     {
-        for (int i = 0; i < 70; i++)
+        for (int i = 0; i < 75; i++)
         {
             int randomIndex = Random.Range(0, englishList.Count);
             Debug.Log(englishList[randomIndex]);

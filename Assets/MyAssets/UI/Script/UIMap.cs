@@ -15,8 +15,8 @@ public class UIMap : UIBase
     private Button[][] mapList;
     private Dictionary<string, int> levelProbabilities = new Dictionary<string, int>
     {
-        { "BATTLE", 75 },
-        { "BOSS", 5 },
+        { "BATTLE", 5 },
+        { "BOSS", 75 },
         { "RANDOM", 5 },
         { "RECOVER", 5 },
         { "SHOP",5 },

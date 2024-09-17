@@ -18,7 +18,7 @@ public class MoveEffect : IEffect
         {
             int avoidClosure = i;
             int checkerboardPoint = BattleManager.Instance.GetCheckerboardPoint(emptyPlaceList[i]);
-            int moveCount = (int)BattleManager.Instance.GetDistance(emptyPlaceList[avoidClosure]) + 1;
+            int moveCount = (int)BattleManager.Instance.GetDistance(emptyPlaceList[avoidClosure]);
             RectTransform emptyPlace = BattleManager.Instance.CheckerboardTrans.GetChild(checkerboardPoint).GetComponent<RectTransform>();
             UnityEngine.Events.UnityAction moveAction = () => Move(emptyPlace.localPosition, emptyPlaceList[avoidClosure], value, moveCount);
             emptyPlace.GetComponent<Button>().onClick.AddListener(moveAction);

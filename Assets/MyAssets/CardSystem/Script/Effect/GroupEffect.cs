@@ -4,17 +4,24 @@ using UnityEngine;
 
 public class GroupEffect : IEffect
 {
+    private string leaderLocation;
+    private int minionsID;
     public void ApplyEffect(int value, string target)
     {
-        EnemyData enemyData = BattleManager.Instance.CurrentMinionsList[target];
-        int minionsCount = BattleManager.Instance.GetMinionsIDCount(value);
-        enemyData.CurrentAttack = enemyData.MinAttack * minionsCount;
-        enemyData.DamageReduction = 15 * minionsCount;
+        leaderLocation = target;
+        minionsID = value;
+        EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
     }
-
+    private void EventTakeDamage(params object[] args)
+    {
+        EnemyData enemyData = BattleManager.Instance.CurrentEnemyList[leaderLocation];
+        int minionsCount = BattleManager.Instance.GetMinionsIDCount(minionsID);
+        enemyData.CurrentAttack = enemyData.MinAttack * (1 + minionsCount);
+        enemyData.DamageReduction = 15 * (1 + minionsCount);
+    }
     public Sprite SetIcon()
     {
-        throw new System.NotImplementedException();
+        return Resources.Load<Sprite>("EffectImage/CantMove");
     }
 
 }

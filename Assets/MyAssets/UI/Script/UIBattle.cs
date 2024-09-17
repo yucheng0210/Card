@@ -196,7 +196,7 @@ public class UIBattle : UIBase
         if (playerCantMove || notInAttack || containsCantMoveEffect)
             return;
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.UsingEffect);
-        EffectFactory.Instance.CreateEffect("MoveEffect").ApplyEffect(BattleManager.Instance.PlayerMoveCount, "Player");
+        EffectFactory.Instance.CreateEffect("MoveEffect").ApplyEffect(BattleManager.Instance.PlayerMoveCount, BattleManager.Instance.CurrentLocationID);
     }
     private void RemoveEnemy(string key)
     {
@@ -250,7 +250,7 @@ public class UIBattle : UIBase
         var enemyList = BattleManager.Instance.CurrentEnemyList;
         var terrainList = BattleManager.Instance.CurrentTerrainList;
         var checkerboardTrans = BattleManager.Instance.CheckerboardTrans;
-
+        Debug.Log("battleinitial");
         // 处理敌人列表
         for (int i = 0; i < enemyList.Count; i++)
         {

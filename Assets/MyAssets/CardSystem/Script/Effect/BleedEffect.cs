@@ -6,43 +6,65 @@ public class BleedEffect : IEffect
 {
     private EnemyData attacker;
     private int bleedCount;
-    private string defenderLocation;
+    Dictionary<string, EnemyData> currentEnemyList;
+    Dictionary<string, int> currentNegativeState;
+    private string typeName;
     public void ApplyEffect(int value, string target)
     {
+        // Set attacker and bleedCount
         attacker = BattleManager.Instance.CurrentEnemyList[target];
         bleedCount = value;
+        typeName = GetType().Name;
+        // Register events
         EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
         EventManager.Instance.AddEventRegister(EventDefinition.eventMove, EventMove);
-        attacker.PassiveSkills.Remove(GetType().Name);
+
+        // Remove this effect from attacker's passive skills
+        attacker.PassiveSkills.Remove(typeName);
+        currentEnemyList = BattleManager.Instance.CurrentEnemyList;
+        currentNegativeState = BattleManager.Instance.CurrentNegativeState;
+
     }
+
     private void EventTakeDamage(params object[] args)
     {
-        defenderLocation = (string)args[2];
-        if (BattleManager.Instance.CurrentLocationID != defenderLocation && !BattleManager.Instance.CurrentEnemyList.ContainsKey(defenderLocation))
+
+        // Unregister the event if the defender is not at the current location
+        if (!currentEnemyList.ContainsValue(attacker))
         {
             EventManager.Instance.RemoveEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
             return;
         }
-        if (attacker == (CharacterData)args[4])
+
+        // Apply bleed effect if the attacker matches the damage source
+        CharacterData damageSource = (CharacterData)args[4];
+        if (attacker == damageSource)
         {
-            if (BattleManager.Instance.CurrentNegativeState.ContainsKey(GetType().Name))
-                BattleManager.Instance.CurrentNegativeState[GetType().Name] += bleedCount;
+            if (currentNegativeState.ContainsKey(typeName))
+                currentNegativeState[typeName] += bleedCount;
             else
-                BattleManager.Instance.CurrentNegativeState.Add(GetType().Name, bleedCount);
+                currentNegativeState.Add(typeName, bleedCount);
         }
     }
+
     private void EventMove(params object[] args)
     {
-        if (BattleManager.Instance.CurrentLocationID != defenderLocation && !BattleManager.Instance.CurrentEnemyList.ContainsKey(defenderLocation))
+
+        // Unregister the event if the defender is not at the current location
+        if (!currentEnemyList.ContainsValue(attacker))
         {
             EventManager.Instance.RemoveEventRegister(EventDefinition.eventMove, EventMove);
             return;
         }
-        BattleManager.Instance.TakeDamage(attacker, BattleManager.Instance.CurrentPlayerData,
-        BattleManager.Instance.CurrentNegativeState[GetType().Name], BattleManager.Instance.CurrentLocationID);
+        if (!currentNegativeState.ContainsKey(typeName))
+            return;
+        // Apply damage to the player
+        int bleedDamage = currentNegativeState[typeName];
+        BattleManager.Instance.TakeDamage(attacker, BattleManager.Instance.CurrentPlayerData, bleedDamage, BattleManager.Instance.CurrentLocationID);
     }
+
     public Sprite SetIcon()
     {
-        throw new System.NotImplementedException();
+        return Resources.Load<Sprite>("EffectImage/CantMove");
     }
 }

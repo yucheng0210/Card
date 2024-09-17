@@ -6,46 +6,64 @@ public class PoisonedEffect : IEffect
 {
     private EnemyData attacker;
     private int poisonCount;
-    private string defenderLocation;
+    private Dictionary<string, EnemyData> currentEnemyList;
+    private Dictionary<string, int> currentNegativeState;
+    private string typeName;
 
     public void ApplyEffect(int value, string target)
     {
+        // Set attacker and poisonCount
         attacker = BattleManager.Instance.CurrentEnemyList[target];
         poisonCount = value;
+        // Register events
         EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
         EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
-        attacker.PassiveSkills.Remove(GetType().Name);
+        typeName = GetType().Name;
+
+        // Remove this skill from attacker's passive skills
+        attacker.PassiveSkills.Remove(typeName);
+        currentEnemyList = BattleManager.Instance.CurrentEnemyList;
+        currentNegativeState = BattleManager.Instance.CurrentNegativeState;
     }
 
     private void EventTakeDamage(params object[] args)
     {
-        defenderLocation = (string)args[2];
-        if (BattleManager.Instance.CurrentLocationID != defenderLocation && !BattleManager.Instance.CurrentEnemyList.ContainsKey(defenderLocation))
+        // If the defender is no longer valid, unregister event and exit
+        if (!currentEnemyList.ContainsValue(attacker))
         {
             EventManager.Instance.RemoveEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
             return;
         }
-        if (attacker == (CharacterData)args[4])
+
+        // Apply poison effect if the attacker matches
+        CharacterData damageSource = (CharacterData)args[4];
+        if (attacker == damageSource)
         {
-            if (BattleManager.Instance.CurrentNegativeState.ContainsKey(GetType().Name))
-                BattleManager.Instance.CurrentNegativeState[GetType().Name] += poisonCount;
+            if (currentNegativeState.ContainsKey(typeName))
+                currentNegativeState[typeName] += poisonCount;
             else
-                BattleManager.Instance.CurrentNegativeState.Add(GetType().Name, poisonCount);
+                currentNegativeState.Add(typeName, poisonCount);
         }
     }
 
     private void EventPlayerTurn(params object[] args)
     {
-        if (BattleManager.Instance.CurrentLocationID != defenderLocation && !BattleManager.Instance.CurrentEnemyList.ContainsKey(defenderLocation))
+
+        // If the defender is no longer valid, unregister event and exit
+        if (!currentEnemyList.ContainsValue(attacker))
         {
             EventManager.Instance.RemoveEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
             return;
         }
-        BattleManager.Instance.CurrentNegativeState[GetType().Name] *= 2;
+        if (!currentNegativeState.ContainsKey(typeName))
+            return;
+        // Double the poison effect on player's turn
+        if (currentNegativeState.ContainsKey(typeName))
+            currentNegativeState[typeName] *= 2;
     }
 
     public Sprite SetIcon()
     {
-        throw new System.NotImplementedException();
+        return Resources.Load<Sprite>("EffectImage/CantMove");
     }
 }
