@@ -261,9 +261,19 @@ public class CardCreater : MonoBehaviour
             }
             yield return new WaitForSecondsRealtime(0.5f);
             if (playerLocationX >= locationX)
-                enemy.EnemyImage.transform.localRotation = Quaternion.Euler(0, 0, 0);
+            {
+                if (enemyData.ImageFlip)
+                    enemy.EnemyImage.transform.localRotation = Quaternion.Euler(0, 180, 0);
+                else
+                    enemy.EnemyImage.transform.localRotation = Quaternion.Euler(0, 0, 0);
+            }
             else
-                enemy.EnemyImage.transform.localRotation = Quaternion.Euler(0, 180, 0);
+            {
+                if (enemyData.ImageFlip)
+                    enemy.EnemyImage.transform.localRotation = Quaternion.Euler(0, 0, 0);
+                else
+                    enemy.EnemyImage.transform.localRotation = Quaternion.Euler(0, 180, 0);
+            }
             switch (enemy.MyAttackType)
             {
                 case Enemy.AttackType.Move:

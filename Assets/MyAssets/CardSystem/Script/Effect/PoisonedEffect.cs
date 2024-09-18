@@ -36,6 +36,8 @@ public class PoisonedEffect : IEffect
         }
 
         // Apply poison effect if the attacker matches
+        if (args.Length < 5)
+            return;
         CharacterData damageSource = (CharacterData)args[4];
         if (attacker == damageSource)
         {

@@ -250,7 +250,6 @@ public class UIBattle : UIBase
         var enemyList = BattleManager.Instance.CurrentEnemyList;
         var terrainList = BattleManager.Instance.CurrentTerrainList;
         var checkerboardTrans = BattleManager.Instance.CheckerboardTrans;
-        Debug.Log("battleinitial");
         // 处理敌人列表
         for (int i = 0; i < enemyList.Count; i++)
         {
@@ -271,7 +270,7 @@ public class UIBattle : UIBase
             enemyData.EnemyTrans = enemyRect;
             enemyData.CurrentHealth = DataManager.Instance.EnemyList[enemy.EnemyID].MaxHealth;
 
-            BattleManager.Instance.TriggerEnemyPassiveSkill(enemy.EnemyLocation);
+            BattleManager.Instance.TriggerEnemyPassiveSkill(enemy.EnemyLocation, false);
         }
 
         // 处理地形列表
@@ -358,7 +357,7 @@ public class UIBattle : UIBase
         {
             RemoveEnemy(locationID);
             if (BattleManager.Instance.CurrentEnemyList.ContainsKey(locationID))
-                BattleManager.Instance.TriggerEnemyPassiveSkill(locationID);
+                BattleManager.Instance.TriggerEnemyPassiveSkill(locationID, false);
         }
 
         GameObject damageNum = Instantiate(damageNumPrefab, UI.transform);

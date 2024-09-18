@@ -144,6 +144,7 @@ public class DataManager : Singleton<DataManager>
                 EnemyAniPath = row[10],
                 PassiveSkills = new Dictionary<string, int>(),
                 DamageReduction = int.Parse(row[12]),
+                ImageFlip = bool.Parse(row[13]),
             };
             if (!string.IsNullOrEmpty(row[9]))
             {

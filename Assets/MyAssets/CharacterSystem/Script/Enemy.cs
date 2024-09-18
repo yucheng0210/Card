@@ -32,6 +32,8 @@ public class Enemy : MonoBehaviour
     public AttackType MyAttackType { get; set; }
     public bool IsDeath { get; set; }
     public Dictionary<string, int> EnemyOnceBattlePositiveList { get; set; }
+    private Dictionary<string, EnemyData> currentEnemyList = new();
+    private EnemyData enemyData = new EnemyData();
     public enum AttackType
     {
         Move,
@@ -43,7 +45,8 @@ public class Enemy : MonoBehaviour
     {
         EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
         EventManager.Instance.AddEventRegister(EventDefinition.eventMove, EventMove);
-        EnemyData enemyData = BattleManager.Instance.CurrentEnemyList[EnemyLocation];
+        currentEnemyList = BattleManager.Instance.CurrentEnemyList;
+        enemyData = currentEnemyList.ContainsKey(EnemyLocation) ? currentEnemyList[EnemyLocation] : BattleManager.Instance.CurrentMinionsList[EnemyLocation];
         EnemyOnceBattlePositiveList = new Dictionary<string, int>();
         RefrAttackIntent();
     }
@@ -54,7 +57,6 @@ public class Enemy : MonoBehaviour
     }
     private void RefrAttackIntent()
     {
-        EnemyData enemyData = BattleManager.Instance.CurrentEnemyList[EnemyLocation];
         float distance = BattleManager.Instance.GetDistance(EnemyLocation);
         enemyAttack.SetActive(false);
         enemyShield.SetActive(false);

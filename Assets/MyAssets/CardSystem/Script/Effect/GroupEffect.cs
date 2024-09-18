@@ -14,6 +14,8 @@ public class GroupEffect : IEffect
     }
     private void EventTakeDamage(params object[] args)
     {
+        if (!BattleManager.Instance.CurrentEnemyList.ContainsKey(leaderLocation))
+            return;
         EnemyData enemyData = BattleManager.Instance.CurrentEnemyList[leaderLocation];
         int minionsCount = BattleManager.Instance.GetMinionsIDCount(minionsID);
         enemyData.CurrentAttack = enemyData.MinAttack * (1 + minionsCount);

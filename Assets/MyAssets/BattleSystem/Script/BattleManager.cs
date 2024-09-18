@@ -117,9 +117,9 @@ public class BattleManager : Singleton<BattleManager>
         Color color = Color.green;
         EventManager.Instance.DispatchEvent(EventDefinition.eventTakeDamage, screenCenter, damage, CurrentLocationID, color);
     }
-    public void TriggerEnemyPassiveSkill(string locationID)
+    public void TriggerEnemyPassiveSkill(string locationID, bool isMinion)
     {
-        EnemyData enemyData = CurrentEnemyList[locationID];
+        EnemyData enemyData = isMinion ? CurrentMinionsList[locationID] : CurrentEnemyList[locationID];
         for (int i = 0; i < enemyData.PassiveSkills.Count; i++)
         {
             string key = enemyData.PassiveSkills.ElementAt(i).Key;
@@ -410,11 +410,12 @@ public class BattleManager : Singleton<BattleManager>
     }
     public void AddMinions(int enemyID, int count, string location)
     {
+        List<string> emptyPlaceList = GetEmptyPlace(location, 2, CheckEmptyType.Move);
         for (int i = 0; i < count; i++)
         {
-            List<string> emptyPlaceList = GetEmptyPlace(location, 2, CheckEmptyType.Move);
             int randomIndex = Random.Range(0, emptyPlaceList.Count);
             CurrentMinionsList.Add(emptyPlaceList[randomIndex], DataManager.Instance.EnemyList[enemyID]);
+            emptyPlaceList.Remove(emptyPlaceList[randomIndex]);
         }
         for (int i = 0; i < CurrentMinionsList.Count; i++)
         {
@@ -428,7 +429,7 @@ public class BattleManager : Singleton<BattleManager>
             enemy.MyAnimator.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>(CurrentMinionsList[key].EnemyAniPath);
             CurrentMinionsList[key].EnemyTrans = enemy.GetComponent<RectTransform>();
             CurrentMinionsList[key].CurrentHealth = DataManager.Instance.EnemyList[enemy.EnemyID].MaxHealth;
-            TriggerEnemyPassiveSkill(enemy.EnemyLocation);
+            TriggerEnemyPassiveSkill(enemy.EnemyLocation, true);
         }
     }
     public int GetMinionsIDCount(int id)

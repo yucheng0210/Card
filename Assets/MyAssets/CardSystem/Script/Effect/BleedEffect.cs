@@ -6,13 +6,15 @@ public class BleedEffect : IEffect
 {
     private EnemyData attacker;
     private int bleedCount;
-    Dictionary<string, EnemyData> currentEnemyList;
-    Dictionary<string, int> currentNegativeState;
+    Dictionary<string, EnemyData> currentEnemyList = new();
+    Dictionary<string, int> currentNegativeState = new();
     private string typeName;
     public void ApplyEffect(int value, string target)
     {
+        currentEnemyList = BattleManager.Instance.CurrentEnemyList;
+        currentNegativeState = BattleManager.Instance.CurrentNegativeState;
         // Set attacker and bleedCount
-        attacker = BattleManager.Instance.CurrentEnemyList[target];
+        attacker = currentEnemyList.ContainsKey(target) ? currentEnemyList[target] : BattleManager.Instance.CurrentMinionsList[target];
         bleedCount = value;
         typeName = GetType().Name;
         // Register events
@@ -21,21 +23,17 @@ public class BleedEffect : IEffect
 
         // Remove this effect from attacker's passive skills
         attacker.PassiveSkills.Remove(typeName);
-        currentEnemyList = BattleManager.Instance.CurrentEnemyList;
-        currentNegativeState = BattleManager.Instance.CurrentNegativeState;
 
     }
 
     private void EventTakeDamage(params object[] args)
     {
-
         // Unregister the event if the defender is not at the current location
         if (!currentEnemyList.ContainsValue(attacker))
         {
             EventManager.Instance.RemoveEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
             return;
         }
-
         // Apply bleed effect if the attacker matches the damage source
         CharacterData damageSource = (CharacterData)args[4];
         if (attacker == damageSource)

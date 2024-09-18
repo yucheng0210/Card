@@ -4,6 +4,6 @@
 1003,大眼怪,47,20,20,EnemyImage/FlyingEye,2,3,99,Attack=1,EnemyAnimation/FlyingEye,SniperEffect=50,0
 1004,菇,84,10,10,EnemyImage/Mushroom,2,2,99,Attack=1;Attack=1;IncreaseHealth=20,EnemyAnimation/Mushroom,ParasiticEffect=10,0
 1005,沙漠狂獸,143,13,13,EnemyImage/Dog,2,2,99,CreateMinionsEffect=3;Attack=1;IncreaseHealth=21,EnemyAnimation/Dog,GroupEffect=2005;BleedEffect=5,0
-1006,毒刃劍蠍,6,10,15,EnemyImage/Dog,2,2,99,Attack=1;Attack=1;IncreaseHealth=22,EnemyAnimation/Scorpion,PoisonedEffect=2;LeaveBattleShieldEffect=5,0
+1006,毒刃劍蠍,6,10,15,EnemyImage/Scorpion,2,2,99,Attack=1;Attack=1;IncreaseHealth=22,EnemyAnimation/Scorpion,PoisonedEffect=2;LeaveBattleShieldEffect=5,0
 1007,風沙追獵者,6,10,15,EnemyImage/Dog,2,2,99,Attack=1;Attack=1;IncreaseHealth=23,EnemyAnimation/Dog,ParasiticEffect=3,0
 2005,沙漠利爪,43,15,15,EnemyImage/Dog,2,2,99,Attack=1;Attack=1;IncreaseHealth=24,EnemyAnimation/Dog,BleedEffect=3,0
