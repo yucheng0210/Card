@@ -121,7 +121,7 @@ public class CardCreater : MonoBehaviour
             yield return new WaitForSecondsRealtime(coolDown); // 等待冷卻時間
             RectTransform handCardRect = handCard[i].GetComponent<RectTransform>();
             handCard[i].transform.SetParent(handCardTrans); // 將卡片設定為手牌的子物件
-            handCard[i].CardBackground.raycastTarget = false;
+            handCard[i].GetComponent<Image>().raycastTarget = false;
             handCard[i].gameObject.SetActive(true); // 啟用卡片物件
             EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
             yield return null;
@@ -155,7 +155,7 @@ public class CardCreater : MonoBehaviour
         List<CardItem> handCard = DataManager.Instance.HandCard;
         for (int i = 0; i < handCard.Count; i++)
         {
-            handCard[i].CardBackground.raycastTarget = true;
+            handCard[i].GetComponent<Image>().raycastTarget = true;
         }
     }
     private void DrawnAllCards()

@@ -64,6 +64,8 @@ public class UIBattle : UIBase
     private Text enemyShield;
     [SerializeField]
     private Text enemyHealth;
+    [SerializeField]
+    private Transform enemyPassiveGroupTrans;
 
     [Header("傷害特效")]
     [SerializeField]
@@ -179,6 +181,16 @@ public class UIBattle : UIBase
         enemyImage.sprite = Resources.Load<Sprite>(enemyData.EnemyImagePath);
         enemyHealth.text = enemyData.CurrentHealth.ToString() + "/" + enemyData.MaxHealth.ToString();
         enemyShield.text = enemyData.CurrentShield.ToString();
+        for (int i = 0; i < enemyPassiveGroupTrans.childCount; i++)
+        {
+            Destroy(enemyPassiveGroupTrans.GetChild(i).gameObject);
+        }
+        for (int i = 0; i < enemyData.MaxPassiveSkillsList.Count; i++)
+        {
+            Image passive = Instantiate(negativePrefab, enemyPassiveGroupTrans).GetComponent<Image>();
+            Sprite image = EffectFactory.Instance.CreateEffect(enemyData.MaxPassiveSkillsList[i]).SetIcon();
+            passive.sprite = image;
+        }
     }
 
     private void ChangeTurn()

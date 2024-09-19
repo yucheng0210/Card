@@ -143,6 +143,7 @@ public class DataManager : Singleton<DataManager>
                 AttackOrderStrs = new List<(string, int)>(),
                 EnemyAniPath = row[10],
                 PassiveSkills = new Dictionary<string, int>(),
+                MaxPassiveSkillsList = new List<string>(),
                 DamageReduction = int.Parse(row[12]),
                 ImageFlip = bool.Parse(row[13]),
             };
@@ -164,6 +165,7 @@ public class DataManager : Singleton<DataManager>
                 for (int j = 0; j < passiveSkills.Length; j++)
                 {
                     string[] skillParts = passiveSkills[j].Split('=');
+                    enemyData.MaxPassiveSkillsList.Add(skillParts[0]);
                     if (skillParts.Length == 2)
                     {
                         enemyData.PassiveSkills.Add(skillParts[0], int.Parse(skillParts[1]));

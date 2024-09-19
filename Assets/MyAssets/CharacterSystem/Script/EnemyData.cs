@@ -16,6 +16,7 @@ public class EnemyData : CharacterData
     public List<ValueTuple<string, int>> AttackOrderStrs { get; set; }
     public int CurrentAttackOrder { get; set; }
     public Dictionary<string, int> PassiveSkills { get; set; }
+    public List<string> MaxPassiveSkillsList { get; set; }
     public bool ImageFlip { get; set; }
     public EnemyData DeepClone()
     {
@@ -26,6 +27,7 @@ public class EnemyData : CharacterData
 
         // 深拷贝 PassiveSkills
         clone.PassiveSkills = new Dictionary<string, int>(this.PassiveSkills);
+        clone.MaxPassiveSkillsList = new List<string>(this.MaxPassiveSkillsList);
 
         return clone;
     }

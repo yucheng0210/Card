@@ -16,10 +16,10 @@ public class UIMap : UIBase
     private Dictionary<string, int> levelProbabilities = new Dictionary<string, int>
     {
         { "BATTLE", 5 },
-        { "BOSS", 75 },
+        { "BOSS", 5 },
         { "RANDOM", 5 },
         { "RECOVER", 5 },
-        { "SHOP",5 },
+        { "SHOP",75 },
         {"TREASURE",5}
     };
     protected override void Start()
