@@ -13,6 +13,8 @@ public class UIShop : UIBase
     private Transform itemGroupTrans;
     [SerializeField]
     private Button exitButton;
+    [SerializeField]
+    private CardItem cardPrefab;
     protected override void Start()
     {
         base.Start();
@@ -25,18 +27,23 @@ public class UIShop : UIBase
     }
     private void RefreshMerchandise()
     {
+        Dictionary<int, CardData> cardList = DataManager.Instance.CardList;
         for (int i = 0; i < cardGroupTrans.childCount; i++)
         {
             Destroy(cardGroupTrans.GetChild(i).gameObject);
         }
         for (int i = 0; i < 6; i++)
         {
-            int randomIndex = Random.Range(0, DataManager.Instance.CardList.Count);
-            CardItem cardItem = Instantiate(BattleManager.Instance.CardPrefab, cardGroupTrans);
+            int randomIndex = Random.Range(0, cardList.Count);
+            KeyValuePair<int, CardData> randomCard = cardList.ElementAt(randomIndex);
+            CardData cardData = cardList[randomCard.Key];
+            CardItem cardItem = Instantiate(cardPrefab, cardGroupTrans);
+            Text cardPriceText = cardItem.transform.GetChild(cardItem.transform.childCount - 1).GetComponent<Text>();
             cardItem.GetComponent<CanvasGroup>().alpha = 1;
-            cardItem.CardID = DataManager.Instance.CardList.ElementAt(randomIndex).Key;
+            cardItem.CardID = randomCard.Key;
             cardItem.CantMove = true;
-            Button cardButton = cardItem.gameObject.AddComponent<Button>();
+            cardPriceText.text = "$" + cardData.CardBuyPrice.ToString();
+            Button cardButton = cardItem.GetComponent<Button>();
             cardButton.onClick.AddListener(() => AddCard(cardItem.CardID, cardButton.gameObject));
         }
     }
