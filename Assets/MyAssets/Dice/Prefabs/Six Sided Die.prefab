@@ -36,7 +36,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &7045118305861763531
 SpriteRenderer:
@@ -87,12 +87,12 @@ SpriteRenderer:
   m_Size: {x: 2.29, y: 1.98}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!95 &3709890204480498700
 Animator:
-  serializedVersion: 5
+  serializedVersion: 4
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -109,8 +109,7 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!50 &5332954656064853751
 Rigidbody2D:
   serializedVersion: 4
@@ -128,12 +127,6 @@ Rigidbody2D:
   m_AngularDrag: 0.05
   m_GravityScale: 1
   m_Material: {fileID: 6200000, guid: 6b792ab03401c03449b7b3d7f288b702, type: 2}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
@@ -148,25 +141,6 @@ CircleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -278,19 +252,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 3955659583493194846}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a76345964a8711541bad6bf6ac25e8ad, type: 3}
+  m_Script: {fileID: 11500000, guid: 18958577b20581841b0fff901c16544c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _clips:
-  - {fileID: 8300000, guid: c0aa6f6c50ee0bc45ab76608d0853b06, type: 3}
-  - {fileID: 8300000, guid: 1a266318add38dc469954374f0ee063a, type: 3}
-  - {fileID: 8300000, guid: 174e889efb49452469129512006f576d, type: 3}
-  - {fileID: 8300000, guid: 6f810cfd5529e40479adf0b7c235e51b, type: 3}
-  - {fileID: 8300000, guid: 504254379b215b14785406d62d802487, type: 3}
-  - {fileID: 8300000, guid: 782d4f9b1cc7c054d9d1eb931163e155, type: 3}
-  - {fileID: 8300000, guid: 1930c7ed41769a34cb6ae75054dcde82, type: 3}
-  - {fileID: 8300000, guid: 1baa22cc2c971c045b38cef2ccb0792c, type: 3}
-  - {fileID: 8300000, guid: ea370b804100b5c489e1ecb2179cc2fd, type: 3}
+  - {fileID: 8300000, guid: 1eaf00705eff0a342a0423faee3d5a50, type: 3}
+  - {fileID: 8300000, guid: f6c69232b5c97fb4f9298f6aedab84ec, type: 3}
+  - {fileID: 8300000, guid: 2e512e3514abfdd4185364fc2aedf536, type: 3}
+  - {fileID: 8300000, guid: 7e953320c4cf8524a928418ab610ed25, type: 3}
+  - {fileID: 8300000, guid: 1e6f112a47d16964cae7a53e2573680f, type: 3}
+  - {fileID: 8300000, guid: dc50d3cd85b22fc40b7e3736df84baf6, type: 3}
+  - {fileID: 8300000, guid: 5d679541fae64554aa79598ce3ffbcbc, type: 3}
+  - {fileID: 8300000, guid: 0a0e9fa269ab68143815daf24b852a41, type: 3}
+  - {fileID: 8300000, guid: c6641abe2fd99fc49a002ca7d919d38f, type: 3}
 --- !u!114 &2723736298186405118
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -300,7 +274,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3955659583493194846}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fcac6cded7aaddc47bb1f91446286c82, type: 3}
+  m_Script: {fileID: 11500000, guid: 392c8f46ea96d1549b3188ce97af9121, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _rollForceMin: {x: 0, y: 350}

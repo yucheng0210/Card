@@ -1,4 +1,5 @@
 using System;
+using Radishmouse;
 using UnityEngine;
 
 public class MapManager : Singleton<MapManager>
@@ -13,7 +14,7 @@ public class MapManager : Singleton<MapManager>
     [SerializeField] int paddingY;
     [SerializeField] EveryLevel[] levels;
     [SerializeField]
-    private Transform mapTrans;
+    private Transform lineGroupTrans;
     [SerializeField]
     private Material lineMaterial;
     public MapNode[][] MapNodes { get { return mapNodes; } }
@@ -249,22 +250,30 @@ public class MapManager : Singleton<MapManager>
                     if (mapNodes[i][j].left != null)
                     {
                         GameObject line = new GameObject();
-                        line.transform.SetParent(mapTrans);
-                        LineRenderer ren = line.AddComponent<LineRenderer>();
+                        line.transform.SetParent(lineGroupTrans);
+                        line.AddComponent<CanvasRenderer>();
+                        //LineRenderer ren = line.AddComponent<LineRenderer>();
+                        UILineRenderer ren = line.AddComponent<UILineRenderer>();
+                        ren.center = false;
+                        ren.thickness = 1;
                         ren.material = lineMaterial;
-                        ren.useWorldSpace = false;
-                        Vector3[] current = { mapNodes[i][j].transform.position, mapNodes[i][j].left.transform.position };
-                        ren.SetPositions(current);
+                        //ren.useWorldSpace = false;
+                        Vector2[] current = { mapNodes[i][j].transform.position, mapNodes[i][j].left.transform.position };
+                        ren.points = current;
                     }
                     if (mapNodes[i][j].right != null)
                     {
                         GameObject line = new GameObject();
-                        line.transform.SetParent(mapTrans);
-                        LineRenderer ren = line.AddComponent<LineRenderer>();
+                        line.transform.SetParent(lineGroupTrans);
+                        line.AddComponent<CanvasRenderer>();
+                        //LineRenderer ren = line.AddComponent<LineRenderer>();
+                        UILineRenderer ren = line.AddComponent<UILineRenderer>();
+                        ren.center = false;
+                        ren.thickness = 1;
                         ren.material = lineMaterial;
-                        line.GetComponent<LineRenderer>().useWorldSpace = false;
-                        Vector3[] current = { mapNodes[i][j].transform.position, mapNodes[i][j].right.transform.position };
-                        ren.SetPositions(current);
+                        //ren.useWorldSpace = false;
+                        Vector2[] current = { mapNodes[i][j].transform.position, mapNodes[i][j].right.transform.position };
+                        ren.points = current;
                     }
                 }
             }
