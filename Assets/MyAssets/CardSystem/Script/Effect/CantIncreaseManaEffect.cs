@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CantIncreaseManaEffect : IEffect
 {
@@ -13,8 +14,18 @@ public class CantIncreaseManaEffect : IEffect
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
 
+    public string SetDescriptionText()
+    {
+        throw new System.NotImplementedException();
+    }
+
     public Sprite SetIcon()
     {
-        return Resources.Load<Sprite>("EffectImage/CantMove");
+        throw new System.NotImplementedException();
+    }
+
+    public string SetTitleText()
+    {
+        throw new System.NotImplementedException();
     }
 }

@@ -46,7 +46,7 @@ public class UIBattle : UIBase
     [SerializeField]
     private Transform positiveGroupTrans;
     [SerializeField]
-    private GameObject negativePrefab;
+    private BattleState negativePrefab;
 
     [Header("敵人")]
     [SerializeField]
@@ -106,15 +106,15 @@ public class UIBattle : UIBase
         EventManager.Instance.AddEventRegister(EventDefinition.eventEnemyTurn, EventEnemyTurn);
         EventManager.Instance.AddEventRegister(EventDefinition.eventMove, EventMove);
         //Hide();
-        StartCoroutine(StartGame());
+       StartGame();
     }
 
-    private IEnumerator StartGame()
+    private void StartGame()
     {
-        yield return null;
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
         BattleManager.Instance.EnemyPrefab = enemyPrefab;
         BattleManager.Instance.EnemyTrans = enemyTrans;
+        CheckBattleInfo();
         Hide();
     }
     private void CheckBattleInfo()
@@ -122,6 +122,7 @@ public class UIBattle : UIBase
         for (int i = 0; i < battleInfoList.Count; i++)
         {
             int id = i;
+            battleInfoList[id].triggers.Clear();
             EventTrigger.Entry entryEnter = new EventTrigger.Entry();
             EventTrigger.Entry entryExit = new EventTrigger.Entry();
             entryEnter.eventID = EventTriggerType.PointerEnter;
@@ -187,7 +188,7 @@ public class UIBattle : UIBase
         }
         for (int i = 0; i < enemyData.MaxPassiveSkillsList.Count; i++)
         {
-            Image passive = Instantiate(negativePrefab, enemyPassiveGroupTrans).GetComponent<Image>();
+            Image passive = Instantiate(negativePrefab, enemyPassiveGroupTrans).BattleStateImage;
             Sprite image = EffectFactory.Instance.CreateEffect(enemyData.MaxPassiveSkillsList[i]).SetIcon();
             passive.sprite = image;
         }
@@ -222,7 +223,7 @@ public class UIBattle : UIBase
                 BattleManager.Instance.CurrentEnemyList.Remove(key);
                 Destroy(enemyData.EnemyTrans.gameObject, 1);
                 ClearAllEventTriggers();
-                CheckBattleInfo();
+                // CheckBattleInfo();
                 CheckEnemyInfo();
             }
             enemy.IsDeath = true;
@@ -347,7 +348,7 @@ public class UIBattle : UIBase
         BattleManager.Instance.PlayerMoveCount++;
         ClearAllEventTriggers();
         CheckEnemyInfo();
-        CheckBattleInfo();
+        //  CheckBattleInfo();
     }
     private void EventEnemyTurn(params object[] args)
     {
@@ -360,7 +361,7 @@ public class UIBattle : UIBase
         UIManager.Instance.ClearMoveClue(true);
         ClearAllEventTriggers();
         CheckEnemyInfo();
-        CheckBattleInfo();
+        // CheckBattleInfo();
     }
     private void EventTakeDamage(params object[] args)
     {
@@ -426,7 +427,7 @@ public class UIBattle : UIBase
         UpdateStateUI(positiveGroupTrans, positiveList, negativePrefab);
     }
 
-    private void UpdateStateUI(Transform groupTrans, Dictionary<string, int> stateList, GameObject prefab)
+    private void UpdateStateUI(Transform groupTrans, Dictionary<string, int> stateList, BattleState prefab)
     {
         // 清空当前状态
         for (int i = groupTrans.childCount - 1; i >= 0; i--)
@@ -439,13 +440,26 @@ public class UIBattle : UIBase
         {
             string key = stateList.ElementAt(i).Key;
             int value = stateList[key];
-
-            GameObject stateObject = Instantiate(prefab, groupTrans);
-            Image stateImage = stateObject.GetComponentInChildren<Image>();
-            Text stateText = stateObject.GetComponentInChildren<Text>();
-
+            BattleState stateObject = Instantiate(prefab, groupTrans);
+            Image stateImage = stateObject.BattleStateImage;
+            Text stateText = stateObject.BattleStateAmount;
+            Text infoTitle = stateObject.InfoTitle;
+            Text infoDescription = stateObject.InfoDescription;
+            Transform infoGroupTrans = stateObject.InfoGroupTrans;
             stateImage.sprite = EffectFactory.Instance.CreateEffect(key).SetIcon();
             stateText.text = value.ToString();
+            EventTrigger eventTrigger = infoGroupTrans.GetComponent<EventTrigger>();
+            eventTrigger.triggers.Clear();
+            EventTrigger.Entry entryEnter = new EventTrigger.Entry();
+            EventTrigger.Entry entryExit = new EventTrigger.Entry();
+            entryEnter.eventID = EventTriggerType.PointerEnter;
+            entryExit.eventID = EventTriggerType.PointerExit;
+            infoTitle.text = EffectFactory.Instance.CreateEffect(key).SetTitleText();
+            infoDescription.text = EffectFactory.Instance.CreateEffect(key).SetDescriptionText();
+            entryEnter.callback.AddListener((arg) => { infoGroupTrans.GetChild(0).gameObject.SetActive(true); });
+            entryExit.callback.AddListener((arg) => { infoGroupTrans.GetChild(0).gameObject.SetActive(false); });
+            eventTrigger.triggers.Add(entryEnter);
+            eventTrigger.triggers.Add(entryExit);
         }
     }
 

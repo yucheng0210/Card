@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class FuriousEffect : IEffect
 {
@@ -46,6 +47,16 @@ public class FuriousEffect : IEffect
     public Sprite SetIcon()
     {
         // 這裡可以根據需要返回一個效果圖標
+        return Resources.Load<Sprite>("EffectImage/CantMove");
+    }
+
+    public string SetTitleText()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public string SetDescriptionText()
+    {
         throw new System.NotImplementedException();
     }
 }

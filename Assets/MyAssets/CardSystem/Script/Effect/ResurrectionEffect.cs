@@ -54,4 +54,14 @@ public class ResurrectionEffect : IEffect
     {
         return Resources.Load<Sprite>("EffectImage/Resurrection");
     }
+
+    public string SetTitleText()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public string SetDescriptionText()
+    {
+        throw new System.NotImplementedException();
+    }
 }

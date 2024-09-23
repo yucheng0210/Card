@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SniperEffect : IEffect
 {
@@ -48,5 +49,15 @@ public class SniperEffect : IEffect
     {
         // Implement SetIcon method or remove if not needed
         return Resources.Load<Sprite>("EffectImage/SniperEffect");
+    }
+
+    public string SetTitleText()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public string SetDescriptionText()
+    {
+        throw new System.NotImplementedException();
     }
 }

@@ -131,10 +131,9 @@ public class UIManager : Singleton<UIManager>
             cardItem.CantMove = true;
         }
     }
-    public void RefreshUseCardBag()
+    public void RefreshUseCardBag(List<CardItem> cardBag)
     {
         ShowUI("UICardMenu");
-        List<CardItem> cardBag = DataManager.Instance.UsedCardBag;
         for (int i = 0; i < BattleManager.Instance.CardMenuTrans.childCount; i++)
         {
             Destroy(BattleManager.Instance.CardMenuTrans.GetChild(i).gameObject);
@@ -191,7 +190,7 @@ public class UIManager : Singleton<UIManager>
     public void SelectCard(UnityEngine.Events.UnityAction unityAction, bool isRefreshUseBag)
     {
         if (isRefreshUseBag)
-            RefreshUseCardBag();
+            RefreshUseCardBag(DataManager.Instance.UsedCardBag);
         else
             RefreshCardBag();
         for (int i = 0; i < BattleManager.Instance.CardMenuTrans.childCount; i++)

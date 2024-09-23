@@ -13,6 +13,8 @@ public class UICardMenu : UIBase
     [SerializeField]
     private Button usedCardMenuButton;
     [SerializeField]
+    private Button removeCardMenuButton;
+    [SerializeField]
     private Button hideButton;
 
     [SerializeField]
@@ -28,27 +30,11 @@ public class UICardMenu : UIBase
         base.Start();
         cardMenuButton.onClick.AddListener(() => UIManager.Instance.RefreshCardBag());
         battleCardMenuButton.onClick.AddListener(() => UIManager.Instance.RefreshCardBag());
-        usedCardMenuButton.onClick.AddListener(() => UIManager.Instance.RefreshUseCardBag());
+        usedCardMenuButton.onClick.AddListener(() => UIManager.Instance.RefreshUseCardBag(DataManager.Instance.UsedCardBag));
+        removeCardMenuButton.onClick.AddListener(() => UIManager.Instance.RefreshUseCardBag(DataManager.Instance.RemoveCardBag));
         hideButton.onClick.AddListener(Hide);
         BattleManager.Instance.CardMenuTrans = contentTrans;
         BattleManager.Instance.CardBagApplyButton = applyButton;
         BattleManager.Instance.CardPrefab = cardPrefab;
-    }
-
-    private void RefreshUsedCardBag()
-    {
-        UI.SetActive(true);
-        for (int i = 0; i < contentTrans.childCount; i++)
-        {
-            Destroy(contentTrans.GetChild(i).gameObject);
-        }
-        List<CardItem> usedCardBag = DataManager.Instance.UsedCardBag;
-        for (int i = 0; i < usedCardBag.Count; i++)
-        {
-            CardItem cardItem = Instantiate(cardPrefab, contentTrans);
-            cardItem.GetComponent<CanvasGroup>().alpha = 1;
-            cardItem.CardID = usedCardBag[i].CardID;
-            cardItem.CantMove = true;
-        }
     }
 }

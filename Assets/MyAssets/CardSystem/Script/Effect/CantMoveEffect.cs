@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CantMoveEffect : IEffect
 {
@@ -22,5 +23,14 @@ public class CantMoveEffect : IEffect
     {
         // 加載並返回效果圖標
         return Resources.Load<Sprite>("EffectImage/CantMove");
+    }
+    public string SetDescriptionText()
+    {
+        return "禁錮";
+    }
+
+    public string SetTitleText()
+    {
+        return "禁止移動";
     }
 }

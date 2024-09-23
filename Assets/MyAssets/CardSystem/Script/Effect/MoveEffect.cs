@@ -27,6 +27,21 @@ public class MoveEffect : IEffect
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.UsingEffect);
     }
 
+    public string SetDescriptionText()
+    {
+        throw new NotImplementedException();
+    }
+
+    public Sprite SetIcon()
+    {
+        throw new NotImplementedException();
+    }
+
+    public string SetTitleText()
+    {
+        throw new NotImplementedException();
+    }
+
     private void Move(Vector3 destination, string locationID, int value, int moveCount)
     {
         for (int i = 0; i < emptyPlaceList.Count; i++)
@@ -42,10 +57,5 @@ public class MoveEffect : IEffect
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Attack);
         EventManager.Instance.DispatchEvent(EventDefinition.eventMove);
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
-    }
-
-    Sprite IEffect.SetIcon()
-    {
-        throw new NotImplementedException();
     }
 }

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.TextCore.Text;
+using UnityEngine.UI;
 
 public class ParasiticEffect : IEffect
 {
@@ -62,5 +63,15 @@ public class ParasiticEffect : IEffect
     {
         // Placeholder icon loading, can be modified as needed
         return Resources.Load<Sprite>("EffectImage/CantMove");
+    }
+
+    public string SetTitleText()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public string SetDescriptionText()
+    {
+        throw new System.NotImplementedException();
     }
 }

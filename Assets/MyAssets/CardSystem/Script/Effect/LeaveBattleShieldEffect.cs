@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LeaveBattleShieldEffect : IEffect
 {
@@ -48,5 +49,15 @@ public class LeaveBattleShieldEffect : IEffect
     public Sprite SetIcon()
     {
         return Resources.Load<Sprite>("EffectImage/ShieldIcon");
+    }
+
+    public string SetTitleText()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public string SetDescriptionText()
+    {
+        throw new System.NotImplementedException();
     }
 }

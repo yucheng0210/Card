@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ReturnCardBag : IEffect
 {
@@ -10,10 +11,22 @@ public class ReturnCardBag : IEffect
         UIManager.Instance.SelectCard(unityAction, true);
         // BattleManager.Instance.CardBagApplyButton.onClick.AddListener(() => UIManager.Instance.SelectCard(unityAction, true));
     }
+
+    public string SetDescriptionText()
+    {
+        throw new System.NotImplementedException();
+    }
+
     public Sprite SetIcon()
     {
         throw new System.NotImplementedException();
     }
+
+    public string SetTitleText()
+    {
+        throw new System.NotImplementedException();
+    }
+
     private void Return()
     {
         BattleManager.Instance.CardBagApplyButton.gameObject.SetActive(false);

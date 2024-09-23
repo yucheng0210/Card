@@ -16,7 +16,8 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     [SerializeField]
     private Text cardCost;
-
+    [SerializeField]
+    private Text manaCost;
     [SerializeField]
     private Text cardDescription;
 
@@ -65,6 +66,11 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         get { return cardCost; }
         set { cardCost = value; }
     }
+    public Text CardManaCost
+    {
+        get { return manaCost; }
+        set { manaCost = value; }
+    }
     public Text CardDescription
     {
         get { return cardDescription; }
@@ -86,6 +92,7 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         CardName.text = cardList[CardID].CardName;
         CardDescription.text = cardList[CardID].CardDescription;
         CardCost.text = cardList[CardID].CardCost.ToString();
+        CardManaCost.text = cardList[CardID].CardManaCost.ToString();
         CardRectTransform = transform.GetComponent<RectTransform>();
         Cost = DataManager.Instance.CardList[CardID].CardCost;
         CardImage.sprite = Resources.Load<Sprite>(DataManager.Instance.CardList[CardID].CardImagePath);

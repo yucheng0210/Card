@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CreateMinionsEffect : IEffect
 {
@@ -10,8 +11,18 @@ public class CreateMinionsEffect : IEffect
         BattleManager.Instance.AddMinions(2005, minionsCount, target);
     }
 
+    public string SetDescriptionText()
+    {
+        throw new System.NotImplementedException();
+    }
+
     public Sprite SetIcon()
     {
         return Resources.Load<Sprite>("EffectImage/CantMove");
+    }
+
+    public string SetTitleText()
+    {
+        throw new System.NotImplementedException();
     }
 }

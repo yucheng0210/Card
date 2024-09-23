@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.UI;
 public class KnockBackEffect : IEffect
 {
     public void ApplyEffect(int value, string target)
@@ -48,7 +49,17 @@ public class KnockBackEffect : IEffect
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
 
+    public string SetDescriptionText()
+    {
+        throw new System.NotImplementedException();
+    }
+
     public Sprite SetIcon()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public string SetTitleText()
     {
         throw new System.NotImplementedException();
     }

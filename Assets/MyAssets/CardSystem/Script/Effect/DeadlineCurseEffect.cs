@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class DeadlineCurseEffect : IEffect
 {
@@ -32,5 +33,15 @@ public class DeadlineCurseEffect : IEffect
     public Sprite SetIcon()
     {
         return Resources.Load<Sprite>("CardImage/FireBall");
+    }
+
+    public string SetTitleText()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public string SetDescriptionText()
+    {
+        throw new System.NotImplementedException();
     }
 }

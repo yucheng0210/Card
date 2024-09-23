@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class FightingSpiritEffect : IEffect
 {
@@ -16,8 +17,18 @@ public class FightingSpiritEffect : IEffect
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
 
+    public string SetDescriptionText()
+    {
+        throw new System.NotImplementedException();
+    }
+
     public Sprite SetIcon()
     {
         return Resources.Load<Sprite>("EffectImage/FightingSpirit");
+    }
+
+    public string SetTitleText()
+    {
+        throw new System.NotImplementedException();
     }
 }

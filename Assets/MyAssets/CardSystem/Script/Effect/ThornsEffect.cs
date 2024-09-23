@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ThornsEffect : IEffect
 {
@@ -61,5 +62,15 @@ public class ThornsEffect : IEffect
     public Sprite SetIcon()
     {
         return Resources.Load<Sprite>("EffectImage/FightingSpirit");
+    }
+
+    public string SetTitleText()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public string SetDescriptionText()
+    {
+        throw new System.NotImplementedException();
     }
 }

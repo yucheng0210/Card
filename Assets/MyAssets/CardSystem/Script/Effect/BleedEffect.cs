@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BleedEffect : IEffect
 {
@@ -64,5 +65,15 @@ public class BleedEffect : IEffect
     public Sprite SetIcon()
     {
         return Resources.Load<Sprite>("EffectImage/CantMove");
+    }
+
+    public string SetTitleText()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public string SetDescriptionText()
+    {
+        throw new System.NotImplementedException();
     }
 }
