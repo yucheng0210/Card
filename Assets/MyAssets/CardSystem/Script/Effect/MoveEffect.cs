@@ -51,7 +51,7 @@ public class MoveEffect : IEffect
             emptyPlace.GetComponent<Button>().onClick.RemoveListener(removeList[i]);
         }
         BattleManager.Instance.PlayerMoveCount -= moveCount;
-        UIManager.Instance.ClearCheckerboardColor(BattleManager.Instance.CurrentLocationID, value, BattleManager.CheckEmptyType.Move);
+        //UIManager.Instance.ClearCheckerboardColor(BattleManager.Instance.CurrentLocationID, value, BattleManager.CheckEmptyType.Move);
         BattleManager.Instance.CurrentLocationID = locationID;
         BattleManager.Instance.PlayerTrans.DOAnchorPos(destination, 0.5f);
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Attack);

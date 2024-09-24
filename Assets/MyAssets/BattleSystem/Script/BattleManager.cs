@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using UnityEngine.EventSystems;
+using UnityEngine.Events;
 
 public class BattleManager : Singleton<BattleManager>
 {
@@ -126,6 +128,26 @@ public class BattleManager : Singleton<BattleManager>
             EffectFactory.Instance.CreateEffect(key).ApplyEffect(enemyData.PassiveSkills[key], locationID);
         }
     }
+    public void SetEventTrigger(EventTrigger eventTrigger, UnityAction unityAction_1, UnityAction unityAction_2)
+    {
+        eventTrigger.triggers.Clear();
+        EventTrigger.Entry entryEnter = new EventTrigger.Entry();
+        EventTrigger.Entry entryExit = new EventTrigger.Entry();
+        entryEnter.eventID = EventTriggerType.PointerEnter;
+        entryExit.eventID = EventTriggerType.PointerExit;
+        entryEnter.callback.AddListener((arg) => { unityAction_1(); });
+        entryExit.callback.AddListener((arg) => { unityAction_2(); });
+        eventTrigger.triggers.Add(entryEnter);
+        eventTrigger.triggers.Add(entryExit);
+    }
+    public void ClearAllEventTriggers()
+    {
+        for (int i = 0; i < CheckerboardTrans.childCount; i++)
+        {
+            EventTrigger eventTrigger = CheckerboardTrans.GetChild(i).GetComponent<EventTrigger>();
+            eventTrigger.triggers.Clear();
+        }
+    }
     public void GetShield(CharacterData defender, int point)
     {
         defender.CurrentShield += point;
@@ -168,7 +190,6 @@ public class BattleManager : Singleton<BattleManager>
         int maxX = point.x + stepCount;
         int minY = point.y - stepCount;
         int maxY = point.y + stepCount;
-
         for (int x = minX; x <= maxX; x++)
         {
             for (int y = minY; y <= maxY; y++)
@@ -187,7 +208,6 @@ public class BattleManager : Singleton<BattleManager>
                 }
             }
         }
-
         return emptyPlaceList;
     }
     public enum CheckEmptyType

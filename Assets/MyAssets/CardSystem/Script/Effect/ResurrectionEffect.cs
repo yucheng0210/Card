@@ -57,11 +57,11 @@ public class ResurrectionEffect : IEffect
 
     public string SetTitleText()
     {
-        throw new System.NotImplementedException();
+        return "死這甦醒";
     }
 
     public string SetDescriptionText()
     {
-        throw new System.NotImplementedException();
+       return "以30%血量復活。";
     }
 }

@@ -67,11 +67,11 @@ public class ParasiticEffect : IEffect
 
     public string SetTitleText()
     {
-        throw new System.NotImplementedException();
+        return "孢子寄生";
     }
 
     public string SetDescriptionText()
     {
-        throw new System.NotImplementedException();
+        return "之後再寫。";
     }
 }

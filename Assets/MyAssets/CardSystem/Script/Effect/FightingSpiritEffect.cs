@@ -7,28 +7,29 @@ public class FightingSpiritEffect : IEffect
 {
     public void ApplyEffect(int value, string target)
     {
+        string typeName = GetType().Name;
         Dictionary<string, int> currentOnceBattlePositiveList = BattleManager.Instance.CurrentOnceBattlePositiveList;
-        if (currentOnceBattlePositiveList.ContainsKey(GetType().Name))
-            currentOnceBattlePositiveList[GetType().Name]++;
+        if (currentOnceBattlePositiveList.ContainsKey(typeName))
+            currentOnceBattlePositiveList[typeName]++;
         else
-            currentOnceBattlePositiveList.Add(GetType().Name, 1);
-        int damage = 8 * currentOnceBattlePositiveList[GetType().Name];
+            currentOnceBattlePositiveList.Add(typeName, 1);
+        int damage = 8 * currentOnceBattlePositiveList[typeName];
         BattleManager.Instance.TakeDamage(BattleManager.Instance.CurrentPlayerData, BattleManager.Instance.CurrentEnemyList[target], damage, target);
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
-
-    public string SetDescriptionText()
-    {
-        throw new System.NotImplementedException();
-    }
-
     public Sprite SetIcon()
     {
         return Resources.Load<Sprite>("EffectImage/FightingSpirit");
     }
 
+    public string SetDescriptionText()
+    {
+        return "戰意";
+    }
+
+
     public string SetTitleText()
     {
-        throw new System.NotImplementedException();
+        return "根據戰意的層數額外增加傷害。";
     }
 }

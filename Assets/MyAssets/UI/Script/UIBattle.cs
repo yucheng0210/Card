@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using DG.Tweening;
 using System.Linq;
 using UnityEngine.EventSystems;
+using UnityEngine.Events;
 
 public class UIBattle : UIBase
 {
@@ -106,7 +107,7 @@ public class UIBattle : UIBase
         EventManager.Instance.AddEventRegister(EventDefinition.eventEnemyTurn, EventEnemyTurn);
         EventManager.Instance.AddEventRegister(EventDefinition.eventMove, EventMove);
         //Hide();
-       StartGame();
+        StartGame();
     }
 
     private void StartGame()
@@ -122,15 +123,9 @@ public class UIBattle : UIBase
         for (int i = 0; i < battleInfoList.Count; i++)
         {
             int id = i;
-            battleInfoList[id].triggers.Clear();
-            EventTrigger.Entry entryEnter = new EventTrigger.Entry();
-            EventTrigger.Entry entryExit = new EventTrigger.Entry();
-            entryEnter.eventID = EventTriggerType.PointerEnter;
-            entryExit.eventID = EventTriggerType.PointerExit;
-            entryEnter.callback.AddListener((arg) => { battleInfoList[id].transform.GetChild(0).gameObject.SetActive(true); });
-            entryExit.callback.AddListener((arg) => { battleInfoList[id].transform.GetChild(0).gameObject.SetActive(false); });
-            battleInfoList[id].triggers.Add(entryEnter);
-            battleInfoList[id].triggers.Add(entryExit);
+            UnityAction unityAction_1 = () => { battleInfoList[id].transform.GetChild(0).gameObject.SetActive(true); };
+            UnityAction unityAction_2 = () => { battleInfoList[id].transform.GetChild(0).gameObject.SetActive(false); };
+            BattleManager.Instance.SetEventTrigger(battleInfoList[id], unityAction_1, unityAction_2);
         }
     }
     private void CheckEnemyInfo()
@@ -141,32 +136,21 @@ public class UIBattle : UIBase
             string location = BattleManager.Instance.ConvertCheckerboardPos(i);
             if (!BattleManager.Instance.CurrentEnemyList.ContainsKey(location))
                 continue;
+            //EnemyData enemyData = BattleManager.Instance.CurrentEnemyList[location];
             EventTrigger eventTrigger = checkerboardTrans.GetChild(i).GetComponent<EventTrigger>();
-            EnemyData enemyData = BattleManager.Instance.CurrentEnemyList[location];
-            EventTrigger.Entry entryEnter = new EventTrigger.Entry();
-            EventTrigger.Entry entryExit = new EventTrigger.Entry();
-            entryEnter.eventID = EventTriggerType.PointerEnter;
-            entryExit.eventID = EventTriggerType.PointerExit;
-            entryEnter.callback.AddListener((arg) => { RefreshEnemyInfo(location); });
-            entryExit.callback.AddListener((arg) =>
+            UnityAction unityAction_1 = () => { RefreshEnemyInfo(location); };
+            UnityAction unityAction_2 = () =>
             {
                 if (BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack)
                     return;
-                UIManager.Instance.ClearCheckerboardColor(location, enemyData.StepCount, BattleManager.CheckEmptyType.EnemyAttack);
-            });
-            eventTrigger.triggers.Add(entryEnter);
-            eventTrigger.triggers.Add(entryExit);
+                //UIManager.Instance.ClearCheckerboardColor(location, enemyData.StepCount, BattleManager.CheckEmptyType.EnemyAttack);
+                UIManager.Instance.ClearMoveClue(false);
+            };
+            BattleManager.Instance.SetEventTrigger(eventTrigger, unityAction_1, unityAction_2);
             //checkerboardTrans.GetChild(i).GetComponent<Button>().onClick.AddListener(() => RefreshEnemyInfo(location));
         }
     }
-    private void ClearAllEventTriggers()
-    {
-        for (int i = 0; i < checkerboardTrans.childCount; i++)
-        {
-            EventTrigger eventTrigger = checkerboardTrans.GetChild(i).GetComponent<EventTrigger>();
-            eventTrigger.triggers.Clear();
-        }
-    }
+
     private void RefreshEnemyInfo(string location)
     {
         if (BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack)
@@ -188,9 +172,11 @@ public class UIBattle : UIBase
         }
         for (int i = 0; i < enemyData.MaxPassiveSkillsList.Count; i++)
         {
+            string key = enemyData.MaxPassiveSkillsList.ElementAt(i).Key;
             Image passive = Instantiate(negativePrefab, enemyPassiveGroupTrans).BattleStateImage;
-            Sprite image = EffectFactory.Instance.CreateEffect(enemyData.MaxPassiveSkillsList[i]).SetIcon();
+            Sprite image = EffectFactory.Instance.CreateEffect(key).SetIcon();
             passive.sprite = image;
+            UpdateStateUI(enemyPassiveGroupTrans, enemyData.MaxPassiveSkillsList, negativePrefab);
         }
     }
 
@@ -222,7 +208,7 @@ public class UIBattle : UIBase
             {
                 BattleManager.Instance.CurrentEnemyList.Remove(key);
                 Destroy(enemyData.EnemyTrans.gameObject, 1);
-                ClearAllEventTriggers();
+                BattleManager.Instance.ClearAllEventTriggers();
                 // CheckBattleInfo();
                 CheckEnemyInfo();
             }
@@ -346,20 +332,20 @@ public class UIBattle : UIBase
         BattleManager.Instance.ManaMultiplier = 1;
         BattleManager.Instance.CurrentConsumeMana = 0;
         BattleManager.Instance.PlayerMoveCount++;
-        ClearAllEventTriggers();
+        BattleManager.Instance.ClearAllEventTriggers();
         CheckEnemyInfo();
         //  CheckBattleInfo();
     }
     private void EventEnemyTurn(params object[] args)
     {
         UIManager.Instance.ClearMoveClue(true);
-        ClearAllEventTriggers();
+        BattleManager.Instance.ClearAllEventTriggers();
     }
     private void EventMove(params object[] args)
     {
         BattleManager.Instance.RefreshCheckerboardList();
         UIManager.Instance.ClearMoveClue(true);
-        ClearAllEventTriggers();
+        BattleManager.Instance.ClearAllEventTriggers();
         CheckEnemyInfo();
         // CheckBattleInfo();
     }
@@ -449,17 +435,11 @@ public class UIBattle : UIBase
             stateImage.sprite = EffectFactory.Instance.CreateEffect(key).SetIcon();
             stateText.text = value.ToString();
             EventTrigger eventTrigger = infoGroupTrans.GetComponent<EventTrigger>();
-            eventTrigger.triggers.Clear();
-            EventTrigger.Entry entryEnter = new EventTrigger.Entry();
-            EventTrigger.Entry entryExit = new EventTrigger.Entry();
-            entryEnter.eventID = EventTriggerType.PointerEnter;
-            entryExit.eventID = EventTriggerType.PointerExit;
+            UnityAction unityAction_1 = () => { infoGroupTrans.GetChild(0).gameObject.SetActive(true); };
+            UnityAction unityAction_2 = () => { infoGroupTrans.GetChild(0).gameObject.SetActive(false); };
+            BattleManager.Instance.SetEventTrigger(eventTrigger, unityAction_1, unityAction_2);
             infoTitle.text = EffectFactory.Instance.CreateEffect(key).SetTitleText();
             infoDescription.text = EffectFactory.Instance.CreateEffect(key).SetDescriptionText();
-            entryEnter.callback.AddListener((arg) => { infoGroupTrans.GetChild(0).gameObject.SetActive(true); });
-            entryExit.callback.AddListener((arg) => { infoGroupTrans.GetChild(0).gameObject.SetActive(false); });
-            eventTrigger.triggers.Add(entryEnter);
-            eventTrigger.triggers.Add(entryExit);
         }
     }
 

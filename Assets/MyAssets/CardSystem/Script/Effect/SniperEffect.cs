@@ -53,11 +53,11 @@ public class SniperEffect : IEffect
 
     public string SetTitleText()
     {
-        throw new System.NotImplementedException();
+        return "地圖炮";
     }
 
     public string SetDescriptionText()
     {
-        throw new System.NotImplementedException();
+        return "距離越遠傷害越高。";
     }
 }

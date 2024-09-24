@@ -150,7 +150,8 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             leftCard.GetComponent<RectTransform>().DOAnchorPosX(BattleManager.Instance.CardPositionList[i].x, moveTime);
         }
         string id = BattleManager.Instance.CurrentLocationID;
-        UIManager.Instance.ClearCheckerboardColor(id, DataManager.Instance.CardList[CardID].CardAttackDistance, BattleManager.CheckEmptyType.PlayerAttack);
+        // UIManager.Instance.ClearCheckerboardColor(id, DataManager.Instance.CardList[CardID].CardAttackDistance, BattleManager.CheckEmptyType.PlayerAttack);
+        UIManager.Instance.ClearMoveClue(false);
     }
 
     public void OnPointerDown(PointerEventData eventData)

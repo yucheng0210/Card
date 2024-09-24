@@ -39,11 +39,11 @@ public class IncreaseHealth : IEffect
 
     public string SetTitleText()
     {
-        throw new System.NotImplementedException();
+        return "治癒";
     }
 
     public string SetDescriptionText()
     {
-        throw new System.NotImplementedException();
+        return "回復血量。";
     }
 }

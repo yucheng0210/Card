@@ -31,6 +31,6 @@ public class CantMoveEffect : IEffect
 
     public string SetTitleText()
     {
-        return "禁止移動";
+        return "禁止移動。";
     }
 }

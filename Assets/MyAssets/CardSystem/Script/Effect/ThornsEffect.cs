@@ -66,11 +66,11 @@ public class ThornsEffect : IEffect
 
     public string SetTitleText()
     {
-        throw new System.NotImplementedException();
+        return "荊棘反傷";
     }
 
     public string SetDescriptionText()
     {
-        throw new System.NotImplementedException();
+        return "受到傷害時，將部分比例的傷害反彈回去。";
     }
 }

@@ -52,11 +52,11 @@ public class FuriousEffect : IEffect
 
     public string SetTitleText()
     {
-        throw new System.NotImplementedException();
+        return "狂怒";
     }
 
     public string SetDescriptionText()
     {
-        throw new System.NotImplementedException();
+        return "每次攻擊提升攻擊力。";
     }
 }
