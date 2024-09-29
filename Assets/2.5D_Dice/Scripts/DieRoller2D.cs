@@ -6,7 +6,7 @@ public class DieRoller2D : MonoBehaviour
 {
     public event Action<int> OnRoll;
     public int Result { get; private set; }
-    
+
     [SerializeField] Vector2 _rollForceMin = new Vector2(0, 350);
     [SerializeField] Vector2 _rollForceMax = new Vector2(0, 450);
     [SerializeField] bool _usePhysics = true;
@@ -31,9 +31,9 @@ public class DieRoller2D : MonoBehaviour
     static readonly int RollingAnimation = Animator.StringToHash("Rolling");
     static readonly int[] ResultAnimations = new[]
     {
-        Animator.StringToHash("LandOn1"), 
+        Animator.StringToHash("LandOn1"),
         Animator.StringToHash("LandOn2"),
-        Animator.StringToHash("LandOn3"), 
+        Animator.StringToHash("LandOn3"),
         Animator.StringToHash("LandOn4"),
         Animator.StringToHash("LandOn5"),
         Animator.StringToHash("LandOn6")
@@ -69,7 +69,7 @@ public class DieRoller2D : MonoBehaviour
     void RollWithPhysics()
     {
         _rigidbody2D.isKinematic = false;
-        _rigidbody2D.AddForce(GetRollForce());
+        _rigidbody2D.AddForce(GetRollForce(), ForceMode2D.Impulse);
         _animator.SetTrigger(RollingAnimation);
         _isRolling = true;
     }
@@ -80,7 +80,7 @@ public class DieRoller2D : MonoBehaviour
         _isRolling = true;
         _timeRemaining = _rollTime;
     }
-    
+
     void FinishRolling()
     {
         _isRolling = false;
@@ -89,7 +89,7 @@ public class DieRoller2D : MonoBehaviour
         _animator.SetTrigger(ResultAnimations[Result - 1]);
         OnRoll?.Invoke(Result);
     }
-    
+
     Vector2 GetRollForce()
     {
         return new Vector2(

@@ -138,6 +138,7 @@ public class UIExplore : UIBase
     }
     private void Shop()
     {
+        // EventManager.Instance.DispatchEvent(EventDefinition.eventDialog,"");
         UIManager.Instance.ShowUI("UIShop");
         UI.SetActive(false);
     }
