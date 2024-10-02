@@ -178,10 +178,10 @@ public class UIExplore : UIBase
     }
     private void EventRefreshUI(params object[] args)
     {
-        int id = DataManager.Instance.PlayerID;
+        PlayerData playerData = BattleManager.Instance.CurrentPlayerData;
         cardBagCountText.text = DataManager.Instance.CardBag.Count.ToString();
-        health.DOFillAmount((float)((float)BattleManager.Instance.CurrentPlayerData.CurrentHealth / BattleManager.Instance.CurrentPlayerData.MaxHealth), 0.5f);
-        healthText.text = BattleManager.Instance.CurrentPlayerData.CurrentHealth.ToString() + "/" + BattleManager.Instance.CurrentPlayerData.MaxHealth.ToString();
+        health.DOFillAmount((float)((float)playerData.CurrentHealth / playerData.MaxHealth), 0.5f);
+        healthText.text = playerData.CurrentHealth.ToString() + "/" + playerData.MaxHealth.ToString();
         moneyText.text = DataManager.Instance.MoneyCount.ToString();
     }
 }

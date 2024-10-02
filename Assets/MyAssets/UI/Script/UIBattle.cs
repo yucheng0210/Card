@@ -23,15 +23,6 @@ public class UIBattle : UIBase
     private Text shieldText;
 
     [SerializeField]
-    private Image health;
-
-    [SerializeField]
-    private Text healthText;
-
-    [SerializeField]
-    private Text battleCardBagCountText;
-
-    [SerializeField]
     private Text usedCardBagCountText;
     [SerializeField]
     private Text removeCardBagCountText;
@@ -392,10 +383,9 @@ public class UIBattle : UIBase
         // 更新UI文本
         actionPointText.text = $"{playerData.CurrentActionPoint}/{playerData.MaxActionPoint}";
         manaPointText.text = playerData.Mana.ToString();
-        health.DOFillAmount((float)playerData.CurrentHealth / playerData.MaxHealth, 0.5f);
-        healthText.text = $"{playerData.CurrentHealth}/{playerData.MaxHealth}";
+       /* health.DOFillAmount((float)playerData.CurrentHealth / playerData.MaxHealth, 0.5f);
+        healthText.text = $"{playerData.CurrentHealth}/{playerData.MaxHealth}";*/
         shieldText.text = playerData.CurrentShield.ToString();
-        battleCardBagCountText.text = cardBag.Count.ToString();
         usedCardBagCountText.text = usedCardBag.Count.ToString();
         removeCardBagCountText.text = removeCardBag.Count.ToString();
 
