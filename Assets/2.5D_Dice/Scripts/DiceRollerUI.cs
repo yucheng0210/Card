@@ -5,21 +5,29 @@ using UnityEngine.UI;
 public class DiceRollerUI : UIBase
 {
     [SerializeField]
-    Button _rollButton, sumBetButton, doublesBetButton, showButton, tenButton, fiftyButton, hundredButton, allinButton, bigButton, smallButton, yesButton, noButton;
+    Button _rollButton, sumBetButton, doublesBetButton, showButton, tenButton, fiftyButton, hundredButton, allinButton, bigButton
+     , smallButton, yesButton, noButton;
     [SerializeField]
     Text _resultsText, _doublesText, gambleResultsText;
     [SerializeField]
     DiceRoller2D _diceRoller;
     [SerializeField]
     Transform gambleTypeTrans, sumBetTrans, doublesBetTrans, betMoneyTrans;
-
-    private string currentDialogID = "GAMBLE_0";
-
+    private int betMoneyCount;
+    private float currentOdds;
+    private string guest = "";
+    // private string currentDialogID = "GAMBLE_0";
+    private enum GambleType
+    {
+        SumBet,
+        DoublesBet
+    }
+    private GambleType currentType;
     void OnEnable()
     {
-        RegisterButtonListeners();
         _diceRoller.OnRoll += HandleRoll;
         showButton.onClick.AddListener(Show);
+        RegisterButtonListeners();
     }
 
     void OnDisable()
@@ -30,6 +38,11 @@ public class DiceRollerUI : UIBase
 
     private void RegisterButtonListeners()
     {
+        betMoneyCount = 0;
+        _resultsText.text = "";
+        _doublesText.text = "";
+        gambleResultsText.text = "";
+        currentOdds = 1;
         tenButton.onClick.AddListener(() => BetMoney(10));
         fiftyButton.onClick.AddListener(() => BetMoney(50));
         hundredButton.onClick.AddListener(() => BetMoney(100));
@@ -37,10 +50,10 @@ public class DiceRollerUI : UIBase
         sumBetButton.onClick.AddListener(SumBet);
         doublesBetButton.onClick.AddListener(DoublesBet);
 
-        bigButton.onClick.AddListener(RollDice);
-        smallButton.onClick.AddListener(RollDice);
-        yesButton.onClick.AddListener(RollDice);
-        noButton.onClick.AddListener(RollDice);
+        bigButton.onClick.AddListener(() => RollDice("大", 1.5f));
+        smallButton.onClick.AddListener(() => RollDice("小", 1.5f));
+        yesButton.onClick.AddListener(() => RollDice("True", 5));
+        noButton.onClick.AddListener(() => RollDice("False", 5));
     }
 
     private void UnregisterButtonListeners()
@@ -62,31 +75,35 @@ public class DiceRollerUI : UIBase
     public override void Show()
     {
         base.Show();
-        EventManager.Instance.DispatchEvent(EventDefinition.eventDialog, currentDialogID);
+        //EventManager.Instance.DispatchEvent(EventDefinition.eventDialog, currentDialogID);
     }
 
     private void HandleRoll(int rollResult)
     {
         _resultsText.text = $"點數為 {rollResult}";
         _doublesText.text = _diceRoller.Doubles ? "Doubles!" : "";
-        gambleResultsText.text = $"{_diceRoller.SumBet}，{(_diceRoller.IsWinner ? "你贏了!!!" : "你輸了...")}";
+        switch (currentType)
+        {
+            case GambleType.SumBet:
+                _diceRoller.IsWinner = _diceRoller.SumBet == guest ? true : false;
+                gambleResultsText.text = $"{_diceRoller.SumBet}，{(_diceRoller.IsWinner ? "你贏了!!!" : "你輸了...")}";
+                break;
+            case GambleType.DoublesBet:
+                _diceRoller.IsWinner = _diceRoller.Doubles.ToString() == guest ? true : false;
+                gambleResultsText.text = $"{(_diceRoller.Doubles ? "Doubles!" : "Not Doubles!")}，{(_diceRoller.IsWinner ? "你贏了!!!" : "你輸了...")}";
+                break;
+        }
+        if (_diceRoller.IsWinner)
+            DataManager.Instance.MoneyCount += (int)(betMoneyCount * currentOdds);
+        EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
 
-    private void RollDice()
+    private void RollDice(string gamble, float odds)
     {
-        ClearResults();
+        UnregisterButtonListeners();
         _diceRoller.RollDice();
-    }
-
-    private void ClearResults()
-    {
-        bigButton.onClick.RemoveAllListeners();
-        smallButton.onClick.RemoveAllListeners();
-        yesButton.onClick.RemoveAllListeners();
-        noButton.onClick.RemoveAllListeners();
-
-        _resultsText.text = "";
-        _doublesText.text = "";
+        guest = gamble;
+        currentOdds = odds;
     }
 
     private void BetMoney(int amount)
@@ -98,22 +115,24 @@ public class DiceRollerUI : UIBase
         betMoneyTrans.gameObject.SetActive(false);
 
         DataManager.Instance.MoneyCount -= amount;
+        betMoneyCount = amount;
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
 
     private void SumBet()
     {
-        ShowBetType(sumBetTrans);
+        ShowBetType(sumBetTrans, GambleType.SumBet);
     }
 
     private void DoublesBet()
     {
-        ShowBetType(doublesBetTrans);
+        ShowBetType(doublesBetTrans, GambleType.DoublesBet);
     }
 
-    private void ShowBetType(Transform betType)
+    private void ShowBetType(Transform betType, GambleType gambleType)
     {
         betType.gameObject.SetActive(true);
         gambleTypeTrans.gameObject.SetActive(false);
+        currentType = gambleType;
     }
 }
