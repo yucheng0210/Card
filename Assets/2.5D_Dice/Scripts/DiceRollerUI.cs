@@ -6,7 +6,7 @@ public class DiceRollerUI : UIBase
 {
     [SerializeField]
     Button _rollButton, sumBetButton, doublesBetButton, showButton, tenButton, fiftyButton, hundredButton, allinButton, bigButton
-     , smallButton, yesButton, noButton;
+     , smallButton, yesButton, noButton, exitButton;
     [SerializeField]
     Text _resultsText, _doublesText, gambleResultsText;
     [SerializeField]
@@ -70,6 +70,7 @@ public class DiceRollerUI : UIBase
         yesButton.onClick.RemoveAllListeners();
         noButton.onClick.RemoveAllListeners();
         showButton.onClick.RemoveAllListeners();
+        exitButton.onClick.RemoveAllListeners();
     }
 
     public override void Show()
@@ -96,6 +97,9 @@ public class DiceRollerUI : UIBase
         if (_diceRoller.IsWinner)
             DataManager.Instance.MoneyCount += (int)(betMoneyCount * currentOdds);
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
+        exitButton.gameObject.SetActive(true);
+        exitButton.onClick.AddListener(() => BattleManager.Instance.NextLevel("DiceRollerUI"));
+        exitButton.onClick.AddListener(() => exitButton.gameObject.SetActive(false));
     }
 
     private void RollDice(string gamble, float odds)

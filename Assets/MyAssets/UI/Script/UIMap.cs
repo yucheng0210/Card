@@ -17,9 +17,9 @@ public class UIMap : UIBase
     {
         { "BATTLE", 5 },
         { "BOSS", 5 },
-        { "RANDOM", 5 },
+        { "RANDOM", 75 },
         { "RECOVER", 5 },
-        { "SHOP",75 },
+        { "SHOP",5 },
         {"TREASURE",5}
     };
     protected override void Start()
@@ -122,12 +122,12 @@ public class UIMap : UIBase
                 switch (key)
                 {
                     case "BATTLE":
-                       /* if (count > 10)
-                            currentIndex = hardRandomIndex;
-                        else if (count > 5)*/
-                            currentIndex = normalRandomIndex;
-                       /* else
-                            currentIndex = simpleRandomIndex;*/
+                        /* if (count > 10)
+                             currentIndex = hardRandomIndex;
+                         else if (count > 5)*/
+                        currentIndex = normalRandomIndex;
+                        /* else
+                             currentIndex = simpleRandomIndex;*/
                         break;
                     case "BOSS":
                         currentIndex = Random.Range(2001, 2003);
@@ -244,13 +244,13 @@ public class UIMap : UIBase
                 if (!CantEnter(i, j))
                 {
                     effectList[i][j].Play();
-                    Debug.Log("Count:" + i + "  " + "ID:" + j);
+                    //Debug.Log("Count:" + i + "  " + "ID:" + j);
                 }
                 else
                     effectList[i][j].Pause();
             }
         }
-        Debug.Log("CurrentLevel: " + MapManager.Instance.LevelCount);
+        //Debug.Log("CurrentLevel: " + MapManager.Instance.LevelCount);
     }
     private void EntryPoint(int count, int id)
     {

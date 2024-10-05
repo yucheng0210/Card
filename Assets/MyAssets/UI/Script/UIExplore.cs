@@ -12,6 +12,8 @@ public class UIExplore : UIBase
     [SerializeField]
     private GameObject corpse;
     [SerializeField]
+    private Button corpseButton;
+    [SerializeField]
     private GameObject recoverMenu;
     [Header("休息")]
     [SerializeField]
@@ -24,6 +26,7 @@ public class UIExplore : UIBase
     private Button restConfirmButton;
     [SerializeField]
     private Button recoverExitButton;
+
     [Header("玩家")]
     [SerializeField]
     private Text cardBagCountText;
@@ -76,13 +79,18 @@ public class UIExplore : UIBase
                 Battle();
                 break;
             case 2:
-                corpse.SetActive(true);
-                corpse.GetComponentInChildren<Button>().onClick.AddListener(() => EventManager.Instance.DispatchEvent(EventDefinition.eventBattleWin));
-                corpse.GetComponentInChildren<Button>().onClick.AddListener(() => corpse.SetActive(false));
+                Corpse();
                 break;
         }
     }
-
+    private void Corpse()
+    {
+        UI.SetActive(true);
+        corpse.SetActive(true);
+        corpseButton.onClick.AddListener(() => EventManager.Instance.DispatchEvent(EventDefinition.eventBattleWin));
+        corpseButton.onClick.AddListener(() => corpse.SetActive(false));
+        corpseButton.onClick.AddListener(() => corpseButton.onClick.RemoveAllListeners());
+    }
     private void Battle()
     {
         //BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Dialog);

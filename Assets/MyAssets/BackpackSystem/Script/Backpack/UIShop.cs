@@ -15,6 +15,8 @@ public class UIShop : UIBase
     private Button exitButton;
     [SerializeField]
     private CardItem cardPrefab;
+    [SerializeField]
+    private Button potionPrefab;
     protected override void Start()
     {
         base.Start();
@@ -28,6 +30,7 @@ public class UIShop : UIBase
     private void RefreshMerchandise()
     {
         Dictionary<int, CardData> cardList = DataManager.Instance.CardList;
+        Dictionary<int, Item> itemList = DataManager.Instance.ItemList;
         for (int i = 0; i < cardGroupTrans.childCount; i++)
         {
             Destroy(cardGroupTrans.GetChild(i).gameObject);
@@ -46,6 +49,20 @@ public class UIShop : UIBase
             Button cardButton = cardItem.GetComponent<Button>();
             cardButton.onClick.AddListener(() => AddCard(cardItem.CardID, cardButton.gameObject));
         }
+        for (int i = 0; i < potionGroupTrans.childCount; i++)
+        {
+            Destroy(potionGroupTrans.GetChild(i).gameObject);
+        }
+        for (int i = 0; i < 6; i++)
+        {
+            int randomIndex = Random.Range(0, itemList.Count);
+            KeyValuePair<int, Item> randomItem = itemList.ElementAt(randomIndex);
+            Item potionItem = itemList[randomItem.Key];
+            Button potion = Instantiate(potionPrefab, potionGroupTrans);
+            Text potionPriceText = potion.transform.GetChild(potion.transform.childCount - 1).GetComponent<Text>();
+            potionPriceText.text = "$" + potionItem.ItemBuyPrice.ToString();
+            potion.onClick.AddListener(() => AddPotion(potionItem.ItemID, potion.gameObject));
+        }
     }
     private void AddCard(int cardID, GameObject card)
     {
@@ -55,6 +72,16 @@ public class UIShop : UIBase
         DataManager.Instance.MoneyCount -= cardData.CardBuyPrice;
         DataManager.Instance.CardBag.Add(cardData);
         Destroy(card);
+        EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
+    }
+    private void AddPotion(int potionID, GameObject potion)
+    {
+        Item item = DataManager.Instance.ItemList[potionID];
+        if (DataManager.Instance.MoneyCount < item.ItemBuyPrice)
+            return;
+        DataManager.Instance.MoneyCount -= item.ItemBuyPrice;
+        DataManager.Instance.PotionBag.Add(item);
+        Destroy(potion);
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
 }
