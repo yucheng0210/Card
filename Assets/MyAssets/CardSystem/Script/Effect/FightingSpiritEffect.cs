@@ -17,10 +17,6 @@ public class FightingSpiritEffect : IEffect
         BattleManager.Instance.TakeDamage(BattleManager.Instance.CurrentPlayerData, BattleManager.Instance.CurrentEnemyList[target], damage, target);
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
-    public Sprite SetIcon()
-    {
-        return Resources.Load<Sprite>("EffectImage/FightingSpirit");
-    }
 
     public string SetDescriptionText()
     {

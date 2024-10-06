@@ -59,12 +59,6 @@ public class ParasiticEffect : IEffect
         BattleManager.Instance.TakeDamage(parasiteRepresent, host, currentDamage, BattleManager.Instance.CurrentLocationID);
     }
 
-    public Sprite SetIcon()
-    {
-        // Placeholder icon loading, can be modified as needed
-        return Resources.Load<Sprite>("EffectImage/CantMove");
-    }
-
     public string SetTitleText()
     {
         return "孢子寄生";

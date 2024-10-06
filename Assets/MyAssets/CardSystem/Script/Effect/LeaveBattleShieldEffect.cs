@@ -46,11 +46,6 @@ public class LeaveBattleShieldEffect : IEffect
         wasAttackedLastTurn = false;
     }
 
-    public Sprite SetIcon()
-    {
-        return Resources.Load<Sprite>("EffectImage/ShieldIcon");
-    }
-
     public string SetTitleText()
     {
         throw new System.NotImplementedException();

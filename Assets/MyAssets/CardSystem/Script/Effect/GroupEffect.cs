@@ -22,10 +22,6 @@ public class GroupEffect : IEffect
         enemyData.CurrentAttack = enemyData.MinAttack * (1 + minionsCount);
         enemyData.DamageReduction = 15 * (1 + minionsCount);
     }
-    public Sprite SetIcon()
-    {
-        return Resources.Load<Sprite>("EffectImage/CantMove");
-    }
 
     public string SetTitleText()
     {

@@ -49,7 +49,7 @@ public class ThornsEffect : IEffect
 
         var damage = (int)args[1];
         var counterattackDamage = Mathf.RoundToInt(damage * (counterattackDamageMultiplier / 100f));
-        
+
         var counterattackTarget = (CharacterData)args[4];
         var targetLocationID = currentEnemyList.FirstOrDefault(x => x.Value == counterattackTarget).Key ?? BattleManager.Instance.CurrentLocationID;
 
@@ -58,12 +58,6 @@ public class ThornsEffect : IEffect
         if (!currentEnemyList.ContainsKey(counterattackerID) && BattleManager.Instance.CurrentLocationID != counterattackerID)
             EventManager.Instance.RemoveEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
     }
-
-    public Sprite SetIcon()
-    {
-        return Resources.Load<Sprite>("EffectImage/FightingSpirit");
-    }
-
     public string SetTitleText()
     {
         return "荊棘反傷";

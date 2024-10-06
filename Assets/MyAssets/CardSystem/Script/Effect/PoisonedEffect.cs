@@ -64,12 +64,6 @@ public class PoisonedEffect : IEffect
         if (currentNegativeState.ContainsKey(typeName))
             currentNegativeState[typeName] *= 2;
     }
-
-    public Sprite SetIcon()
-    {
-        return Resources.Load<Sprite>("EffectImage/CantMove");
-    }
-
     public string SetTitleText()
     {
         throw new System.NotImplementedException();

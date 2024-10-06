@@ -32,11 +32,6 @@ public class MoveEffect : IEffect
         throw new NotImplementedException();
     }
 
-    public Sprite SetIcon()
-    {
-        throw new NotImplementedException();
-    }
-
     public string SetTitleText()
     {
         throw new NotImplementedException();

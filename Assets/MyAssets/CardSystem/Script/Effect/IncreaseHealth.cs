@@ -32,11 +32,6 @@ public class IncreaseHealth : IEffect
         return null;
     }
 
-    public Sprite SetIcon()
-    {
-        return Resources.Load<Sprite>("EffectImage/CantMove");
-    }
-
     public string SetTitleText()
     {
         return "治癒";

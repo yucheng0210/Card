@@ -19,11 +19,6 @@ public class CantMoveEffect : IEffect
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
 
-    public Sprite SetIcon()
-    {
-        // 加載並返回效果圖標
-        return Resources.Load<Sprite>("EffectImage/CantMove");
-    }
     public string SetDescriptionText()
     {
         return "禁錮";

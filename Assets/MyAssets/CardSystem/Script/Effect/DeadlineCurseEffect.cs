@@ -30,10 +30,6 @@ public class DeadlineCurseEffect : IEffect
             EventManager.Instance.RemoveEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
         }
     }
-    public Sprite SetIcon()
-    {
-        return Resources.Load<Sprite>("CardImage/FireBall");
-    }
 
     public string SetTitleText()
     {

@@ -15,11 +15,6 @@ public class BurnEffect : IEffect
         throw new System.NotImplementedException();
     }
 
-    public Sprite SetIcon()
-    {
-        throw new System.NotImplementedException();
-    }
-
     public string SetTitleText()
     {
         throw new System.NotImplementedException();

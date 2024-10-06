@@ -16,11 +16,6 @@ public class CreateMinionsEffect : IEffect
         throw new System.NotImplementedException();
     }
 
-    public Sprite SetIcon()
-    {
-        return Resources.Load<Sprite>("EffectImage/CantMove");
-    }
-
     public string SetTitleText()
     {
         throw new System.NotImplementedException();

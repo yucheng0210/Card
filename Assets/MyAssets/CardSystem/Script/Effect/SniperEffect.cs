@@ -45,11 +45,6 @@ public class SniperEffect : IEffect
         enemyData.CurrentAttack = enemyData.MinAttack + Mathf.RoundToInt(enemyData.MinAttack * (distance - 1) * (attackMultiplier / 100f));
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
-    public Sprite SetIcon()
-    {
-        // Implement SetIcon method or remove if not needed
-        return Resources.Load<Sprite>("EffectImage/SniperEffect");
-    }
 
     public string SetTitleText()
     {

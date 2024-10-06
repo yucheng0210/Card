@@ -17,10 +17,10 @@ public class UIMap : UIBase
     {
         { "BATTLE", 5 },
         { "BOSS", 5 },
-        { "RANDOM", 75 },
+        { "RANDOM", 5 },
         { "RECOVER", 5 },
         { "SHOP",5 },
-        {"TREASURE",5}
+        {"TREASURE",75}
     };
     protected override void Start()
     {

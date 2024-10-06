@@ -1,122 +1,188 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+
 public class UIExplore : UIBase
 {
     [Header("隨機事件")]
-    [SerializeField]
-    private GameObject corpse;
-    [SerializeField]
-    private Button corpseButton;
-    [SerializeField]
-    private GameObject recoverMenu;
+    [SerializeField] private GameObject corpse;
+    [SerializeField] private Button corpseButton;
+    [SerializeField] private GameObject recoverMenu;
+
     [Header("休息")]
-    [SerializeField]
-    private Button restButton;
-    [SerializeField]
-    private Button removeCardButton;
-    [SerializeField]
-    private GameObject restMenu;
-    [SerializeField]
-    private Button restConfirmButton;
-    [SerializeField]
-    private Button recoverExitButton;
+    [SerializeField] private Button restButton;
+    [SerializeField] private Button removeCardButton;
+    [SerializeField] private GameObject restMenu;
+    [SerializeField] private Button restConfirmButton;
+    [SerializeField] private Button recoverExitButton;
 
     [Header("玩家")]
-    [SerializeField]
-    private Text cardBagCountText;
-    [SerializeField]
-    private Image health;
+    [SerializeField] private Text cardBagCountText;
+    [SerializeField] private Image health;
+    [SerializeField] private Text healthText;
+    [SerializeField] private Text moneyText;
 
-    [SerializeField]
-    private Text healthText;
-    [SerializeField]
-    private Text moneyText;
     [Header("寶藏")]
-    [SerializeField]
-    private GameObject treasure;
+    [SerializeField] private GameObject treasure;
 
     protected override void Start()
     {
         base.Start();
-        EventManager.Instance.AddEventRegister(EventDefinition.eventExplore, EventExplore);
-        // exitButton.onClick.AddListener(ExitExplore);
+        RegisterEvents();
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.None);
-        RecoverInitialize();
-        EventManager.Instance.AddEventRegister(EventDefinition.eventRefreshUI, EventRefreshUI);
+        InitializeRecovery();
     }
 
-    private void HideAllUI()
+    private void RegisterEvents()
     {
-        for (int i = 1; i < UI.transform.childCount; i++)
+        EventManager.Instance.AddEventRegister(EventDefinition.eventExplore, OnExploreEvent);
+        EventManager.Instance.AddEventRegister(EventDefinition.eventRefreshUI, RefreshUI);
+    }
+
+    private void OnExploreEvent(params object[] args)
+    {
+        switch (args[0])
         {
-            UI.transform.GetChild(i).gameObject.SetActive(false);
+            case "DIALOG":
+                OpenDialog();
+                break;
+            case "RANDOM":
+                TriggerRandomEvent();
+                break;
+            case "BATTLE":
+                StartBattle();
+                break;
+            case "RECOVER":
+                OpenRecoverMenu();
+                break;
+            case "BOSS":
+                StartBossBattle();
+                break;
+            case "SHOP":
+                OpenShop();
+                break;
+            case "TREASURE":
+                OpenTreasure();
+                break;
         }
     }
 
-    private void Dialog()
+    private void OpenDialog()
     {
-        //entrance.SetActive(true);
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Dialog);
     }
 
-    private void Random()
+    private void TriggerRandomEvent()
     {
-        //BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Dialog);
-
-        int randomIndex = UnityEngine.Random.Range(0, 3);
+        int randomIndex = Random.Range(0, 3);
         switch (randomIndex)
         {
             case 0:
-                Recover();
+                OpenRecoverMenu();
                 break;
             case 1:
-                Battle();
+                StartBattle();
                 break;
             case 2:
-                Corpse();
+                ShowCorpse();
                 break;
         }
     }
-    private void Corpse()
+
+    private void ShowCorpse()
     {
         UI.SetActive(true);
         corpse.SetActive(true);
-        corpseButton.onClick.AddListener(() => EventManager.Instance.DispatchEvent(EventDefinition.eventBattleWin));
-        corpseButton.onClick.AddListener(() => corpse.SetActive(false));
-        corpseButton.onClick.AddListener(() => corpseButton.onClick.RemoveAllListeners());
+        corpseButton.onClick.AddListener(OnCorpseButtonClicked);
     }
-    private void Battle()
+
+    private void OnCorpseButtonClicked()
     {
-        //BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Dialog);
+        EventManager.Instance.DispatchEvent(EventDefinition.eventBattleWin);
+        corpse.SetActive(false);
+        corpseButton.onClick.RemoveAllListeners();
+    }
+
+    private void StartBattle()
+    {
         UIManager.Instance.ShowUI("UIBattle");
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.BattleInitial);
         UI.SetActive(false);
     }
-    private void RecoverInitialize()
+
+    private void StartBossBattle()
     {
-        int playerID = DataManager.Instance.PlayerID;
-        int recoverCount = (int)(BattleManager.Instance.CurrentPlayerData.MaxHealth * 0.35f);
-        int currentRemoveID = UIManager.Instance.CurrentRemoveID;
-        UnityEngine.Events.UnityAction unityAction = () => RemoveSuccess(BattleManager.Instance.CardMenuTrans.GetChild(currentRemoveID).gameObject);
-        restButton.onClick.AddListener(() => restMenu.SetActive(true));
-        restButton.onClick.AddListener(() => restButton.gameObject.SetActive(false));
-        restButton.onClick.AddListener(() => removeCardButton.gameObject.SetActive(false));
-        //removeCardButton.onClick.AddListener(() => UIManager.Instance.RefreshCardBag());
-        removeCardButton.onClick.AddListener(() => UIManager.Instance.SelectCard(unityAction, false));
-        restConfirmButton.onClick.AddListener(() => BattleManager.Instance.Recover(BattleManager.Instance.CurrentPlayerData, recoverCount));
-        restConfirmButton.onClick.AddListener(() => recoverExitButton.gameObject.SetActive(true));
-        restConfirmButton.onClick.AddListener(() => restMenu.SetActive(false));
-        restConfirmButton.onClick.AddListener(() => EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI));
-        recoverExitButton.onClick.AddListener(() => recoverMenu.SetActive(false));
+        StartBattle(); // Boss戰也使用相同的流程
+    }
+
+    private void OpenShop()
+    {
+        UIManager.Instance.ShowUI("UIShop");
+        UI.SetActive(false);
+    }
+
+    private void OpenTreasure()
+    {
+        treasure.SetActive(true);
+        treasure.GetComponentInChildren<Button>().onClick.AddListener(OnTreasureButtonClicked);
+    }
+
+    private void OnTreasureButtonClicked()
+    {
+        EventManager.Instance.DispatchEvent(EventDefinition.eventBattleWin);
+        treasure.SetActive(false);
+    }
+
+    private void InitializeRecovery()
+    {
+        restButton.onClick.AddListener(OpenRestMenu);
+        removeCardButton.onClick.AddListener(OpenCardSelection);
+        restConfirmButton.onClick.AddListener(OnRestConfirmed);
         recoverExitButton.onClick.AddListener(ExitExplore);
     }
-    private void Recover()
+
+    private void OpenRestMenu()
+    {
+        restMenu.SetActive(true);
+        restButton.gameObject.SetActive(false);
+        removeCardButton.gameObject.SetActive(false);
+    }
+
+    private void OpenCardSelection()
+    {
+        int currentRemoveID = UIManager.Instance.CurrentRemoveID;
+        UnityEngine.Events.UnityAction unityAction = () => RemoveCardSuccess(currentRemoveID);
+        UIManager.Instance.SelectCard(unityAction, false);
+    }
+
+    private void OnRestConfirmed()
+    {
+        int recoverAmount = (int)(BattleManager.Instance.CurrentPlayerData.MaxHealth * 0.35f);
+        BattleManager.Instance.Recover(BattleManager.Instance.CurrentPlayerData, recoverAmount);
+        recoverExitButton.gameObject.SetActive(true);
+        restMenu.SetActive(false);
+        EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
+    }
+
+    private void RemoveCardSuccess(int cardID)
+    {
+        // 移除 DataManager 中的卡片
+        DataManager.Instance.CardBag.RemoveAt(cardID);
+
+        // UI 處理，例如從界面中移除卡片物件
+        Destroy(BattleManager.Instance.CardMenuTrans.GetChild(cardID).gameObject);
+
+        // 隱藏回復菜單並退出探索
+        recoverMenu.SetActive(false);
+        ExitExplore();
+
+        // 刷新界面，更新 UI 顯示
+        EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
+    }
+
+
+    private void OpenRecoverMenu()
     {
         UI.SetActive(true);
         recoverMenu.SetActive(true);
@@ -124,72 +190,17 @@ public class UIExplore : UIBase
         removeCardButton.gameObject.SetActive(true);
     }
 
-    private void Boss()
-    {
-        UIManager.Instance.ShowUI("UIBattle");
-        BattleManager.Instance.ChangeTurn(BattleManager.BattleType.BattleInitial);
-        UI.SetActive(false);
-    }
-    private void RemoveSuccess(GameObject removeCard)
-    {
-        BattleManager.Instance.CardBagApplyButton.gameObject.SetActive(false);
-        DataManager.Instance.CardBag.RemoveAt(UIManager.Instance.CurrentRemoveID);
-        Destroy(removeCard);
-        removeCardButton.gameObject.SetActive(false);
-        recoverMenu.SetActive(false);
-        ExitExplore();
-        EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
-    }
     private void ExitExplore()
     {
         BattleManager.Instance.NextLevel("UICardMenu");
     }
-    private void Shop()
-    {
-        // EventManager.Instance.DispatchEvent(EventDefinition.eventDialog,"");
-        UIManager.Instance.ShowUI("UIShop");
-        UI.SetActive(false);
-    }
-    private void Treasure()
-    {
-        treasure.SetActive(true);
-        treasure.GetComponentInChildren<Button>().onClick.AddListener(() => EventManager.Instance.DispatchEvent(EventDefinition.eventBattleWin));
-        treasure.GetComponentInChildren<Button>().onClick.AddListener(() => treasure.SetActive(false));
-    }
-    private void EventExplore(params object[] args)
-    {
-        switch (args[0])
-        {
-            case "DIALOG":
-                Dialog();
-                break;
-            case "RANDOM":
-                Random();
-                break;
-            case "BATTLE":
-                Battle();
-                break;
-            case "RECOVER":
-                Recover();
-                break;
-            case "BOSS":
-                Boss();
-                break;
-            case "SHOP":
-                Shop();
-                break;
-            case "TREASURE":
-                Treasure();
-                break;
 
-        }
-    }
-    private void EventRefreshUI(params object[] args)
+    private void RefreshUI(params object[] args)
     {
         PlayerData playerData = BattleManager.Instance.CurrentPlayerData;
         cardBagCountText.text = DataManager.Instance.CardBag.Count.ToString();
-        health.DOFillAmount((float)((float)playerData.CurrentHealth / playerData.MaxHealth), 0.5f);
-        healthText.text = playerData.CurrentHealth.ToString() + "/" + playerData.MaxHealth.ToString();
+        health.DOFillAmount((float)playerData.CurrentHealth / playerData.MaxHealth, 0.5f);
+        healthText.text = $"{playerData.CurrentHealth}/{playerData.MaxHealth}";
         moneyText.text = DataManager.Instance.MoneyCount.ToString();
     }
 }

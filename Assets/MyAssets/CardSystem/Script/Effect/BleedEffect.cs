@@ -62,11 +62,6 @@ public class BleedEffect : IEffect
         BattleManager.Instance.TakeDamage(attacker, BattleManager.Instance.CurrentPlayerData, bleedDamage, BattleManager.Instance.CurrentLocationID);
     }
 
-    public Sprite SetIcon()
-    {
-        return Resources.Load<Sprite>("EffectImage/CantMove");
-    }
-
     public string SetTitleText()
     {
         throw new System.NotImplementedException();

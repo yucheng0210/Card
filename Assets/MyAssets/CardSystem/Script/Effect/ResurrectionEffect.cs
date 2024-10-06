@@ -23,7 +23,7 @@ public class ResurrectionEffect : IEffect
 
         // 移除被动技能并设置复活效果图标
         enemyData.PassiveSkills.Remove(GetType().Name);
-        enemyEffectImage.sprite = SetIcon();
+        enemyEffectImage.sprite = ((IEffect)this).SetIcon();
         enemy.EnemyEffectImage.SetActive(true);
 
         // 注册敌人回合结束事件
@@ -50,11 +50,6 @@ public class ResurrectionEffect : IEffect
         EventManager.Instance.RemoveEventRegister(EventDefinition.eventEnemyTurn, EventEnemyTurn);
     }
 
-    public Sprite SetIcon()
-    {
-        return Resources.Load<Sprite>("EffectImage/Resurrection");
-    }
-
     public string SetTitleText()
     {
         return "死這甦醒";
@@ -62,6 +57,6 @@ public class ResurrectionEffect : IEffect
 
     public string SetDescriptionText()
     {
-       return "以30%血量復活。";
+        return "以30%血量復活。";
     }
 }
