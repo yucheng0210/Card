@@ -197,10 +197,8 @@ public class BattleManager : Singleton<BattleManager>
                 // 跳過起始點
                 if (x == point.x && y == point.y)
                     continue;
-
-                bool isInnerCircle = x > minX && x < maxX && y > minY && y < maxY;
-                bool isBoundary = (x == minX && y == point.y) || (x == maxX && y == point.y) || (y == minY && x == point.x) || (y == maxY && x == point.x);
-                if (isInnerCircle || isBoundary)
+                int testStepCount = GetRoute(location, ConvertCheckerboardPos(x, y)).Count;
+                if (testStepCount <= stepCount)
                 {
                     string targetPos = ConvertCheckerboardPos(x, y);
                     if (CheckPlaceEmpty(targetPos, checkEmptyType) && CheckUnBlock(location, targetPos))
@@ -248,6 +246,69 @@ public class BattleManager : Singleton<BattleManager>
 
         return true;
     }
+    public List<string> GetRoute(string fromLocation, string toLocation)
+    {
+        int[] startPos = ConvertNormalPos(fromLocation);
+        int[] endPos = ConvertNormalPos(toLocation);
+
+        // 存儲已經走過的格子
+        HashSet<string> visited = new HashSet<string>();
+        // 存儲路徑的佇列，每個佇列中的元素包括當前位置和該位置的路徑
+        Queue<(int[] currentPos, List<string> path)> queue = new Queue<(int[], List<string>)>();
+
+        // 初始化起始點
+        queue.Enqueue((startPos, new List<string>()));
+        visited.Add(fromLocation);
+
+        // BFS遍歷格子
+        while (queue.Count > 0)
+        {
+            var (currentPos, path) = queue.Dequeue();
+
+            // 檢查是否已經到達終點
+            if (currentPos[0] == endPos[0] && currentPos[1] == endPos[1])
+            {
+                return path; // 找到目標
+            }
+
+            // 定義可以移動的四個方向：上、下、左、右
+            int[][] directions = new int[][]
+            {
+            new int[] { 0, 1 },  // 上
+            new int[] { 0, -1 }, // 下
+            new int[] { -1, 0 }, // 左
+            new int[] { 1, 0 }   // 右
+            };
+
+            // 嘗試每個方向
+            for (int i = 0; i < directions.Length; i++)
+            {
+                int[] nextPos = new int[] { currentPos[0] + directions[i][0], currentPos[1] + directions[i][1] };
+                string nextLocation = ConvertCheckerboardPos(nextPos[0], nextPos[1]);
+
+                // 檢查該位置是否已經訪問過，或者超出範圍
+                if (!visited.Contains(nextLocation) && IsWithinBounds(nextPos) && CheckPlaceEmpty(nextLocation, CheckEmptyType.Move))
+                {
+                    visited.Add(nextLocation); // 標記為已訪問
+                    var newPath = new List<string>(path);
+                    newPath.Add(nextLocation);
+                    queue.Enqueue((nextPos, newPath));
+                }
+            }
+        }
+
+        // 若沒有找到路徑，則返回空列表
+        return new List<string>();
+    }
+
+    // 用來檢查位置是否在合法範圍內
+    private bool IsWithinBounds(int[] position)
+    {
+        // 假設棋盤範圍是0到N，可以根據實際情況調整
+        int boardSize = 8; // 假設棋盤大小為 8x8
+        return position[0] >= 0 && position[0] < boardSize && position[1] >= 0 && position[1] < boardSize;
+    }
+
     public float GetDistance(string location)
     {
         int[] playerNormalPos = ConvertNormalPos(CurrentLocationID);

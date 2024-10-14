@@ -151,7 +151,7 @@ public class UIBattle : UIBase
         if (distance <= enemyData.AttackDistance)
             UIManager.Instance.ChangeCheckerboardColor(false, location, enemyData.AttackDistance, BattleManager.CheckEmptyType.EnemyAttack);
         else
-            UIManager.Instance.ChangeCheckerboardColor(true, location, enemyData.StepCount, BattleManager.CheckEmptyType.EnemyAttack);
+            UIManager.Instance.ChangeCheckerboardColor(true, location, enemyData.StepCount, BattleManager.CheckEmptyType.Move);
         enemyInfo.SetActive(true);
         enemyName.text = enemyData.CharacterName;
         enemyImage.sprite = Resources.Load<Sprite>(enemyData.EnemyImagePath);

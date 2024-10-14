@@ -106,6 +106,7 @@ public class CardCreater : MonoBehaviour
 
     private IEnumerator DrawCard(int addCardCount)
     {
+        yield return UIManager.Instance.FadeOutIn(roundTip.GetComponent<CanvasGroup>(), 0.5f, 1, false); // 執行 UI 淡入淡出效果
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.DrawCard);
         List<CardItem> handCard = DataManager.Instance.HandCard;
         int maxCardCount = handCard.Count + addCardCount;
@@ -214,13 +215,6 @@ public class CardCreater : MonoBehaviour
     {
         currentPosX = startPosition.x;
         roundTip.GetComponent<Image>().sprite = playerRound;
-        StartCoroutine(PlayerDrawCard());
-    }
-
-
-    private IEnumerator PlayerDrawCard()
-    {
-        yield return UIManager.Instance.FadeOutIn(roundTip.GetComponent<CanvasGroup>(), 0.5f, 1, false); // 執行 UI 淡入淡出效果
         StartCoroutine(DrawCard(BattleManager.Instance.CurrentDrawCardCount));
     }
 
@@ -238,41 +232,38 @@ public class CardCreater : MonoBehaviour
 
     private IEnumerator EnemyAttack()
     {
-        Dictionary<string, EnemyData> newCurrentEnemyList = new();
-        List<string> movedLocationList = new();
         yield return UIManager.Instance.FadeOutIn(roundTip.GetComponent<CanvasGroup>(), 0.5f, 1, false);
         yield return new WaitForSecondsRealtime(1);
-        for (int i = 0; i < BattleManager.Instance.CurrentEnemyList.Count; i++)
+        Dictionary<string, EnemyData> currentEnemyList = BattleManager.Instance.CurrentEnemyList;
+        List<EnemyData> moveHistoryList = new();
+        for (int i = 0; i < currentEnemyList.Count; i++)
         {
-            string location = BattleManager.Instance.CurrentEnemyList.ElementAt(i).Key;
-            string newLocation = location;
+            string location = currentEnemyList.ElementAt(i).Key;
             int locationX = BattleManager.Instance.ConvertNormalPos(location)[0];
             int playerLocationX = BattleManager.Instance.ConvertNormalPos(BattleManager.Instance.CurrentLocationID)[0];
-            EnemyData enemyData = BattleManager.Instance.CurrentEnemyList[location];
+            EnemyData enemyData = currentEnemyList[location];
             int stepCount = enemyData.StepCount;
             RectTransform enemyTrans = enemyData.EnemyTrans;
             List<string> emptyPlaceList = BattleManager.Instance.GetEmptyPlace(location, stepCount, BattleManager.CheckEmptyType.Move);
             Enemy enemy = enemyTrans.GetComponent<Enemy>();
             PlayerData playerData = BattleManager.Instance.CurrentPlayerData;
-            for (int j = 0; j < movedLocationList.Count; j++)//因為不是立即更新棋盤的空白位置
-            {
-                if (emptyPlaceList.Contains(movedLocationList[j]))
-                    emptyPlaceList.Remove(movedLocationList[j]);
-            }
+            Image enemyImage = enemy.EnemyImage;
+            if (moveHistoryList.Contains(enemyData))
+                continue;
             yield return new WaitForSecondsRealtime(0.5f);
             if (playerLocationX >= locationX)
             {
                 if (enemyData.ImageFlip)
-                    enemy.EnemyImage.transform.localRotation = Quaternion.Euler(0, 180, 0);
+                    enemyImage.transform.localRotation = Quaternion.Euler(0, 180, 0);
                 else
-                    enemy.EnemyImage.transform.localRotation = Quaternion.Euler(0, 0, 0);
+                    enemyImage.transform.localRotation = Quaternion.Euler(0, 0, 0);
             }
             else
             {
                 if (enemyData.ImageFlip)
-                    enemy.EnemyImage.transform.localRotation = Quaternion.Euler(0, 0, 0);
+                    enemyImage.transform.localRotation = Quaternion.Euler(0, 0, 0);
                 else
-                    enemy.EnemyImage.transform.localRotation = Quaternion.Euler(0, 180, 0);
+                    enemyImage.transform.localRotation = Quaternion.Euler(0, 180, 0);
             }
             switch (enemy.MyAttackType)
             {
@@ -289,48 +280,45 @@ public class CardCreater : MonoBehaviour
                             minPoint = targetPoint;
                         }
                     }
-                    newLocation = BattleManager.Instance.ConvertCheckerboardPos(minPoint[0], minPoint[1]);
-                    int childCount = BattleManager.Instance.GetCheckerboardPoint(newLocation);
-                    RectTransform emptyPlace = BattleManager.Instance.CheckerboardTrans.GetChild(childCount).GetComponent<RectTransform>();
-                    enemyTrans.DOAnchorPos(emptyPlace.localPosition, 0.5f);
-                    newCurrentEnemyList.Add(newLocation, enemyData);
-                    movedLocationList.Add(newLocation);
-                    enemyData.CurrentAttackOrder--;
-                    enemy.MyAnimator.SetBool("isRunning", true);
+                    string newLocation = BattleManager.Instance.ConvertCheckerboardPos(minPoint[0], minPoint[1]);
+                    List<string> routeList = BattleManager.Instance.GetRoute(location, newLocation);
+                    for (int k = 0; k < routeList.Count; k++)
+                    {
+                        int childCount = BattleManager.Instance.GetCheckerboardPoint(routeList[k]);
+                        RectTransform emptyPlace = BattleManager.Instance.CheckerboardTrans.GetChild(childCount).GetComponent<RectTransform>();
+                        enemyTrans.DOAnchorPos(emptyPlace.localPosition, 0.5f);
+                        enemy.MyAnimator.SetBool("isRunning", true);
+                        yield return new WaitForSeconds(0.5f);
+                        enemy.MyAnimator.SetBool("isRunning", false);
+                    }
+                    currentEnemyList.Add(newLocation, enemyData);
+                    currentEnemyList.Remove(location);
+                    moveHistoryList.Add(enemyData);
+                    i--;
+                    enemy.EnemyLocation = newLocation;
+                    BattleManager.Instance.RefreshCheckerboardList();
                     break;
                 case Enemy.AttackType.Attack:
                     enemy.MyAnimator.SetTrigger("isAttacking");
                     yield return new WaitForSecondsRealtime(0.25f);
                     BattleManager.Instance.TakeDamage(enemyData, playerData, enemyData.CurrentAttack, BattleManager.Instance.CurrentLocationID);
-                    newCurrentEnemyList.Add(newLocation, BattleManager.Instance.CurrentEnemyList[location]);
                     break;
                 case Enemy.AttackType.Shield:
                     BattleManager.Instance.GetShield(enemyData, enemyData.CurrentAttack / 2);
-                    newCurrentEnemyList.Add(newLocation, BattleManager.Instance.CurrentEnemyList[location]);
                     break;
                 case Enemy.AttackType.Effect:
                     string key = enemyData.AttackOrderStrs.ElementAt(enemyData.CurrentAttackOrder).Item1;
                     int value = enemyData.AttackOrderStrs.ElementAt(enemyData.CurrentAttackOrder).Item2;
                     EffectFactory.Instance.CreateEffect(key).ApplyEffect(value, location);
-                    newCurrentEnemyList.Add(newLocation, BattleManager.Instance.CurrentEnemyList[location]);
                     break;
             }
             yield return new WaitForSecondsRealtime(0.5f);
-            enemy.MyAnimator.SetBool("isRunning", false);
             if (enemyData.CurrentAttackOrder >= enemyData.AttackOrderStrs.Count - 1)
                 enemyData.CurrentAttackOrder = 0;
-            else
+            else if (enemy.MyAttackType != Enemy.AttackType.Move)
                 enemyData.CurrentAttackOrder++;
-
             EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
             yield return new WaitForSecondsRealtime(1);
-        }
-        BattleManager.Instance.CurrentEnemyList.Clear();
-        for (int i = 0; i < newCurrentEnemyList.Count; i++)
-        {
-            BattleManager.Instance.CurrentEnemyList.Add(newCurrentEnemyList.ElementAt(i).Key, newCurrentEnemyList.ElementAt(i).Value);
-            Enemy newEnemy = BattleManager.Instance.CurrentEnemyList[newCurrentEnemyList.ElementAt(i).Key].EnemyTrans.GetComponent<Enemy>();
-            newEnemy.EnemyLocation = newCurrentEnemyList.ElementAt(i).Key;
         }
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Player);
     }
