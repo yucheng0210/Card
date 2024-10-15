@@ -47,31 +47,38 @@ public class Enemy : MonoBehaviour
         Move,
         Attack,
         Shield,
-        Effect
+        Effect,
+        None,
     }
     private void Start()
     {
         EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
         EventManager.Instance.AddEventRegister(EventDefinition.eventMove, EventMove);
+        EnemyOnceBattlePositiveList = new Dictionary<string, int>();
         currentEnemyList = BattleManager.Instance.CurrentEnemyList;
         enemyData = currentEnemyList.ContainsKey(EnemyLocation) ? currentEnemyList[EnemyLocation] : BattleManager.Instance.CurrentMinionsList[EnemyLocation];
-        EnemyOnceBattlePositiveList = new Dictionary<string, int>();
-        RefrAttackIntent();
     }
+
     private void OnDisable()
     {
         EventManager.Instance.RemoveEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
         EventManager.Instance.RemoveEventRegister(EventDefinition.eventMove, EventMove);
     }
-    private void RefrAttackIntent()
+    private void RefreshAttackIntent()
     {
-        float distance = BattleManager.Instance.GetDistance(EnemyLocation);
+        float distance = BattleManager.Instance.GetRoute(EnemyLocation, BattleManager.Instance.CurrentLocationID, BattleManager.CheckEmptyType.EnemyAttack).Count;
+        Debug.Log(distance);
         enemyAttack.SetActive(false);
         enemyShield.SetActive(false);
         enemyMove.SetActive(false);
         enemyEffect.SetActive(false);
         enemyAttackIntentText.enabled = true;
-        if (distance <= enemyData.AttackDistance && BattleManager.Instance.CheckUnBlock(EnemyLocation, BattleManager.Instance.CurrentLocationID))
+        if (distance == 0)
+        {
+            MyAttackType = AttackType.None;
+            enemyAttackIntentText.text = "?";
+        }
+        else if (distance <= enemyData.AttackDistance)
         {
             string attackOrder = enemyData.AttackOrderStrs.ElementAt(enemyData.CurrentAttackOrder).Item1;
             switch (attackOrder)
@@ -118,10 +125,10 @@ public class Enemy : MonoBehaviour
     private void EventPlayerTurn(params object[] args)
     {
         BattleManager.Instance.RefreshCheckerboardList();
-        RefrAttackIntent();
+        RefreshAttackIntent();
     }
     private void EventMove(params object[] args)
     {
-        RefrAttackIntent();
+        RefreshAttackIntent();
     }
 }

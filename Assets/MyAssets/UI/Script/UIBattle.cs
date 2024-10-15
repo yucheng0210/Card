@@ -38,7 +38,9 @@ public class UIBattle : UIBase
     [SerializeField]
     private Transform positiveGroupTrans;
     [SerializeField]
-    private BattleState negativePrefab;
+    private BattleState negativeLPrefab;
+    [SerializeField]
+    private BattleState negativeRPrefab;
 
     [Header("敵人")]
     [SerializeField]
@@ -88,9 +90,6 @@ public class UIBattle : UIBase
     protected override void Start()
     {
         base.Start();
-        changeTurnButton.onClick.AddListener(ChangeTurn);
-        playerMoveButton.onClick.AddListener(PlayerMove);
-        BattleManager.Instance.CheckerboardTrans = checkerboardTrans;
         EventManager.Instance.AddEventRegister(EventDefinition.eventRefreshUI, EventRefreshUI);
         EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
         EventManager.Instance.AddEventRegister(EventDefinition.eventBattleInitial, EventBattleInitial);
@@ -106,7 +105,7 @@ public class UIBattle : UIBase
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
         BattleManager.Instance.EnemyPrefab = enemyPrefab;
         BattleManager.Instance.EnemyTrans = enemyTrans;
-        CheckBattleInfo();
+        BattleManager.Instance.CheckerboardTrans = checkerboardTrans;
         Hide();
     }
     private void CheckBattleInfo()
@@ -146,12 +145,16 @@ public class UIBattle : UIBase
     {
         if (BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack)
             return;
-        float distance = BattleManager.Instance.GetDistance(location);
+        float distance = BattleManager.Instance.GetRoute(location, BattleManager.Instance.CurrentLocationID, BattleManager.CheckEmptyType.EnemyAttack).Count;
         EnemyData enemyData = BattleManager.Instance.CurrentEnemyList[location];
-        if (distance <= enemyData.AttackDistance)
-            UIManager.Instance.ChangeCheckerboardColor(false, location, enemyData.AttackDistance, BattleManager.CheckEmptyType.EnemyAttack);
-        else
-            UIManager.Instance.ChangeCheckerboardColor(true, location, enemyData.StepCount, BattleManager.CheckEmptyType.Move);
+        if (distance != 0)
+        {
+            if (distance <= enemyData.AttackDistance)
+                UIManager.Instance.ChangeCheckerboardColor(false, location, enemyData.AttackDistance, BattleManager.CheckEmptyType.EnemyAttack);
+            else
+                UIManager.Instance.ChangeCheckerboardColor(true, location, enemyData.StepCount, BattleManager.CheckEmptyType.Move);
+
+        }
         enemyInfo.SetActive(true);
         enemyName.text = enemyData.CharacterName;
         enemyImage.sprite = Resources.Load<Sprite>(enemyData.EnemyImagePath);
@@ -164,10 +167,10 @@ public class UIBattle : UIBase
         for (int i = 0; i < enemyData.MaxPassiveSkillsList.Count; i++)
         {
             string key = enemyData.MaxPassiveSkillsList.ElementAt(i).Key;
-            Image passive = Instantiate(negativePrefab, enemyPassiveGroupTrans).BattleStateImage;
+            Image passive = Instantiate(negativeLPrefab, enemyPassiveGroupTrans).BattleStateImage;
             Sprite image = EffectFactory.Instance.CreateEffect(key).SetIcon();
             passive.sprite = image;
-            UpdateStateUI(enemyPassiveGroupTrans, enemyData.MaxPassiveSkillsList, negativePrefab);
+            UpdateStateUI(enemyPassiveGroupTrans, enemyData.MaxPassiveSkillsList, negativeLPrefab);
         }
     }
 
@@ -186,7 +189,7 @@ public class UIBattle : UIBase
         if (playerCantMove || notInAttack || containsCantMoveEffect)
             return;
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.UsingEffect);
-        EffectFactory.Instance.CreateEffect("MoveEffect").ApplyEffect(BattleManager.Instance.PlayerMoveCount, BattleManager.Instance.CurrentLocationID);
+        EffectFactory.Instance.CreateEffect(nameof(MoveEffect)).ApplyEffect(BattleManager.Instance.PlayerMoveCount, BattleManager.Instance.CurrentLocationID);
     }
     private void RemoveEnemy(string key)
     {
@@ -229,17 +232,16 @@ public class UIBattle : UIBase
     }
     private void EventBattleInitial(params object[] args)
     {
-        BattleInitial();
+        StartCoroutine(BattleInitial());
     }
 
-    private void BattleInitial()
+    private IEnumerator BattleInitial()
     {
         RefreshPotionBag();
 
         // 获取当前的敌人列表和地形列表
         var enemyList = BattleManager.Instance.CurrentEnemyList;
         var terrainList = BattleManager.Instance.CurrentTerrainList;
-        var checkerboardTrans = BattleManager.Instance.CheckerboardTrans;
         // 处理敌人列表
         for (int i = 0; i < enemyList.Count; i++)
         {
@@ -261,6 +263,7 @@ public class UIBattle : UIBase
             enemyData.CurrentHealth = DataManager.Instance.EnemyList[enemy.EnemyID].MaxHealth;
 
             BattleManager.Instance.TriggerEnemyPassiveSkill(enemy.EnemyLocation, false);
+            yield return null;
         }
 
         // 处理地形列表
@@ -275,8 +278,9 @@ public class UIBattle : UIBase
 
             terrainImage.sprite = Resources.Load<Sprite>(terrainData.ImagePath);
             terrainRect.anchoredPosition = checkerboardTrans.GetChild(BattleManager.Instance.GetCheckerboardPoint(key)).localPosition;
+            yield return null;
         }
-
+        CheckBattleInfo();
         // 初始化玩家回合
         BattleManager.Instance.PlayerMoveCount = 2;
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Player);
@@ -325,6 +329,10 @@ public class UIBattle : UIBase
         BattleManager.Instance.PlayerMoveCount++;
         BattleManager.Instance.ClearAllEventTriggers();
         CheckEnemyInfo();
+        changeTurnButton.onClick.RemoveAllListeners();
+        playerMoveButton.onClick.RemoveAllListeners();
+        changeTurnButton.onClick.AddListener(ChangeTurn);
+        playerMoveButton.onClick.AddListener(PlayerMove);
         //  CheckBattleInfo();
     }
     private void EventEnemyTurn(params object[] args)
@@ -397,10 +405,10 @@ public class UIBattle : UIBase
         }
 
         // 更新负面状态
-        UpdateStateUI(negativeGroupTrans, negativeState, negativePrefab);
+        UpdateStateUI(negativeGroupTrans, negativeState, negativeRPrefab);
 
         // 更新正面状态
-        UpdateStateUI(positiveGroupTrans, positiveList, negativePrefab);
+        UpdateStateUI(positiveGroupTrans, positiveList, negativeRPrefab);
     }
 
     private void UpdateStateUI(Transform groupTrans, Dictionary<string, int> stateList, BattleState prefab)

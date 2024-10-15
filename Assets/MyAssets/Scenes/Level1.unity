@@ -7515,7 +7515,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 1602.5992}
+  m_AnchoredPosition: {x: 0, y: 1602.5991}
   m_SizeDelta: {x: 0, y: 2682.599}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &303874182
@@ -18920,7 +18920,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9aa590902af92a54eacaec60b0b976a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentPlayerID: 1001
 --- !u!114 &975104200
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20542,7 +20541,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 194137554}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.40259463
+  m_Size: 0.40259263
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -41310,7 +41309,8 @@ MonoBehaviour:
   playerMoveGridTrans: {fileID: 1456546031}
   negativeGroupTrans: {fileID: 1092746130}
   positiveGroupTrans: {fileID: 1865755324}
-  negativePrefab: {fileID: 1165997934838447130, guid: 8a548db25a1b05645bb6bbd4c115c764, type: 3}
+  negativeLPrefab: {fileID: 1165997934838447130, guid: 8a548db25a1b05645bb6bbd4c115c764, type: 3}
+  negativeRPrefab: {fileID: 1165997934838447130, guid: 0353e3fd917d61644aaf14babf570a80, type: 3}
   enemyPrefab: {fileID: 2209537678675416046, guid: 4078854a1e3459648b5bc4a716616e5e, type: 3}
   enemyTrans: {fileID: 1171661}
   enemyInfo: {fileID: 1291772317}

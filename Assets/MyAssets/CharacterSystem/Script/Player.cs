@@ -5,9 +5,6 @@ using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField]
-    private int currentPlayerID;
-
     private void Start()
     {
         BattleManager.Instance.PlayerTrans = GetComponent<RectTransform>();

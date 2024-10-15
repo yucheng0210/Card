@@ -85,10 +85,14 @@ public class BattleManager : Singleton<BattleManager>
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
+            /* for (int i = 0; i < CurrentEnemyList.Count; i++)
+             {
+                 CharacterData value = CurrentEnemyList.ElementAt(i).Value;
+                 TakeDamage(CurrentPlayerData, value, 20, CurrentEnemyList.ElementAt(i).Key);
+             }*/
             for (int i = 0; i < CurrentEnemyList.Count; i++)
             {
-                CharacterData value = CurrentEnemyList.ElementAt(i).Value;
-                TakeDamage(CurrentPlayerData, value, 20, CurrentEnemyList.ElementAt(i).Key);
+                Debug.Log(CurrentEnemyList.ElementAt(i).Key == CurrentEnemyList[CurrentEnemyList.ElementAt(i).Key].EnemyTrans.GetComponent<Enemy>().EnemyLocation);
             }
         }
     }
@@ -194,16 +198,13 @@ public class BattleManager : Singleton<BattleManager>
         {
             for (int y = minY; y <= maxY; y++)
             {
+                string targetPos = ConvertCheckerboardPos(x, y);
+                int testStepCount = GetRoute(location, targetPos, checkEmptyType).Count;
                 // 跳過起始點
-                if (x == point.x && y == point.y)
+                if ((x == point.x && y == point.y) || testStepCount == 0)
                     continue;
-                int testStepCount = GetRoute(location, ConvertCheckerboardPos(x, y)).Count;
-                if (testStepCount <= stepCount)
-                {
-                    string targetPos = ConvertCheckerboardPos(x, y);
-                    if (CheckPlaceEmpty(targetPos, checkEmptyType) && CheckUnBlock(location, targetPos))
-                        emptyPlaceList.Add(targetPos);
-                }
+                if (testStepCount <= stepCount && CheckPlaceEmpty(targetPos, checkEmptyType))
+                    emptyPlaceList.Add(targetPos);
             }
         }
         return emptyPlaceList;
@@ -246,7 +247,7 @@ public class BattleManager : Singleton<BattleManager>
 
         return true;
     }
-    public List<string> GetRoute(string fromLocation, string toLocation)
+    public List<string> GetRoute(string fromLocation, string toLocation, CheckEmptyType checkEmptyType)
     {
         int[] startPos = ConvertNormalPos(fromLocation);
         int[] endPos = ConvertNormalPos(toLocation);
@@ -274,10 +275,10 @@ public class BattleManager : Singleton<BattleManager>
             // 定義可以移動的四個方向：上、下、左、右
             int[][] directions = new int[][]
             {
-            new int[] { 0, 1 },  // 上
-            new int[] { 0, -1 }, // 下
-            new int[] { -1, 0 }, // 左
-            new int[] { 1, 0 }   // 右
+                new int[] { 0, 1 },  // 上
+                new int[] { 0, -1 }, // 下
+                new int[] { -1, 0 }, // 左
+                new int[] { 1, 0 }   // 右
             };
 
             // 嘗試每個方向
@@ -287,7 +288,7 @@ public class BattleManager : Singleton<BattleManager>
                 string nextLocation = ConvertCheckerboardPos(nextPos[0], nextPos[1]);
 
                 // 檢查該位置是否已經訪問過，或者超出範圍
-                if (!visited.Contains(nextLocation) && IsWithinBounds(nextPos) && CheckPlaceEmpty(nextLocation, CheckEmptyType.Move))
+                if (!visited.Contains(nextLocation) && CheckerboardList.ContainsKey(nextLocation) && CheckPlaceEmpty(nextLocation, checkEmptyType))
                 {
                     visited.Add(nextLocation); // 標記為已訪問
                     var newPath = new List<string>(path);
@@ -300,23 +301,6 @@ public class BattleManager : Singleton<BattleManager>
         // 若沒有找到路徑，則返回空列表
         return new List<string>();
     }
-
-    // 用來檢查位置是否在合法範圍內
-    private bool IsWithinBounds(int[] position)
-    {
-        // 假設棋盤範圍是0到N，可以根據實際情況調整
-        int boardSize = 8; // 假設棋盤大小為 8x8
-        return position[0] >= 0 && position[0] < boardSize && position[1] >= 0 && position[1] < boardSize;
-    }
-
-    public float GetDistance(string location)
-    {
-        int[] playerNormalPos = ConvertNormalPos(CurrentLocationID);
-        int[] enemyNormalPos = ConvertNormalPos(location);
-        float distance = Mathf.Sqrt(Mathf.Pow(playerNormalPos[0] - enemyNormalPos[0], 2) + Mathf.Pow(playerNormalPos[1] - enemyNormalPos[1], 2));
-        return distance;
-    }
-
     public void RefreshCheckerboardList()
     {
         CheckerboardList.Clear();

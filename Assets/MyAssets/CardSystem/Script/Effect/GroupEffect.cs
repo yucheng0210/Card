@@ -25,11 +25,11 @@ public class GroupEffect : IEffect
 
     public string SetTitleText()
     {
-        throw new System.NotImplementedException();
+        return "族群效應";
     }
 
     public string SetDescriptionText()
     {
-        throw new System.NotImplementedException();
+        return "場上每多一隻爪牙減傷和攻擊上升";
     }
 }
