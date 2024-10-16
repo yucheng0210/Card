@@ -12,7 +12,7 @@ public class MoveEffect : IEffect
 
     public void ApplyEffect(int value, string target)
     {
-        emptyPlaceList = BattleManager.Instance.GetEmptyPlace(target, value, BattleManager.CheckEmptyType.Move);
+        emptyPlaceList = BattleManager.Instance.GetEmptyPlace(target, value, BattleManager.CheckEmptyType.Move, true);
         UIManager.Instance.ChangeCheckerboardColor(true, target, value, BattleManager.CheckEmptyType.Move);
         for (int i = 0; i < emptyPlaceList.Count; i++)
         {

@@ -64,7 +64,12 @@ public class BattleManager : Singleton<BattleManager>
     public Dictionary<string, string> CheckerboardList { get; set; }
     public RectTransform PlayerTrans { get; set; }
     public RectTransform CheckerboardTrans { get; set; }
-
+    public enum CheckEmptyType
+    {
+        PlayerAttack,
+        EnemyAttack,
+        Move
+    }
     protected override void Awake()
     {
         base.Awake();
@@ -185,7 +190,7 @@ public class BattleManager : Singleton<BattleManager>
         int y = point / 8;
         return x.ToString() + ' ' + y.ToString();
     }
-    public List<string> GetEmptyPlace(string location, int stepCount, CheckEmptyType checkEmptyType)
+    public List<string> GetEmptyPlace(string location, int stepCount, CheckEmptyType checkEmptyType, bool isBFS)
     {
         List<string> emptyPlaceList = new();
         int[] pos = ConvertNormalPos(location);
@@ -203,18 +208,13 @@ public class BattleManager : Singleton<BattleManager>
                 // 跳過起始點
                 if ((x == point.x && y == point.y) || testStepCount == 0)
                     continue;
-                if (testStepCount <= stepCount && CheckPlaceEmpty(targetPos, checkEmptyType))
+                if (testStepCount <= stepCount && isBFS && CheckPlaceEmpty(targetPos, checkEmptyType))
                     emptyPlaceList.Add(targetPos);
             }
         }
         return emptyPlaceList;
     }
-    public enum CheckEmptyType
-    {
-        PlayerAttack,
-        EnemyAttack,
-        Move
-    }
+
     private bool CheckPlaceEmpty(string place, CheckEmptyType checkEmptyType)
     {
         if (!CheckerboardList.ContainsKey(place))
@@ -222,31 +222,20 @@ public class BattleManager : Singleton<BattleManager>
         string placeStatus = CheckerboardList[place];
         bool playerAttackCondition = checkEmptyType == CheckEmptyType.PlayerAttack && placeStatus == "Enemy";
         bool enemyAttackCondition = checkEmptyType == CheckEmptyType.EnemyAttack && placeStatus == "Player";
-        if (playerAttackCondition || enemyAttackCondition || placeStatus == "Empty")
-            return true;
-        return false;
+        return playerAttackCondition || enemyAttackCondition || placeStatus == "Empty";
     }
-    public bool CheckUnBlock(string fromLocation, string toLocation)
+    public float CalculateDistance(string fromLocation, string toLocation)
     {
-        int[] fromPos = ConvertNormalPos(fromLocation);
-        int[] toPos = ConvertNormalPos(toLocation);
-        Vector2Int from = new Vector2Int(fromPos[0], fromPos[1]);
-        Vector2Int to = new Vector2Int(toPos[0], toPos[1]);
+        int[] startPos = ConvertNormalPos(fromLocation);  // 從字符串位置轉換為座標
+        int[] endPos = ConvertNormalPos(toLocation);
 
-        int steps = Mathf.Max(Mathf.Abs(to.x - from.x), Mathf.Abs(to.y - from.y));
-        for (int i = 1; i < steps; i++)
-        {
-            float t = (float)i / steps;
-            int x = Mathf.RoundToInt(Mathf.Lerp(from.x, to.x, t));
-            int y = Mathf.RoundToInt(Mathf.Lerp(from.y, to.y, t));
-            string intermediatePos = ConvertCheckerboardPos(x, y);
+        int deltaX = endPos[0] - startPos[0];  // 計算 X 軸差異
+        int deltaY = endPos[1] - startPos[1];  // 計算 Y 軸差異
 
-            if (CheckerboardList.ContainsKey(intermediatePos) && CheckerboardList[intermediatePos] != "Empty")
-                return false;
-        }
-
-        return true;
+        // 計算歐幾里得距離
+        return Mathf.Sqrt(deltaX * deltaX + deltaY * deltaY);
     }
+
     public List<string> GetRoute(string fromLocation, string toLocation, CheckEmptyType checkEmptyType)
     {
         int[] startPos = ConvertNormalPos(fromLocation);
@@ -301,6 +290,44 @@ public class BattleManager : Singleton<BattleManager>
         // 若沒有找到路徑，則返回空列表
         return new List<string>();
     }
+    public bool CheckLinearAttackCondition(string fromLocation, string toLocation)
+    {
+        int[] fromPos = ConvertNormalPos(fromLocation);
+        int[] toPos = ConvertNormalPos(toLocation);
+        bool isNoObstacle = CalculateDistance(fromLocation, toLocation) == GetRoute(fromLocation, toLocation, CheckEmptyType.EnemyAttack).Count;
+        bool isInTheSameLine = (fromPos[0] == toPos[0]) || (fromPos[1] == toPos[1]);
+        return isInTheSameLine && isNoObstacle;
+    }
+    public bool CheckSurroundingAttackCondition(string fromLocation, string toLocation, int attackDistance)
+    {
+        List<string> emptyPlaceList = GetEmptyPlace(fromLocation, attackDistance, CheckEmptyType.EnemyAttack, false);
+        return emptyPlaceList.Contains(toLocation);
+    }
+    public bool CheckConeAttackCondition(string fromLocation, string toLocation, int attackDistance)
+    {
+        // 取得起點和目標點的座標
+        int[] fromPos = ConvertNormalPos(fromLocation);
+        int[] toPos = ConvertNormalPos(toLocation);
+
+        // 計算x和y座標之間的差距
+        int dx = fromPos[0] - toPos[0];
+        int dy = fromPos[1] - toPos[1];
+
+        // 檢查是否在攻擊距離內
+        if (Mathf.Abs(dx) > attackDistance || Mathf.Abs(dy) > attackDistance)
+        {
+            return false; // 超出攻擊距離
+        }
+
+        // 檢查是否在三角形範圍內 (這裡假設攻擊範圍是向上擴展的等腰三角形)
+        if (dx >= 0 && Mathf.Abs(dy) <= dx && dx <= attackDistance)
+        {
+            return true; // 在攻擊範圍內
+        }
+
+        return false; // 不在攻擊範圍內
+    }
+
     public void RefreshCheckerboardList()
     {
         CheckerboardList.Clear();
@@ -475,7 +502,7 @@ public class BattleManager : Singleton<BattleManager>
     }
     public void AddMinions(int enemyID, int count, string location)
     {
-        List<string> emptyPlaceList = GetEmptyPlace(location, 2, CheckEmptyType.Move);
+        List<string> emptyPlaceList = GetEmptyPlace(location, 2, CheckEmptyType.Move, true);
         for (int i = 0; i < count; i++)
         {
             int randomIndex = Random.Range(0, emptyPlaceList.Count);

@@ -45,7 +45,9 @@ public class Enemy : MonoBehaviour
     public enum AttackType
     {
         Move,
-        Attack,
+        LinearAttack,
+        SurroundingAttack,
+        ConeAttack,
         Shield,
         Effect,
         None,
@@ -67,60 +69,107 @@ public class Enemy : MonoBehaviour
     private void RefreshAttackIntent()
     {
         float distance = BattleManager.Instance.GetRoute(EnemyLocation, BattleManager.Instance.CurrentLocationID, BattleManager.CheckEmptyType.EnemyAttack).Count;
-        Debug.Log(distance);
+        ResetUIElements();
+
+        if (distance == 0)
+        {
+            HandleNoAttack();
+        }
+        else if (distance <= enemyData.AttackDistance)
+        {
+            HandleAttack();
+        }
+        else
+        {
+            HandleMove();
+        }
+
+        SetInfoGroupEventTrigger();
+        EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
+    }
+
+    private void ResetUIElements()
+    {
         enemyAttack.SetActive(false);
         enemyShield.SetActive(false);
         enemyMove.SetActive(false);
         enemyEffect.SetActive(false);
         enemyAttackIntentText.enabled = true;
-        if (distance == 0)
+    }
+
+    private void HandleNoAttack()
+    {
+        MyAttackType = AttackType.None;
+        enemyAttackIntentText.text = "?";
+    }
+
+    private void HandleAttack()
+    {
+        string attackOrder = enemyData.AttackOrderStrs.ElementAt(enemyData.CurrentAttackOrder).Item1;
+        Dictionary<string, AttackType> attackTypeMap = new Dictionary<string, AttackType>
         {
-            MyAttackType = AttackType.None;
-            enemyAttackIntentText.text = "?";
+            { "LinearAttack", AttackType.LinearAttack },
+            { "SurroundingAttack", AttackType.SurroundingAttack },
+            { "ConeAttack", AttackType.ConeAttack }
+        };
+        if (attackTypeMap.TryGetValue(attackOrder, out AttackType attackType))
+        {
+            MyAttackType = attackType;
+            Attack();
         }
-        else if (distance <= enemyData.AttackDistance)
+        else if (attackOrder == "Shield")
         {
-            string attackOrder = enemyData.AttackOrderStrs.ElementAt(enemyData.CurrentAttackOrder).Item1;
-            switch (attackOrder)
-            {
-                case "Attack":
-                    infoTitle.text = "攻擊";
-                    infoDescription.text = "發動攻擊。";
-                    MyAttackType = AttackType.Attack;
-                    enemyAttackIntentText.text = enemyData.CurrentAttack.ToString();
-                    enemyAttack.SetActive(true);
-                    break;
-                case "Shield":
-                    infoTitle.text = "護盾";
-                    infoDescription.text = "產生護盾。";
-                    MyAttackType = AttackType.Shield;
-                    enemyAttackIntentText.text = (enemyData.CurrentAttack / 2).ToString();
-                    enemyShield.SetActive(true);
-                    break;
-                default:
-                    Image enemyEffectImage = enemyEffect.GetComponent<Image>();
-                    infoTitle.text = EffectFactory.Instance.CreateEffect(attackOrder).SetTitleText();
-                    infoDescription.text = EffectFactory.Instance.CreateEffect(attackOrder).SetDescriptionText();
-                    MyAttackType = AttackType.Effect;
-                    enemyAttackIntentText.enabled = false;
-                    enemyEffectImage.sprite = EffectFactory.Instance.CreateEffect(attackOrder).SetIcon();
-                    enemyEffect.SetActive(true);
-                    break;
-            }
+            ActivateShield();
         }
         else
         {
-            infoTitle.text = "移動";
-            infoDescription.text = "進行移動。";
-            MyAttackType = AttackType.Move;
-            enemyAttackIntentText.enabled = false;
-            enemyMove.SetActive(true);
+            ActivateEffect(attackOrder);
         }
+    }
+
+    private void ActivateShield()
+    {
+        infoTitle.text = "護盾";
+        infoDescription.text = "產生護盾。";
+        MyAttackType = AttackType.Shield;
+        enemyAttackIntentText.text = (enemyData.CurrentAttack / 2).ToString();
+        enemyShield.SetActive(true);
+    }
+
+    private void ActivateEffect(string attackOrder)
+    {
+        Image enemyEffectImage = enemyEffect.GetComponent<Image>();
+        infoTitle.text = EffectFactory.Instance.CreateEffect(attackOrder).SetTitleText();
+        infoDescription.text = EffectFactory.Instance.CreateEffect(attackOrder).SetDescriptionText();
+        MyAttackType = AttackType.Effect;
+        enemyAttackIntentText.enabled = false;
+        enemyEffectImage.sprite = EffectFactory.Instance.CreateEffect(attackOrder).SetIcon();
+        enemyEffect.SetActive(true);
+    }
+
+    private void HandleMove()
+    {
+        infoTitle.text = "移動";
+        infoDescription.text = "進行移動。";
+        MyAttackType = AttackType.Move;
+        enemyAttackIntentText.enabled = false;
+        enemyMove.SetActive(true);
+    }
+
+    private void SetInfoGroupEventTrigger()
+    {
         EventTrigger eventTrigger = infoGroupTrans.GetComponent<EventTrigger>();
         UnityAction unityAction_1 = () => { infoGroupTrans.GetChild(0).gameObject.SetActive(true); };
         UnityAction unityAction_2 = () => { infoGroupTrans.GetChild(0).gameObject.SetActive(false); };
         BattleManager.Instance.SetEventTrigger(eventTrigger, unityAction_1, unityAction_2);
-        EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
+    }
+
+    private void Attack()
+    {
+        infoTitle.text = "攻擊";
+        infoDescription.text = "發動攻擊。";
+        enemyAttackIntentText.text = enemyData.CurrentAttack.ToString();
+        enemyAttack.SetActive(true);
     }
     private void EventPlayerTurn(params object[] args)
     {

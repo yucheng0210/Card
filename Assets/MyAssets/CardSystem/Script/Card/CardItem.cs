@@ -216,7 +216,7 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         string id = BattleManager.Instance.CurrentLocationID;
         int attackDistance = DataManager.Instance.CardList[CardID].CardAttackDistance;
-        List<string> emptyPlaceList = BattleManager.Instance.GetEmptyPlace(id, attackDistance, BattleManager.CheckEmptyType.PlayerAttack);
+        List<string> emptyPlaceList = BattleManager.Instance.GetEmptyPlace(id, attackDistance, BattleManager.CheckEmptyType.PlayerAttack, true);
         bool inRangeBool = false;
         for (int i = 0; i < emptyPlaceList.Count; i++)
         {

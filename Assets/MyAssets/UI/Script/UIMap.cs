@@ -229,9 +229,8 @@ public class UIMap : UIBase
     #endregion
     private bool CantEnter(int count, int id)
     {
-        if ((MapManager.Instance.LevelCount == 0 && count == 0) || (MapManager.Instance.MapNodes[count][id].l.LevelActive && MapManager.Instance.LevelCount == count))
-            return false;
-        return true;
+        int levelCount = MapManager.Instance.LevelCount;
+        return !((levelCount == 0 && count == 0) || (MapManager.Instance.MapNodes[count][id].l.LevelActive && levelCount == count));
     }
     private void CanEnterEffect()
     {

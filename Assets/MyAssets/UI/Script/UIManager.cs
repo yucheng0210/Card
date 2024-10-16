@@ -164,7 +164,7 @@ public class UIManager : Singleton<UIManager>
     public void ChangeCheckerboardColor(bool isMove, string location, int stepCount, BattleManager.CheckEmptyType checkEmptyType)
     {
         //ClearMoveClue(false);
-        List<string> emptyPlaceList = BattleManager.Instance.GetEmptyPlace(location, stepCount, checkEmptyType);
+        List<string> emptyPlaceList = BattleManager.Instance.GetEmptyPlace(location, stepCount, checkEmptyType, true);
         Color color = new Color(1, 1, 1, 1);
         for (int i = 0; i < emptyPlaceList.Count; i++)
         {
@@ -178,7 +178,7 @@ public class UIManager : Singleton<UIManager>
     public void ClearCheckerboardColor(string location, int stepCount, BattleManager.CheckEmptyType checkEmptyType)
     {
         //ClearMoveClue(false);
-        List<string> emptyPlaceList = BattleManager.Instance.GetEmptyPlace(location, stepCount, checkEmptyType);
+        List<string> emptyPlaceList = BattleManager.Instance.GetEmptyPlace(location, stepCount, checkEmptyType, true);
         Color color = new Color(1, 1, 1, 0);
         for (int i = 0; i < emptyPlaceList.Count; i++)
         {

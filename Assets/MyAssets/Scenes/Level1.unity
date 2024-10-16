@@ -7515,7 +7515,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 1602.5991}
+  m_AnchoredPosition: {x: 0, y: 1602.5994}
   m_SizeDelta: {x: 0, y: 2682.599}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &303874182
@@ -20540,8 +20540,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 194137555}
   m_HandleRect: {fileID: 194137554}
   m_Direction: 2
-  m_Value: 0
-  m_Size: 0.40259263
+  m_Value: -0.00000015234042
+  m_Size: 0.40241116
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -41325,6 +41325,9 @@ MonoBehaviour:
   checkerboardTrans: {fileID: 1596125020}
   terrainPrefab: {fileID: 3279483545118963417, guid: 216afeff6261da047843ed4e13a12d36, type: 3}
   terrainTrans: {fileID: 1325702296}
+  roundTip: {fileID: 286452093}
+  playerRound: {fileID: 21300000, guid: 073521897bb1ade4f86def2cc1a263c7, type: 3}
+  enemyRound: {fileID: 21300000, guid: 470a2e6c928f1214aa0ad598c5f2a385, type: 3}
   potionGroupTrans: {fileID: 1415866742}
   potionPrefab: {fileID: 7333642391348528245, guid: cc36005db0df47747bc59aa5c17546e4, type: 3}
   potionClueMenu: {fileID: 729138225}

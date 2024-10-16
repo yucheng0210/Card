@@ -79,6 +79,12 @@ public class UIBattle : UIBase
 
     [SerializeField]
     private Transform terrainTrans;
+    [SerializeField]
+    private CanvasGroup roundTip;
+    [SerializeField]
+    private Sprite playerRound;
+    [SerializeField]
+    private Sprite enemyRound;
     [Header("藥水")]
     [SerializeField]
     private Transform potionGroupTrans;
@@ -145,15 +151,18 @@ public class UIBattle : UIBase
     {
         if (BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack)
             return;
-        float distance = BattleManager.Instance.GetRoute(location, BattleManager.Instance.CurrentLocationID, BattleManager.CheckEmptyType.EnemyAttack).Count;
         EnemyData enemyData = BattleManager.Instance.CurrentEnemyList[location];
-        if (distance != 0)
+        Enemy enemy = enemyData.EnemyTrans.GetComponent<Enemy>();
+        switch (enemy.MyAttackType)
         {
-            if (distance <= enemyData.AttackDistance)
-                UIManager.Instance.ChangeCheckerboardColor(false, location, enemyData.AttackDistance, BattleManager.CheckEmptyType.EnemyAttack);
-            else
+            case Enemy.AttackType.None:
+                break;
+            case Enemy.AttackType.Move:
                 UIManager.Instance.ChangeCheckerboardColor(true, location, enemyData.StepCount, BattleManager.CheckEmptyType.Move);
-
+                break;
+            default:
+                UIManager.Instance.ChangeCheckerboardColor(false, location, enemyData.AttackDistance, BattleManager.CheckEmptyType.EnemyAttack);
+                break;
         }
         enemyInfo.SetActive(true);
         enemyName.text = enemyData.CharacterName;
@@ -172,6 +181,154 @@ public class UIBattle : UIBase
             passive.sprite = image;
             UpdateStateUI(enemyPassiveGroupTrans, enemyData.MaxPassiveSkillsList, negativeLPrefab);
         }
+    }
+    private IEnumerator EnemyAttack()
+    {
+        yield return new WaitForSecondsRealtime(1);
+        Dictionary<string, EnemyData> currentEnemyList = BattleManager.Instance.CurrentEnemyList;
+        List<EnemyData> moveHistoryList = new();
+
+        for (int i = 0; i < currentEnemyList.Count; i++)
+        {
+            string location = currentEnemyList.ElementAt(i).Key;
+            EnemyData enemyData = currentEnemyList[location];
+
+            if (moveHistoryList.Contains(enemyData))  // 跳过已经移动过的敌人
+                continue;
+
+            RectTransform enemyTrans = enemyData.EnemyTrans;
+            Enemy enemy = enemyTrans.GetComponent<Enemy>();
+            PlayerData playerData = BattleManager.Instance.CurrentPlayerData;
+            Image enemyImage = enemy.EnemyImage;
+
+            SetEnemyAttackRotation(enemyData, enemyImage, location);  // 设置敌人朝向
+
+            switch (enemy.MyAttackType)
+            {
+                case Enemy.AttackType.None:
+                    break;
+                case Enemy.AttackType.Move:
+                    yield return HandleEnemyMove(location, enemyData, enemyTrans, enemy, enemyImage);  // 单独处理移动逻辑
+                    moveHistoryList.Add(enemyData);
+                    i--;  // 减少 i 以确保下次循环不跳过下一个敌人
+                    break;
+
+                case Enemy.AttackType.LinearAttack:
+                case Enemy.AttackType.SurroundingAttack:
+                case Enemy.AttackType.ConeAttack:
+                    if (CanPerformAttack(location, enemyData.AttackDistance, enemy.MyAttackType))
+                    {
+                        yield return HandleEnemyAttack(enemy, enemyData, playerData); // 单独处理攻击逻辑
+                    }
+                    break;
+                case Enemy.AttackType.Shield:
+                    BattleManager.Instance.GetShield(enemyData, enemyData.CurrentAttack / 2);  // 处理护盾
+                    break;
+
+                case Enemy.AttackType.Effect:
+                    ApplyEffect(enemyData, location);  // 处理效果
+                    break;
+            }
+            UpdateAttackOrder(enemyData, enemy);  // 更新攻击顺序
+            SetEnemyAttackRotation(enemyData, enemyImage, location);
+            EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
+            yield return new WaitForSecondsRealtime(0.5f);
+        }
+
+        BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Player);
+    }
+    private bool CanPerformAttack(string location, int attackDistance, Enemy.AttackType attackType)
+    {
+        string playerLocation = BattleManager.Instance.CurrentLocationID;
+        switch (attackType)
+        {
+            case Enemy.AttackType.LinearAttack:
+                return BattleManager.Instance.CheckLinearAttackCondition(location, playerLocation); // 特定條件
+            case Enemy.AttackType.SurroundingAttack:
+                return BattleManager.Instance.CheckSurroundingAttackCondition(location, playerLocation, attackDistance); // 特定條件
+            case Enemy.AttackType.ConeAttack:
+                return BattleManager.Instance.CheckConeAttackCondition(location, playerLocation, attackDistance); // 特定條件
+            default:
+                return false;
+        }
+    }
+
+    // 设置敌人朝向
+    private void SetEnemyAttackRotation(EnemyData enemyData, Image enemyImage, string location)
+    {
+        int locationX = BattleManager.Instance.ConvertNormalPos(location)[0];
+        int playerLocationX = BattleManager.Instance.ConvertNormalPos(BattleManager.Instance.CurrentLocationID)[0];
+        bool shouldFlip = (playerLocationX > locationX) ? enemyData.ImageFlip : !enemyData.ImageFlip;
+        enemyImage.transform.localRotation = Quaternion.Euler(0, shouldFlip ? 180 : 0, 0);
+    }
+    private void SetEnemyMoveRotation(EnemyData enemyData, Image enemyImage, string fromLocation, string toLocation)
+    {
+        int fromLocationX = BattleManager.Instance.ConvertNormalPos(fromLocation)[0];
+        int toLocationX = BattleManager.Instance.ConvertNormalPos(toLocation)[0];
+        bool shouldFlip = (toLocationX > fromLocationX) ? enemyData.ImageFlip : !enemyData.ImageFlip;
+        enemyImage.transform.localRotation = Quaternion.Euler(0, shouldFlip ? 180 : 0, 0);
+    }
+    // 处理敌人移动
+    private IEnumerator HandleEnemyMove(string location, EnemyData enemyData, RectTransform enemyTrans, Enemy enemy, Image enemyImage)
+    {
+        List<string> emptyPlaceList = BattleManager.Instance.GetEmptyPlace(location, enemyData.StepCount, BattleManager.CheckEmptyType.Move, true);
+        string playerLocation = BattleManager.Instance.CurrentLocationID;
+        int[] minPoint = BattleManager.Instance.ConvertNormalPos(emptyPlaceList[0]);
+        int minDistance = BattleManager.Instance.GetRoute(emptyPlaceList[0], playerLocation, BattleManager.CheckEmptyType.EnemyAttack).Count;
+
+        // 找到最近的位置
+        for (int j = 1; j < emptyPlaceList.Count; j++)
+        {
+            int[] targetPoint = BattleManager.Instance.ConvertNormalPos(emptyPlaceList[j]);
+            int targetDistance = BattleManager.Instance.GetRoute(emptyPlaceList[j], playerLocation, BattleManager.CheckEmptyType.EnemyAttack).Count;
+            if (targetDistance < minDistance)
+            {
+                minPoint = targetPoint;
+                minDistance = targetDistance;
+            }
+            yield return null;
+        }
+        string newLocation = BattleManager.Instance.ConvertCheckerboardPos(minPoint[0], minPoint[1]);
+        List<string> routeList = BattleManager.Instance.GetRoute(location, newLocation, BattleManager.CheckEmptyType.Move);
+        for (int k = 0; k < routeList.Count; k++)
+        {
+            int childCount = BattleManager.Instance.GetCheckerboardPoint(routeList[k]);
+            RectTransform emptyPlace = BattleManager.Instance.CheckerboardTrans.GetChild(childCount).GetComponent<RectTransform>();
+            SetEnemyMoveRotation(enemyData, enemyImage, location, routeList[k]);
+            enemyTrans.DOAnchorPos(emptyPlace.localPosition, 0.5f);  // 移动动画
+            enemy.MyAnimator.SetBool("isRunning", true);
+            yield return new WaitForSeconds(0.5f);
+            enemy.MyAnimator.SetBool("isRunning", false);
+        }
+        BattleManager.Instance.CurrentEnemyList.Add(newLocation, enemyData);
+        BattleManager.Instance.CurrentEnemyList.Remove(location);  // 更新敌人位置
+        enemy.EnemyLocation = newLocation;
+        BattleManager.Instance.RefreshCheckerboardList();
+    }
+
+    // 处理敌人攻击
+    private IEnumerator HandleEnemyAttack(Enemy enemy, EnemyData enemyData, PlayerData playerData)
+    {
+        enemy.MyAnimator.SetTrigger("isAttacking");
+        yield return new WaitForSecondsRealtime(0.25f);
+        BattleManager.Instance.TakeDamage(enemyData, playerData, enemyData.CurrentAttack, BattleManager.Instance.CurrentLocationID);
+    }
+
+    // 应用敌人的效果
+    private void ApplyEffect(EnemyData enemyData, string location)
+    {
+        string key = enemyData.AttackOrderStrs.ElementAt(enemyData.CurrentAttackOrder).Item1;
+        int value = enemyData.AttackOrderStrs.ElementAt(enemyData.CurrentAttackOrder).Item2;
+        EffectFactory.Instance.CreateEffect(key).ApplyEffect(value, location);
+    }
+
+    // 更新攻击顺序
+    private void UpdateAttackOrder(EnemyData enemyData, Enemy enemy)
+    {
+        if (enemyData.CurrentAttackOrder >= enemyData.AttackOrderStrs.Count - 1)
+            enemyData.CurrentAttackOrder = 0;
+        else if (enemy.MyAttackType != Enemy.AttackType.Move)
+            enemyData.CurrentAttackOrder++;
     }
 
     private void ChangeTurn()
@@ -282,6 +439,7 @@ public class UIBattle : UIBase
         }
         CheckBattleInfo();
         // 初始化玩家回合
+        roundTip.GetComponent<Image>().sprite = playerRound;
         BattleManager.Instance.PlayerMoveCount = 2;
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Player);
     }
@@ -333,12 +491,17 @@ public class UIBattle : UIBase
         playerMoveButton.onClick.RemoveAllListeners();
         changeTurnButton.onClick.AddListener(ChangeTurn);
         playerMoveButton.onClick.AddListener(PlayerMove);
+        roundTip.GetComponent<Image>().sprite = playerRound;
+        StartCoroutine(UIManager.Instance.FadeOutIn(roundTip, 0.5f, 1, false));
         //  CheckBattleInfo();
     }
     private void EventEnemyTurn(params object[] args)
     {
         UIManager.Instance.ClearMoveClue(true);
         BattleManager.Instance.ClearAllEventTriggers();
+        roundTip.GetComponent<Image>().sprite = enemyRound;
+        StartCoroutine(UIManager.Instance.FadeOutIn(roundTip, 0.5f, 1, false));
+        StartCoroutine(EnemyAttack());
     }
     private void EventMove(params object[] args)
     {
