@@ -161,16 +161,33 @@ public class UIManager : Singleton<UIManager>
             }
         }
     }
-    public void ChangeCheckerboardColor(bool isMove, string location, int stepCount, BattleManager.CheckEmptyType checkEmptyType)
+    public void ChangeCheckerboardColor(string location, int stepCount, BattleManager.CheckEmptyType checkEmptyType, BattleManager.AttackType attackType, bool isMove)
     {
         //ClearMoveClue(false);
-        List<string> emptyPlaceList = BattleManager.Instance.GetEmptyPlace(location, stepCount, checkEmptyType, true);
+        List<string> emptyPlaceList = new List<string>();
         Color color = new Color(1, 1, 1, 1);
+        RectTransform checkerboardTrans = BattleManager.Instance.CheckerboardTrans;
+        switch (attackType)
+        {
+            case BattleManager.AttackType.Linear:
+                emptyPlaceList = BattleManager.Instance.GetLinearAttackList(location, BattleManager.Instance.CurrentLocationID); // 特定條件
+                break;
+            case BattleManager.AttackType.Surrounding:
+                emptyPlaceList = BattleManager.Instance.GetEmptyPlace(location, stepCount, checkEmptyType, false); // 特定條件
+                break;
+            case BattleManager.AttackType.Cone:
+                emptyPlaceList = BattleManager.Instance.GetConeAttackList(location, BattleManager.Instance.CurrentLocationID, stepCount); // 特定條件
+                break;
+            case BattleManager.AttackType.Default:
+                emptyPlaceList = BattleManager.Instance.GetEmptyPlace(location, stepCount, checkEmptyType, true);
+                break;
+        }
+        Debug.Log(emptyPlaceList.Count);
         for (int i = 0; i < emptyPlaceList.Count; i++)
         {
             int checkerboardPoint = BattleManager.Instance.GetCheckerboardPoint(emptyPlaceList[i]);
-            CheckerboardSlot emptySlot = BattleManager.Instance.CheckerboardTrans.GetChild(checkerboardPoint).GetComponent<CheckerboardSlot>();
-            Image emptyImage = BattleManager.Instance.CheckerboardTrans.GetChild(checkerboardPoint).GetComponent<Image>();
+            CheckerboardSlot emptySlot = checkerboardTrans.GetChild(checkerboardPoint).GetComponent<CheckerboardSlot>();
+            Image emptyImage = checkerboardTrans.GetChild(checkerboardPoint).GetComponent<Image>();
             emptyImage.sprite = isMove ? emptySlot.BlueClueImage : emptySlot.RedClueImage;
             emptyImage.color = color;
         }

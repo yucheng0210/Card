@@ -9,4 +9,5 @@ public interface IEffect
     Sprite SetIcon() { return Resources.Load<Sprite>("EffectImage/" + GetType().Name); }
     string SetTitleText();
     string SetDescriptionText();
+    BattleManager.AttackType SetEffectAttackType() { return BattleManager.AttackType.Surrounding; }
 }

@@ -20,12 +20,12 @@ public class FightingSpiritEffect : IEffect
 
     public string SetDescriptionText()
     {
-        return "戰意";
+        return "根據戰意的層數額外增加傷害。";
     }
 
 
     public string SetTitleText()
     {
-        return "根據戰意的層數額外增加傷害。";
+        return "戰意";
     }
 }

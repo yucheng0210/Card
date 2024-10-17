@@ -24,6 +24,14 @@ public class BattleManager : Singleton<BattleManager>
         Victory,
         Loss
     }
+    public enum AttackType
+    {
+        None,
+        Default,
+        Linear,
+        Surrounding,
+        Cone
+    }
     //玩家
     private int playerMoveCount;
     public int PlayerMoveCount
@@ -208,7 +216,7 @@ public class BattleManager : Singleton<BattleManager>
                 // 跳過起始點
                 if ((x == point.x && y == point.y) || testStepCount == 0)
                     continue;
-                if (testStepCount <= stepCount && isBFS && CheckPlaceEmpty(targetPos, checkEmptyType))
+                if ((testStepCount <= stepCount || !isBFS) && CheckPlaceEmpty(targetPos, checkEmptyType))
                     emptyPlaceList.Add(targetPos);
             }
         }
@@ -290,21 +298,52 @@ public class BattleManager : Singleton<BattleManager>
         // 若沒有找到路徑，則返回空列表
         return new List<string>();
     }
-    public bool CheckLinearAttackCondition(string fromLocation, string toLocation)
+    public List<string> GetLinearAttackList(string fromLocation, string toLocation)
     {
-        int[] fromPos = ConvertNormalPos(fromLocation);
-        int[] toPos = ConvertNormalPos(toLocation);
-        bool isNoObstacle = CalculateDistance(fromLocation, toLocation) == GetRoute(fromLocation, toLocation, CheckEmptyType.EnemyAttack).Count;
-        bool isInTheSameLine = (fromPos[0] == toPos[0]) || (fromPos[1] == toPos[1]);
-        return isInTheSameLine && isNoObstacle;
+        List<string> linearAttackList = new List<string>();
+
+        // 轉換位置為座標
+        int[] startPos = ConvertNormalPos(fromLocation);
+        int[] endPos = ConvertNormalPos(toLocation);
+
+        int startX = startPos[0];
+        int startY = startPos[1];
+        int endX = endPos[0];
+        int endY = endPos[1];
+
+        // 計算x和y軸的距離
+        int distanceX = Mathf.Abs(endX - startX);
+        int distanceY = Mathf.Abs(endY - startY);
+
+        // 選擇距離較遠的軸，設置相應的方向與迴圈範圍
+        bool isXPrimary = distanceX >= distanceY;
+        int primaryStart = isXPrimary ? startX : startY;
+        int primaryEnd = isXPrimary ? endX : endY;
+        int secondaryPos = isXPrimary ? startY : startX;
+        int direction = (primaryEnd > primaryStart) ? 1 : -1;
+
+        // 擴展座標，檢查是否可以攻擊
+        for (int pos = primaryStart; ; pos += direction)
+        {
+            string newLocation = isXPrimary ? ConvertCheckerboardPos(pos, secondaryPos) : ConvertCheckerboardPos(secondaryPos, pos);
+
+            if (CheckPlaceEmpty(newLocation, CheckEmptyType.EnemyAttack))
+            {
+                linearAttackList.Add(newLocation);
+            }
+            else
+            {
+                break;  // 如果有障礙物，停止擴展
+            }
+        }
+
+        return linearAttackList;
     }
-    public bool CheckSurroundingAttackCondition(string fromLocation, string toLocation, int attackDistance)
+
+    public List<string> GetConeAttackList(string fromLocation, string toLocation, int attackDistance)
     {
-        List<string> emptyPlaceList = GetEmptyPlace(fromLocation, attackDistance, CheckEmptyType.EnemyAttack, false);
-        return emptyPlaceList.Contains(toLocation);
-    }
-    public bool CheckConeAttackCondition(string fromLocation, string toLocation, int attackDistance)
-    {
+        List<string> coneAttackList = new List<string>();
+
         // 取得起點和目標點的座標
         int[] fromPos = ConvertNormalPos(fromLocation);
         int[] toPos = ConvertNormalPos(toLocation);
@@ -313,20 +352,33 @@ public class BattleManager : Singleton<BattleManager>
         int dx = fromPos[0] - toPos[0];
         int dy = fromPos[1] - toPos[1];
 
-        // 檢查是否在攻擊距離內
-        if (Mathf.Abs(dx) > attackDistance || Mathf.Abs(dy) > attackDistance)
-        {
-            return false; // 超出攻擊距離
-        }
-
-        // 檢查是否在三角形範圍內 (這裡假設攻擊範圍是向上擴展的等腰三角形)
+        // 檢查目標點是否在攻擊距離內且符合三角形範圍條件
         if (dx >= 0 && Mathf.Abs(dy) <= dx && dx <= attackDistance)
         {
-            return true; // 在攻擊範圍內
+            // 遍歷整個三角形範圍
+            for (int x = 0; x <= attackDistance; x++)
+            {
+                // 定義y範圍 (根據x位置，y範圍會逐漸擴展)
+                int minY = fromPos[1] - x;
+                int maxY = fromPos[1] + x;
+
+                for (int y = minY; y <= maxY; y++)
+                {
+                    // 獲得當前座標
+                    string newLocation = ConvertCheckerboardPos(fromPos[0] - x, y);
+
+                    // 確認位置是否為空位且無障礙物
+                    if (CheckPlaceEmpty(newLocation, CheckEmptyType.EnemyAttack))
+                    {
+                        coneAttackList.Add(newLocation);
+                    }
+                }
+            }
         }
 
-        return false; // 不在攻擊範圍內
+        return coneAttackList;
     }
+
 
     public void RefreshCheckerboardList()
     {

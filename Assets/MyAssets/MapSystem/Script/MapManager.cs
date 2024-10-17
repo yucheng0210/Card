@@ -233,7 +233,7 @@ public class MapManager : Singleton<MapManager>
     {
         for (int i = 0; i < levels.Length; i++)
         {
-            int x = i * 150 + paddingX + leftPadding;
+            int x = i * 300 + paddingX + leftPadding;
             int y = paddingY;
             levels[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(x, y);
             levels[i].SetRoomsPosition(random);

@@ -7,6 +7,8 @@ public class UIOption : UIBase
     [SerializeField]
     private Button exitButton;
     [SerializeField]
+    private Button returnButton;
+    [SerializeField]
     private Button showButton;
     private void Awake()
     {
@@ -14,7 +16,8 @@ public class UIOption : UIBase
     }
     private void Initialize()
     {
-        exitButton.onClick.AddListener(Hide);
+        exitButton.onClick.AddListener(() => UnityEditor.EditorApplication.isPlaying = false);
+        returnButton.onClick.AddListener(Hide);
         showButton.onClick.AddListener(Show);
     }
 }

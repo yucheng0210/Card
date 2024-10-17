@@ -13,7 +13,7 @@ public class MoveEffect : IEffect
     public void ApplyEffect(int value, string target)
     {
         emptyPlaceList = BattleManager.Instance.GetEmptyPlace(target, value, BattleManager.CheckEmptyType.Move, true);
-        UIManager.Instance.ChangeCheckerboardColor(true, target, value, BattleManager.CheckEmptyType.Move);
+        UIManager.Instance.ChangeCheckerboardColor(target, value, BattleManager.CheckEmptyType.Move, BattleManager.AttackType.Default, true);
         for (int i = 0; i < emptyPlaceList.Count; i++)
         {
             int avoidClosure = i;

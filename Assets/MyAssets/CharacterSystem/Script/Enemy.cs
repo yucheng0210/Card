@@ -37,17 +37,16 @@ public class Enemy : MonoBehaviour
     public Animator MyAnimator { get { return myAnimator; } set { myAnimator = value; } }
     public int EnemyID { get; set; }
     public string EnemyLocation { get; set; }
-    public AttackType MyAttackType { get; set; }
+    public ActionType MyActionType { get; set; }
+    public BattleManager.AttackType MyAttackType { get; set; }
     public bool IsDeath { get; set; }
     public Dictionary<string, int> EnemyOnceBattlePositiveList { get; set; }
     private Dictionary<string, EnemyData> currentEnemyList = new();
     private EnemyData enemyData = new EnemyData();
-    public enum AttackType
+    public enum ActionType
     {
         Move,
-        LinearAttack,
-        SurroundingAttack,
-        ConeAttack,
+        Attack,
         Shield,
         Effect,
         None,
@@ -99,22 +98,23 @@ public class Enemy : MonoBehaviour
 
     private void HandleNoAttack()
     {
-        MyAttackType = AttackType.None;
+        MyActionType = ActionType.None;
         enemyAttackIntentText.text = "?";
     }
 
     private void HandleAttack()
     {
         string attackOrder = enemyData.AttackOrderStrs.ElementAt(enemyData.CurrentAttackOrder).Item1;
-        Dictionary<string, AttackType> attackTypeMap = new Dictionary<string, AttackType>
+        Dictionary<string, BattleManager.AttackType> attackTypeMap = new Dictionary<string, BattleManager.AttackType>
         {
-            { "LinearAttack", AttackType.LinearAttack },
-            { "SurroundingAttack", AttackType.SurroundingAttack },
-            { "ConeAttack", AttackType.ConeAttack }
+            { "LinearAttack", BattleManager.AttackType.Linear },
+            { "SurroundingAttack", BattleManager.AttackType.Surrounding },
+            { "ConeAttack",BattleManager.AttackType.Cone }
         };
-        if (attackTypeMap.TryGetValue(attackOrder, out AttackType attackType))
+        if (attackTypeMap.TryGetValue(attackOrder, out BattleManager.AttackType attackType))
         {
             MyAttackType = attackType;
+            MyActionType = ActionType.Attack;
             Attack();
         }
         else if (attackOrder == "Shield")
@@ -131,17 +131,19 @@ public class Enemy : MonoBehaviour
     {
         infoTitle.text = "護盾";
         infoDescription.text = "產生護盾。";
-        MyAttackType = AttackType.Shield;
+        MyActionType = ActionType.Shield;
+        MyAttackType = BattleManager.AttackType.None;
         enemyAttackIntentText.text = (enemyData.CurrentAttack / 2).ToString();
         enemyShield.SetActive(true);
     }
 
     private void ActivateEffect(string attackOrder)
     {
+        MyActionType = ActionType.Effect;
+        MyAttackType = EffectFactory.Instance.CreateEffect(attackOrder).SetEffectAttackType();
         Image enemyEffectImage = enemyEffect.GetComponent<Image>();
         infoTitle.text = EffectFactory.Instance.CreateEffect(attackOrder).SetTitleText();
         infoDescription.text = EffectFactory.Instance.CreateEffect(attackOrder).SetDescriptionText();
-        MyAttackType = AttackType.Effect;
         enemyAttackIntentText.enabled = false;
         enemyEffectImage.sprite = EffectFactory.Instance.CreateEffect(attackOrder).SetIcon();
         enemyEffect.SetActive(true);
@@ -151,7 +153,8 @@ public class Enemy : MonoBehaviour
     {
         infoTitle.text = "移動";
         infoDescription.text = "進行移動。";
-        MyAttackType = AttackType.Move;
+        MyActionType = ActionType.Move;
+        MyAttackType = BattleManager.AttackType.Default;
         enemyAttackIntentText.enabled = false;
         enemyMove.SetActive(true);
     }

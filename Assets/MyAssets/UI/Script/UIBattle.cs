@@ -153,15 +153,16 @@ public class UIBattle : UIBase
             return;
         EnemyData enemyData = BattleManager.Instance.CurrentEnemyList[location];
         Enemy enemy = enemyData.EnemyTrans.GetComponent<Enemy>();
-        switch (enemy.MyAttackType)
+        switch (enemy.MyActionType)
         {
-            case Enemy.AttackType.None:
+            case Enemy.ActionType.None:
                 break;
-            case Enemy.AttackType.Move:
-                UIManager.Instance.ChangeCheckerboardColor(true, location, enemyData.StepCount, BattleManager.CheckEmptyType.Move);
+            case Enemy.ActionType.Move:
+                UIManager.Instance.ChangeCheckerboardColor(location, enemyData.StepCount, BattleManager.CheckEmptyType.Move, enemy.MyAttackType, true);
                 break;
-            default:
-                UIManager.Instance.ChangeCheckerboardColor(false, location, enemyData.AttackDistance, BattleManager.CheckEmptyType.EnemyAttack);
+            case Enemy.ActionType.Attack:
+            case Enemy.ActionType.Effect:
+                UIManager.Instance.ChangeCheckerboardColor(location, enemyData.AttackDistance, BattleManager.CheckEmptyType.EnemyAttack, enemy.MyAttackType, false);
                 break;
         }
         enemyInfo.SetActive(true);
@@ -203,29 +204,28 @@ public class UIBattle : UIBase
 
             SetEnemyAttackRotation(enemyData, enemyImage, location);  // 设置敌人朝向
 
-            switch (enemy.MyAttackType)
+            switch (enemy.MyActionType)
             {
-                case Enemy.AttackType.None:
+                case Enemy.ActionType.None:
                     break;
-                case Enemy.AttackType.Move:
+                case Enemy.ActionType.Move:
                     yield return HandleEnemyMove(location, enemyData, enemyTrans, enemy, enemyImage);  // 单独处理移动逻辑
                     moveHistoryList.Add(enemyData);
                     i--;  // 减少 i 以确保下次循环不跳过下一个敌人
                     break;
 
-                case Enemy.AttackType.LinearAttack:
-                case Enemy.AttackType.SurroundingAttack:
-                case Enemy.AttackType.ConeAttack:
+                case Enemy.ActionType.Attack:
+                    enemy.MyAnimator.SetTrigger("isAttacking");
                     if (CanPerformAttack(location, enemyData.AttackDistance, enemy.MyAttackType))
                     {
-                        yield return HandleEnemyAttack(enemy, enemyData, playerData); // 单独处理攻击逻辑
+                        yield return HandleEnemyAttack(enemyData, playerData); // 单独处理攻击逻辑
                     }
                     break;
-                case Enemy.AttackType.Shield:
+                case Enemy.ActionType.Shield:
                     BattleManager.Instance.GetShield(enemyData, enemyData.CurrentAttack / 2);  // 处理护盾
                     break;
 
-                case Enemy.AttackType.Effect:
+                case Enemy.ActionType.Effect:
                     ApplyEffect(enemyData, location);  // 处理效果
                     break;
             }
@@ -237,17 +237,17 @@ public class UIBattle : UIBase
 
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Player);
     }
-    private bool CanPerformAttack(string location, int attackDistance, Enemy.AttackType attackType)
+    private bool CanPerformAttack(string location, int attackDistance, BattleManager.AttackType attackType)
     {
         string playerLocation = BattleManager.Instance.CurrentLocationID;
         switch (attackType)
         {
-            case Enemy.AttackType.LinearAttack:
-                return BattleManager.Instance.CheckLinearAttackCondition(location, playerLocation); // 特定條件
-            case Enemy.AttackType.SurroundingAttack:
-                return BattleManager.Instance.CheckSurroundingAttackCondition(location, playerLocation, attackDistance); // 特定條件
-            case Enemy.AttackType.ConeAttack:
-                return BattleManager.Instance.CheckConeAttackCondition(location, playerLocation, attackDistance); // 特定條件
+            case BattleManager.AttackType.Linear:
+                return BattleManager.Instance.GetLinearAttackList(location, playerLocation).Contains(playerLocation); // 特定條件
+            case BattleManager.AttackType.Surrounding:
+                return BattleManager.Instance.GetEmptyPlace(location, attackDistance, BattleManager.CheckEmptyType.EnemyAttack, false).Contains(playerLocation); // 特定條件
+            case BattleManager.AttackType.Cone:
+                return BattleManager.Instance.GetConeAttackList(location, playerLocation, attackDistance).Contains(playerLocation); // 特定條件
             default:
                 return false;
         }
@@ -307,9 +307,8 @@ public class UIBattle : UIBase
     }
 
     // 处理敌人攻击
-    private IEnumerator HandleEnemyAttack(Enemy enemy, EnemyData enemyData, PlayerData playerData)
+    private IEnumerator HandleEnemyAttack(EnemyData enemyData, PlayerData playerData)
     {
-        enemy.MyAnimator.SetTrigger("isAttacking");
         yield return new WaitForSecondsRealtime(0.25f);
         BattleManager.Instance.TakeDamage(enemyData, playerData, enemyData.CurrentAttack, BattleManager.Instance.CurrentLocationID);
     }
@@ -327,7 +326,7 @@ public class UIBattle : UIBase
     {
         if (enemyData.CurrentAttackOrder >= enemyData.AttackOrderStrs.Count - 1)
             enemyData.CurrentAttackOrder = 0;
-        else if (enemy.MyAttackType != Enemy.AttackType.Move)
+        else if (enemy.MyActionType != Enemy.ActionType.Move)
             enemyData.CurrentAttackOrder++;
     }
 

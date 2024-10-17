@@ -17,7 +17,7 @@ public class EveryLevel : MonoBehaviour
             {
                 int x = random.Next(padding, oneCellWidth - padding);
                 int y = random.Next(padding, oneCellHeight - padding) + i * oneCellHeight;
-                nodes[i].gameObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(x,y);
+                nodes[i].gameObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(x, y);
             }
         }
     }
