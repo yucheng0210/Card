@@ -14,6 +14,7 @@ public class ThornsEffect : IEffect
     {
         Dictionary<string, int> currentOnceBattlePositiveList;
         currentEnemyList = BattleManager.Instance.CurrentEnemyList;
+        string typeName = GetType().Name;
         if (target == BattleManager.Instance.CurrentLocationID)
         {
             counterattacker = BattleManager.Instance.CurrentPlayerData;
@@ -30,13 +31,13 @@ public class ThornsEffect : IEffect
             return;
         }
 
-        if (!currentOnceBattlePositiveList.TryGetValue(GetType().Name, out var existingValue))
+        if (!currentOnceBattlePositiveList.TryGetValue(typeName, out var existingValue))
         {
             existingValue = 0;
         }
-        currentOnceBattlePositiveList[GetType().Name] = existingValue + value;
+        currentOnceBattlePositiveList[typeName] = existingValue + value;
 
-        counterattackDamageMultiplier = currentOnceBattlePositiveList[GetType().Name];
+        counterattackDamageMultiplier = currentOnceBattlePositiveList[typeName];
         counterattackerID = target;
 
         EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
@@ -52,8 +53,7 @@ public class ThornsEffect : IEffect
 
         var counterattackTarget = (CharacterData)args[4];
         var targetLocationID = currentEnemyList.FirstOrDefault(x => x.Value == counterattackTarget).Key ?? BattleManager.Instance.CurrentLocationID;
-
-        BattleManager.Instance.TakeDamage(counterattacker, counterattackTarget, counterattackDamage, targetLocationID);
+        BattleManager.Instance.TakeDamage(counterattacker, counterattackTarget, counterattackDamage, targetLocationID, 0.5f);
 
         if (!currentEnemyList.ContainsKey(counterattackerID) && BattleManager.Instance.CurrentLocationID != counterattackerID)
             EventManager.Instance.RemoveEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
@@ -66,5 +66,9 @@ public class ThornsEffect : IEffect
     public string SetDescriptionText()
     {
         return "受到傷害時，將部分比例的傷害反彈回去。";
+    }
+    public BattleManager.ActionRangeType SetEffectAttackType()
+    {
+        return BattleManager.ActionRangeType.None; // 自訂攻擊類型
     }
 }

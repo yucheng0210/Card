@@ -104,7 +104,7 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             return;
         index = transform.GetSiblingIndex();
         Quaternion zeroRotation = Quaternion.Euler(0, 0, 0);
-        transform.DOScale(2.5f, moveTime);
+        transform.DOScale(2f, moveTime);
         transform.DORotateQuaternion(zeroRotation, moveTime);
         CardRectTransform.DOAnchorPosY(pointerEnterUpY, moveTime);
         float space = pointerEnterSpacing;
@@ -126,16 +126,17 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                 space = pointerEnterReduceCount;
         }
         transform.SetAsLastSibling();
-        string id = BattleManager.Instance.CurrentLocationID;
+        string location = BattleManager.Instance.CurrentLocationID;
         int cardAttackDistance = DataManager.Instance.CardList[CardID].CardAttackDistance;
-        UIManager.Instance.ChangeCheckerboardColor(id, cardAttackDistance, BattleManager.CheckEmptyType.PlayerAttack, BattleManager.AttackType.Default, false);
+        List<string> emptyPlaceList = BattleManager.Instance.GetAcitonRangeTypeList(location, cardAttackDistance, BattleManager.CheckEmptyType.PlayerAttack, BattleManager.ActionRangeType.Default);
+        UIManager.Instance.ChangeCheckerboardColor(emptyPlaceList, false);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
         if (BattleManager.Instance.IsDrag && !isAttackCard || CantMove || BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack)
             return;
-        transform.DOScale(1.5f, moveTime);
+        transform.DOScale(1f, moveTime);
         transform.DORotateQuaternion(Quaternion.Euler(0, 0, BattleManager.Instance.CardAngleList[index]), moveTime);
         CardRectTransform.DOAnchorPos(BattleManager.Instance.CardPositionList[index], moveTime);
         transform.SetSiblingIndex(index);
@@ -216,7 +217,7 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         string id = BattleManager.Instance.CurrentLocationID;
         int attackDistance = DataManager.Instance.CardList[CardID].CardAttackDistance;
-        List<string> emptyPlaceList = BattleManager.Instance.GetEmptyPlace(id, attackDistance, BattleManager.CheckEmptyType.PlayerAttack, true);
+        List<string> emptyPlaceList = BattleManager.Instance.GetAcitonRangeTypeList(id, attackDistance, BattleManager.CheckEmptyType.PlayerAttack, BattleManager.ActionRangeType.Default);
         bool inRangeBool = false;
         for (int i = 0; i < emptyPlaceList.Count; i++)
         {
@@ -245,7 +246,7 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         BattleManager.Instance.ConsumeMana(cardData.CardManaCost);
         BattleManager.Instance.GetShield(BattleManager.Instance.CurrentPlayerData, cardData.CardShield);
         if (cardData.CardAttack != 0 && cardData.CardType != "詛咒")
-            BattleManager.Instance.TakeDamage(BattleManager.Instance.CurrentPlayerData, BattleManager.Instance.CurrentEnemyList[target], cardData.CardAttack, target);
+            BattleManager.Instance.TakeDamage(BattleManager.Instance.CurrentPlayerData, BattleManager.Instance.CurrentEnemyList[target], cardData.CardAttack, target, 0);
         if (!cardData.CardRemove)
             DataManager.Instance.UsedCardBag.Add(this);
         else

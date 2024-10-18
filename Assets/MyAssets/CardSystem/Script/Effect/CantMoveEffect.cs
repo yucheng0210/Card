@@ -28,4 +28,8 @@ public class CantMoveEffect : IEffect
     {
         return "禁止移動。";
     }
+    public BattleManager.ActionRangeType SetEffectAttackType()
+    {
+        return BattleManager.ActionRangeType.Cone;
+    }
 }

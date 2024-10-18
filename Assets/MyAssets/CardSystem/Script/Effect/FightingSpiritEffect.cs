@@ -14,7 +14,7 @@ public class FightingSpiritEffect : IEffect
         else
             currentOnceBattlePositiveList.Add(typeName, 1);
         int damage = 8 * currentOnceBattlePositiveList[typeName];
-        BattleManager.Instance.TakeDamage(BattleManager.Instance.CurrentPlayerData, BattleManager.Instance.CurrentEnemyList[target], damage, target);
+        BattleManager.Instance.TakeDamage(BattleManager.Instance.CurrentPlayerData, BattleManager.Instance.CurrentEnemyList[target], damage, target, 0);
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
 

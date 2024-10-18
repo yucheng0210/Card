@@ -24,13 +24,19 @@ public class BattleManager : Singleton<BattleManager>
         Victory,
         Loss
     }
-    public enum AttackType
+    public enum ActionRangeType
     {
         None,
         Default,
         Linear,
         Surrounding,
         Cone
+    }
+    public enum CheckEmptyType
+    {
+        PlayerAttack,
+        EnemyAttack,
+        Move
     }
     //玩家
     private int playerMoveCount;
@@ -72,12 +78,7 @@ public class BattleManager : Singleton<BattleManager>
     public Dictionary<string, string> CheckerboardList { get; set; }
     public RectTransform PlayerTrans { get; set; }
     public RectTransform CheckerboardTrans { get; set; }
-    public enum CheckEmptyType
-    {
-        PlayerAttack,
-        EnemyAttack,
-        Move
-    }
+
     protected override void Awake()
     {
         base.Awake();
@@ -98,29 +99,40 @@ public class BattleManager : Singleton<BattleManager>
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            /* for (int i = 0; i < CurrentEnemyList.Count; i++)
-             {
-                 CharacterData value = CurrentEnemyList.ElementAt(i).Value;
-                 TakeDamage(CurrentPlayerData, value, 20, CurrentEnemyList.ElementAt(i).Key);
-             }*/
             for (int i = 0; i < CurrentEnemyList.Count; i++)
             {
-                Debug.Log(CurrentEnemyList.ElementAt(i).Key == CurrentEnemyList[CurrentEnemyList.ElementAt(i).Key].EnemyTrans.GetComponent<Enemy>().EnemyLocation);
+                CharacterData value = CurrentEnemyList.ElementAt(i).Value;
+                TakeDamage(CurrentPlayerData, value, 20, CurrentEnemyList.ElementAt(i).Key, 0);
             }
+            /* for (int i = 0; i < CurrentEnemyList.Count; i++)
+             {
+                 Debug.Log(CurrentEnemyList.ElementAt(i).Key == CurrentEnemyList[CurrentEnemyList.ElementAt(i).Key].EnemyTrans.GetComponent<Enemy>().EnemyLocation);
+             }*/
         }
     }
-    public void TakeDamage(CharacterData attacker, CharacterData defender, int damage, string location)
+    public void TakeDamage(CharacterData attacker, CharacterData defender, int damage, string location, float delay)
     {
+        StartCoroutine(TakeDamageCoroutine(attacker, defender, damage, location, delay));
+    }
+    private IEnumerator TakeDamageCoroutine(CharacterData attacker, CharacterData defender, int damage, string location, float delay)
+    {
+        // 等待指定的秒數
+        yield return new WaitForSeconds(delay);
+
+        // 執行原本的 TakeDamage 邏輯
         int currentDamage = damage * (100 - defender.DamageReduction) / 100 - defender.CurrentShield;
         if (currentDamage < 0)
             currentDamage = 0;
         defender.CurrentShield -= damage;
         defender.CurrentHealth -= currentDamage;
+
         int point = GetCheckerboardPoint(location);
         Vector2 pos = new(CheckerboardTrans.GetChild(point).localPosition.x, CheckerboardTrans.GetChild(point).localPosition.y);
         Color color = Color.red;
+        EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
         EventManager.Instance.DispatchEvent(EventDefinition.eventTakeDamage, pos, damage, location, color, attacker, defender);
     }
+
     public void Recover(CharacterData defender, int damage, string location)
     {
         defender.CurrentHealth += damage;
@@ -198,7 +210,7 @@ public class BattleManager : Singleton<BattleManager>
         int y = point / 8;
         return x.ToString() + ' ' + y.ToString();
     }
-    public List<string> GetEmptyPlace(string location, int stepCount, CheckEmptyType checkEmptyType, bool isBFS)
+    private List<string> GetEmptyPlace(string location, int stepCount, CheckEmptyType checkEmptyType, bool isBFS)
     {
         List<string> emptyPlaceList = new();
         int[] pos = ConvertNormalPos(location);
@@ -243,7 +255,26 @@ public class BattleManager : Singleton<BattleManager>
         // 計算歐幾里得距離
         return Mathf.Sqrt(deltaX * deltaX + deltaY * deltaY);
     }
-
+    public List<string> GetAcitonRangeTypeList(string location, int stepCount, CheckEmptyType checkEmptyType, ActionRangeType actionRangeType)
+    {
+        List<string> emptyPlaceList = new List<string>();
+        switch (actionRangeType)
+        {
+            case ActionRangeType.Linear:
+                emptyPlaceList = GetLinearAttackList(location, CurrentLocationID); // 特定條件
+                break;
+            case ActionRangeType.Surrounding:
+                emptyPlaceList = GetEmptyPlace(location, stepCount, checkEmptyType, false); // 特定條件
+                break;
+            case ActionRangeType.Cone:
+                emptyPlaceList = GetConeAttackList(location, CurrentLocationID, stepCount); // 特定條件
+                break;
+            case ActionRangeType.Default:
+                emptyPlaceList = GetEmptyPlace(location, stepCount, checkEmptyType, true);
+                break;
+        }
+        return emptyPlaceList;
+    }
     public List<string> GetRoute(string fromLocation, string toLocation, CheckEmptyType checkEmptyType)
     {
         int[] startPos = ConvertNormalPos(fromLocation);
@@ -342,43 +373,60 @@ public class BattleManager : Singleton<BattleManager>
 
     public List<string> GetConeAttackList(string fromLocation, string toLocation, int attackDistance)
     {
+        // 如果起點和終點相同，直接返回空列表
+        if (fromLocation == toLocation)
+            return null;
+
         List<string> coneAttackList = new List<string>();
 
         // 取得起點和目標點的座標
         int[] fromPos = ConvertNormalPos(fromLocation);
         int[] toPos = ConvertNormalPos(toLocation);
 
-        // 計算x和y座標之間的差距
-        int dx = fromPos[0] - toPos[0];
-        int dy = fromPos[1] - toPos[1];
+        // 計算x和y座標的差距來決定攻擊方向
+        int dx = toPos[0] - fromPos[0];
+        int dy = toPos[1] - fromPos[1];
 
-        // 檢查目標點是否在攻擊距離內且符合三角形範圍條件
-        if (dx >= 0 && Mathf.Abs(dy) <= dx && dx <= attackDistance)
+        // 根據目標點相對起點的方位來確定攻擊方向
+        int directionX = (dx != 0) ? (dx > 0 ? 1 : -1) : 0;  // x軸方向
+        int directionY = (dy != 0) ? (dy > 0 ? 1 : -1) : 0;  // y軸方向
+
+        bool prioritizeYDirection = directionY != 0;  // 是否以y方向為主
+        int mainDirection = prioritizeYDirection ? directionY : directionX;
+
+        // 生成等腰三角形範圍，根據攻擊距離
+        for (int h = 0; h < attackDistance; h++)
         {
-            // 遍歷整個三角形範圍
-            for (int x = 0; x <= attackDistance; x++)
+            // 計算對應高（h）位置的寬度範圍 (如 1, 3, 5...)
+            int range = (2 * h) + 1;
+            int offset = (h + 1) * mainDirection;  // 方向偏移量
+            int halfRange = range / 2;  // 左右擴展範圍
+            int breakCount = 0;
+            for (int w = -halfRange; w <= halfRange; w++)
             {
-                // 定義y範圍 (根據x位置，y範圍會逐漸擴展)
-                int minY = fromPos[1] - x;
-                int maxY = fromPos[1] + x;
+                // 計算當前點的x和y座標
+                int currentX = prioritizeYDirection ? fromPos[0] + w : fromPos[0] + offset;
+                int currentY = prioritizeYDirection ? fromPos[1] + offset : fromPos[1] + w;
 
-                for (int y = minY; y <= maxY; y++)
+                // 將座標轉為棋盤位置
+                string newLocation = ConvertCheckerboardPos(currentX, currentY);
+
+                // 確認位置是否為空位且無障礙物
+                if (CheckPlaceEmpty(newLocation, CheckEmptyType.EnemyAttack))
                 {
-                    // 獲得當前座標
-                    string newLocation = ConvertCheckerboardPos(fromPos[0] - x, y);
-
-                    // 確認位置是否為空位且無障礙物
-                    if (CheckPlaceEmpty(newLocation, CheckEmptyType.EnemyAttack))
-                    {
-                        coneAttackList.Add(newLocation);
-                    }
+                    coneAttackList.Add(newLocation);
+                }
+                else
+                {
+                    breakCount++;
                 }
             }
+            if (breakCount == range)
+                break;
         }
 
         return coneAttackList;
     }
-
 
     public void RefreshCheckerboardList()
     {
@@ -399,9 +447,13 @@ public class BattleManager : Singleton<BattleManager>
                     // Debug.Log("敵人：" + location);
                 }
                 else if (CurrentTerrainList.ContainsKey(location))
+                {
                     CheckerboardList.Add(location, "Terrain");
+                }
                 else
+                {
                     CheckerboardList.Add(location, "Empty");
+                }
             }
         }
     }

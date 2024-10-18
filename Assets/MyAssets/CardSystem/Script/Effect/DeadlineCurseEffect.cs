@@ -22,7 +22,7 @@ public class DeadlineCurseEffect : IEffect
                 string locationID = BattleManager.Instance.CurrentLocationID;
                 PlayerData playerData = BattleManager.Instance.CurrentPlayerData;
                 EnemyData enemyData = BattleManager.Instance.CurrentEnemyList[locationID];
-                BattleManager.Instance.TakeDamage(enemyData, playerData, DataManager.Instance.CardList[5001].CardAttack, locationID);
+                BattleManager.Instance.TakeDamage(enemyData, playerData, DataManager.Instance.CardList[5001].CardAttack, locationID, 0);
                 DataManager.Instance.HandCard.Remove(cardItem);
                 DataManager.Instance.RemoveCardBag.Add(cardItem);
                 cardItem.gameObject.SetActive(false);

@@ -9,7 +9,7 @@ public class PoisonExplosionEffect : IEffect
     {
         int damage = BattleManager.Instance.CurrentNegativeState["PoisonedEffect"];
         BattleManager.Instance.TakeDamage(BattleManager.Instance.CurrentEnemyList[target], BattleManager.Instance.CurrentPlayerData, damage
-        , BattleManager.Instance.CurrentLocationID);
+        , BattleManager.Instance.CurrentLocationID, 0);
         BattleManager.Instance.CurrentNegativeState.Remove("PoisonedEffect");
     }
 

@@ -92,7 +92,7 @@ public class UIBattle : UIBase
     private Button potionPrefab;
     [SerializeField]
     private Transform potionClueMenu;
-
+    private bool inRange;
     protected override void Start()
     {
         base.Start();
@@ -132,18 +132,15 @@ public class UIBattle : UIBase
             string location = BattleManager.Instance.ConvertCheckerboardPos(i);
             if (!BattleManager.Instance.CurrentEnemyList.ContainsKey(location))
                 continue;
-            //EnemyData enemyData = BattleManager.Instance.CurrentEnemyList[location];
             EventTrigger eventTrigger = checkerboardTrans.GetChild(i).GetComponent<EventTrigger>();
             UnityAction unityAction_1 = () => { RefreshEnemyInfo(location); };
             UnityAction unityAction_2 = () =>
             {
                 if (BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack)
                     return;
-                //UIManager.Instance.ClearCheckerboardColor(location, enemyData.StepCount, BattleManager.CheckEmptyType.EnemyAttack);
                 UIManager.Instance.ClearMoveClue(false);
             };
             BattleManager.Instance.SetEventTrigger(eventTrigger, unityAction_1, unityAction_2);
-            //checkerboardTrans.GetChild(i).GetComponent<Button>().onClick.AddListener(() => RefreshEnemyInfo(location));
         }
     }
 
@@ -153,18 +150,8 @@ public class UIBattle : UIBase
             return;
         EnemyData enemyData = BattleManager.Instance.CurrentEnemyList[location];
         Enemy enemy = enemyData.EnemyTrans.GetComponent<Enemy>();
-        switch (enemy.MyActionType)
-        {
-            case Enemy.ActionType.None:
-                break;
-            case Enemy.ActionType.Move:
-                UIManager.Instance.ChangeCheckerboardColor(location, enemyData.StepCount, BattleManager.CheckEmptyType.Move, enemy.MyAttackType, true);
-                break;
-            case Enemy.ActionType.Attack:
-            case Enemy.ActionType.Effect:
-                UIManager.Instance.ChangeCheckerboardColor(location, enemyData.AttackDistance, BattleManager.CheckEmptyType.EnemyAttack, enemy.MyAttackType, false);
-                break;
-        }
+        bool isMove = enemy.MyActionType == Enemy.ActionType.Move ? true : false;
+        UIManager.Instance.ChangeCheckerboardColor(enemy.CurrentActionRangeTypeList, isMove);
         enemyInfo.SetActive(true);
         enemyName.text = enemyData.CharacterName;
         enemyImage.sprite = Resources.Load<Sprite>(enemyData.EnemyImagePath);
@@ -201,9 +188,9 @@ public class UIBattle : UIBase
             Enemy enemy = enemyTrans.GetComponent<Enemy>();
             PlayerData playerData = BattleManager.Instance.CurrentPlayerData;
             Image enemyImage = enemy.EnemyImage;
-
             SetEnemyAttackRotation(enemyData, enemyImage, location);  // 设置敌人朝向
-
+            string playerLocation = BattleManager.Instance.CurrentLocationID;
+            inRange = enemy.CurrentActionRangeTypeList.Contains(playerLocation) || enemy.MyActionRangeType == BattleManager.ActionRangeType.None;
             switch (enemy.MyActionType)
             {
                 case Enemy.ActionType.None:
@@ -215,14 +202,12 @@ public class UIBattle : UIBase
                     break;
 
                 case Enemy.ActionType.Attack:
-                    enemy.MyAnimator.SetTrigger("isAttacking");
-                    if (CanPerformAttack(location, enemyData.AttackDistance, enemy.MyAttackType))
-                    {
-                        yield return HandleEnemyAttack(enemyData, playerData); // 单独处理攻击逻辑
-                    }
+                    int attackCount = enemyData.AttackOrderStrs.ElementAt(enemyData.CurrentAttackOrder).Item2;
+                    yield return HandleEnemyAttack(enemyData, enemy, playerData, attackCount); // 单独处理攻击逻辑
                     break;
                 case Enemy.ActionType.Shield:
-                    BattleManager.Instance.GetShield(enemyData, enemyData.CurrentAttack / 2);  // 处理护盾
+                    int shieldCount = enemyData.AttackOrderStrs.ElementAt(enemyData.CurrentAttackOrder).Item2;
+                    BattleManager.Instance.GetShield(enemyData, shieldCount);  // 处理护盾
                     break;
 
                 case Enemy.ActionType.Effect:
@@ -230,27 +215,11 @@ public class UIBattle : UIBase
                     break;
             }
             UpdateAttackOrder(enemyData, enemy);  // 更新攻击顺序
-            SetEnemyAttackRotation(enemyData, enemyImage, location);
             EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
             yield return new WaitForSecondsRealtime(0.5f);
         }
 
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Player);
-    }
-    private bool CanPerformAttack(string location, int attackDistance, BattleManager.AttackType attackType)
-    {
-        string playerLocation = BattleManager.Instance.CurrentLocationID;
-        switch (attackType)
-        {
-            case BattleManager.AttackType.Linear:
-                return BattleManager.Instance.GetLinearAttackList(location, playerLocation).Contains(playerLocation); // 特定條件
-            case BattleManager.AttackType.Surrounding:
-                return BattleManager.Instance.GetEmptyPlace(location, attackDistance, BattleManager.CheckEmptyType.EnemyAttack, false).Contains(playerLocation); // 特定條件
-            case BattleManager.AttackType.Cone:
-                return BattleManager.Instance.GetConeAttackList(location, playerLocation, attackDistance).Contains(playerLocation); // 特定條件
-            default:
-                return false;
-        }
     }
 
     // 设置敌人朝向
@@ -271,7 +240,7 @@ public class UIBattle : UIBase
     // 处理敌人移动
     private IEnumerator HandleEnemyMove(string location, EnemyData enemyData, RectTransform enemyTrans, Enemy enemy, Image enemyImage)
     {
-        List<string> emptyPlaceList = BattleManager.Instance.GetEmptyPlace(location, enemyData.StepCount, BattleManager.CheckEmptyType.Move, true);
+        List<string> emptyPlaceList = BattleManager.Instance.GetAcitonRangeTypeList(location, enemyData.StepCount, enemy.MyCheckEmptyType, enemy.MyActionRangeType);
         string playerLocation = BattleManager.Instance.CurrentLocationID;
         int[] minPoint = BattleManager.Instance.ConvertNormalPos(emptyPlaceList[0]);
         int minDistance = BattleManager.Instance.GetRoute(emptyPlaceList[0], playerLocation, BattleManager.CheckEmptyType.EnemyAttack).Count;
@@ -300,25 +269,36 @@ public class UIBattle : UIBase
             yield return new WaitForSeconds(0.5f);
             enemy.MyAnimator.SetBool("isRunning", false);
         }
-        BattleManager.Instance.CurrentEnemyList.Add(newLocation, enemyData);
+        SetEnemyAttackRotation(enemyData, enemyImage, newLocation);
         BattleManager.Instance.CurrentEnemyList.Remove(location);  // 更新敌人位置
+        BattleManager.Instance.CurrentEnemyList.Add(newLocation, enemyData);
         enemy.EnemyLocation = newLocation;
         BattleManager.Instance.RefreshCheckerboardList();
     }
 
     // 处理敌人攻击
-    private IEnumerator HandleEnemyAttack(EnemyData enemyData, PlayerData playerData)
+    private IEnumerator HandleEnemyAttack(EnemyData enemyData, Enemy enemy, PlayerData playerData, int attackCount)
     {
-        yield return new WaitForSecondsRealtime(0.25f);
-        BattleManager.Instance.TakeDamage(enemyData, playerData, enemyData.CurrentAttack, BattleManager.Instance.CurrentLocationID);
+
+        for (int i = 0; i < attackCount; i++)
+        {
+            enemy.MyAnimator.SetTrigger("isAttacking");
+            yield return new WaitForSecondsRealtime(0.25f);
+            if (inRange)
+                BattleManager.Instance.TakeDamage(enemyData, playerData, enemyData.CurrentAttack, BattleManager.Instance.CurrentLocationID, 0.5f);
+            yield return new WaitForSecondsRealtime(0.5f);
+        }
     }
 
     // 应用敌人的效果
     private void ApplyEffect(EnemyData enemyData, string location)
     {
-        string key = enemyData.AttackOrderStrs.ElementAt(enemyData.CurrentAttackOrder).Item1;
-        int value = enemyData.AttackOrderStrs.ElementAt(enemyData.CurrentAttackOrder).Item2;
-        EffectFactory.Instance.CreateEffect(key).ApplyEffect(value, location);
+        if (inRange)
+        {
+            string key = enemyData.AttackOrderStrs.ElementAt(enemyData.CurrentAttackOrder).Item1;
+            int value = enemyData.AttackOrderStrs.ElementAt(enemyData.CurrentAttackOrder).Item2;
+            EffectFactory.Instance.CreateEffect(key).ApplyEffect(value, location);
+        }
     }
 
     // 更新攻击顺序

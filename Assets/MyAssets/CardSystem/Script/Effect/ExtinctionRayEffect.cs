@@ -10,7 +10,7 @@ public class ExtinctionRayEffect : IEffect
         int mana = BattleManager.Instance.CurrentPlayerData.Mana;
         int upCount = mana / 10;
         int damage = (int)(mana * 2 + 2 * Mathf.Pow(2, upCount));
-        BattleManager.Instance.TakeDamage(BattleManager.Instance.CurrentPlayerData, BattleManager.Instance.CurrentEnemyList[target], damage, target);
+        BattleManager.Instance.TakeDamage(BattleManager.Instance.CurrentPlayerData, BattleManager.Instance.CurrentEnemyList[target], damage, target, 0);
         BattleManager.Instance.ConsumeMana(mana);
     }
 

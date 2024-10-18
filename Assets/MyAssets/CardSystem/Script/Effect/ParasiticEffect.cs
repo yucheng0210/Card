@@ -56,7 +56,7 @@ public class ParasiticEffect : IEffect
         CharacterData parasiteRepresent = new EnemyData();
         // Recover parasite and damage host
         BattleManager.Instance.Recover(parasite, currentDamage, enemyLocation);
-        BattleManager.Instance.TakeDamage(parasiteRepresent, host, currentDamage, BattleManager.Instance.CurrentLocationID);
+        BattleManager.Instance.TakeDamage(parasiteRepresent, host, currentDamage, BattleManager.Instance.CurrentLocationID, 0.5f);
     }
 
     public string SetTitleText()

@@ -35,14 +35,17 @@ public class Enemy : MonoBehaviour
     public Image EnemyImage { get { return enemyImage; } set { enemyImage = value; } }
     public GameObject EnemyEffectImage { get { return enemyEffect; } set { enemyEffect = value; } }
     public Animator MyAnimator { get { return myAnimator; } set { myAnimator = value; } }
+    public List<string> CurrentActionRangeTypeList { get; set; }
     public int EnemyID { get; set; }
     public string EnemyLocation { get; set; }
     public ActionType MyActionType { get; set; }
-    public BattleManager.AttackType MyAttackType { get; set; }
+    public BattleManager.ActionRangeType MyActionRangeType { get; set; }
+    public BattleManager.CheckEmptyType MyCheckEmptyType { get; set; }
     public bool IsDeath { get; set; }
     public Dictionary<string, int> EnemyOnceBattlePositiveList { get; set; }
     private Dictionary<string, EnemyData> currentEnemyList = new();
     private EnemyData enemyData = new EnemyData();
+    private int actionRangeDistance;
     public enum ActionType
     {
         Move,
@@ -69,7 +72,6 @@ public class Enemy : MonoBehaviour
     {
         float distance = BattleManager.Instance.GetRoute(EnemyLocation, BattleManager.Instance.CurrentLocationID, BattleManager.CheckEmptyType.EnemyAttack).Count;
         ResetUIElements();
-
         if (distance == 0)
         {
             HandleNoAttack();
@@ -82,7 +84,7 @@ public class Enemy : MonoBehaviour
         {
             HandleMove();
         }
-
+        CurrentActionRangeTypeList = BattleManager.Instance.GetAcitonRangeTypeList(EnemyLocation, actionRangeDistance, MyCheckEmptyType, MyActionRangeType);
         SetInfoGroupEventTrigger();
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
@@ -105,16 +107,18 @@ public class Enemy : MonoBehaviour
     private void HandleAttack()
     {
         string attackOrder = enemyData.AttackOrderStrs.ElementAt(enemyData.CurrentAttackOrder).Item1;
-        Dictionary<string, BattleManager.AttackType> attackTypeMap = new Dictionary<string, BattleManager.AttackType>
+        Dictionary<string, BattleManager.ActionRangeType> attackTypeMap = new Dictionary<string, BattleManager.ActionRangeType>
         {
-            { "LinearAttack", BattleManager.AttackType.Linear },
-            { "SurroundingAttack", BattleManager.AttackType.Surrounding },
-            { "ConeAttack",BattleManager.AttackType.Cone }
+            { "LinearAttack", BattleManager.ActionRangeType.Linear },
+            { "SurroundingAttack", BattleManager.ActionRangeType.Surrounding },
+            { "ConeAttack",BattleManager.ActionRangeType.Cone }
         };
-        if (attackTypeMap.TryGetValue(attackOrder, out BattleManager.AttackType attackType))
+        actionRangeDistance = enemyData.AttackDistance;
+        if (attackTypeMap.TryGetValue(attackOrder, out BattleManager.ActionRangeType attackType))
         {
-            MyAttackType = attackType;
+            MyActionRangeType = attackType;
             MyActionType = ActionType.Attack;
+            MyCheckEmptyType = BattleManager.CheckEmptyType.EnemyAttack;
             Attack();
         }
         else if (attackOrder == "Shield")
@@ -129,18 +133,22 @@ public class Enemy : MonoBehaviour
 
     private void ActivateShield()
     {
+        int shieldCount = enemyData.AttackOrderStrs.ElementAt(enemyData.CurrentAttackOrder).Item2;
         infoTitle.text = "護盾";
         infoDescription.text = "產生護盾。";
         MyActionType = ActionType.Shield;
-        MyAttackType = BattleManager.AttackType.None;
-        enemyAttackIntentText.text = (enemyData.CurrentAttack / 2).ToString();
+        MyActionRangeType = BattleManager.ActionRangeType.None;
+        MyCheckEmptyType = BattleManager.CheckEmptyType.EnemyAttack;
+        enemyAttackIntentText.text = shieldCount.ToString();
         enemyShield.SetActive(true);
     }
 
     private void ActivateEffect(string attackOrder)
     {
+        actionRangeDistance = enemyData.AttackDistance;
         MyActionType = ActionType.Effect;
-        MyAttackType = EffectFactory.Instance.CreateEffect(attackOrder).SetEffectAttackType();
+        MyActionRangeType = EffectFactory.Instance.CreateEffect(attackOrder).SetEffectAttackType();
+        MyCheckEmptyType = BattleManager.CheckEmptyType.EnemyAttack;
         Image enemyEffectImage = enemyEffect.GetComponent<Image>();
         infoTitle.text = EffectFactory.Instance.CreateEffect(attackOrder).SetTitleText();
         infoDescription.text = EffectFactory.Instance.CreateEffect(attackOrder).SetDescriptionText();
@@ -151,10 +159,12 @@ public class Enemy : MonoBehaviour
 
     private void HandleMove()
     {
+        actionRangeDistance = enemyData.StepCount;
         infoTitle.text = "移動";
         infoDescription.text = "進行移動。";
         MyActionType = ActionType.Move;
-        MyAttackType = BattleManager.AttackType.Default;
+        MyActionRangeType = BattleManager.ActionRangeType.Default;
+        MyCheckEmptyType = BattleManager.CheckEmptyType.Move;
         enemyAttackIntentText.enabled = false;
         enemyMove.SetActive(true);
     }
@@ -181,6 +191,7 @@ public class Enemy : MonoBehaviour
     }
     private void EventMove(params object[] args)
     {
-        RefreshAttackIntent();
+        //CurrentActionRangeTypeList = BattleManager.Instance.GetAcitonRangeTypeList(EnemyLocation, actionRangeDistance, MyCheckEmptyType, MyActionRangeType);
+        // RefreshAttackIntent();
     }
 }
