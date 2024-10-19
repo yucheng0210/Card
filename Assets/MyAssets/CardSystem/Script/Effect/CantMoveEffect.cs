@@ -19,15 +19,15 @@ public class CantMoveEffect : IEffect
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
 
-    public string SetDescriptionText()
+    public string SetTitleText()
     {
         return "禁錮";
     }
-
-    public string SetTitleText()
+    public string SetDescriptionText()
     {
-        return "禁止移動。";
+        return "封印移動的負面效果。";
     }
+
     public BattleManager.ActionRangeType SetEffectAttackType()
     {
         return BattleManager.ActionRangeType.Cone;

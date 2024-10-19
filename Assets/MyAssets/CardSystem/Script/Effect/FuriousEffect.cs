@@ -51,6 +51,6 @@ public class FuriousEffect : IEffect
 
     public string SetDescriptionText()
     {
-        return "每次攻擊提升攻擊力。";
+        return "攻擊命中敵人時，提升自身的攻擊力。";
     }
 }

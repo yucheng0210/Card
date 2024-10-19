@@ -9,5 +9,6 @@ public interface IEffect
     Sprite SetIcon() { return Resources.Load<Sprite>("EffectImage/" + GetType().Name); }
     string SetTitleText();
     string SetDescriptionText();
+    string SetPassiveEffectDescriptionText() { return SetDescriptionText(); }
     BattleManager.ActionRangeType SetEffectAttackType() { return BattleManager.ActionRangeType.Surrounding; }
 }

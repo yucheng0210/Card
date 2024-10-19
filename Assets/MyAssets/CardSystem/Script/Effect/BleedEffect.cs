@@ -59,16 +59,20 @@ public class BleedEffect : IEffect
             return;
         // Apply damage to the player
         int bleedDamage = currentNegativeState[typeName];
-        BattleManager.Instance.TakeDamage(attacker, BattleManager.Instance.CurrentPlayerData, bleedDamage, BattleManager.Instance.CurrentLocationID, 0);
+        BattleManager.Instance.TakeDamage(attacker, BattleManager.Instance.CurrentPlayerData, bleedDamage, BattleManager.Instance.CurrentLocationID, 0.25f);
     }
 
     public string SetTitleText()
     {
-        throw new System.NotImplementedException();
+        return "流血";
     }
 
     public string SetDescriptionText()
     {
-        throw new System.NotImplementedException();
+        return "移動時會受到等同於流血效果層數的傷害。";
+    }
+    public string SetPassiveEffectDescriptionText()
+    {
+        return "攻擊時對敵人施加流血效果。";
     }
 }

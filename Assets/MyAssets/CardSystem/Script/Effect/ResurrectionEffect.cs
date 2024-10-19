@@ -52,11 +52,11 @@ public class ResurrectionEffect : IEffect
 
     public string SetTitleText()
     {
-        return "死這甦醒";
+        return "死者甦醒";
     }
 
     public string SetDescriptionText()
     {
-        return "以30%血量復活。";
+        return "當生命歸零時，角色進入復甦狀態，在自己的回合開始時，角色將以特定比例的生命復活，且該被動技能將被移除。";
     }
 }

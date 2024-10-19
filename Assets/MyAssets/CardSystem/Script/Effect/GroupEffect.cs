@@ -25,7 +25,7 @@ public class GroupEffect : IEffect
 
     public string SetTitleText()
     {
-        return "族群效應";
+        return "族群增益";
     }
 
     public string SetDescriptionText()

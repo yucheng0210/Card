@@ -65,7 +65,7 @@ public class ThornsEffect : IEffect
 
     public string SetDescriptionText()
     {
-        return "受到傷害時，將部分比例的傷害反彈回去。";
+        return "受到攻擊時，將部分比例的傷害反彈回去。";
     }
     public BattleManager.ActionRangeType SetEffectAttackType()
     {

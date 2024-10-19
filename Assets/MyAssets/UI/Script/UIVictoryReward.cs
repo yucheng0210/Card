@@ -123,6 +123,7 @@ public class UIVictoryReward : UIBase
         {
             int rewardID = MapManager.Instance.MapNodes[count][id].l.RewardIDList[i].Item1;
             GameObject reward = Instantiate(rewardPrefab, rewardGroupTrans);
+            reward.GetComponent<Image>().sprite = Resources.Load<Sprite>(DataManager.Instance.ItemList[rewardID].ItemImagePath);
             /* rewardName = reward.transform.GetChild(0).GetComponent<Text>();
              rewardCount = reward.transform.GetChild(1).GetComponent<Text>();
              rewardName.text = DataManager.Instance.ItemList[rewardID].ItemName;

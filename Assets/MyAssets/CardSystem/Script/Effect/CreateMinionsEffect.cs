@@ -10,14 +10,14 @@ public class CreateMinionsEffect : IEffect
         int minionsCount = Mathf.Clamp(value - BattleManager.Instance.CurrentMinionsList.Count, 0, value);
         BattleManager.Instance.AddMinions(2005, minionsCount, target);
     }
+    public string SetTitleText()
+    {
+        return "召喚爪牙";
+    }
 
     public string SetDescriptionText()
     {
-        throw new System.NotImplementedException();
+        return "召喚數隻弱化版的本體爪牙。"; 
     }
 
-    public string SetTitleText()
-    {
-        throw new System.NotImplementedException();
-    }
 }

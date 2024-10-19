@@ -462,6 +462,19 @@ public class BattleManager : Singleton<BattleManager>
         CurrentPlayerData.Mana -= consumeMana;
         CurrentConsumeMana += consumeMana;
     }
+    public string AutomaticLineWrapping(string str, int wrappingCount)
+    {
+        string newStr = "";
+        for (int i = 0; i < str.Length; i++)
+        {
+            newStr += str[i];
+            if (i == wrappingCount - 1)
+            {
+                newStr += "\n\n";
+            }
+        }
+        return newStr;
+    }
     public void ChangeTurn(BattleType type)
     {
         MyBattleType = type;

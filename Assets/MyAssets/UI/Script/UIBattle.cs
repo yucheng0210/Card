@@ -167,7 +167,7 @@ public class UIBattle : UIBase
             Image passive = Instantiate(negativeLPrefab, enemyPassiveGroupTrans).BattleStateImage;
             Sprite image = EffectFactory.Instance.CreateEffect(key).SetIcon();
             passive.sprite = image;
-            UpdateStateUI(enemyPassiveGroupTrans, enemyData.MaxPassiveSkillsList, negativeLPrefab);
+            UpdateStateUI(enemyPassiveGroupTrans, enemyData.MaxPassiveSkillsList, negativeLPrefab, true);
         }
     }
     private IEnumerator EnemyAttack()
@@ -547,13 +547,13 @@ public class UIBattle : UIBase
         }
 
         // 更新负面状态
-        UpdateStateUI(negativeGroupTrans, negativeState, negativeRPrefab);
+        UpdateStateUI(negativeGroupTrans, negativeState, negativeRPrefab, false);
 
         // 更新正面状态
-        UpdateStateUI(positiveGroupTrans, positiveList, negativeRPrefab);
+        UpdateStateUI(positiveGroupTrans, positiveList, negativeRPrefab, false);
     }
 
-    private void UpdateStateUI(Transform groupTrans, Dictionary<string, int> stateList, BattleState prefab)
+    private void UpdateStateUI(Transform groupTrans, Dictionary<string, int> stateList, BattleState prefab, bool isPassiveEffect)
     {
         // 清空当前状态
         for (int i = groupTrans.childCount - 1; i >= 0; i--)
@@ -579,7 +579,14 @@ public class UIBattle : UIBase
             UnityAction unityAction_2 = () => { infoGroupTrans.GetChild(0).gameObject.SetActive(false); };
             BattleManager.Instance.SetEventTrigger(eventTrigger, unityAction_1, unityAction_2);
             infoTitle.text = EffectFactory.Instance.CreateEffect(key).SetTitleText();
-            infoDescription.text = EffectFactory.Instance.CreateEffect(key).SetDescriptionText();
+            string descriptionStr = isPassiveEffect ? EffectFactory.Instance.CreateEffect(key).SetPassiveEffectDescriptionText()
+            : EffectFactory.Instance.CreateEffect(key).SetDescriptionText();
+            if (descriptionStr.Length > 30)
+            {
+                infoGroupTrans.GetChild(0).GetChild(0).gameObject.SetActive(true);
+                descriptionStr = BattleManager.Instance.AutomaticLineWrapping(descriptionStr, 30);
+            }
+            infoDescription.text = descriptionStr;
         }
     }
 

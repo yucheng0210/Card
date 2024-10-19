@@ -150,8 +150,8 @@ public class Enemy : MonoBehaviour
         MyActionRangeType = EffectFactory.Instance.CreateEffect(attackOrder).SetEffectAttackType();
         MyCheckEmptyType = BattleManager.CheckEmptyType.EnemyAttack;
         Image enemyEffectImage = enemyEffect.GetComponent<Image>();
-        infoTitle.text = EffectFactory.Instance.CreateEffect(attackOrder).SetTitleText();
-        infoDescription.text = EffectFactory.Instance.CreateEffect(attackOrder).SetDescriptionText();
+        infoTitle.text = "效果";
+        infoDescription.text = "施展未知效果。";
         enemyAttackIntentText.enabled = false;
         enemyEffectImage.sprite = EffectFactory.Instance.CreateEffect(attackOrder).SetIcon();
         enemyEffect.SetActive(true);

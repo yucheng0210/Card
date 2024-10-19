@@ -18131,15 +18131,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 100
+    m_Left: 50
     m_Right: 0
-    m_Top: 120
+    m_Top: 50
     m_Bottom: 0
   m_ChildAlignment: 0
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 100, y: 150}
-  m_Spacing: {x: 200, y: 200}
+  m_CellSize: {x: 225, y: 300}
+  m_Spacing: {x: 50, y: 50}
   m_Constraint: 0
   m_ConstraintCount: 2
 --- !u!1 &929211205
@@ -20567,7 +20567,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 194137554}
   m_Direction: 2
   m_Value: 0.000000035924344
-  m_Size: 0.24118002
+  m_Size: 0.24117577
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
