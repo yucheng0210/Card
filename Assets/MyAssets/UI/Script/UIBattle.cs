@@ -457,7 +457,7 @@ public class UIBattle : UIBase
         DataManager.Instance.PotionBag.RemoveAt(bagID);
         potionClueMenu.gameObject.SetActive(false);
         RefreshPotionBag();
-        EventRefreshUI();
+        EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
     private void EventPlayerTurn(params object[] args)
     {

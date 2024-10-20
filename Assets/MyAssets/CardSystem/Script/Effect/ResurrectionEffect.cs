@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class ResurrectionEffect : IEffect
 {
-    private int reciprocalCount = 1;
     private int recoverCount;
     private EnemyData enemyData;
     private Enemy enemy;
@@ -33,7 +32,7 @@ public class ResurrectionEffect : IEffect
 
     private void EventEnemyTurn(params object[] args)
     {
-        if (--reciprocalCount > 0) return;
+        if (enemyData.CurrentHealth > 0) return;
 
         // 敌人复活
         enemy.IsDeath = false;

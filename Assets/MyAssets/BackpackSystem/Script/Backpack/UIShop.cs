@@ -45,7 +45,7 @@ public class UIShop : UIBase
             cardItem.GetComponent<CanvasGroup>().alpha = 1;
             cardItem.CardID = randomCard.Key;
             cardItem.CantMove = true;
-            cardPriceText.text = "$" + cardData.CardBuyPrice.ToString();
+            cardPriceText.text = cardData.CardBuyPrice.ToString();
             Button cardButton = cardItem.GetComponent<Button>();
             cardButton.onClick.AddListener(() => AddCard(cardItem.CardID, cardButton.gameObject));
         }
@@ -60,7 +60,7 @@ public class UIShop : UIBase
             Item potionItem = itemList[randomItem.Key];
             Button potion = Instantiate(potionPrefab, potionGroupTrans);
             Text potionPriceText = potion.transform.GetChild(potion.transform.childCount - 1).GetComponent<Text>();
-            potionPriceText.text = "$" + potionItem.ItemBuyPrice.ToString();
+            potionPriceText.text = potionItem.ItemBuyPrice.ToString();
             potion.onClick.AddListener(() => AddPotion(potionItem.ItemID, potion.gameObject));
         }
     }

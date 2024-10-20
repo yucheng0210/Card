@@ -48,11 +48,11 @@ public class LeaveBattleShieldEffect : IEffect
 
     public string SetTitleText()
     {
-        throw new System.NotImplementedException();
+        return "脫戰冰盾";
     }
 
     public string SetDescriptionText()
     {
-        throw new System.NotImplementedException();
+        return "上回合未受到攻擊，自動生成護盾。";
     }
 }

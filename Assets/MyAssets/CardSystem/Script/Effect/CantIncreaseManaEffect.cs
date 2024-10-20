@@ -13,13 +13,13 @@ public class CantIncreaseManaEffect : IEffect
             BattleManager.Instance.CurrentNegativeState.Add(GetType().Name, 1);
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
+    public string SetTitleText()
+    {
+       return "禁魔";
+    }
 
     public string SetDescriptionText()
     {
-        throw new System.NotImplementedException();
-    }
-    public string SetTitleText()
-    {
-        throw new System.NotImplementedException();
+       return "下回合無法獲得魔力。";
     }
 }

@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using DG.Tweening;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
+using Unity.VisualScripting;
 
 public class BattleManager : Singleton<BattleManager>
 {
@@ -601,8 +602,9 @@ public class BattleManager : Singleton<BattleManager>
     public void NextLevel(string hideMenu)
     {
         // BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Dialog);
+        string showMenuStr = MapManager.Instance.LevelCount == 14 ? "UISkyIsland" : "UIMap";
         MapManager.Instance.LevelCount++;
-        UIManager.Instance.ShowUI("UIMap");
+        UIManager.Instance.ShowUI(showMenuStr);
         UIManager.Instance.HideUI(hideMenu);
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
@@ -623,7 +625,8 @@ public class BattleManager : Singleton<BattleManager>
         for (int i = 0; i < count; i++)
         {
             int randomIndex = Random.Range(0, emptyPlaceList.Count);
-            CurrentMinionsList.Add(emptyPlaceList[randomIndex], DataManager.Instance.EnemyList[enemyID]);
+            EnemyData enemyData = DataManager.Instance.EnemyList[enemyID].DeepClone();
+            CurrentMinionsList.Add(emptyPlaceList[randomIndex], enemyData);
             emptyPlaceList.Remove(emptyPlaceList[randomIndex]);
         }
         for (int i = 0; i < CurrentMinionsList.Count; i++)

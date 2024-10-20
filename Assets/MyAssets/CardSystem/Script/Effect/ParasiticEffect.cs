@@ -66,6 +66,6 @@ public class ParasiticEffect : IEffect
 
     public string SetDescriptionText()
     {
-        return "之後再寫。";
+        return "給予寄生卡片。";
     }
 }

@@ -15,12 +15,12 @@ public class UIMap : UIBase
     private Button[][] mapList;
     private Dictionary<string, int> levelProbabilities = new Dictionary<string, int>
     {
-        { "BATTLE", 5 },
+        { "BATTLE", 75 },
         { "BOSS", 5 },
         { "RANDOM", 5 },
         { "RECOVER", 5 },
         { "SHOP",5 },
-        {"TREASURE",75}
+        {"TREASURE",5}
     };
     protected override void Start()
     {
@@ -36,7 +36,6 @@ public class UIMap : UIBase
     {
         // 初始化列表
         InitializeLists();
-
         // 遍歷每一行節點
         for (int i = MapManager.Instance.MapNodes.Length - 1; i >= 0; i--)
         {
@@ -144,6 +143,9 @@ public class UIMap : UIBase
                     case "TREASURE":
                         currentIndex = 6001;
                         break;
+                    case "FINALBOSS":
+                        currentIndex = 7001;
+                        break;
                 }
                 break;
             }
@@ -156,6 +158,8 @@ public class UIMap : UIBase
         Level level = DataManager.Instance.LevelTypeList[currentIndex].Clone();
         level.LevelParentList = new List<int>();
         level.LevelID = i * 5 + j;
+        MapManager.Instance.LevelCount = 14;
+        level.LevelActive = true;
         if (MapManager.Instance.MapNodes[i][j].left != null)
             level.LevelParentList.Add(MapManager.Instance.MapNodes[i][j].left.l.LevelID);
         if (MapManager.Instance.MapNodes[i][j].right != null)
@@ -246,7 +250,9 @@ public class UIMap : UIBase
                     //Debug.Log("Count:" + i + "  " + "ID:" + j);
                 }
                 else
+                {
                     effectList[i][j].Pause();
+                }
             }
         }
         //Debug.Log("CurrentLevel: " + MapManager.Instance.LevelCount);

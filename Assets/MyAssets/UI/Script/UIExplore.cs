@@ -25,6 +25,8 @@ public class UIExplore : UIBase
 
     [Header("寶藏")]
     [SerializeField] private GameObject treasure;
+    [SerializeField] private GameObject openedTreasureBackground;
+    [SerializeField] private Transform treasureItemTrans;
 
     protected override void Start()
     {
@@ -64,6 +66,9 @@ public class UIExplore : UIBase
                 break;
             case "TREASURE":
                 OpenTreasure();
+                break;
+            case "FINALBOSS":
+                StartFinalBossBattle();
                 break;
         }
     }
@@ -115,7 +120,10 @@ public class UIExplore : UIBase
     {
         StartBattle(); // Boss戰也使用相同的流程
     }
-
+    private void StartFinalBossBattle()
+    {
+        StartBattle();
+    }
     private void OpenShop()
     {
         UIManager.Instance.ShowUI("UIShop");
@@ -131,6 +139,7 @@ public class UIExplore : UIBase
     private void OnTreasureButtonClicked()
     {
         EventManager.Instance.DispatchEvent(EventDefinition.eventBattleWin);
+        /* openedTreasureBackground.SetActive(true);*/
         treasure.SetActive(false);
     }
 

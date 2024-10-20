@@ -66,11 +66,11 @@ public class PoisonedEffect : IEffect
     }
     public string SetTitleText()
     {
-        throw new System.NotImplementedException();
+        return "中毒";
     }
 
     public string SetDescriptionText()
     {
-        throw new System.NotImplementedException();
+        return  "攻擊疊加毒素。";
     }
 }

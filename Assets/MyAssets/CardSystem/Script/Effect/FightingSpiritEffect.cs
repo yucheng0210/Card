@@ -10,12 +10,17 @@ public class FightingSpiritEffect : IEffect
         string typeName = GetType().Name;
         Dictionary<string, int> currentOnceBattlePositiveList = BattleManager.Instance.CurrentOnceBattlePositiveList;
         if (currentOnceBattlePositiveList.ContainsKey(typeName))
-            currentOnceBattlePositiveList[typeName]++;
+            currentOnceBattlePositiveList[typeName] += 8;
         else
-            currentOnceBattlePositiveList.Add(typeName, 1);
-        int damage = 8 * currentOnceBattlePositiveList[typeName];
+            currentOnceBattlePositiveList.Add(typeName, 8);
+        int damage = currentOnceBattlePositiveList[typeName];
         BattleManager.Instance.TakeDamage(BattleManager.Instance.CurrentPlayerData, BattleManager.Instance.CurrentEnemyList[target], damage, target, 0);
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
+    }
+
+    public string SetTitleText()
+    {
+        return "戰意";
     }
 
     public string SetDescriptionText()
@@ -23,9 +28,4 @@ public class FightingSpiritEffect : IEffect
         return "根據戰意的層數額外增加傷害。";
     }
 
-
-    public string SetTitleText()
-    {
-        return "戰意";
-    }
 }

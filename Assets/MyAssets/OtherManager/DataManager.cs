@@ -58,9 +58,9 @@ public class DataManager : Singleton<DataManager>
 
     private void Start()
     {
-        //StartGame();
-        StartGame_FightingSpiritEffect();
-        //StartGame_ExtinctionRayEffect();
+        //StartGame_Default();
+        //StartGame_FightingSpiritEffect();
+        StartGame_ExtinctionRayEffect();
     }
 
     private void LoadData()
@@ -379,7 +379,7 @@ public class DataManager : Singleton<DataManager>
         }
         #endregion
     }
-    private void StartGame()
+    private void StartGame_Default()
     {
         MoneyCount = 99;
         PlayerID = 1001;
@@ -431,6 +431,8 @@ public class DataManager : Singleton<DataManager>
         cardData = CardList[1011];
         CardBag.Add(cardData);
         cardData = CardList[1010];
+        CardBag.Add(cardData);
+        cardData = CardList[1009];
         CardBag.Add(cardData);
         BattleManager.Instance.CurrentPlayerData = PlayerList[PlayerID];
     }

@@ -240,7 +240,7 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             return;
         if (cardData.CardCost < 0)
             return;
-        CardRectTransform.DOScale(1.5f, 0);
+        CardRectTransform.DOScale(1f, 0);
         DataManager.Instance.HandCard.Remove(this);
         BattleManager.Instance.ConsumeActionPoint(Cost);
         BattleManager.Instance.ConsumeMana(cardData.CardManaCost);
