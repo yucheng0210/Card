@@ -59,8 +59,8 @@ public class DataManager : Singleton<DataManager>
     private void Start()
     {
         //StartGame_Default();
-        //StartGame_FightingSpiritEffect();
-        StartGame_ExtinctionRayEffect();
+        StartGame_FightingSpiritEffect();
+        //StartGame_ExtinctionRayEffect();
     }
 
     private void LoadData()

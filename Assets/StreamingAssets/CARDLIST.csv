@@ -4,7 +4,7 @@
 1003,衝擊波,攻擊,CardImage/MagicBullet,2,無,null,造成10點傷害，並擊退。,10,0,KnockBackEffect=1,基本,1,3,FALSE,50,FALSE
 1004,聚魔,增益,CardImage/GatherMagic,1,無,null,獲得5點魔力。,0,0,IncreaseManaEffect=5,普通,0,0,FALSE,50,FALSE
 1005,移動,移動,CardImage/NormalMove,1,無,null,移動一格。,0,0,MoveEffect=1,普通,0,0,FALSE,50,FALSE
-1006,至尊平A,攻擊,CardImage/PhysicalAttack,1,無,null,獲得一層戰意，並額外造成等同於戰意層數的傷害。,0,0,FightingSpiritEffect=0,普通,1,0,FALSE,50,FALSE
+1006,至尊平A,攻擊,CardImage/Foreknowledge,1,無,null,獲得一層戰意，並額外造成等同於戰意層數的傷害。,0,0,FightingSpiritEffect=0,普通,1,0,FALSE,50,FALSE
 1007,湧泉,能力,CardImage/Spring,1,無,null,每回合生成兩點魔力。,0,0,IncreaseManaEffect=2,普通,0,0,FALSE,50,FALSE
 1008,岩壁,防禦,CardImage/Spring,2,無,null,產生13點護盾，限制移動。,0,13,CantMoveEffect=0,普通,0,5,FALSE,50,FALSE
 1009,以一換二,增益,CardImage/DrawCards,1,無,null,抽兩張牌。,0,0,DrawCardEffect=2,普通,0,0,FALSE,50,FALSE

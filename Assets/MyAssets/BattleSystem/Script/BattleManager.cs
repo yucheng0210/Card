@@ -130,8 +130,8 @@ public class BattleManager : Singleton<BattleManager>
         int point = GetCheckerboardPoint(location);
         Vector2 pos = new(CheckerboardTrans.GetChild(point).localPosition.x, CheckerboardTrans.GetChild(point).localPosition.y);
         Color color = Color.red;
-        EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
         EventManager.Instance.DispatchEvent(EventDefinition.eventTakeDamage, pos, damage, location, color, attacker, defender);
+        EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
 
     public void Recover(CharacterData defender, int damage, string location)

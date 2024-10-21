@@ -10,5 +10,5 @@ public interface IEffect
     string SetTitleText();
     string SetDescriptionText();
     string SetPassiveEffectDescriptionText() { return SetDescriptionText(); }
-    BattleManager.ActionRangeType SetEffectAttackType() { return BattleManager.ActionRangeType.Surrounding; }
+    BattleManager.ActionRangeType SetEffectAttackType() { return BattleManager.ActionRangeType.None; }
 }
