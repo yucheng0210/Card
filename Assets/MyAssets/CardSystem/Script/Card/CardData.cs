@@ -54,5 +54,12 @@ public class CardData
     public int CardManaCost { get; set; }
     public bool CardRemove { get; set; }
     public int CardBuyPrice { get; set; }
-    public bool CardFreeze { get; set;}
+    public bool CardFreeze { get; set; }
+    public CardItem MyCardItem { get; set; }
+    public CardData DeepClone()
+    {
+        CardData clone = (CardData)this.MemberwiseClone();
+        clone.CardEffectList = new List<ValueTuple<string, int>>(this.CardEffectList);
+        return clone;
+    }
 }

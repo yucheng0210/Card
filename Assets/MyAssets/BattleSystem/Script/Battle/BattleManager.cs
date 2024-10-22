@@ -355,7 +355,7 @@ public class BattleManager : Singleton<BattleManager>
         int direction = (primaryEnd > primaryStart) ? 1 : -1;
 
         // 擴展座標，檢查是否可以攻擊
-        for (int pos = primaryStart; ; pos += direction)
+        for (int pos = primaryStart + direction; ; pos += direction)
         {
             string newLocation = isXPrimary ? ConvertCheckerboardPos(pos, secondaryPos) : ConvertCheckerboardPos(secondaryPos, pos);
 
@@ -613,7 +613,7 @@ public class BattleManager : Singleton<BattleManager>
         CardItem cardItem = Instantiate(CardPrefab, CardBagTrans);
         cardItem.transform.SetParent(CardBagTrans);
         cardItem.GetComponent<RectTransform>().anchoredPosition = CardBagTrans.position;
-        cardItem.CardID = id;
+        cardItem.MyCardData.CardID = id;
         cardItem.gameObject.SetActive(false);
         DataManager.Instance.CardBag.Insert(0, DataManager.Instance.CardList[id]);
         CardItemList.Insert(0, cardItem);
@@ -661,15 +661,19 @@ public class BattleManager : Singleton<BattleManager>
         for (int i = 0; i < CardItemList.Count; i++)
         {
             CardItem cardItem = CardItemList[i];
-            if (cardItem.CardID == id)
+            if (cardItem.MyCardData.CardID == id)
                 count++;
         }
         for (int i = 0; i < DataManager.Instance.UsedCardBag.Count; i++)
         {
             CardItem cardItem = DataManager.Instance.UsedCardBag[i];
-            if (cardItem.CardID == id)
+            if (cardItem.MyCardData.CardID == id)
                 count++;
         }
         return count;
+    }
+    public CharacterData IdentifyCharacter(string location)
+    {
+        return !CheckerboardList.ContainsKey(location) ? null : CurrentEnemyList.ContainsKey(location) ? CurrentEnemyList[location] : CurrentPlayerData;
     }
 }

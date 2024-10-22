@@ -43,11 +43,11 @@ public class UIShop : UIBase
             CardItem cardItem = Instantiate(cardPrefab, cardGroupTrans);
             Text cardPriceText = cardItem.transform.GetChild(cardItem.transform.childCount - 1).GetComponent<Text>();
             cardItem.GetComponent<CanvasGroup>().alpha = 1;
-            cardItem.CardID = randomCard.Key;
+            cardItem.MyCardData.CardID = randomCard.Key;
             cardItem.CantMove = true;
             cardPriceText.text = cardData.CardBuyPrice.ToString();
             Button cardButton = cardItem.GetComponent<Button>();
-            cardButton.onClick.AddListener(() => AddCard(cardItem.CardID, cardButton.gameObject));
+            cardButton.onClick.AddListener(() => AddCard(cardItem.MyCardData.CardID, cardButton.gameObject));
         }
         for (int i = 0; i < potionGroupTrans.childCount; i++)
         {

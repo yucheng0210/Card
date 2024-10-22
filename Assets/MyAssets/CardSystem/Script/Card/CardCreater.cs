@@ -56,7 +56,8 @@ public class CardCreater : MonoBehaviour
         for (int i = 0; i < cardBag.Count; i++)
         {
             CardItem cardItem = Instantiate(BattleManager.Instance.CardPrefab, transform);
-            cardItem.CardID = cardBag[i].CardID;
+            cardBag[i].MyCardItem = cardItem;
+            cardItem.MyCardData = cardBag[i].DeepClone();
             cardItem.gameObject.SetActive(false);
             BattleManager.Instance.CardItemList.Add(cardItem);
         }
@@ -159,8 +160,7 @@ public class CardCreater : MonoBehaviour
         for (int j = 0; j < DataManager.Instance.UsedCardBag.Count; j++)
         {
             BattleManager.Instance.CardItemList.Add(DataManager.Instance.UsedCardBag[j]);
-            int index = DataManager.Instance.UsedCardBag[j].CardID;
-            DataManager.Instance.CardBag.Add(DataManager.Instance.CardList[index]);
+            DataManager.Instance.CardBag.Add(DataManager.Instance.UsedCardBag[j].MyCardData);
         }
         for (int j = 0; j < BattleManager.Instance.CardItemList.Count; j++)
         {
@@ -230,7 +230,7 @@ public class CardCreater : MonoBehaviour
         List<CardItem> handCard = DataManager.Instance.HandCard;
         for (int i = 0; i < handCard.Count; i++)
         {
-            if (DataManager.Instance.CardList[handCard[i].CardID].CardFreeze)
+            if (handCard[i].MyCardData.CardFreeze)
             {
                 freezeCardList.Add(handCard[i]);
                 continue;
@@ -258,26 +258,27 @@ public class CardCreater : MonoBehaviour
         for (int i = 0; i < handCard.Count; i++)
         {
             cardItemList.Add(handCard[i]);
-            int index = handCard[i].CardID;
-            if (cardList[index].CardType == "詛咒")
+            if (handCard[i].MyCardData.CardType == "詛咒")
+            {
                 continue;
-            cardBag.Add(cardList[index]);
+            }
+            cardBag.Add(handCard[i].MyCardData);
         }
         for (int j = 0; j < useCardBag.Count; j++)
         {
             cardItemList.Add(useCardBag[j]);
-            int index = useCardBag[j].CardID;
-            if (cardList[index].CardType == "詛咒")
+            if (useCardBag[j].MyCardData.CardType == "詛咒")
+            {
                 continue;
-            cardBag.Add(cardList[index]);
+            }
+            cardBag.Add(useCardBag[j].MyCardData);
         }
         for (int j = 0; j < removeCardBag.Count; j++)
         {
             cardItemList.Add(removeCardBag[j]);
-            int index = removeCardBag[j].CardID;
-            if (cardList[index].CardType == "詛咒")
+            if (removeCardBag[j].MyCardData.CardType == "詛咒")
                 continue;
-            cardBag.Add(cardList[index]);
+            cardBag.Add(removeCardBag[j].MyCardData);
         }
         for (int j = 0; j < cardItemList.Count; j++)
         {

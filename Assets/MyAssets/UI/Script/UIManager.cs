@@ -127,7 +127,7 @@ public class UIManager : Singleton<UIManager>
         {
             CardItem cardItem = Instantiate(BattleManager.Instance.CardPrefab, BattleManager.Instance.CardMenuTrans);
             cardItem.GetComponent<CanvasGroup>().alpha = 1;
-            cardItem.CardID = cardBag[i].CardID;
+            cardItem.MyCardData.CardID = cardBag[i].CardID;
             cardItem.CantMove = true;
         }
     }
@@ -142,7 +142,7 @@ public class UIManager : Singleton<UIManager>
         {
             CardItem cardItem = Instantiate(BattleManager.Instance.CardPrefab, BattleManager.Instance.CardMenuTrans);
             cardItem.GetComponent<CanvasGroup>().alpha = 1;
-            cardItem.CardID = cardBag[i].CardID;
+            cardItem.MyCardData.CardID = cardBag[i].MyCardData.CardID;
             cardItem.CantMove = true;
         }
     }

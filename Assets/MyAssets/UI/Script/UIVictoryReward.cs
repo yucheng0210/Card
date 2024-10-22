@@ -79,7 +79,7 @@ public class UIVictoryReward : UIBase
             CardItem cardItem = Instantiate(cardPrefab, cardRewardGroupTrans);
             Button cardButton = cardItem.gameObject.AddComponent<Button>();
             cardItem.GetComponent<CanvasGroup>().alpha = 1;
-            cardItem.CardID = cardList[rewardID].CardID;
+            cardItem.MyCardData.CardID = cardList[rewardID].CardID;
             cardItem.CantMove = true;
             cardButton.onClick.AddListener(() => AddCard(rewardID));
             normalCardList.Remove(rewardID);

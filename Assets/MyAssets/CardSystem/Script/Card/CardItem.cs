@@ -41,8 +41,9 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     private CardItem rightCard, leftCard;
     private bool isAttackCard;
     private Enemy enemy;
-    public int CardID { get; set; }
-    public int Cost { get; set; }
+    //public int CardID { get; set; }
+    public CardData MyCardData { get; set; }
+    //public int Cost { get; set; }
     public RectTransform CardRectTransform { get; set; }
     public bool CantMove { get; set; }
     private Outline outline;
@@ -50,11 +51,6 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         get { return cardImage; }
         set { cardImage = value; }
-    }
-    public Image CardBackground
-    {
-        get { return cardBackground; }
-        set { cardBackground = value; }
     }
     public Text CardName
     {
@@ -89,13 +85,12 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     private void SetCardInfo()
     {
         Dictionary<int, CardData> cardList = DataManager.Instance.CardList;
-        CardName.text = cardList[CardID].CardName;
-        CardDescription.text = cardList[CardID].CardDescription;
-        CardCost.text = cardList[CardID].CardCost.ToString();
-        CardManaCost.text = cardList[CardID].CardManaCost.ToString();
+        CardName.text = MyCardData.CardName;
+        CardDescription.text = MyCardData.CardDescription;
+        CardCost.text = MyCardData.CardCost.ToString();
+        CardManaCost.text = MyCardData.CardManaCost.ToString();
         CardRectTransform = transform.GetComponent<RectTransform>();
-        Cost = DataManager.Instance.CardList[CardID].CardCost;
-        CardImage.sprite = Resources.Load<Sprite>(DataManager.Instance.CardList[CardID].CardImagePath);
+        CardImage.sprite = Resources.Load<Sprite>(MyCardData.CardImagePath);
         outline = GetComponentInChildren<Outline>();
     }
     public void OnPointerEnter(PointerEventData eventData)
@@ -127,7 +122,7 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         }
         transform.SetAsLastSibling();
         string location = BattleManager.Instance.CurrentLocationID;
-        int cardAttackDistance = DataManager.Instance.CardList[CardID].CardAttackDistance;
+        int cardAttackDistance = MyCardData.CardAttackDistance;
         List<string> emptyPlaceList = BattleManager.Instance.GetAcitonRangeTypeList(location, cardAttackDistance, BattleManager.CheckEmptyType.PlayerAttack, BattleManager.ActionRangeType.Default);
         UIManager.Instance.ChangeCheckerboardColor(emptyPlaceList, false);
     }
@@ -159,7 +154,7 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         if (CantMove || BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack)
             return;
-        isAttackCard = DataManager.Instance.CardList[CardID].CardType == "攻擊" ? true : false;
+        isAttackCard = MyCardData.CardType == "攻擊";
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -184,7 +179,9 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public void OnEndDrag(PointerEventData eventData)
     {
         if (CantMove || BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack)
+        {
             return;
+        }
         BattleManager.Instance.IsDrag = false;
         Cursor.visible = true;
         if (isAttackCard)
@@ -194,7 +191,9 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             return;
         }
         if (CardRectTransform.anchoredPosition.y >= 540 && GetUseCardCondition())
+        {
             UseCard("Player");
+        }
         else
         {
             CardRectTransform.anchoredPosition = BattleManager.Instance.CardPositionList[index];
@@ -210,13 +209,15 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         {
             enemy = hit.transform.GetComponent<Enemy>();
             if (onEnd && GetUseCardCondition() && CheckEnemyInAttackRange(enemy.EnemyLocation))
+            {
                 UseCard(enemy.EnemyLocation);
+            }
         }
     }
     private bool CheckEnemyInAttackRange(string enemyLocation)
     {
         string id = BattleManager.Instance.CurrentLocationID;
-        int attackDistance = DataManager.Instance.CardList[CardID].CardAttackDistance;
+        int attackDistance = MyCardData.CardAttackDistance;
         List<string> emptyPlaceList = BattleManager.Instance.GetAcitonRangeTypeList(id, attackDistance, BattleManager.CheckEmptyType.PlayerAttack, BattleManager.ActionRangeType.Default);
         bool inRangeBool = false;
         for (int i = 0; i < emptyPlaceList.Count; i++)
@@ -229,28 +230,40 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     private bool GetUseCardCondition()
     {
         PlayerData playerData = BattleManager.Instance.CurrentPlayerData;
-        return playerData.CurrentActionPoint >= Cost && playerData.Mana >= DataManager.Instance.CardList[CardID].CardManaCost;
+        return playerData.CurrentActionPoint >= MyCardData.CardCost && playerData.Mana >= MyCardData.CardManaCost;
     }
     private void UseCard(string target)
     {
         if (BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack)
+        {
             return;
-        CardData cardData = DataManager.Instance.CardList[CardID];
+        }
+        CardData cardData = MyCardData;
         if (BattleManager.Instance.CurrentNegativeState.ContainsKey(nameof(CantMoveEffect)) && cardData.CardType == "移動")
+        {
             return;
+        }
         if (cardData.CardCost < 0)
+        {
             return;
+        }
         CardRectTransform.DOScale(1f, 0);
         DataManager.Instance.HandCard.Remove(this);
-        BattleManager.Instance.ConsumeActionPoint(Cost);
+        BattleManager.Instance.ConsumeActionPoint(cardData.CardCost);
         BattleManager.Instance.ConsumeMana(cardData.CardManaCost);
         BattleManager.Instance.GetShield(BattleManager.Instance.CurrentPlayerData, cardData.CardShield);
         if (cardData.CardAttack != 0 && cardData.CardType != "詛咒")
+        {
             BattleManager.Instance.TakeDamage(BattleManager.Instance.CurrentPlayerData, BattleManager.Instance.CurrentEnemyList[target], cardData.CardAttack, target, 0);
+        }
         if (!cardData.CardRemove)
+        {
             DataManager.Instance.UsedCardBag.Add(this);
+        }
         else
+        {
             DataManager.Instance.RemoveCardBag.Add(this);
+        }
         EventManager.Instance.DispatchEvent(EventDefinition.eventUseCard, this);
         for (int i = 0; i < cardData.CardEffectList.Count; i++)
         {
@@ -264,9 +277,13 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                 continue;
             }
             if (cardData.CardType == "陷阱")
+            {
                 BattleManager.Instance.CurrentTrapList.Add(BattleManager.Instance.CurrentLocationID, effectID);
+            }
             if (BattleManager.Instance.CurrentNegativeState.ContainsKey(nameof(CantIncreaseManaEffect)) && effectID == nameof(IncreaseManaEffect))
+            {
                 continue;
+            }
             EffectFactory.Instance.CreateEffect(effectID).ApplyEffect(effectCount, target);
         }
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
@@ -274,9 +291,13 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     }
     private void EventRefreshUI(params object[] args)
     {
-        if (BattleManager.Instance.CurrentPlayerData.CurrentActionPoint >= Cost && BattleManager.Instance.CurrentPlayerData.Mana >= DataManager.Instance.CardList[CardID].CardManaCost)
+        if (BattleManager.Instance.CurrentPlayerData.CurrentActionPoint >= MyCardData.CardCost && BattleManager.Instance.CurrentPlayerData.Mana >= MyCardData.CardManaCost)
+        {
             UIManager.Instance.ChangeOutline(outline, 10);
+        }
         else
+        {
             UIManager.Instance.ChangeOutline(outline, 0);
+        }
     }
 }

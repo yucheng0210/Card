@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class TeleportEffect : IEffect
 {
+    private CharacterData characterData;
     public void ApplyEffect(int value, string target)
     {
-        throw new System.NotImplementedException();
+        characterData = BattleManager.Instance.IdentifyCharacter(target);
     }
     public string SetTitleText()
     {
@@ -15,7 +16,7 @@ public class TeleportEffect : IEffect
 
     public string SetDescriptionText()
     {
-        return "隨機朝遠離敵人的方向移動。";
+        return "隨機朝遠離敵人的方向瞬移。";
     }
 
 }

@@ -25,11 +25,10 @@ public class ReturnCardBag : IEffect
     private void Return()
     {
         BattleManager.Instance.CardBagApplyButton.gameObject.SetActive(false);
-        int id = DataManager.Instance.UsedCardBag[UIManager.Instance.CurrentRemoveID].CardID;
         CardItem cardItem = DataManager.Instance.UsedCardBag[UIManager.Instance.CurrentRemoveID];
         cardItem.transform.SetParent(BattleManager.Instance.CardBagTrans);
         cardItem.GetComponent<RectTransform>().anchoredPosition = BattleManager.Instance.CardBagTrans.position;
-        DataManager.Instance.CardBag.Insert(0, DataManager.Instance.CardList[id]);
+        DataManager.Instance.CardBag.Insert(0, cardItem.MyCardData);
         BattleManager.Instance.CardItemList.Insert(0, cardItem);
         DataManager.Instance.UsedCardBag.RemoveAt(UIManager.Instance.CurrentRemoveID);
         UIManager.Instance.HideUI("UICardMenu");

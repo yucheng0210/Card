@@ -158,7 +158,7 @@ public class UIMap : UIBase
         Level level = DataManager.Instance.LevelTypeList[currentIndex].Clone();
         level.LevelParentList = new List<int>();
         level.LevelID = i * 5 + j;
-        MapManager.Instance.LevelCount = 14;
+        MapManager.Instance.LevelCount = 8;
         level.LevelActive = true;
         if (MapManager.Instance.MapNodes[i][j].left != null)
             level.LevelParentList.Add(MapManager.Instance.MapNodes[i][j].left.l.LevelID);
