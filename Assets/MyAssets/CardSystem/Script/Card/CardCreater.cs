@@ -56,34 +56,39 @@ public class CardCreater : MonoBehaviour
         for (int i = 0; i < cardBag.Count; i++)
         {
             CardItem cardItem = Instantiate(BattleManager.Instance.CardPrefab, transform);
-            cardBag[i].MyCardItem = cardItem;
-            cardItem.MyCardData = cardBag[i].DeepClone();
+            RectTransform rectTransform = cardItem.GetComponent<RectTransform>();
+            rectTransform.anchoredPosition = transform.position;
+            cardItem.MyCardData = cardBag[i];
             cardItem.gameObject.SetActive(false);
-            BattleManager.Instance.CardItemList.Add(cardItem);
+            cardBag[i].MyCardItem = cardItem;
         }
     }
 
-    private void CalculatePositionAngle(int cardCount)
+    private void CalculatePositionAngle(int cardCount, List<CardData> cardBag)
     {
-        BattleManager.Instance.CardPositionList.Clear();
-        BattleManager.Instance.CardAngleList.Clear();
         int odd = cardCount % 2 != 0 ? 0 : 1;
         float startAngle = (cardCount / 2 - odd) * minCardAngle;
         Vector2 cardPos = startPosition;
         //當偶數時startPosition會在中間兩張牌之間，需要扣除額外一半cardXSpacing；
         cardPos.x -= ((cardCount / 2 - odd) + (0.5f * odd)) * cardXSpacing;
         cardPos.y -= ((1 + (cardCount / 2 - odd)) * (cardCount / 2 - odd)) / 2 * cardYSpacing;
-        for (int i = 0; i < cardCount; i++)
+        int adjustCount = cardCount > cardBag.Count ? cardBag.Count : cardCount;
+        for (int i = 0; i < adjustCount; i++)
         {
-            BattleManager.Instance.CardPositionList.Add(cardPos);
-            BattleManager.Instance.CardAngleList.Add(startAngle);
+            CardItem cardItem = cardBag[i].MyCardItem;
+            cardItem.CurrentPos = cardPos;
+            cardItem.CurrentAngle = startAngle;
             int ySpacingMultiplier = 0;
             if (odd == 0)
             {
                 if (i >= cardCount / 2 - odd)
+                {
                     ySpacingMultiplier = cardCount / 2 - odd - i - 1;
+                }
                 else
+                {
                     ySpacingMultiplier = cardCount / 2 - odd - i;
+                }
                 startAngle -= minCardAngle; // 更新下一張卡片的旋轉角度
             }
             else
@@ -104,42 +109,48 @@ public class CardCreater : MonoBehaviour
         //yield return UIManager.Instance.FadeOutIn(roundTip.GetComponent<CanvasGroup>(), 0.5f, 1, false); // 執行 UI 淡入淡出效果
         yield return new WaitForSecondsRealtime(1);
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.DrawCard);
-        List<CardItem> handCard = DataManager.Instance.HandCard;
+        List<CardData> handCard = DataManager.Instance.HandCard;
+        List<CardData> cardBag = DataManager.Instance.CardBag;
         int maxCardCount = handCard.Count + addCardCount;
-        // 檢查卡片數量是否為奇數
-        CalculatePositionAngle(maxCardCount);
-        // 逐個處理每張手牌卡片
+        CalculatePositionAngle(maxCardCount, cardBag);
         for (int i = handCard.Count; i < maxCardCount; i++)
         {
-            if (DataManager.Instance.CardBag.Count == 0)
-                DrawnAllCards();
+            if (cardBag.Count == 0)
+            {
+                if (DataManager.Instance.UsedCardBag.Count == 0)
+                {
+                    break;
+                }
+                DrawnAllCards(addCardCount - i - 1);
+            }
             // 根據抽卡數量將卡片添加到手牌中
-            handCard.Add(BattleManager.Instance.CardItemList[0]);
+            handCard.Add(cardBag[0]);
             yield return new WaitForSecondsRealtime(coolDown); // 等待冷卻時間
-            RectTransform handCardRect = handCard[i].GetComponent<RectTransform>();
-            handCard[i].transform.SetParent(handCardTrans); // 將卡片設定為手牌的子物件
-            handCard[i].GetComponent<Image>().raycastTarget = false;
-            handCard[i].gameObject.SetActive(true); // 啟用卡片物件
+            CardItem cardItem = handCard[i].MyCardItem;
+            RectTransform handCardRect = cardItem.GetComponent<RectTransform>();
+            cardItem.transform.SetParent(handCardTrans); // 將卡片設定為手牌的子物件
+            cardItem.GetComponent<Image>().raycastTarget = false;
+            cardItem.gameObject.SetActive(true); // 啟用卡片物件
             EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
             yield return null;
-            handCard[i].CantMove = false;
-            StartCoroutine(UIManager.Instance.FadeOut(handCard[i].GetComponent<CanvasGroup>(), moveTime));
+            cardItem.CantMove = false;
+            StartCoroutine(UIManager.Instance.FadeOut(cardItem.GetComponent<CanvasGroup>(), moveTime));
             handCardRect.DOAnchorPosX(currentPosX, moveTime); // 使用 DOTween 動畫設定卡片位置
-            handCardRect.DOAnchorPosY(BattleManager.Instance.CardPositionList[i].y, moveTime);
-            handCardRect.DORotateQuaternion(Quaternion.Euler(0, 0, BattleManager.Instance.CardAngleList[i]), moveTime);
+            handCardRect.DOAnchorPosY(cardItem.CurrentPos.y, moveTime);
+            handCardRect.DORotateQuaternion(Quaternion.Euler(0, 0, cardItem.CurrentAngle), moveTime);
 
             // 將前面的卡片向左偏移以創造重疊效果
             for (int j = i; j > 0; j--)
             {
-                RectTransform lastHandCardRect = handCard[j - 1].GetComponent<RectTransform>();
+                CardItem lastCardItem = handCard[j - 1].MyCardItem;
+                RectTransform lastHandCardRect = lastCardItem.GetComponent<RectTransform>();
                 lastHandCardRect.DOAnchorPosX(currentPosX - (i - j + 1) * cardXSpacing, moveTime);
-                lastHandCardRect.DOAnchorPosY(BattleManager.Instance.CardPositionList[j - 1].y, moveTime);
-                lastHandCardRect.DORotateQuaternion(Quaternion.Euler(0, 0, BattleManager.Instance.CardAngleList[j - 1]), moveTime);
+                lastHandCardRect.DOAnchorPosY(lastCardItem.CurrentPos.y, moveTime);
+                lastHandCardRect.DORotateQuaternion(Quaternion.Euler(0, 0, lastCardItem.CurrentAngle), moveTime);
             }
             currentPosX += cardXSpacing / 2; // 更新下一張卡片的起始位置
             // 設定卡片旋轉角度
             DataManager.Instance.CardBag.RemoveAt(0);
-            BattleManager.Instance.CardItemList.RemoveAt(0);
             EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
         }
         yield return new WaitForSecondsRealtime(moveTime);
@@ -149,39 +160,54 @@ public class CardCreater : MonoBehaviour
 
     private void HandCardRaycast()
     {
-        List<CardItem> handCard = DataManager.Instance.HandCard;
+        List<CardData> handCard = DataManager.Instance.HandCard;
         for (int i = 0; i < handCard.Count; i++)
         {
-            handCard[i].GetComponent<Image>().raycastTarget = true;
+            handCard[i].MyCardItem.GetComponent<Image>().raycastTarget = true;
         }
     }
-    private void DrawnAllCards()
+    private void DrawnAllCards(int count)
     {
-        for (int j = 0; j < DataManager.Instance.UsedCardBag.Count; j++)
+        List<CardData> usedCardBag = DataManager.Instance.UsedCardBag;
+        List<CardData> cardBag = DataManager.Instance.CardBag;
+        for (int j = 0; j < usedCardBag.Count; j++)
         {
-            BattleManager.Instance.CardItemList.Add(DataManager.Instance.UsedCardBag[j]);
-            DataManager.Instance.CardBag.Add(DataManager.Instance.UsedCardBag[j].MyCardData);
+            cardBag.Add(usedCardBag[j]);
         }
-        for (int j = 0; j < BattleManager.Instance.CardItemList.Count; j++)
+        for (int j = 0; j < cardBag.Count; j++)
         {
-            BattleManager.Instance.CardItemList[j].transform.SetParent(transform);
-            BattleManager.Instance.CardItemList[j].GetComponent<RectTransform>().anchoredPosition = transform.position;
+            CardItem cardItem = cardBag[j].MyCardItem;
+            cardItem.transform.SetParent(transform);
+            cardItem.GetComponent<RectTransform>().anchoredPosition = transform.position;
         }
         DataManager.Instance.UsedCardBag.Clear();
         BattleManager.Instance.Shuffle();
+        CalculatePositionAngle(count, cardBag);
     }
-
+    private void AdjustCard(int count)
+    {
+        List<CardData> handCard = DataManager.Instance.HandCard;
+        CalculatePositionAngle(count, DataManager.Instance.HandCard);
+        for (int i = 0; i < handCard.Count; i++)
+        {
+            CardItem cardItem = handCard[i].MyCardItem;
+            RectTransform handCardRect = cardItem.GetComponent<RectTransform>();
+            handCardRect.DOAnchorPos(cardItem.CurrentPos, moveTime);
+            handCardRect.DORotateQuaternion(Quaternion.Euler(0, 0, cardItem.CurrentAngle), moveTime);
+        }
+    }
     private IEnumerator HideAllCards()
     {
-        for (int i = 0; i < DataManager.Instance.UsedCardBag.Count; i++)
+        List<CardData> usedCardBag = DataManager.Instance.UsedCardBag;
+        for (int i = 0; i < usedCardBag.Count; i++)
         {
-            StartCoroutine(UIManager.Instance.FadeIn(DataManager.Instance.UsedCardBag[i].GetComponent<CanvasGroup>(), moveTime / 2));
+            StartCoroutine(UIManager.Instance.FadeIn(usedCardBag[i].MyCardItem.GetComponent<CanvasGroup>(), moveTime / 2));
             yield return null;
         }
         yield return new WaitForSecondsRealtime(moveTime);
-        for (int i = 0; i < DataManager.Instance.UsedCardBag.Count; i++)
+        for (int i = 0; i < usedCardBag.Count; i++)
         {
-            DataManager.Instance.UsedCardBag[i].gameObject.SetActive(false);
+            usedCardBag[i].MyCardItem.gameObject.SetActive(false);
             yield return null;
         }
     }
@@ -189,7 +215,7 @@ public class CardCreater : MonoBehaviour
 
     private void EventDrawCard(params object[] args)
     {
-        StartCoroutine(DrawCard((int)(args[0])));
+        StartCoroutine(DrawCard((int)args[0]));
     }
 
     private void EventUseCard(params object[] args)
@@ -197,7 +223,7 @@ public class CardCreater : MonoBehaviour
         currentPosX -= cardXSpacing / 2;
         CardItem cardItem = (CardItem)args[0];
         cardItem.transform.SetParent(usedCardTrans);
-        AdjustCard();
+        AdjustCard(DataManager.Instance.HandCard.Count);
     }
 
     private void EventBattleInitial(params object[] args)
@@ -211,84 +237,65 @@ public class CardCreater : MonoBehaviour
         StartCoroutine(DrawCard(BattleManager.Instance.CurrentDrawCardCount));
     }
 
-    private void AdjustCard()
-    {
-        List<CardItem> handCard = DataManager.Instance.HandCard;
-        CalculatePositionAngle(handCard.Count);
-        for (int i = 0; i < handCard.Count; i++)
-        {
-            RectTransform handCardRect = handCard[i].GetComponent<RectTransform>();
-            handCardRect.DOAnchorPos(BattleManager.Instance.CardPositionList[i], moveTime);
-            handCardRect.DORotateQuaternion(Quaternion.Euler(0, 0, BattleManager.Instance.CardAngleList[i]), moveTime);
-        }
-    }
-
-
     private void EventEnemyTurn(params object[] args)
     {
-        List<CardItem> freezeCardList = new List<CardItem>();
-        List<CardItem> handCard = DataManager.Instance.HandCard;
+        List<CardData> freezeCardList = new List<CardData>();
+        List<CardData> handCard = DataManager.Instance.HandCard;
         for (int i = 0; i < handCard.Count; i++)
         {
-            if (handCard[i].MyCardData.CardFreeze)
+            if (handCard[i].CardFreeze)
             {
                 freezeCardList.Add(handCard[i]);
                 continue;
             }
-            handCard[i].gameObject.SetActive(true);
-            handCard[i].CantMove = true;
-            handCard[i].transform.SetParent(usedCardTrans);
-            handCard[i].GetComponent<RectTransform>().DOAnchorPos(usedCardTrans.GetComponent<RectTransform>().anchoredPosition, moveTime);
+            handCard[i].MyCardItem.gameObject.SetActive(true);
+            handCard[i].MyCardItem.CantMove = true;
+            handCard[i].MyCardItem.transform.SetParent(usedCardTrans);
+            handCard[i].MyCardItem.GetComponent<RectTransform>().DOAnchorPos(usedCardTrans.GetComponent<RectTransform>().anchoredPosition, moveTime);
             DataManager.Instance.UsedCardBag.Add(handCard[i]);
         }
         handCard.Clear();
         handCard = freezeCardList;
-        AdjustCard();
+        AdjustCard(handCard.Count);
         StartCoroutine(HideAllCards());
     }
 
     private void EventBattleWin(params object[] args)
     {
-        List<CardItem> cardItemList = BattleManager.Instance.CardItemList;
-        List<CardItem> handCard = DataManager.Instance.HandCard;
-        List<CardItem> useCardBag = DataManager.Instance.UsedCardBag;
-        List<CardItem> removeCardBag = DataManager.Instance.RemoveCardBag;
-        Dictionary<int, CardData> cardList = DataManager.Instance.CardList;
+        List<CardData> handCard = DataManager.Instance.HandCard;
+        List<CardData> useCardBag = DataManager.Instance.UsedCardBag;
+        List<CardData> removeCardBag = DataManager.Instance.RemoveCardBag;
         List<CardData> cardBag = DataManager.Instance.CardBag;
         for (int i = 0; i < handCard.Count; i++)
         {
-            cardItemList.Add(handCard[i]);
-            if (handCard[i].MyCardData.CardType == "詛咒")
+            if (handCard[i].CardType == "詛咒")
             {
                 continue;
             }
-            cardBag.Add(handCard[i].MyCardData);
+            cardBag.Add(handCard[i]);
         }
         for (int j = 0; j < useCardBag.Count; j++)
         {
-            cardItemList.Add(useCardBag[j]);
-            if (useCardBag[j].MyCardData.CardType == "詛咒")
+            if (useCardBag[j].CardType == "詛咒")
             {
                 continue;
             }
-            cardBag.Add(useCardBag[j].MyCardData);
+            cardBag.Add(useCardBag[j]);
         }
         for (int j = 0; j < removeCardBag.Count; j++)
         {
-            cardItemList.Add(removeCardBag[j]);
-            if (removeCardBag[j].MyCardData.CardType == "詛咒")
+            if (removeCardBag[j].CardType == "詛咒")
+            {
                 continue;
-            cardBag.Add(removeCardBag[j].MyCardData);
+            }
+            cardBag.Add(removeCardBag[j]);
         }
-        for (int j = 0; j < cardItemList.Count; j++)
+        for (int j = 0; j < cardBag.Count; j++)
         {
-            Destroy(cardItemList[j].gameObject);
+            Destroy(cardBag[j].MyCardItem.gameObject);
         }
-        BattleManager.Instance.CardAngleList.Clear();
-        BattleManager.Instance.CardPositionList.Clear();
         removeCardBag.Clear();
         useCardBag.Clear();
         handCard.Clear();
-        cardItemList.Clear();
     }
 }

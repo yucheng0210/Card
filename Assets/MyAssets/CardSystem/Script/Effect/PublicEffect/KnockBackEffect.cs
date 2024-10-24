@@ -43,7 +43,6 @@ public class KnockBackEffect : IEffect
             BattleManager.Instance.CurrentEnemyList.Add(locationID, enemyData);
             BattleManager.Instance.CurrentEnemyList.Remove(target);
             enemyData.EnemyTrans.DOAnchorPos(destination, 0.2f);
-            enemyData.EnemyTrans.GetComponent<Enemy>().EnemyLocation = locationID;
         }
         EventManager.Instance.DispatchEvent(EventDefinition.eventMove);
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);

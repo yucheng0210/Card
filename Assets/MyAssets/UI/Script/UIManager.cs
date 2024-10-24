@@ -115,34 +115,20 @@ public class UIManager : Singleton<UIManager>
     {
         outline.effectDistance = new Vector2(length, length);
     }
-    public void RefreshCardBag()
+    public void RefreshCardBag(List<CardData> cardBag)
     {
         ShowUI("UICardMenu");
-        List<CardData> cardBag = DataManager.Instance.CardBag;
-        for (int i = 0; i < BattleManager.Instance.CardMenuTrans.childCount; i++)
+        Transform cardMenuTrans = BattleManager.Instance.CardMenuTrans;
+        cardMenuTrans.position = Vector3.zero;
+        for (int i = 0; i < cardMenuTrans.childCount; i++)
         {
-            Destroy(BattleManager.Instance.CardMenuTrans.GetChild(i).gameObject);
+            Destroy(cardMenuTrans.GetChild(i).gameObject);
         }
         for (int i = 0; i < cardBag.Count; i++)
         {
-            CardItem cardItem = Instantiate(BattleManager.Instance.CardPrefab, BattleManager.Instance.CardMenuTrans);
+            CardItem cardItem = Instantiate(BattleManager.Instance.CardPrefab, cardMenuTrans);
             cardItem.GetComponent<CanvasGroup>().alpha = 1;
-            cardItem.MyCardData.CardID = cardBag[i].CardID;
-            cardItem.CantMove = true;
-        }
-    }
-    public void RefreshUseCardBag(List<CardItem> cardBag)
-    {
-        ShowUI("UICardMenu");
-        for (int i = 0; i < BattleManager.Instance.CardMenuTrans.childCount; i++)
-        {
-            Destroy(BattleManager.Instance.CardMenuTrans.GetChild(i).gameObject);
-        }
-        for (int i = 0; i < cardBag.Count; i++)
-        {
-            CardItem cardItem = Instantiate(BattleManager.Instance.CardPrefab, BattleManager.Instance.CardMenuTrans);
-            cardItem.GetComponent<CanvasGroup>().alpha = 1;
-            cardItem.MyCardData.CardID = cardBag[i].MyCardData.CardID;
+            cardItem.MyCardData = cardBag[i];
             cardItem.CantMove = true;
         }
     }
@@ -178,9 +164,13 @@ public class UIManager : Singleton<UIManager>
     public void SelectCard(UnityEngine.Events.UnityAction unityAction, bool isRefreshUseBag)
     {
         if (isRefreshUseBag)
-            RefreshUseCardBag(DataManager.Instance.UsedCardBag);
+        {
+            RefreshCardBag(DataManager.Instance.UsedCardBag);
+        }
         else
-            RefreshCardBag();
+        {
+            RefreshCardBag(DataManager.Instance.CardBag);
+        }
         for (int i = 0; i < BattleManager.Instance.CardMenuTrans.childCount; i++)
         {
             int avoidClosure = i;

@@ -89,7 +89,7 @@ public class UIVictoryReward : UIBase
 
     private void AddCard(int rewardID)
     {
-        DataManager.Instance.CardBag.Add(DataManager.Instance.CardList[rewardID]);
+        BattleManager.Instance.AddCard(rewardID);
         for (int i = 0; i < cardRewardGroupTrans.childCount; i++)
         {
             Destroy(cardRewardGroupTrans.GetChild(i).gameObject);

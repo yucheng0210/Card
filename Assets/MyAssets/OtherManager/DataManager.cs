@@ -17,10 +17,10 @@ public class DataManager : Singleton<DataManager>
     private readonly string skillListPath = Application.streamingAssetsPath + "/SKILLLIST.csv";
     public Dictionary<int, CardData> CardList { get; set; }
     public List<CardData> CardBag { get; set; }
-    public List<CardItem> UsedCardBag { get; set; }
-    public List<CardItem> RemoveCardBag { get; set; }
+    public List<CardData> UsedCardBag { get; set; }
+    public List<CardData> RemoveCardBag { get; set; }
+    public List<CardData> HandCard { get; set; }
     public List<Item> PotionBag { get; set; }
-    public List<CardItem> HandCard { get; set; }
     public Dictionary<int, PlayerData> PlayerList { get; set; }
     public Dictionary<int, EnemyData> EnemyList { get; set; }
     public Dictionary<int, Level> LevelList { get; set; }
@@ -39,10 +39,10 @@ public class DataManager : Singleton<DataManager>
         base.Awake();
         CardList = new Dictionary<int, CardData>();
         CardBag = new List<CardData>();
-        UsedCardBag = new List<CardItem>();
-        RemoveCardBag = new List<CardItem>();
+        UsedCardBag = new List<CardData>();
+        RemoveCardBag = new List<CardData>();
         PotionBag = new List<Item>();
-        HandCard = new List<CardItem>();
+        HandCard = new List<CardData>();
         PlayerList = new Dictionary<int, PlayerData>();
         EnemyList = new Dictionary<int, EnemyData>();
         LevelList = new Dictionary<int, Level>();
@@ -383,57 +383,64 @@ public class DataManager : Singleton<DataManager>
     {
         MoneyCount = 99;
         PlayerID = 1001;
-        CardData cardData;
+
+        // Add six 1001 cards
         for (int i = 0; i < 6; i++)
         {
-            cardData = CardList[1001];
-            CardBag.Add(cardData);
+            CardBag.Add(CardList[1001].DeepClone());
         }
+
+        // Add four 1002 cards
         for (int i = 0; i < 4; i++)
         {
-            cardData = CardList[1002];
-            CardBag.Add(cardData);
+            CardBag.Add(CardList[1002].DeepClone());
         }
-        CardBag.Add(CardList[1003]);
+
+        // Add one 1003 card
+        CardBag.Add(CardList[1003].DeepClone());
+
+        // Add items to backpack and potion bag
         BackpackManager.Instance.AddItem(3001, Backpack);
         PotionBag.Add(ItemList[1001]);
+
+        // Set current player data
         BattleManager.Instance.CurrentPlayerData = PlayerList[PlayerID];
-        // PlayerList[PlayerID].CharacterPos = LevelList[LevelID].PlayerStartPos;
     }
+
     private void StartGame_FightingSpiritEffect()
     {
         MoneyCount = 99;
         PlayerID = 1001;
-        CardData cardData;
+
+        // Add ten 1006 cards
         for (int i = 0; i < 10; i++)
         {
-            cardData = CardList[1006];
-            CardBag.Add(cardData);
+            CardBag.Add(CardList[1006].DeepClone());
         }
+
+        // Add items to backpack and potion bag
         BackpackManager.Instance.AddItem(3001, Backpack);
         PotionBag.Add(ItemList[1001]);
-        // PlayerList[PlayerID].CharacterPos = LevelList[LevelID].PlayerStartPos;
+
+        // Set current player data
         BattleManager.Instance.CurrentPlayerData = PlayerList[PlayerID];
     }
+
     private void StartGame_ExtinctionRayEffect()
     {
         MoneyCount = 99;
         PlayerID = 1001;
-        CardData cardData;
-        cardData = CardList[3001];
-        CardBag.Add(cardData);
-        cardData = CardList[2002];
-        CardBag.Add(cardData);
-        cardData = CardList[2003];
-        CardBag.Add(cardData);
-        cardData = CardList[2004];
-        CardBag.Add(cardData);
-        cardData = CardList[1011];
-        CardBag.Add(cardData);
-        cardData = CardList[1010];
-        CardBag.Add(cardData);
-        cardData = CardList[1009];
-        CardBag.Add(cardData);
+
+        // Add specific cards
+        int[] cardIds = { 3001, 2002, 2003, 2004, 1011, 1010, 1009 };
+
+        for (int i = 0; i < cardIds.Length; i++)
+        {
+            CardBag.Add(CardList[cardIds[i]].DeepClone());
+        }
+
+        // Set current player data
         BattleManager.Instance.CurrentPlayerData = PlayerList[PlayerID];
     }
+
 }

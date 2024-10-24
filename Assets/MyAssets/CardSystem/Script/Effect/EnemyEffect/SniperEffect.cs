@@ -40,7 +40,7 @@ public class SniperEffect : IEffect
             EventManager.Instance.RemoveEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
             return;
         }
-        string defenderLocation = enemyData.EnemyTrans.GetComponent<Enemy>().EnemyLocation;
+        string defenderLocation = BattleManager.Instance.GetEnemyKey(enemyData, BattleManager.Instance.CurrentEnemyList);
         int distance = BattleManager.Instance.GetRoute(defenderLocation, BattleManager.Instance.CurrentLocationID, BattleManager.CheckEmptyType.EnemyAttack).Count;
         enemyData.CurrentAttack = enemyData.MinAttack + Mathf.RoundToInt(enemyData.MinAttack * (distance - 1) * (attackMultiplier / 100f));
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);

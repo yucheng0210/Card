@@ -272,7 +272,6 @@ public class UIBattle : UIBase
         SetEnemyAttackRotation(enemyData, enemyImage, newLocation);
         BattleManager.Instance.CurrentEnemyList.Remove(location);  // 更新敌人位置
         BattleManager.Instance.CurrentEnemyList.Add(newLocation, enemyData);
-        enemy.EnemyLocation = newLocation;
         BattleManager.Instance.RefreshCheckerboardList();
     }
 
@@ -305,9 +304,13 @@ public class UIBattle : UIBase
     private void UpdateAttackOrder(EnemyData enemyData, Enemy enemy)
     {
         if (enemyData.CurrentAttackOrder >= enemyData.AttackOrderStrs.Count - 1)
+        {
             enemyData.CurrentAttackOrder = 0;
+        }
         else if (enemy.MyActionType != Enemy.ActionType.Move)
-            enemyData.CurrentAttackOrder++;
+        {
+
+        }
     }
 
     private void ChangeTurn()
@@ -387,18 +390,16 @@ public class UIBattle : UIBase
             int checkerboardPoint = BattleManager.Instance.GetCheckerboardPoint(key);
             Enemy enemy = Instantiate(enemyPrefab, enemyTrans);
             RectTransform enemyRect = enemy.GetComponent<RectTransform>();
-
-            enemy.EnemyLocation = key;
             enemyRect.anchoredPosition = checkerboardTrans.GetChild(checkerboardPoint).localPosition;
             enemy.EnemyID = enemyData.CharacterID;
             enemy.EnemyImage.sprite = Resources.Load<Sprite>(enemyData.EnemyImagePath);
             enemy.MyAnimator.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>(enemyData.EnemyAniPath);
-
             enemyData.CurrentAttack = enemyData.MinAttack;
             enemyData.EnemyTrans = enemyRect;
             enemyData.CurrentHealth = DataManager.Instance.EnemyList[enemy.EnemyID].MaxHealth;
-
-            BattleManager.Instance.TriggerEnemyPassiveSkill(enemy.EnemyLocation, false);
+            enemy.MyEnemyData = enemyData;
+            string location = BattleManager.Instance.GetEnemyKey(enemyData, BattleManager.Instance.CurrentEnemyList);
+            BattleManager.Instance.TriggerEnemyPassiveSkill(location, false);
             yield return null;
         }
 
@@ -524,7 +525,6 @@ public class UIBattle : UIBase
     {
         // 提取局部变量
         var playerData = BattleManager.Instance.CurrentPlayerData;
-        var cardBag = DataManager.Instance.CardBag;
         var usedCardBag = DataManager.Instance.UsedCardBag;
         var removeCardBag = DataManager.Instance.RemoveCardBag;
         var negativeState = BattleManager.Instance.CurrentNegativeState;

@@ -52,7 +52,7 @@ public class ParasiticEffect : IEffect
         if (sporeCount == 0)
             return;
         int currentDamage = damage * sporeCount;
-        string enemyLocation = parasite.EnemyTrans.GetComponent<Enemy>().EnemyLocation;
+        string enemyLocation = BattleManager.Instance.GetEnemyKey(parasite, BattleManager.Instance.CurrentEnemyList);
         CharacterData parasiteRepresent = new EnemyData();
         // Recover parasite and damage host
         BattleManager.Instance.Recover(parasite, currentDamage, enemyLocation);

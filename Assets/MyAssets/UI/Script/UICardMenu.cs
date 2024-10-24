@@ -26,9 +26,9 @@ public class UICardMenu : UIBase
     protected override void Start()
     {
         base.Start();
-        cardMenuButton.onClick.AddListener(() => UIManager.Instance.RefreshCardBag());
-        usedCardMenuButton.onClick.AddListener(() => UIManager.Instance.RefreshUseCardBag(DataManager.Instance.UsedCardBag));
-        removeCardMenuButton.onClick.AddListener(() => UIManager.Instance.RefreshUseCardBag(DataManager.Instance.RemoveCardBag));
+        cardMenuButton.onClick.AddListener(() => UIManager.Instance.RefreshCardBag(DataManager.Instance.CardBag));
+        usedCardMenuButton.onClick.AddListener(() => UIManager.Instance.RefreshCardBag(DataManager.Instance.UsedCardBag));
+        removeCardMenuButton.onClick.AddListener(() => UIManager.Instance.RefreshCardBag(DataManager.Instance.RemoveCardBag));
         hideButton.onClick.AddListener(Hide);
         BattleManager.Instance.CardMenuTrans = contentTrans;
         BattleManager.Instance.CardBagApplyButton = applyButton;

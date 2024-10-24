@@ -17,14 +17,14 @@ public class DeadlineCurseEffect : IEffect
         reciprocalCount--;
         if (reciprocalCount <= 0)
         {
-            if (DataManager.Instance.HandCard.Contains(cardItem))
+            if (DataManager.Instance.HandCard.Contains(cardItem.MyCardData))
             {
                 string locationID = BattleManager.Instance.CurrentLocationID;
                 PlayerData playerData = BattleManager.Instance.CurrentPlayerData;
                 EnemyData enemyData = BattleManager.Instance.CurrentEnemyList[locationID];
                 BattleManager.Instance.TakeDamage(enemyData, playerData, DataManager.Instance.CardList[5001].CardAttack, locationID, 0);
-                DataManager.Instance.HandCard.Remove(cardItem);
-                DataManager.Instance.RemoveCardBag.Add(cardItem);
+                DataManager.Instance.HandCard.Remove(cardItem.MyCardData);
+                DataManager.Instance.RemoveCardBag.Add(cardItem.MyCardData);
                 cardItem.gameObject.SetActive(false);
             }
             EventManager.Instance.RemoveEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);

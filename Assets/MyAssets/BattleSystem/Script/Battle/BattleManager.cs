@@ -57,9 +57,9 @@ public class BattleManager : Singleton<BattleManager>
     public Transform CardBagTrans { get; set; }
     public Button CardBagApplyButton { get; set; }
     public CardItem CardPrefab { get; set; }
-    public List<CardItem> CardItemList { get; set; }
-    public List<Vector2> CardPositionList { get; set; }
-    public List<float> CardAngleList { get; set; }
+    //public List<CardItem> CardItemList { get; set; }
+    //public List<Vector2> CardPositionList { get; set; }
+    //public List<float> CardAngleList { get; set; }
     public Dictionary<string, int> CurrentNegativeState { get; set; }
     public Dictionary<string, int> CurrentAbilityList { get; set; }
     public Dictionary<string, string> CurrentTrapList { get; set; }
@@ -84,9 +84,9 @@ public class BattleManager : Singleton<BattleManager>
     {
         base.Awake();
         IsDrag = false;
-        CardItemList = new List<CardItem>();
-        CardPositionList = new List<Vector2>();
-        CardAngleList = new List<float>();
+        //CardItemList = new List<CardItem>();
+        /*CardPositionList = new List<Vector2>();
+        CardAngleList = new List<float>();*/
         CurrentEnemyList = new Dictionary<string, EnemyData>();
         CurrentMinionsList = new Dictionary<string, EnemyData>();
         CurrentAbilityList = new Dictionary<string, int>();
@@ -236,7 +236,7 @@ public class BattleManager : Singleton<BattleManager>
         return emptyPlaceList;
     }
 
-    private bool CheckPlaceEmpty(string place, CheckEmptyType checkEmptyType)
+    public bool CheckPlaceEmpty(string place, CheckEmptyType checkEmptyType)
     {
         if (!CheckerboardList.ContainsKey(place))
             return false;
@@ -591,12 +591,13 @@ public class BattleManager : Singleton<BattleManager>
 
     public void Shuffle()
     {
-        for (int i = 0; i < DataManager.Instance.CardBag.Count; i++)
+        List<CardData> cardBag = DataManager.Instance.CardBag;
+        for (int i = 0; i < cardBag.Count; i++)
         {
-            int randomIndex = Random.Range(0, DataManager.Instance.CardBag.Count);
-            CardData temp = DataManager.Instance.CardBag[randomIndex];
-            DataManager.Instance.CardBag[randomIndex] = DataManager.Instance.CardBag[i];
-            DataManager.Instance.CardBag[i] = temp;
+            int randomIndex = Random.Range(0, cardBag.Count);
+            CardData temp = cardBag[randomIndex];
+            cardBag[randomIndex] = cardBag[i];
+            cardBag[i] = temp;
         }
     }
     public void NextLevel(string hideMenu)
@@ -611,12 +612,15 @@ public class BattleManager : Singleton<BattleManager>
     public CardItem AddCard(int id)
     {
         CardItem cardItem = Instantiate(CardPrefab, CardBagTrans);
+        CardData cardData = DataManager.Instance.CardList[id].DeepClone();
         cardItem.transform.SetParent(CardBagTrans);
-        cardItem.GetComponent<RectTransform>().anchoredPosition = CardBagTrans.position;
-        cardItem.MyCardData.CardID = id;
+        RectTransform rectTransform = cardItem.GetComponent<RectTransform>();
+        rectTransform.anchoredPosition = CardBagTrans.position;
         cardItem.gameObject.SetActive(false);
-        DataManager.Instance.CardBag.Insert(0, DataManager.Instance.CardList[id]);
-        CardItemList.Insert(0, cardItem);
+        cardData.CardID = id;
+        cardData.MyCardItem = cardItem;
+        cardItem.MyCardData = cardData;
+        DataManager.Instance.CardBag.Insert(0, cardData);
         return cardItem;
     }
     public void AddMinions(int enemyID, int count, string location)
@@ -634,14 +638,15 @@ public class BattleManager : Singleton<BattleManager>
             string key = CurrentMinionsList.ElementAt(i).Key;
             int checkerboardPoint = GetCheckerboardPoint(key);
             Enemy enemy = Instantiate(EnemyPrefab, EnemyTrans);
-            enemy.EnemyLocation = key;
             enemy.GetComponent<RectTransform>().anchoredPosition = CheckerboardTrans.GetChild(checkerboardPoint).localPosition;
             enemy.EnemyID = CurrentMinionsList[key].CharacterID;
             enemy.EnemyImage.sprite = Resources.Load<Sprite>(CurrentMinionsList[key].EnemyImagePath);
             enemy.MyAnimator.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>(CurrentMinionsList[key].EnemyAniPath);
             CurrentMinionsList[key].EnemyTrans = enemy.GetComponent<RectTransform>();
             CurrentMinionsList[key].CurrentHealth = DataManager.Instance.EnemyList[enemy.EnemyID].MaxHealth;
-            TriggerEnemyPassiveSkill(enemy.EnemyLocation, true);
+            enemy.MyEnemyData = CurrentMinionsList[key];
+            string minionsLocation = GetEnemyKey(CurrentMinionsList[key], CurrentMinionsList);
+            TriggerEnemyPassiveSkill(minionsLocation, true);
         }
     }
     public int GetMinionsIDCount(int id)
@@ -658,16 +663,16 @@ public class BattleManager : Singleton<BattleManager>
     public int GetCardCount(int id)
     {
         int count = 0;
-        for (int i = 0; i < CardItemList.Count; i++)
+        List<CardData> cardBag = DataManager.Instance.CardBag;
+        for (int i = 0; i < cardBag.Count; i++)
         {
-            CardItem cardItem = CardItemList[i];
-            if (cardItem.MyCardData.CardID == id)
+            if (cardBag[i].CardID == id)
                 count++;
         }
-        for (int i = 0; i < DataManager.Instance.UsedCardBag.Count; i++)
+        List<CardData> usedCardBag = DataManager.Instance.UsedCardBag;
+        for (int i = 0; i < usedCardBag.Count; i++)
         {
-            CardItem cardItem = DataManager.Instance.UsedCardBag[i];
-            if (cardItem.MyCardData.CardID == id)
+            if (usedCardBag[i].CardID == id)
                 count++;
         }
         return count;
@@ -675,5 +680,9 @@ public class BattleManager : Singleton<BattleManager>
     public CharacterData IdentifyCharacter(string location)
     {
         return !CheckerboardList.ContainsKey(location) ? null : CurrentEnemyList.ContainsKey(location) ? CurrentEnemyList[location] : CurrentPlayerData;
+    }
+    public string GetEnemyKey(EnemyData enemyData, Dictionary<string, EnemyData> enemyDataDict)
+    {
+        return enemyDataDict.FirstOrDefault(x => x.Value == enemyData).Key;
     }
 }

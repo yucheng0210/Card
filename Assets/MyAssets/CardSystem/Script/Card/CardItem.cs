@@ -46,6 +46,8 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     //public int Cost { get; set; }
     public RectTransform CardRectTransform { get; set; }
     public bool CantMove { get; set; }
+    public Vector2 CurrentPos { get; set; }
+    public float CurrentAngle { get; set; }
     private Outline outline;
     public Image CardImage
     {
@@ -84,7 +86,6 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     private void SetCardInfo()
     {
-        Dictionary<int, CardData> cardList = DataManager.Instance.CardList;
         CardName.text = MyCardData.CardName;
         CardDescription.text = MyCardData.CardDescription;
         CardCost.text = MyCardData.CardCost.ToString();
@@ -106,19 +107,23 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         for (int i = index + 1; i < transform.parent.childCount; i++)
         {
             rightCard = transform.parent.GetChild(i).GetComponent<CardItem>();
-            rightCard.GetComponent<RectTransform>().DOAnchorPosX(BattleManager.Instance.CardPositionList[i].x + space, moveTime);
+            rightCard.GetComponent<RectTransform>().DOAnchorPosX(rightCard.CurrentPos.x + space, moveTime);
             space -= pointerEnterReduceCount;
             if (space <= 0)
+            {
                 space = pointerEnterReduceCount;
+            }
         }
         space = pointerEnterSpacing;
         for (int i = index - 1; i >= 0; i--)
         {
             leftCard = transform.parent.GetChild(i).GetComponent<CardItem>();
-            leftCard.GetComponent<RectTransform>().DOAnchorPosX(BattleManager.Instance.CardPositionList[i].x - space, moveTime);
+            leftCard.GetComponent<RectTransform>().DOAnchorPosX(leftCard.CurrentPos.x - space, moveTime);
             space -= pointerEnterReduceCount;
             if (space <= 0)
+            {
                 space = pointerEnterReduceCount;
+            }
         }
         transform.SetAsLastSibling();
         string location = BattleManager.Instance.CurrentLocationID;
@@ -132,21 +137,19 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         if (BattleManager.Instance.IsDrag && !isAttackCard || CantMove || BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack)
             return;
         transform.DOScale(1f, moveTime);
-        transform.DORotateQuaternion(Quaternion.Euler(0, 0, BattleManager.Instance.CardAngleList[index]), moveTime);
-        CardRectTransform.DOAnchorPos(BattleManager.Instance.CardPositionList[index], moveTime);
+        transform.DORotateQuaternion(Quaternion.Euler(0, 0, CurrentAngle), moveTime);
+        CardRectTransform.DOAnchorPos(CurrentPos, moveTime);
         transform.SetSiblingIndex(index);
         for (int i = index + 1; i < transform.parent.childCount; i++)
         {
             rightCard = transform.parent.GetChild(i).GetComponent<CardItem>();
-            rightCard.GetComponent<RectTransform>().DOAnchorPosX(BattleManager.Instance.CardPositionList[i].x, moveTime);
+            rightCard.GetComponent<RectTransform>().DOAnchorPosX(rightCard.CurrentPos.x, moveTime);
         }
         for (int i = index - 1; i >= 0; i--)
         {
             leftCard = transform.parent.GetChild(i).GetComponent<CardItem>();
-            leftCard.GetComponent<RectTransform>().DOAnchorPosX(BattleManager.Instance.CardPositionList[i].x, moveTime);
+            leftCard.GetComponent<RectTransform>().DOAnchorPosX(leftCard.CurrentPos.x, moveTime);
         }
-        string id = BattleManager.Instance.CurrentLocationID;
-        // UIManager.Instance.ClearCheckerboardColor(id, DataManager.Instance.CardList[CardID].CardAttackDistance, BattleManager.CheckEmptyType.PlayerAttack);
         UIManager.Instance.ClearMoveClue(false);
     }
 
@@ -196,7 +199,7 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         }
         else
         {
-            CardRectTransform.anchoredPosition = BattleManager.Instance.CardPositionList[index];
+            CardRectTransform.anchoredPosition = CurrentPos;
             CardRectTransform.SetSiblingIndex(index);
         }
     }
@@ -208,9 +211,10 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         if (Physics.Raycast(ray, out hit, 10000, LayerMask.GetMask("Enemy")))
         {
             enemy = hit.transform.GetComponent<Enemy>();
-            if (onEnd && GetUseCardCondition() && CheckEnemyInAttackRange(enemy.EnemyLocation))
+            string location = BattleManager.Instance.GetEnemyKey(enemy.MyEnemyData, BattleManager.Instance.CurrentEnemyList);
+            if (onEnd && GetUseCardCondition() && CheckEnemyInAttackRange(location))
             {
-                UseCard(enemy.EnemyLocation);
+                UseCard(location);
             }
         }
     }
@@ -248,7 +252,7 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             return;
         }
         CardRectTransform.DOScale(1f, 0);
-        DataManager.Instance.HandCard.Remove(this);
+        DataManager.Instance.HandCard.Remove(MyCardData);
         BattleManager.Instance.ConsumeActionPoint(cardData.CardCost);
         BattleManager.Instance.ConsumeMana(cardData.CardManaCost);
         BattleManager.Instance.GetShield(BattleManager.Instance.CurrentPlayerData, cardData.CardShield);
@@ -258,11 +262,11 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         }
         if (!cardData.CardRemove)
         {
-            DataManager.Instance.UsedCardBag.Add(this);
+            DataManager.Instance.UsedCardBag.Add(MyCardData);
         }
         else
         {
-            DataManager.Instance.RemoveCardBag.Add(this);
+            DataManager.Instance.RemoveCardBag.Add(MyCardData);
         }
         EventManager.Instance.DispatchEvent(EventDefinition.eventUseCard, this);
         for (int i = 0; i < cardData.CardEffectList.Count; i++)

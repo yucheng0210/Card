@@ -11,13 +11,12 @@ public class ReturnCardBag : IEffect
         UIManager.Instance.SelectCard(unityAction, true);
         // BattleManager.Instance.CardBagApplyButton.onClick.AddListener(() => UIManager.Instance.SelectCard(unityAction, true));
     }
-
-    public string SetDescriptionText()
+    public string SetTitleText()
     {
         throw new System.NotImplementedException();
     }
 
-    public string SetTitleText()
+    public string SetDescriptionText()
     {
         throw new System.NotImplementedException();
     }
@@ -25,11 +24,10 @@ public class ReturnCardBag : IEffect
     private void Return()
     {
         BattleManager.Instance.CardBagApplyButton.gameObject.SetActive(false);
-        CardItem cardItem = DataManager.Instance.UsedCardBag[UIManager.Instance.CurrentRemoveID];
+        CardItem cardItem = DataManager.Instance.UsedCardBag[UIManager.Instance.CurrentRemoveID].MyCardItem;
         cardItem.transform.SetParent(BattleManager.Instance.CardBagTrans);
         cardItem.GetComponent<RectTransform>().anchoredPosition = BattleManager.Instance.CardBagTrans.position;
         DataManager.Instance.CardBag.Insert(0, cardItem.MyCardData);
-        BattleManager.Instance.CardItemList.Insert(0, cardItem);
         DataManager.Instance.UsedCardBag.RemoveAt(UIManager.Instance.CurrentRemoveID);
         UIManager.Instance.HideUI("UICardMenu");
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
