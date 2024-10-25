@@ -284,7 +284,9 @@ public class UIBattle : UIBase
             enemy.MyAnimator.SetTrigger("isAttacking");
             yield return new WaitForSecondsRealtime(0.25f);
             if (inRange)
+            {
                 BattleManager.Instance.TakeDamage(enemyData, playerData, enemyData.CurrentAttack, BattleManager.Instance.CurrentLocationID, 0.5f);
+            }
             yield return new WaitForSecondsRealtime(0.5f);
         }
     }
@@ -309,7 +311,7 @@ public class UIBattle : UIBase
         }
         else if (enemy.MyActionType != Enemy.ActionType.Move)
         {
-
+            enemyData.CurrentAttackOrder++;
         }
     }
 

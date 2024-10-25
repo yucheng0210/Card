@@ -222,15 +222,14 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         string id = BattleManager.Instance.CurrentLocationID;
         int attackDistance = MyCardData.CardAttackDistance;
-        List<string> emptyPlaceList = BattleManager.Instance.GetAcitonRangeTypeList(id, attackDistance, BattleManager.CheckEmptyType.PlayerAttack, BattleManager.ActionRangeType.Default);
-        bool inRangeBool = false;
-        for (int i = 0; i < emptyPlaceList.Count; i++)
-        {
-            if (emptyPlaceList[i].Contains(enemyLocation))
-                inRangeBool = true;
-        }
-        return inRangeBool;
+        BattleManager.CheckEmptyType checkEmptyType = BattleManager.CheckEmptyType.PlayerAttack;
+        BattleManager.ActionRangeType actionRangeType = BattleManager.ActionRangeType.Default;
+        // 獲取行動範圍內的空位置列表
+        List<string> emptyPlaceList = BattleManager.Instance.GetAcitonRangeTypeList(id, attackDistance, checkEmptyType, actionRangeType);
+        // 使用 List.Contains 簡化判斷
+        return emptyPlaceList.Contains(enemyLocation);
     }
+
     private bool GetUseCardCondition()
     {
         PlayerData playerData = BattleManager.Instance.CurrentPlayerData;

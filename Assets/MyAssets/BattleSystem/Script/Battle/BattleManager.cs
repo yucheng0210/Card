@@ -620,7 +620,7 @@ public class BattleManager : Singleton<BattleManager>
         cardData.CardID = id;
         cardData.MyCardItem = cardItem;
         cardItem.MyCardData = cardData;
-        DataManager.Instance.CardBag.Insert(0, cardData);
+        DataManager.Instance.CardBag.Add(cardData);
         return cardItem;
     }
     public void AddMinions(int enemyID, int count, string location)

@@ -16,7 +16,7 @@ public class TeleportEffect : IEffect
         {
             string key = BattleManager.Instance.CheckerboardList.ElementAt(i).Key;
             float currentDistance = BattleManager.Instance.CalculateDistance(key, BattleManager.Instance.CurrentLocationID);
-            if (BattleManager.Instance.CheckPlaceEmpty(target, BattleManager.CheckEmptyType.Move) && currentDistance >= minDistance && target != key)
+            if (BattleManager.Instance.CheckPlaceEmpty(key, BattleManager.CheckEmptyType.Move) && currentDistance >= minDistance)
             {
                 teleportList.Add(key);
             }

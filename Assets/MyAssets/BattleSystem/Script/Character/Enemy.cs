@@ -70,7 +70,7 @@ public class Enemy : MonoBehaviour
     }
     private void RefreshAttackIntent()
     {
-        string location = BattleManager.Instance.GetEnemyKey(MyEnemyData, BattleManager.Instance.CurrentEnemyList);
+        string location = BattleManager.Instance.GetEnemyKey(MyEnemyData, currentEnemyList);
         float distance = BattleManager.Instance.GetRoute(location, BattleManager.Instance.CurrentLocationID, BattleManager.CheckEmptyType.EnemyAttack).Count;
         ResetUIElements();
         if (distance == 0)

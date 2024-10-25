@@ -17,8 +17,6 @@ public class SniperEffect : IEffect
             EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
             enemyData.PassiveSkills.Remove(GetType().Name);
         }
-        else
-            Debug.LogWarning($"Target {target} not found in CurrentEnemyList.");
     }
 
     private void EventMove(params object[] args)

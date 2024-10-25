@@ -66,47 +66,49 @@ public class CardCreater : MonoBehaviour
 
     private void CalculatePositionAngle(int cardCount, List<CardData> cardBag)
     {
-        int odd = cardCount % 2 != 0 ? 0 : 1;
-        float startAngle = (cardCount / 2 - odd) * minCardAngle;
+        int adjustCount = Mathf.Min(cardCount, cardBag.Count);
+        // 計算是否為偶數，並確定開始角度
+        int isOddCount = adjustCount % 2 != 0 ? 0 : 1;
+        float startAngle = (adjustCount / 2 - isOddCount) * minCardAngle;
+        // 計算初始位置，處理偶數牌位偏移
         Vector2 cardPos = startPosition;
-        //當偶數時startPosition會在中間兩張牌之間，需要扣除額外一半cardXSpacing；
-        cardPos.x -= ((cardCount / 2 - odd) + (0.5f * odd)) * cardXSpacing;
-        cardPos.y -= ((1 + (cardCount / 2 - odd)) * (cardCount / 2 - odd)) / 2 * cardYSpacing;
-        int adjustCount = cardCount > cardBag.Count ? cardBag.Count : cardCount;
+        float halfCardCount = adjustCount / 2 - isOddCount;
+        cardPos.x -= (halfCardCount + (isOddCount / 2)) * cardXSpacing;
+        cardPos.y -= (1 + halfCardCount) * (adjustCount / 2f - isOddCount) / 2 * cardYSpacing;
+        // 確定迴圈次數，避免超過卡包數量
         for (int i = 0; i < adjustCount; i++)
         {
+
+            // 獲取當前卡片
             CardItem cardItem = cardBag[i].MyCardItem;
+
+            // 設置當前卡片位置與角度
             cardItem.CurrentPos = cardPos;
             cardItem.CurrentAngle = startAngle;
-            int ySpacingMultiplier = 0;
-            if (odd == 0)
+            // 計算y軸偏移量
+            int ySpacingMultiplier = adjustCount / 2 - i - isOddCount;
+            if (isOddCount == 0)
             {
-                if (i >= cardCount / 2 - odd)
+                if (i >= adjustCount / 2)
                 {
-                    ySpacingMultiplier = cardCount / 2 - odd - i - 1;
+                    ySpacingMultiplier--;
                 }
-                else
-                {
-                    ySpacingMultiplier = cardCount / 2 - odd - i;
-                }
-                startAngle -= minCardAngle; // 更新下一張卡片的旋轉角度
             }
             else
             {
-                if (!(i == cardCount / 2 - odd))
+                if (i == adjustCount / 2 - isOddCount)
                 {
-                    startAngle -= minCardAngle; // 更新下一張卡片的旋轉角度
-                    ySpacingMultiplier = cardCount / 2 - odd - i;
+                    startAngle += minCardAngle;
                 }
             }
+            // 更新下一張卡片的x和y座標，以及角度
             cardPos.x += cardXSpacing;
             cardPos.y += ySpacingMultiplier * cardYSpacing;
+            startAngle -= minCardAngle;  // 更新旋轉角度
         }
     }
-
     private IEnumerator DrawCard(int addCardCount)
     {
-        //yield return UIManager.Instance.FadeOutIn(roundTip.GetComponent<CanvasGroup>(), 0.5f, 1, false); // 執行 UI 淡入淡出效果
         yield return new WaitForSecondsRealtime(1);
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.DrawCard);
         List<CardData> handCard = DataManager.Instance.HandCard;
@@ -121,7 +123,7 @@ public class CardCreater : MonoBehaviour
                 {
                     break;
                 }
-                DrawnAllCards(addCardCount - i - 1);
+                DrawnAllCards(maxCardCount - i);
             }
             // 根據抽卡數量將卡片添加到手牌中
             handCard.Add(cardBag[0]);
@@ -150,7 +152,7 @@ public class CardCreater : MonoBehaviour
             }
             currentPosX += cardXSpacing / 2; // 更新下一張卡片的起始位置
             // 設定卡片旋轉角度
-            DataManager.Instance.CardBag.RemoveAt(0);
+            cardBag.RemoveAt(0);
             EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
         }
         yield return new WaitForSecondsRealtime(moveTime);

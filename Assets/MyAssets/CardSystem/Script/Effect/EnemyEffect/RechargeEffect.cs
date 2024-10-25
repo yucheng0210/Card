@@ -8,7 +8,7 @@ public class RechargeEffect : IEffect
     public void ApplyEffect(int value, string target)
     {
         enemyData = BattleManager.Instance.CurrentEnemyList[target];
-        enemyData.CurrentAttack = Mathf.RoundToInt(enemyData.MinAttack * (1 + (value / 100f)));
+        enemyData.CurrentAttack += Mathf.RoundToInt(enemyData.MinAttack * (value / 100f));
         EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
     }
     private void EventTakeDamage(params object[] args)
