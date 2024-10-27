@@ -11,11 +11,11 @@ public class ParasiticEffect : IEffect
     private int damage;
     private int sporeCount;
 
-    public void ApplyEffect(int value, string target)
+    public void ApplyEffect(int value, string fromLocation, string toLocation)
     {
-        if (!BattleManager.Instance.CurrentEnemyList.TryGetValue(target, out parasite))
+        if (!BattleManager.Instance.CurrentEnemyList.TryGetValue(fromLocation, out parasite))
         {
-            Debug.LogWarning($"Target {target} not found in CurrentEnemyList.");
+            Debug.LogWarning($"Target {fromLocation} not found in CurrentEnemyList.");
             return;
         }
         host = BattleManager.Instance.CurrentPlayerData;

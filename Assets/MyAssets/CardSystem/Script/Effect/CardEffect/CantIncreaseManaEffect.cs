@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class CantIncreaseManaEffect : IEffect
 {
-    public void ApplyEffect(int value, string target)
+    public void ApplyEffect(int value, string fromLocation, string toLocation)
     {
         if (BattleManager.Instance.CurrentNegativeState.ContainsKey(GetType().Name))
             BattleManager.Instance.CurrentNegativeState[GetType().Name]++;

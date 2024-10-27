@@ -10,12 +10,12 @@ public class BleedEffect : IEffect
     Dictionary<string, EnemyData> currentEnemyList = new();
     Dictionary<string, int> currentNegativeState = new();
     private string typeName;
-    public void ApplyEffect(int value, string target)
+    public void ApplyEffect(int value, string fromLocation, string toLocation)
     {
         currentEnemyList = BattleManager.Instance.CurrentEnemyList;
         currentNegativeState = BattleManager.Instance.CurrentNegativeState;
         // Set attacker and bleedCount
-        attacker = currentEnemyList.ContainsKey(target) ? currentEnemyList[target] : BattleManager.Instance.CurrentMinionsList[target];
+        attacker = currentEnemyList.ContainsKey(fromLocation) ? currentEnemyList[fromLocation] : BattleManager.Instance.CurrentMinionsList[fromLocation];
         bleedCount = value;
         typeName = GetType().Name;
         // Register events
@@ -40,9 +40,13 @@ public class BleedEffect : IEffect
         if (attacker == damageSource)
         {
             if (currentNegativeState.ContainsKey(typeName))
+            {
                 currentNegativeState[typeName] += bleedCount;
+            }
             else
+            {
                 currentNegativeState.Add(typeName, bleedCount);
+            }
         }
     }
 

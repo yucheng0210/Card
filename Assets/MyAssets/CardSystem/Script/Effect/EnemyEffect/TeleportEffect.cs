@@ -7,10 +7,10 @@ using UnityEngine;
 public class TeleportEffect : IEffect
 {
     private CharacterData characterData;
-    public void ApplyEffect(int value, string target)
+    public void ApplyEffect(int value, string fromLocation, string toLocation)
     {
-        characterData = BattleManager.Instance.IdentifyCharacter(target);
-        float minDistance = BattleManager.Instance.CalculateDistance(target, BattleManager.Instance.CurrentLocationID);
+        characterData = BattleManager.Instance.IdentifyCharacter(fromLocation);
+        float minDistance = BattleManager.Instance.CalculateDistance(fromLocation, BattleManager.Instance.CurrentLocationID);
         List<string> teleportList = new();
         for (int i = 0; i < BattleManager.Instance.CheckerboardList.Count; i++)
         {
@@ -22,7 +22,7 @@ public class TeleportEffect : IEffect
             }
         }
         int randomIndex = Random.Range(0, teleportList.Count);
-        BattleManager.Instance.CurrentEnemyList.Remove(target);
+        BattleManager.Instance.CurrentEnemyList.Remove(fromLocation);
         BattleManager.Instance.CurrentEnemyList.Add(teleportList[randomIndex], (EnemyData)characterData);
         int childCount = BattleManager.Instance.GetCheckerboardPoint(teleportList[randomIndex]);
         RectTransform emptyPlace = BattleManager.Instance.CheckerboardTrans.GetChild(childCount).GetComponent<RectTransform>();

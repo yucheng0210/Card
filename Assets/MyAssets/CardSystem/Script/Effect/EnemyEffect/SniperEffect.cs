@@ -8,9 +8,9 @@ public class SniperEffect : IEffect
     private EnemyData enemyData;
     private int attackMultiplier;
 
-    public void ApplyEffect(int value, string target)
+    public void ApplyEffect(int value, string fromLocation, string toLocation)
     {
-        if (BattleManager.Instance.CurrentEnemyList.TryGetValue(target, out enemyData))
+        if (BattleManager.Instance.CurrentEnemyList.TryGetValue(fromLocation, out enemyData))
         {
             attackMultiplier = value;
             EventManager.Instance.AddEventRegister(EventDefinition.eventMove, EventMove);

@@ -94,7 +94,9 @@ public class UIMap : UIBase
         int currentIndex = GetCurrentIndex(i, simpleRandomIndex, normalRandomIndex, hardRandomIndex);
 
         if (DataManager.Instance.LevelTypeList[currentIndex].LevelType != "BATTLE" && i == 0)
+        {
             return false;
+        }
 
         Level level = CreateLevel(i, j, currentIndex);
         MapManager.Instance.MapNodes[i][j].l = level;
@@ -121,12 +123,13 @@ public class UIMap : UIBase
                 switch (key)
                 {
                     case "BATTLE":
-                        if (count > 10)
+                        /*if (count > 10)
                             currentIndex = hardRandomIndex;
                         else if (count > 5)
                             currentIndex = normalRandomIndex;
                         else
-                            currentIndex = simpleRandomIndex;
+                            currentIndex = simpleRandomIndex;*/
+                        currentIndex = 8001;
                         break;
                     case "BOSS":
                         currentIndex = Random.Range(2001, 2003);
@@ -158,12 +161,16 @@ public class UIMap : UIBase
         Level level = DataManager.Instance.LevelTypeList[currentIndex].Clone();
         level.LevelParentList = new List<int>();
         level.LevelID = i * 5 + j;
-        MapManager.Instance.LevelCount = 8;
+        //MapManager.Instance.LevelCount = 8;
         level.LevelActive = true;
         if (MapManager.Instance.MapNodes[i][j].left != null)
+        {
             level.LevelParentList.Add(MapManager.Instance.MapNodes[i][j].left.l.LevelID);
+        }
         if (MapManager.Instance.MapNodes[i][j].right != null)
+        {
             level.LevelParentList.Add(MapManager.Instance.MapNodes[i][j].right.l.LevelID);
+        }
         return level;
     }
 

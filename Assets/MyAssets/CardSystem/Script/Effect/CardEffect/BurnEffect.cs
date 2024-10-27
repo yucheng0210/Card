@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class BurnEffect : IEffect
 {
-    public void ApplyEffect(int value, string target)
+    public void ApplyEffect(int value, string fromLocation, string toLocation)
     {
         //BattleManager.Instance.TakeDamage(BattleManager.Instance.CurrentEnemyList[target], 2, target);
     }

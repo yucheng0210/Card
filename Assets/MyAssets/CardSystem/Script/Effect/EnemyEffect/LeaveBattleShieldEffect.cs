@@ -9,14 +9,14 @@ public class LeaveBattleShieldEffect : IEffect
     private bool wasAttackedLastTurn;
     private int shieldCount;
     private Dictionary<string, EnemyData> currentEnemyList;
-    public void ApplyEffect(int value, string target)
+    public void ApplyEffect(int value, string fromLocation, string toLocation)
     {
         // 初始化狀態
         wasAttackedLastTurn = false;
-        targetCharacter = currentEnemyList.ContainsKey(target) ? currentEnemyList[target] : BattleManager.Instance.CurrentPlayerData;
+        targetCharacter = currentEnemyList.ContainsKey(fromLocation) ? currentEnemyList[fromLocation] : BattleManager.Instance.CurrentPlayerData;
         shieldCount = value;
-        if (currentEnemyList.ContainsKey(target))
-            currentEnemyList[target].PassiveSkills.Remove(GetType().Name);
+        if (currentEnemyList.ContainsKey(fromLocation))
+            currentEnemyList[fromLocation].PassiveSkills.Remove(GetType().Name);
         Debug.Log(wasAttackedLastTurn);
         // 監聽攻擊事件
         EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);

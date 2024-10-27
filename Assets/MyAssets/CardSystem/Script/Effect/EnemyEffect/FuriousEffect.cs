@@ -9,11 +9,11 @@ public class FuriousEffect : IEffect
     private EnemyData enemyData;
     private Dictionary<string, EnemyData> enemyList;
 
-    public void ApplyEffect(int value, string target)
+    public void ApplyEffect(int value, string fromLocation, string toLocation)
     {
         enemyList = BattleManager.Instance.CurrentEnemyList;
 
-        if (enemyList.TryGetValue(target, out enemyData))
+        if (enemyList.TryGetValue(fromLocation, out enemyData))
         {
             attackIncreaseCount = Mathf.RoundToInt(enemyData.CurrentAttack * (value / 100f));
             // 移除被動技能

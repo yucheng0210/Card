@@ -10,15 +10,16 @@ public class MoveEffect : IEffect
     private List<UnityEngine.Events.UnityAction> removeList = new();
     private List<string> emptyPlaceList;
 
-    public void ApplyEffect(int value, string target)
+    public void ApplyEffect(int value, string fromLocation, string toLocation)
     {
-        emptyPlaceList = BattleManager.Instance.GetAcitonRangeTypeList(target, value, BattleManager.CheckEmptyType.Move, BattleManager.ActionRangeType.Default);
+        emptyPlaceList = BattleManager.Instance.GetAcitonRangeTypeList(fromLocation, value, BattleManager.CheckEmptyType.Move, BattleManager.ActionRangeType.Default);
         UIManager.Instance.ChangeCheckerboardColor(emptyPlaceList, true);
         for (int i = 0; i < emptyPlaceList.Count; i++)
         {
             int avoidClosure = i;
             int checkerboardPoint = BattleManager.Instance.GetCheckerboardPoint(emptyPlaceList[i]);
-            int moveCount = BattleManager.Instance.GetRoute(target, emptyPlaceList[i], BattleManager.CheckEmptyType.Move).Count;
+            int playerOnceMoveConsume = BattleManager.Instance.PlayerOnceMoveConsume;
+            int moveCount = BattleManager.Instance.GetRoute(fromLocation, emptyPlaceList[i], BattleManager.CheckEmptyType.Move).Count * playerOnceMoveConsume;
             RectTransform emptyPlace = BattleManager.Instance.CheckerboardTrans.GetChild(checkerboardPoint).GetComponent<RectTransform>();
             UnityEngine.Events.UnityAction moveAction = () => Move(emptyPlace.localPosition, emptyPlaceList[avoidClosure], moveCount);
             emptyPlace.GetComponent<Button>().onClick.AddListener(moveAction);
@@ -26,17 +27,6 @@ public class MoveEffect : IEffect
         }
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.UsingEffect);
     }
-
-    public string SetDescriptionText()
-    {
-        throw new NotImplementedException();
-    }
-
-    public string SetTitleText()
-    {
-        throw new NotImplementedException();
-    }
-
     private void Move(Vector3 destination, string locationID, int moveCount)
     {
         for (int i = 0; i < emptyPlaceList.Count; i++)
@@ -46,7 +36,6 @@ public class MoveEffect : IEffect
             emptyPlace.GetComponent<Button>().onClick.RemoveListener(removeList[i]);
         }
         BattleManager.Instance.PlayerMoveCount -= moveCount;
-        //UIManager.Instance.ClearCheckerboardColor(BattleManager.Instance.CurrentLocationID, value, BattleManager.CheckEmptyType.Move);
         PlayerMoveAction(BattleManager.Instance.CurrentLocationID, locationID);
         BattleManager.Instance.CurrentLocationID = locationID;
         EventManager.Instance.DispatchEvent(EventDefinition.eventMove);
@@ -68,6 +57,14 @@ public class MoveEffect : IEffect
         }
         );
         sequence.Play();
+    }
+    public string SetTitleText()
+    {
+        throw new NotImplementedException();
+    }
+    public string SetDescriptionText()
+    {
+        throw new NotImplementedException();
     }
 
 }

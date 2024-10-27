@@ -10,24 +10,24 @@ public class ThornsEffect : IEffect
     private CharacterData counterattacker;
     private int counterattackDamageMultiplier;
     private Dictionary<string, EnemyData> currentEnemyList;
-    public void ApplyEffect(int value, string target)
+    public void ApplyEffect(int value, string fromLocation, string toLocation)
     {
         Dictionary<string, int> currentOnceBattlePositiveList;
         currentEnemyList = BattleManager.Instance.CurrentEnemyList;
         string typeName = GetType().Name;
-        if (target == BattleManager.Instance.CurrentLocationID)
+        if (fromLocation == BattleManager.Instance.CurrentLocationID)
         {
             counterattacker = BattleManager.Instance.CurrentPlayerData;
             currentOnceBattlePositiveList = BattleManager.Instance.CurrentOnceBattlePositiveList;
         }
-        else if (currentEnemyList.TryGetValue(target, out var enemyData))
+        else if (currentEnemyList.TryGetValue(fromLocation, out var enemyData))
         {
             counterattacker = enemyData;
             currentOnceBattlePositiveList = enemyData.EnemyTrans.GetComponent<Enemy>().EnemyOnceBattlePositiveList;
         }
         else
         {
-            Debug.LogWarning($"Target {target} not found in CurrentEnemyList.");
+            Debug.LogWarning($"Target {fromLocation} not found in CurrentEnemyList.");
             return;
         }
 
@@ -38,7 +38,7 @@ public class ThornsEffect : IEffect
         currentOnceBattlePositiveList[typeName] = existingValue + value;
 
         counterattackDamageMultiplier = currentOnceBattlePositiveList[typeName];
-        counterattackerID = target;
+        counterattackerID = fromLocation;
 
         EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
     }
@@ -46,7 +46,9 @@ public class ThornsEffect : IEffect
     private void EventTakeDamage(params object[] args)
     {
         if (counterattackerID != (string)args[2])
+        {
             return;
+        }
 
         var damage = (int)args[1];
         var counterattackDamage = Mathf.RoundToInt(damage * (counterattackDamageMultiplier / 100f));

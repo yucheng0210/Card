@@ -5,10 +5,10 @@ using UnityEngine.UI;
 
 public class PoisonExplosionEffect : IEffect
 {
-    public void ApplyEffect(int value, string target)
+    public void ApplyEffect(int value, string fromLocation, string toLocation)
     {
         int damage = BattleManager.Instance.CurrentNegativeState["PoisonedEffect"];
-        BattleManager.Instance.TakeDamage(BattleManager.Instance.CurrentEnemyList[target], BattleManager.Instance.CurrentPlayerData, damage
+        BattleManager.Instance.TakeDamage(BattleManager.Instance.CurrentEnemyList[fromLocation], BattleManager.Instance.CurrentPlayerData, damage
         , BattleManager.Instance.CurrentLocationID, 0);
         BattleManager.Instance.CurrentNegativeState.Remove("PoisonedEffect");
     }

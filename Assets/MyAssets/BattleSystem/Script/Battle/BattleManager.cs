@@ -31,13 +31,15 @@ public class BattleManager : Singleton<BattleManager>
         Default,
         Linear,
         Surrounding,
-        Cone
+        Cone,
+        Jump
     }
     public enum CheckEmptyType
     {
         PlayerAttack,
         EnemyAttack,
-        Move
+        Move,
+        ALLCharacter
     }
     //玩家
     private int playerMoveCount;
@@ -48,9 +50,12 @@ public class BattleManager : Singleton<BattleManager>
         {
             playerMoveCount = value;
             if (playerMoveCount > 2)
+            {
                 playerMoveCount = 2;
+            }
         }
     }
+    public int PlayerOnceMoveConsume { get; set; }
     public int CurrentDrawCardCount { get; set; }
     public BattleType MyBattleType { get; set; }
     public Transform CardMenuTrans { get; set; }
@@ -123,7 +128,9 @@ public class BattleManager : Singleton<BattleManager>
         // 執行原本的 TakeDamage 邏輯
         int currentDamage = damage * (100 - defender.DamageReduction) / 100 - defender.CurrentShield;
         if (currentDamage < 0)
+        {
             currentDamage = 0;
+        }
         defender.CurrentShield -= damage;
         defender.CurrentHealth -= currentDamage;
 
@@ -155,7 +162,7 @@ public class BattleManager : Singleton<BattleManager>
         for (int i = 0; i < enemyData.PassiveSkills.Count; i++)
         {
             string key = enemyData.PassiveSkills.ElementAt(i).Key;
-            EffectFactory.Instance.CreateEffect(key).ApplyEffect(enemyData.PassiveSkills[key], locationID);
+            EffectFactory.Instance.CreateEffect(key).ApplyEffect(enemyData.PassiveSkills[key], locationID, CurrentLocationID);
         }
     }
     public void SetEventTrigger(EventTrigger eventTrigger, UnityAction unityAction_1, UnityAction unityAction_2)
@@ -243,7 +250,8 @@ public class BattleManager : Singleton<BattleManager>
         string placeStatus = CheckerboardList[place];
         bool playerAttackCondition = checkEmptyType == CheckEmptyType.PlayerAttack && placeStatus == "Enemy";
         bool enemyAttackCondition = checkEmptyType == CheckEmptyType.EnemyAttack && placeStatus == "Player";
-        return playerAttackCondition || enemyAttackCondition || placeStatus == "Empty";
+        bool allCharacterCondition = checkEmptyType == CheckEmptyType.ALLCharacter && (placeStatus == "Player" || placeStatus == "Enemy");
+        return playerAttackCondition || enemyAttackCondition || allCharacterCondition || placeStatus == "Empty";
     }
     public float CalculateDistance(string fromLocation, string toLocation)
     {
@@ -271,6 +279,9 @@ public class BattleManager : Singleton<BattleManager>
                 emptyPlaceList = GetConeAttackList(location, CurrentLocationID, stepCount); // 特定條件
                 break;
             case ActionRangeType.Default:
+                emptyPlaceList = GetEmptyPlace(location, stepCount, checkEmptyType, true);
+                break;
+            case ActionRangeType.Jump:
                 emptyPlaceList = GetEmptyPlace(location, stepCount, checkEmptyType, true);
                 break;
         }
@@ -514,6 +525,7 @@ public class BattleManager : Singleton<BattleManager>
         int levelID = MapManager.Instance.LevelID;
         int skillID = CurrentPlayerData.StartSkill;
         int levelCount = MapManager.Instance.LevelCount;
+        PlayerOnceMoveConsume = 1;
         CurrentLocationID = MapManager.Instance.MapNodes[levelCount][levelID].l.PlayerStartPos;
         CurrentPlayerData.CurrentActionPoint = CurrentPlayerData.MaxActionPoint;
         CurrentPlayerData.Mana = 10;
@@ -557,7 +569,6 @@ public class BattleManager : Singleton<BattleManager>
     private void PlayerTurn()
     {
         CurrentPlayerData.CurrentActionPoint = CurrentPlayerData.MaxActionPoint;
-        //DataManager.Instance.PlayerList[playerID].Mana++;
         CurrentPlayerData.CurrentShield = 0;
         for (int i = 0; i < CurrentAbilityList.Count; i++)
         {
@@ -565,14 +576,14 @@ public class BattleManager : Singleton<BattleManager>
             int effectCount;
             effectID = CurrentAbilityList.ElementAt(i).Key;
             effectCount = CurrentAbilityList.ElementAt(i).Value;
-            EffectFactory.Instance.CreateEffect(effectID).ApplyEffect(effectCount, CurrentLocationID);
-
+            EffectFactory.Instance.CreateEffect(effectID).ApplyEffect(effectCount, CurrentLocationID, CurrentLocationID);
         }
         EventManager.Instance.DispatchEvent(EventDefinition.eventPlayerTurn);
     }
 
     private void EnemyTurn()
     {
+        PlayerOnceMoveConsume = 1;
         for (int i = 0; i < CurrentNegativeState.Count; i++)
         {
             string negativeState = CurrentNegativeState.ElementAt(i).Key;

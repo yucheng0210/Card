@@ -287,7 +287,7 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             {
                 continue;
             }
-            EffectFactory.Instance.CreateEffect(effectID).ApplyEffect(effectCount, target);
+            EffectFactory.Instance.CreateEffect(effectID).ApplyEffect(effectCount, BattleManager.Instance.CurrentLocationID, target);
         }
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
         gameObject.SetActive(false);

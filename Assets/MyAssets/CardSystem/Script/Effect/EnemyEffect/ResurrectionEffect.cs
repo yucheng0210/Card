@@ -11,11 +11,11 @@ public class ResurrectionEffect : IEffect
     private Image enemyEffectImage;
     private string targetLocation;
 
-    public void ApplyEffect(int value, string target)
+    public void ApplyEffect(int value, string fromLocation, string toLocation)
     {
-        if (!BattleManager.Instance.CurrentEnemyList.TryGetValue(target, out enemyData) || enemyData.CurrentHealth > 0)
+        if (!BattleManager.Instance.CurrentEnemyList.TryGetValue(fromLocation, out enemyData) || enemyData.CurrentHealth > 0)
             return;
-        targetLocation = target;
+        targetLocation = fromLocation;
         recoverCount = Mathf.RoundToInt(enemyData.MaxHealth * (value / 100f));
         enemy = enemyData.EnemyTrans.GetComponent<Enemy>();
         enemyEffectImage = enemy.EnemyEffectImage.GetComponent<Image>();

@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class SetManaMultiplierEffect : IEffect
 {
-    public void ApplyEffect(int value, string target)
+    public void ApplyEffect(int value, string fromLocation, string toLocation)
     {
         BattleManager.Instance.ManaMultiplier = value;
     }

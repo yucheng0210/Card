@@ -7,7 +7,7 @@ public class DeadlineCurseEffect : IEffect
 {
     private CardItem cardItem;
     private int reciprocalCount = 3;
-    public void ApplyEffect(int value, string target)
+    public void ApplyEffect(int value, string fromLocation, string toLocation)
     {
         cardItem = BattleManager.Instance.AddCard(5001);
         EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);

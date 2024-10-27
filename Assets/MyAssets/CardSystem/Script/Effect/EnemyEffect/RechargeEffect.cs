@@ -5,9 +5,9 @@ using UnityEngine;
 public class RechargeEffect : IEffect
 {
     private EnemyData enemyData;
-    public void ApplyEffect(int value, string target)
+    public void ApplyEffect(int value, string fromLocation, string toLocation)
     {
-        enemyData = BattleManager.Instance.CurrentEnemyList[target];
+        enemyData = BattleManager.Instance.CurrentEnemyList[fromLocation];
         enemyData.CurrentAttack += Mathf.RoundToInt(enemyData.MinAttack * (value / 100f));
         EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
     }

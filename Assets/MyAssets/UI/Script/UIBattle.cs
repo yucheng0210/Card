@@ -137,7 +137,9 @@ public class UIBattle : UIBase
             UnityAction unityAction_2 = () =>
             {
                 if (BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack)
+                {
                     return;
+                }
                 UIManager.Instance.ClearMoveClue(false);
             };
             BattleManager.Instance.SetEventTrigger(eventTrigger, unityAction_1, unityAction_2);
@@ -240,7 +242,8 @@ public class UIBattle : UIBase
     // 处理敌人移动
     private IEnumerator HandleEnemyMove(string location, EnemyData enemyData, RectTransform enemyTrans, Enemy enemy, Image enemyImage)
     {
-        List<string> emptyPlaceList = BattleManager.Instance.GetAcitonRangeTypeList(location, enemyData.StepCount, enemy.MyCheckEmptyType, enemy.MyActionRangeType);
+        BattleManager.ActionRangeType actionRangeType = BattleManager.ActionRangeType.Default;
+        List<string> emptyPlaceList = BattleManager.Instance.GetAcitonRangeTypeList(location, enemyData.StepCount, enemy.MyCheckEmptyType, actionRangeType);
         string playerLocation = BattleManager.Instance.CurrentLocationID;
         int[] minPoint = BattleManager.Instance.ConvertNormalPos(emptyPlaceList[0]);
         int minDistance = BattleManager.Instance.GetRoute(emptyPlaceList[0], playerLocation, BattleManager.CheckEmptyType.EnemyAttack).Count;
@@ -281,7 +284,14 @@ public class UIBattle : UIBase
 
         for (int i = 0; i < attackCount; i++)
         {
-            enemy.MyAnimator.SetTrigger("isAttacking");
+            if (enemy.MySequence != null)
+            {
+                enemy.MySequence.Play();
+            }
+            else
+            {
+                enemy.MyAnimator.SetTrigger("isAttacking");
+            }
             yield return new WaitForSecondsRealtime(0.25f);
             if (inRange)
             {
@@ -298,7 +308,7 @@ public class UIBattle : UIBase
         {
             string key = enemyData.AttackOrderStrs.ElementAt(enemyData.CurrentAttackOrder).Item1;
             int value = enemyData.AttackOrderStrs.ElementAt(enemyData.CurrentAttackOrder).Item2;
-            EffectFactory.Instance.CreateEffect(key).ApplyEffect(value, location);
+            EffectFactory.Instance.CreateEffect(key).ApplyEffect(value, location, BattleManager.Instance.CurrentLocationID);
         }
     }
 
@@ -328,9 +338,12 @@ public class UIBattle : UIBase
         bool notInAttack = BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack;
         bool containsCantMoveEffect = BattleManager.Instance.CurrentNegativeState.ContainsKey(nameof(CantMoveEffect));
         if (playerCantMove || notInAttack || containsCantMoveEffect)
+        {
             return;
+        }
+        string playerLocation = BattleManager.Instance.CurrentLocationID;
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.UsingEffect);
-        EffectFactory.Instance.CreateEffect(nameof(MoveEffect)).ApplyEffect(BattleManager.Instance.PlayerMoveCount, BattleManager.Instance.CurrentLocationID);
+        EffectFactory.Instance.CreateEffect(nameof(MoveEffect)).ApplyEffect(BattleManager.Instance.PlayerMoveCount, playerLocation, playerLocation);
     }
     private void RemoveEnemy(string key)
     {
@@ -344,7 +357,6 @@ public class UIBattle : UIBase
                 BattleManager.Instance.CurrentEnemyList.Remove(key);
                 Destroy(enemyData.EnemyTrans.gameObject, 1);
                 BattleManager.Instance.ClearAllEventTriggers();
-                // CheckBattleInfo();
                 CheckEnemyInfo();
             }
             enemy.IsDeath = true;
@@ -388,7 +400,6 @@ public class UIBattle : UIBase
         {
             string key = enemyList.ElementAt(i).Key;
             EnemyData enemyData = enemyList.ElementAt(i).Value;
-
             int checkerboardPoint = BattleManager.Instance.GetCheckerboardPoint(key);
             Enemy enemy = Instantiate(enemyPrefab, enemyTrans);
             RectTransform enemyRect = enemy.GetComponent<RectTransform>();
@@ -456,7 +467,8 @@ public class UIBattle : UIBase
     }
     private void UsePotionEffect(string effectName, int value, int bagID)
     {
-        EffectFactory.Instance.CreateEffect(effectName).ApplyEffect(value, BattleManager.Instance.CurrentLocationID);
+        string playerLocation = BattleManager.Instance.CurrentLocationID;
+        EffectFactory.Instance.CreateEffect(effectName).ApplyEffect(value, playerLocation, playerLocation);
         DataManager.Instance.PotionBag.RemoveAt(bagID);
         potionClueMenu.gameObject.SetActive(false);
         RefreshPotionBag();
@@ -475,7 +487,6 @@ public class UIBattle : UIBase
         playerMoveButton.onClick.AddListener(PlayerMove);
         roundTip.GetComponent<Image>().sprite = playerRound;
         StartCoroutine(UIManager.Instance.FadeOutIn(roundTip, 0.5f, 1, false));
-        //  CheckBattleInfo();
     }
     private void EventEnemyTurn(params object[] args)
     {
@@ -500,9 +511,10 @@ public class UIBattle : UIBase
         {
             RemoveEnemy(locationID);
             if (BattleManager.Instance.CurrentEnemyList.ContainsKey(locationID))
+            {
                 BattleManager.Instance.TriggerEnemyPassiveSkill(locationID, false);
+            }
         }
-
         GameObject damageNum = Instantiate(damageNumPrefab, UI.transform);
         RectTransform damageRect = damageNum.GetComponent<RectTransform>();
         Text damageText = damageNum.GetComponentInChildren<Text>();

@@ -11,10 +11,10 @@ public class PoisonedEffect : IEffect
     private Dictionary<string, int> currentNegativeState;
     private string typeName;
 
-    public void ApplyEffect(int value, string target)
+    public void ApplyEffect(int value, string fromLocation, string toLocation)
     {
         // Set attacker and poisonCount
-        attacker = BattleManager.Instance.CurrentEnemyList[target];
+        attacker = BattleManager.Instance.CurrentEnemyList[fromLocation];
         poisonCount = value;
         // Register events
         EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);

@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class SlowDownEffect : IEffect
 {
-    public void ApplyEffect(int value, string target)
+    public void ApplyEffect(int value, string fromLocation, string toLocation)
     {
-        BattleManager.Instance.PlayerMoveCount -= value;
+        BattleManager.Instance.CurrentNegativeState.Add(GetType().Name, value);
+        BattleManager.Instance.PlayerOnceMoveConsume = 2;
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
 
@@ -16,7 +17,7 @@ public class SlowDownEffect : IEffect
     }
     public string SetDescriptionText()
     {
-        return "扣除一格移動點。";
+        return "移動需要耗費更多點數。";
     }
     public BattleManager.ActionRangeType SetEffectAttackType()
     {

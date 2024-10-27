@@ -8,6 +8,7 @@ using System.Linq;
 using UnityEditor.Animations;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
+using DG.Tweening;
 
 public class Enemy : MonoBehaviour
 {
@@ -37,12 +38,12 @@ public class Enemy : MonoBehaviour
     public Animator MyAnimator { get { return myAnimator; } set { myAnimator = value; } }
     public List<string> CurrentActionRangeTypeList { get; set; }
     public int EnemyID { get; set; }
-    //public string EnemyLocation { get; set; }
     public ActionType MyActionType { get; set; }
     public BattleManager.ActionRangeType MyActionRangeType { get; set; }
     public BattleManager.CheckEmptyType MyCheckEmptyType { get; set; }
     public bool IsDeath { get; set; }
     public Dictionary<string, int> EnemyOnceBattlePositiveList { get; set; }
+    public Sequence MySequence { get; set; }
     private Dictionary<string, EnemyData> currentEnemyList = new();
     public EnemyData MyEnemyData { get; set; }
     private int actionRangeDistance;
@@ -58,7 +59,6 @@ public class Enemy : MonoBehaviour
     {
         string location = BattleManager.Instance.GetEnemyKey(MyEnemyData, BattleManager.Instance.CurrentEnemyList);
         EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
-        EventManager.Instance.AddEventRegister(EventDefinition.eventMove, EventMove);
         EnemyOnceBattlePositiveList = new Dictionary<string, int>();
         currentEnemyList = BattleManager.Instance.CurrentEnemyList;
     }
@@ -66,7 +66,6 @@ public class Enemy : MonoBehaviour
     private void OnDisable()
     {
         EventManager.Instance.RemoveEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
-        EventManager.Instance.RemoveEventRegister(EventDefinition.eventMove, EventMove);
     }
     private void RefreshAttackIntent()
     {
@@ -112,7 +111,8 @@ public class Enemy : MonoBehaviour
         {
             { "LinearAttack", BattleManager.ActionRangeType.Linear },
             { "SurroundingAttack", BattleManager.ActionRangeType.Surrounding },
-            { "ConeAttack",BattleManager.ActionRangeType.Cone }
+            { "ConeAttack",BattleManager.ActionRangeType.Cone },
+            { "JumpAttack",BattleManager.ActionRangeType.Jump }
         };
         actionRangeDistance = MyEnemyData.AttackDistance;
         if (attackTypeMap.TryGetValue(attackOrder, out BattleManager.ActionRangeType attackType))
@@ -184,15 +184,41 @@ public class Enemy : MonoBehaviour
         infoDescription.text = "發動攻擊。";
         enemyAttackIntentText.text = MyEnemyData.CurrentAttack.ToString();
         enemyAttack.SetActive(true);
+        MySequence = DOTween.Sequence();
+        switch (MyActionRangeType)
+        {
+            case BattleManager.ActionRangeType.Jump:
+                string playerLocation = BattleManager.Instance.CurrentLocationID;
+                string enemyLocation = BattleManager.Instance.GetEnemyKey(MyEnemyData, currentEnemyList);
+                float distance = BattleManager.Instance.CalculateDistance(enemyLocation, playerLocation);
+                RectTransform enemyRect = GetComponent<RectTransform>();
+                int curveHeight = 500;
+                Vector2 startPoint = enemyRect.localPosition;
+                Vector2 endPoint = BattleManager.Instance.PlayerTrans.localPosition;
+                Vector2 midPoint = new(startPoint.x + distance / 2, startPoint.y + curveHeight);
+                MySequence.Append(
+                DOTween.To((t) =>
+                {
+                    Vector2 position = UIManager.Instance.GetBezierCurve(startPoint, midPoint, endPoint, t);
+                    enemyRect.anchoredPosition = position;
+                }, 0, 1, 1).SetEase(Ease.InQuad));
+                MySequence.AppendCallback(() =>
+                {
+                    EffectFactory.Instance.CreateEffect("KnockBackEffect").ApplyEffect(1, enemyLocation, playerLocation);
+                });
+                MySequence.AppendCallback(() =>
+                {
+                    currentEnemyList.Remove(enemyLocation);
+                    currentEnemyList.Add(playerLocation, MyEnemyData);
+                    MySequence = null;
+                });
+                MySequence.Pause();
+                break;
+        }
     }
     private void EventPlayerTurn(params object[] args)
     {
         BattleManager.Instance.RefreshCheckerboardList();
         RefreshAttackIntent();
-    }
-    private void EventMove(params object[] args)
-    {
-        //CurrentActionRangeTypeList = BattleManager.Instance.GetAcitonRangeTypeList(EnemyLocation, actionRangeDistance, MyCheckEmptyType, MyActionRangeType);
-        // RefreshAttackIntent();
     }
 }

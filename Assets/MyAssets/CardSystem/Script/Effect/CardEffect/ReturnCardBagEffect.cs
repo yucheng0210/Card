@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class ReturnCardBag : IEffect
 {
-    public void ApplyEffect(int value, string target)
+    public void ApplyEffect(int value, string fromLocation, string toLocation)
     {
         UnityEngine.Events.UnityAction unityAction = Return;
         UIManager.Instance.SelectCard(unityAction, true);

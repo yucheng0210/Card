@@ -5,31 +5,16 @@ using UnityEngine.UI;
 
 public class IncreaseHealth : IEffect
 {
-    public void ApplyEffect(int value, string target)
+    public void ApplyEffect(int value, string fromLocation, string toLocation)
     {
         // 确定目标数据
-        CharacterData recoverData = GetTargetCharacterData(target);
+        CharacterData recoverData = BattleManager.Instance.IdentifyCharacter(fromLocation);
 
         // 计算恢复的生命值
         int recoveryAmount = Mathf.RoundToInt(recoverData.MaxHealth * (value / 100f));
 
         // 执行恢复操作
-        BattleManager.Instance.Recover(recoverData, recoveryAmount, BattleManager.Instance.CurrentLocationID);
-    }
-
-    private CharacterData GetTargetCharacterData(string target)
-    {
-        // 根据目标位置获取角色数据
-        if (target == BattleManager.Instance.CurrentLocationID)
-            return BattleManager.Instance.CurrentPlayerData;
-
-        // 尝试获取敌人数据
-        if (BattleManager.Instance.CurrentEnemyList.TryGetValue(target, out var enemyData))
-            return enemyData;
-
-        // 如果目标不合法，记录警告并返回 null
-        Debug.LogWarning($"Target '{target}' not found in CurrentEnemyList.");
-        return null;
+        BattleManager.Instance.Recover(recoverData, recoveryAmount, fromLocation);
     }
 
     public string SetTitleText()
