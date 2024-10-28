@@ -112,7 +112,8 @@ public class Enemy : MonoBehaviour
             { "LinearAttack", BattleManager.ActionRangeType.Linear },
             { "SurroundingAttack", BattleManager.ActionRangeType.Surrounding },
             { "ConeAttack",BattleManager.ActionRangeType.Cone },
-            { "JumpAttack",BattleManager.ActionRangeType.Jump }
+            { "JumpAttack",BattleManager.ActionRangeType.Jump },
+            {"StraightChargeAttack",BattleManager.ActionRangeType.StraightCharge}
         };
         actionRangeDistance = MyEnemyData.AttackDistance;
         if (attackTypeMap.TryGetValue(attackOrder, out BattleManager.ActionRangeType attackType))

@@ -32,7 +32,8 @@ public class BattleManager : Singleton<BattleManager>
         Linear,
         Surrounding,
         Cone,
-        Jump
+        Jump,
+        StraightCharge
     }
     public enum CheckEmptyType
     {

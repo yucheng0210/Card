@@ -1,23 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class CreateMinionsEffect : IEffect
+public class ApplyBuff : IEffect
 {
     public void ApplyEffect(int value, string fromLocation, string toLocation)
     {
-        int minionsCount = Mathf.Clamp(value, 0, value);
-        BattleManager.Instance.AddMinions(2005, minionsCount, fromLocation);
-    }
-    public string SetTitleText()
-    {
-        return "召喚爪牙";
+        throw new System.NotImplementedException();
     }
 
+    public string SetTitleText()
+    {
+        throw new System.NotImplementedException();
+    }
     public string SetDescriptionText()
     {
-        return "召喚數隻爪牙。";
+        throw new System.NotImplementedException();
     }
 
 }
