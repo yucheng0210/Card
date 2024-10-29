@@ -211,7 +211,7 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         if (Physics.Raycast(ray, out hit, 10000, LayerMask.GetMask("Enemy")))
         {
             enemy = hit.transform.GetComponent<Enemy>();
-            string location = BattleManager.Instance.GetEnemyKey(enemy.MyEnemyData, BattleManager.Instance.CurrentEnemyList);
+            string location = BattleManager.Instance.GetEnemyKey(enemy.MyEnemyData);
             if (onEnd && GetUseCardCondition() && CheckEnemyInAttackRange(location))
             {
                 UseCard(location);

@@ -131,7 +131,9 @@ public class UIBattle : UIBase
         {
             string location = BattleManager.Instance.ConvertCheckerboardPos(i);
             if (!BattleManager.Instance.CurrentEnemyList.ContainsKey(location))
+            {
                 continue;
+            }
             EventTrigger eventTrigger = checkerboardTrans.GetChild(i).GetComponent<EventTrigger>();
             UnityAction unityAction_1 = () => { RefreshEnemyInfo(location); };
             UnityAction unityAction_2 = () =>
@@ -149,7 +151,9 @@ public class UIBattle : UIBase
     private void RefreshEnemyInfo(string location)
     {
         if (BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack)
+        {
             return;
+        }
         EnemyData enemyData = BattleManager.Instance.CurrentEnemyList[location];
         Enemy enemy = enemyData.EnemyTrans.GetComponent<Enemy>();
         bool isMove = enemy.MyActionType == Enemy.ActionType.Move ? true : false;
@@ -411,7 +415,7 @@ public class UIBattle : UIBase
             enemyData.EnemyTrans = enemyRect;
             enemyData.CurrentHealth = DataManager.Instance.EnemyList[enemy.EnemyID].MaxHealth;
             enemy.MyEnemyData = enemyData;
-            string location = BattleManager.Instance.GetEnemyKey(enemyData, BattleManager.Instance.CurrentEnemyList);
+            string location = BattleManager.Instance.GetEnemyKey(enemyData);
             BattleManager.Instance.TriggerEnemyPassiveSkill(location, false);
             yield return null;
         }

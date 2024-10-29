@@ -57,7 +57,6 @@ public class Enemy : MonoBehaviour
     }
     private void Start()
     {
-        string location = BattleManager.Instance.GetEnemyKey(MyEnemyData, BattleManager.Instance.CurrentEnemyList);
         EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
         EnemyOnceBattlePositiveList = new Dictionary<string, int>();
         currentEnemyList = BattleManager.Instance.CurrentEnemyList;
@@ -69,7 +68,7 @@ public class Enemy : MonoBehaviour
     }
     private void RefreshAttackIntent()
     {
-        string location = BattleManager.Instance.GetEnemyKey(MyEnemyData, currentEnemyList);
+        string location = BattleManager.Instance.GetEnemyKey(MyEnemyData);
         float distance = BattleManager.Instance.GetRoute(location, BattleManager.Instance.CurrentLocationID, BattleManager.CheckEmptyType.EnemyAttack).Count;
         ResetUIElements();
         if (distance == 0)
@@ -185,37 +184,63 @@ public class Enemy : MonoBehaviour
         infoDescription.text = "發動攻擊。";
         enemyAttackIntentText.text = MyEnemyData.CurrentAttack.ToString();
         enemyAttack.SetActive(true);
-        MySequence = DOTween.Sequence();
         switch (MyActionRangeType)
         {
             case BattleManager.ActionRangeType.Jump:
-                string playerLocation = BattleManager.Instance.CurrentLocationID;
-                string enemyLocation = BattleManager.Instance.GetEnemyKey(MyEnemyData, currentEnemyList);
-                float distance = BattleManager.Instance.CalculateDistance(enemyLocation, playerLocation);
-                RectTransform enemyRect = GetComponent<RectTransform>();
-                int curveHeight = 500;
-                Vector2 startPoint = enemyRect.localPosition;
-                Vector2 endPoint = BattleManager.Instance.PlayerTrans.localPosition;
-                Vector2 midPoint = new(startPoint.x + distance / 2, startPoint.y + curveHeight);
-                MySequence.Append(
-                DOTween.To((t) =>
-                {
-                    Vector2 position = UIManager.Instance.GetBezierCurve(startPoint, midPoint, endPoint, t);
-                    enemyRect.anchoredPosition = position;
-                }, 0, 1, 1).SetEase(Ease.InQuad));
-                MySequence.AppendCallback(() =>
-                {
-                    EffectFactory.Instance.CreateEffect("KnockBackEffect").ApplyEffect(1, enemyLocation, playerLocation);
-                });
-                MySequence.AppendCallback(() =>
-                {
-                    currentEnemyList.Remove(enemyLocation);
-                    currentEnemyList.Add(playerLocation, MyEnemyData);
-                    MySequence = null;
-                });
-                MySequence.Pause();
+                JumpAttackSequence();
+                break;
+            case BattleManager.ActionRangeType.StraightCharge:
+                StraightChargeAttackSequence();
                 break;
         }
+    }
+    private void JumpAttackSequence()
+    {
+        MySequence = DOTween.Sequence();
+        string playerLocation = BattleManager.Instance.CurrentLocationID;
+        string enemyLocation = BattleManager.Instance.GetEnemyKey(MyEnemyData);
+        float distance = BattleManager.Instance.CalculateDistance(enemyLocation, playerLocation);
+        RectTransform enemyRect = GetComponent<RectTransform>();
+        int curveHeight = 500;
+        Vector2 startPoint = enemyRect.localPosition;
+        Vector2 endPoint = BattleManager.Instance.PlayerTrans.localPosition;
+        Vector2 midPoint = new(startPoint.x + distance / 2, startPoint.y + curveHeight);
+        MySequence.Append(
+        DOTween.To((t) =>
+        {
+            Vector2 position = UIManager.Instance.GetBezierCurve(startPoint, midPoint, endPoint, t);
+            enemyRect.anchoredPosition = position;
+        }, 0, 1, 1).SetEase(Ease.InQuad));
+        MySequence.AppendCallback(() =>
+        {
+            EffectFactory.Instance.CreateEffect("KnockBackEffect").ApplyEffect(1, enemyLocation, playerLocation);
+        });
+        MySequence.AppendCallback(() =>
+        {
+            currentEnemyList.Remove(enemyLocation);
+            currentEnemyList.Add(playerLocation, MyEnemyData);
+            MySequence = null;
+        });
+        MySequence.Pause();
+    }
+    private void StraightChargeAttackSequence()
+    {
+        MySequence = DOTween.Sequence();
+        string enemyLocation = BattleManager.Instance.GetEnemyKey(MyEnemyData);
+        List<string> emptyPlaceList = BattleManager.Instance.GetAcitonRangeTypeList(enemyLocation, MyEnemyData.AttackDistance, MyCheckEmptyType, MyActionRangeType);
+        string destinationLocation = emptyPlaceList[emptyPlaceList.Count - 1];
+        RectTransform enemyRect = GetComponent<RectTransform>();
+        int checkerboardPoint = BattleManager.Instance.GetCheckerboardPoint(destinationLocation);
+        Vector2 destinationPos = BattleManager.Instance.CheckerboardTrans.GetChild(checkerboardPoint).GetComponent<RectTransform>().localPosition;
+        MySequence.AppendCallback(() =>
+        {
+            enemyRect.DOAnchorPos(destinationPos, 1);
+            currentEnemyList.Remove(enemyLocation);
+            currentEnemyList.Add(destinationLocation, MyEnemyData);
+            MySequence = null;
+        }
+           );
+        MySequence.Pause();
     }
     private void EventPlayerTurn(params object[] args)
     {

@@ -208,16 +208,16 @@ public class BattleManager : Singleton<BattleManager>
     {
         return x.ToString() + ' ' + y.ToString();
     }
-    public int GetCheckerboardPoint(string point)
-    {
-        string[] points = point.Split(' ');
-        return int.Parse(points[0]) + int.Parse(points[1]) * 8;
-    }
     public string ConvertCheckerboardPos(int point)
     {
         int x = point % 8;
         int y = point / 8;
         return x.ToString() + ' ' + y.ToString();
+    }
+    public int GetCheckerboardPoint(string point)
+    {
+        string[] points = point.Split(' ');
+        return int.Parse(points[0]) + int.Parse(points[1]) * 8;
     }
     private List<string> GetEmptyPlace(string location, int stepCount, CheckEmptyType checkEmptyType, bool isBFS)
     {
@@ -236,9 +236,13 @@ public class BattleManager : Singleton<BattleManager>
                 int testStepCount = GetRoute(location, targetPos, checkEmptyType).Count;
                 // 跳過起始點
                 if ((x == point.x && y == point.y) || testStepCount == 0)
+                {
                     continue;
+                }
                 if ((testStepCount <= stepCount || !isBFS) && CheckPlaceEmpty(targetPos, checkEmptyType))
+                {
                     emptyPlaceList.Add(targetPos);
+                }
             }
         }
         return emptyPlaceList;
@@ -271,7 +275,7 @@ public class BattleManager : Singleton<BattleManager>
         switch (actionRangeType)
         {
             case ActionRangeType.Linear:
-                emptyPlaceList = GetLinearAttackList(location, CurrentLocationID); // 特定條件
+                emptyPlaceList = GetLinearAttackList(location, CurrentLocationID, stepCount); // 特定條件
                 break;
             case ActionRangeType.Surrounding:
                 emptyPlaceList = GetEmptyPlace(location, stepCount, checkEmptyType, false); // 特定條件
@@ -284,6 +288,9 @@ public class BattleManager : Singleton<BattleManager>
                 break;
             case ActionRangeType.Jump:
                 emptyPlaceList = GetEmptyPlace(location, stepCount, checkEmptyType, true);
+                break;
+            case ActionRangeType.StraightCharge:
+                emptyPlaceList = GetStraightChargeList(location, CurrentLocationID, stepCount);
                 break;
         }
         return emptyPlaceList;
@@ -342,7 +349,7 @@ public class BattleManager : Singleton<BattleManager>
         // 若沒有找到路徑，則返回空列表
         return new List<string>();
     }
-    public List<string> GetLinearAttackList(string fromLocation, string toLocation)
+    public List<string> GetLinearAttackList(string fromLocation, string toLocation, int attackDistance)
     {
         List<string> linearAttackList = new List<string>();
 
@@ -365,12 +372,11 @@ public class BattleManager : Singleton<BattleManager>
         int primaryEnd = isXPrimary ? endX : endY;
         int secondaryPos = isXPrimary ? startY : startX;
         int direction = (primaryEnd > primaryStart) ? 1 : -1;
-
+        int count = 0;
         // 擴展座標，檢查是否可以攻擊
-        for (int pos = primaryStart + direction; ; pos += direction)
+        for (int pos = primaryStart + direction; count < attackDistance; pos += direction)
         {
             string newLocation = isXPrimary ? ConvertCheckerboardPos(pos, secondaryPos) : ConvertCheckerboardPos(secondaryPos, pos);
-
             if (CheckPlaceEmpty(newLocation, CheckEmptyType.EnemyAttack))
             {
                 linearAttackList.Add(newLocation);
@@ -379,6 +385,7 @@ public class BattleManager : Singleton<BattleManager>
             {
                 break;  // 如果有障礙物，停止擴展
             }
+            count++;
         }
 
         return linearAttackList;
@@ -388,7 +395,9 @@ public class BattleManager : Singleton<BattleManager>
     {
         // 如果起點和終點相同，直接返回空列表
         if (fromLocation == toLocation)
+        {
             return null;
+        }
 
         List<string> coneAttackList = new List<string>();
 
@@ -435,10 +444,55 @@ public class BattleManager : Singleton<BattleManager>
                 }
             }
             if (breakCount == range)
+            {
                 break;
+            }
         }
 
         return coneAttackList;
+    }
+    public List<string> GetStraightChargeList(string fromLocation, string toLocation, int attackDistance)
+    {
+        List<string> emptyPlaceList = GetLinearAttackList(fromLocation, toLocation, attackDistance);
+        List<string> straightChargeList = new List<string>();
+
+        for (int i = 0; i < emptyPlaceList.Count; i++)
+        {
+            // 轉換座標字串為數值
+            int[] currentPos = ConvertNormalPos(emptyPlaceList[i]);
+            int x = currentPos[0];
+            int y = currentPos[1];
+
+            // 判定方向：根據起點與終點位置的相對座標來確定方向
+            int[] fromPos = ConvertNormalPos(fromLocation);
+            int[] toPos = ConvertNormalPos(toLocation);
+            bool isHorizontal = Mathf.Abs(fromPos[0] - toPos[0]) >= Mathf.Abs(fromPos[1] - toPos[1]);
+
+            // 根據方向選擇擴展座標
+            string leftNeighbor, rightNeighbor;
+            if (isHorizontal)
+            {
+                leftNeighbor = ConvertCheckerboardPos(x, y + 1);  // 左側座標
+                rightNeighbor = ConvertCheckerboardPos(x, y - 1); // 右側座標
+            }
+            else
+            {
+                leftNeighbor = ConvertCheckerboardPos(x + 1, y);  // 上側座標
+                rightNeighbor = ConvertCheckerboardPos(x - 1, y); // 下側座標
+            }
+
+            // 檢查座標是否符合條件
+            if (CheckPlaceEmpty(leftNeighbor, CheckEmptyType.EnemyAttack))
+            {
+                straightChargeList.Add(leftNeighbor);
+            }
+            if (CheckPlaceEmpty(rightNeighbor, CheckEmptyType.EnemyAttack))
+            {
+                straightChargeList.Add(rightNeighbor);
+            }
+        }
+
+        return straightChargeList;
     }
 
     public void RefreshCheckerboardList()
@@ -454,7 +508,7 @@ public class BattleManager : Singleton<BattleManager>
                     CheckerboardList.Add(location, "Player");
                     //Debug.Log("玩家：" + location);
                 }
-                else if (CurrentEnemyList.ContainsKey(location))
+                else if (CurrentEnemyList.ContainsKey(location) || CurrentMinionsList.ContainsKey(location))
                 {
                     CheckerboardList.Add(location, "Enemy");
                     // Debug.Log("敵人：" + location);
@@ -657,7 +711,7 @@ public class BattleManager : Singleton<BattleManager>
             CurrentMinionsList[key].EnemyTrans = enemy.GetComponent<RectTransform>();
             CurrentMinionsList[key].CurrentHealth = DataManager.Instance.EnemyList[enemy.EnemyID].MaxHealth;
             enemy.MyEnemyData = CurrentMinionsList[key];
-            string minionsLocation = GetEnemyKey(CurrentMinionsList[key], CurrentMinionsList);
+            string minionsLocation = GetEnemyKey(CurrentMinionsList[key]);
             TriggerEnemyPassiveSkill(minionsLocation, true);
         }
     }
@@ -668,7 +722,9 @@ public class BattleManager : Singleton<BattleManager>
         {
             EnemyData enemyData = CurrentEnemyList.ElementAt(i).Value;
             if (enemyData.CharacterID == id)
+            {
                 count++;
+            }
         }
         return count;
     }
@@ -679,13 +735,17 @@ public class BattleManager : Singleton<BattleManager>
         for (int i = 0; i < cardBag.Count; i++)
         {
             if (cardBag[i].CardID == id)
+            {
                 count++;
+            }
         }
         List<CardData> usedCardBag = DataManager.Instance.UsedCardBag;
         for (int i = 0; i < usedCardBag.Count; i++)
         {
             if (usedCardBag[i].CardID == id)
+            {
                 count++;
+            }
         }
         return count;
     }
@@ -693,8 +753,10 @@ public class BattleManager : Singleton<BattleManager>
     {
         return !CheckerboardList.ContainsKey(location) ? null : CurrentEnemyList.ContainsKey(location) ? CurrentEnemyList[location] : CurrentPlayerData;
     }
-    public string GetEnemyKey(EnemyData enemyData, Dictionary<string, EnemyData> enemyDataDict)
+    public string GetEnemyKey(EnemyData enemyData)
     {
-        return enemyDataDict.FirstOrDefault(x => x.Value == enemyData).Key;
+        string key = CurrentEnemyList.FirstOrDefault(x => x.Value == enemyData).Key;
+        key ??= CurrentMinionsList.FirstOrDefault(x => x.Value == enemyData).Key;
+        return key;
     }
 }

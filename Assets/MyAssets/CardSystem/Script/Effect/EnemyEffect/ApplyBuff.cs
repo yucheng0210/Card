@@ -1,12 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class ApplyBuff : IEffect
 {
     public void ApplyEffect(int value, string fromLocation, string toLocation)
     {
-        throw new System.NotImplementedException();
+        Dictionary<string, EnemyData> minionsList = BattleManager.Instance.CurrentMinionsList;
+        for (int i = 0; i < minionsList.Count; i++)
+        {
+            string key = minionsList.ElementAt(i).Key;
+            minionsList[key].CurrentAttack += value;
+        }
     }
 
     public string SetTitleText()

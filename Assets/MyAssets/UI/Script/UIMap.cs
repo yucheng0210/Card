@@ -124,11 +124,18 @@ public class UIMap : UIBase
                 {
                     case "BATTLE":
                         /*if (count > 10)
+                        {
                             currentIndex = hardRandomIndex;
+                        }
                         else if (count > 5)
+                        {
                             currentIndex = normalRandomIndex;
+                        }
                         else
-                            currentIndex = simpleRandomIndex;*/
+                        {
+                        currentIndex = simpleRandomIndex;
+                        }
+                            */
                         currentIndex = 8001;
                         break;
                     case "BOSS":
