@@ -214,11 +214,7 @@ public class Enemy : MonoBehaviour
         MySequence.AppendCallback(() =>
         {
             EffectFactory.Instance.CreateEffect("KnockBackEffect").ApplyEffect(1, enemyLocation, playerLocation);
-        });
-        MySequence.AppendCallback(() =>
-        {
-            currentEnemyList.Remove(enemyLocation);
-            currentEnemyList.Add(playerLocation, MyEnemyData);
+            BattleManager.Instance.Replace(currentEnemyList, enemyLocation, playerLocation);
             MySequence = null;
         });
         MySequence.Pause();
@@ -227,19 +223,21 @@ public class Enemy : MonoBehaviour
     {
         MySequence = DOTween.Sequence();
         string enemyLocation = BattleManager.Instance.GetEnemyKey(MyEnemyData);
-        List<string> emptyPlaceList = BattleManager.Instance.GetAcitonRangeTypeList(enemyLocation, MyEnemyData.AttackDistance, MyCheckEmptyType, MyActionRangeType);
-        string destinationLocation = emptyPlaceList[emptyPlaceList.Count - 1];
+        int attackDistance = MyEnemyData.AttackDistance;
+        BattleManager.ActionRangeType actionRangeType = BattleManager.ActionRangeType.Linear;
+        List<string> emptyPlaceList = BattleManager.Instance.GetAcitonRangeTypeList(enemyLocation, attackDistance, MyCheckEmptyType, actionRangeType);
+        string destinationLocation = emptyPlaceList.Count > 0 ? emptyPlaceList[^1] : enemyLocation;
         RectTransform enemyRect = GetComponent<RectTransform>();
         int checkerboardPoint = BattleManager.Instance.GetCheckerboardPoint(destinationLocation);
         Vector2 destinationPos = BattleManager.Instance.CheckerboardTrans.GetChild(checkerboardPoint).GetComponent<RectTransform>().localPosition;
+        Tween moveTween = enemyRect.DOAnchorPos(destinationPos, 0.25f);
+        MySequence.Append(moveTween);
         MySequence.AppendCallback(() =>
         {
-            enemyRect.DOAnchorPos(destinationPos, 1);
-            currentEnemyList.Remove(enemyLocation);
-            currentEnemyList.Add(destinationLocation, MyEnemyData);
+            EffectFactory.Instance.CreateEffect("KnockBackEffect").ApplyEffect(1, enemyLocation, destinationLocation);
+            BattleManager.Instance.Replace(currentEnemyList, enemyLocation, destinationLocation);
             MySequence = null;
-        }
-           );
+        });
         MySequence.Pause();
     }
     private void EventPlayerTurn(params object[] args)

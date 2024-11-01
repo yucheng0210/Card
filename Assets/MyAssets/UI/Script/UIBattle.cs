@@ -85,6 +85,8 @@ public class UIBattle : UIBase
     private Sprite playerRound;
     [SerializeField]
     private Sprite enemyRound;
+    [SerializeField]
+    private Button speedupButton;
     [Header("藥水")]
     [SerializeField]
     private Transform potionGroupTrans;
@@ -130,7 +132,7 @@ public class UIBattle : UIBase
         for (int i = 0; i < checkerboardTrans.childCount; i++)
         {
             string location = BattleManager.Instance.ConvertCheckerboardPos(i);
-            if (!BattleManager.Instance.CurrentEnemyList.ContainsKey(location))
+            if (!BattleManager.Instance.CurrentEnemyList.ContainsKey(location) || !BattleManager.Instance.CurrentMinionsList.ContainsKey(location))
             {
                 continue;
             }
@@ -180,54 +182,63 @@ public class UIBattle : UIBase
     {
         yield return new WaitForSecondsRealtime(1);
         Dictionary<string, EnemyData> currentEnemyList = BattleManager.Instance.CurrentEnemyList;
+        Dictionary<string, EnemyData> currentMinionsList = BattleManager.Instance.CurrentMinionsList;
         List<EnemyData> moveHistoryList = new();
 
-        for (int i = 0; i < currentEnemyList.Count; i++)
+        // 將敵人的攻擊邏輯提取到單獨的方法中
+        yield return ExecuteEnemyActions(currentMinionsList, moveHistoryList);
+        yield return ExecuteEnemyActions(currentEnemyList, moveHistoryList);
+
+        BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Player);
+    }
+
+    private IEnumerator ExecuteEnemyActions(Dictionary<string, EnemyData> enemyList, List<EnemyData> moveHistoryList)
+    {
+        int count = enemyList.Count;
+        for (int i = 0; i < count; i++)
         {
-            string location = currentEnemyList.ElementAt(i).Key;
-            EnemyData enemyData = currentEnemyList[location];
+            var kvp = enemyList.ElementAt(i);
+            string location = kvp.Key;
+            EnemyData enemyData = kvp.Value;
 
             if (moveHistoryList.Contains(enemyData))  // 跳过已经移动过的敌人
+            {
                 continue;
+            }
 
             RectTransform enemyTrans = enemyData.EnemyTrans;
             Enemy enemy = enemyTrans.GetComponent<Enemy>();
             PlayerData playerData = BattleManager.Instance.CurrentPlayerData;
             Image enemyImage = enemy.EnemyImage;
             SetEnemyAttackRotation(enemyData, enemyImage, location);  // 设置敌人朝向
+
             string playerLocation = BattleManager.Instance.CurrentLocationID;
             inRange = enemy.CurrentActionRangeTypeList.Contains(playerLocation) || enemy.MyActionRangeType == BattleManager.ActionRangeType.None;
+
             switch (enemy.MyActionType)
             {
-                case Enemy.ActionType.None:
-                    break;
                 case Enemy.ActionType.Move:
-                    yield return HandleEnemyMove(location, enemyData, enemyTrans, enemy, enemyImage);  // 单独处理移动逻辑
+                    yield return HandleEnemyMove(location, enemyData, enemyTrans, enemy, enemyImage, enemyList);  // 单独处理移动逻辑
                     moveHistoryList.Add(enemyData);
-                    i--;  // 减少 i 以确保下次循环不跳过下一个敌人
                     break;
-
                 case Enemy.ActionType.Attack:
-                    int attackCount = enemyData.AttackOrderStrs.ElementAt(enemyData.CurrentAttackOrder).Item2;
+                    int attackCount = enemyData.AttackOrderStrs[enemyData.CurrentAttackOrder].Item2;
                     yield return HandleEnemyAttack(enemyData, enemy, playerData, attackCount); // 单独处理攻击逻辑
                     break;
                 case Enemy.ActionType.Shield:
-                    int shieldCount = enemyData.AttackOrderStrs.ElementAt(enemyData.CurrentAttackOrder).Item2;
+                    int shieldCount = enemyData.AttackOrderStrs[enemyData.CurrentAttackOrder].Item2;
                     BattleManager.Instance.GetShield(enemyData, shieldCount);  // 处理护盾
                     break;
-
                 case Enemy.ActionType.Effect:
                     ApplyEffect(enemyData, location);  // 处理效果
                     break;
             }
+
             UpdateAttackOrder(enemyData, enemy);  // 更新攻击顺序
             EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
             yield return new WaitForSecondsRealtime(0.5f);
         }
-
-        BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Player);
     }
-
     // 设置敌人朝向
     private void SetEnemyAttackRotation(EnemyData enemyData, Image enemyImage, string location)
     {
@@ -244,7 +255,7 @@ public class UIBattle : UIBase
         enemyImage.transform.localRotation = Quaternion.Euler(0, shouldFlip ? 180 : 0, 0);
     }
     // 处理敌人移动
-    private IEnumerator HandleEnemyMove(string location, EnemyData enemyData, RectTransform enemyTrans, Enemy enemy, Image enemyImage)
+    private IEnumerator HandleEnemyMove(string location, EnemyData enemyData, RectTransform enemyTrans, Enemy enemy, Image enemyImage, Dictionary<string, EnemyData> enemyDict)
     {
         BattleManager.ActionRangeType actionRangeType = BattleManager.ActionRangeType.Default;
         List<string> emptyPlaceList = BattleManager.Instance.GetAcitonRangeTypeList(location, enemyData.StepCount, enemy.MyCheckEmptyType, actionRangeType);
@@ -277,15 +288,13 @@ public class UIBattle : UIBase
             enemy.MyAnimator.SetBool("isRunning", false);
         }
         SetEnemyAttackRotation(enemyData, enemyImage, newLocation);
-        BattleManager.Instance.CurrentEnemyList.Remove(location);  // 更新敌人位置
-        BattleManager.Instance.CurrentEnemyList.Add(newLocation, enemyData);
+        BattleManager.Instance.Replace(enemyDict, location, newLocation);
         BattleManager.Instance.RefreshCheckerboardList();
     }
 
     // 处理敌人攻击
     private IEnumerator HandleEnemyAttack(EnemyData enemyData, Enemy enemy, PlayerData playerData, int attackCount)
     {
-
         for (int i = 0; i < attackCount; i++)
         {
             if (enemy.MySequence != null)
@@ -351,14 +360,21 @@ public class UIBattle : UIBase
     }
     private void RemoveEnemy(string key)
     {
-        EnemyData enemyData = BattleManager.Instance.CurrentEnemyList[key];
+        EnemyData enemyData = (EnemyData)BattleManager.Instance.IdentifyCharacter(key);
         Enemy enemy = enemyData.EnemyTrans.GetComponent<Enemy>();
         if (enemyData.CurrentHealth <= 0 && !enemy.IsDeath)
         {
             enemy.MyAnimator.SetTrigger("isDeath");
             if (!enemyData.PassiveSkills.ContainsKey("ResurrectionEffect"))
             {
-                BattleManager.Instance.CurrentEnemyList.Remove(key);
+                if (BattleManager.Instance.CurrentEnemyList.ContainsKey(key))
+                {
+                    BattleManager.Instance.CurrentEnemyList.Remove(key);
+                }
+                else
+                {
+                    BattleManager.Instance.CurrentMinionsList.Remove(key);
+                }
                 Destroy(enemyData.EnemyTrans.gameObject, 1);
                 BattleManager.Instance.ClearAllEventTriggers();
                 CheckEnemyInfo();
@@ -366,7 +382,9 @@ public class UIBattle : UIBase
             enemy.IsDeath = true;
         }
         else
+        {
             enemy.MyAnimator.SetTrigger("isHited");
+        }
         BattleManager.Instance.RefreshCheckerboardList();
         if (BattleManager.Instance.CurrentEnemyList.Count == 0)
         {
@@ -387,11 +405,49 @@ public class UIBattle : UIBase
             Destroy(terrainTrans.GetChild(i).gameObject);
         }
     }
-    private void EventBattleInitial(params object[] args)
-    {
-        StartCoroutine(BattleInitial());
-    }
 
+
+    private void RefreshPotionBag()
+    {
+        for (int i = 0; i < potionGroupTrans.childCount; i++)
+        {
+            Destroy(potionGroupTrans.GetChild(i).gameObject);
+        }
+        for (int i = 0; i < DataManager.Instance.PotionBag.Count; i++)
+        {
+            int avoidClosure = i;
+            Button potion = Instantiate(potionPrefab, potionGroupTrans);
+            potion.onClick.AddListener(() => UsePotion(DataManager.Instance.PotionBag[avoidClosure].ItemID, avoidClosure));
+        }
+    }
+    private void UsePotion(int itemID, int bagID)
+    {
+        if (BattleManager.Instance.MyBattleType == BattleManager.BattleType.Enemy)
+            return;
+        potionClueMenu.gameObject.SetActive(true);
+        string[] effect = DataManager.Instance.ItemList[itemID].ItemEffectName.Split('=');
+        string effectName = effect[0];
+        int value = int.Parse(effect[1]);
+        Button yesButton = potionClueMenu.GetChild(0).GetComponent<Button>();
+        Button noButton = potionClueMenu.GetChild(1).GetComponent<Button>();
+        yesButton.onClick.RemoveAllListeners();
+        noButton.onClick.RemoveAllListeners();
+        yesButton.onClick.AddListener(() => UsePotionEffect(effectName, value, bagID));
+        noButton.onClick.AddListener(() => potionClueMenu.gameObject.SetActive(false));
+    }
+    private void UsePotionEffect(string effectName, int value, int bagID)
+    {
+        string playerLocation = BattleManager.Instance.CurrentLocationID;
+        EffectFactory.Instance.CreateEffect(effectName).ApplyEffect(value, playerLocation, playerLocation);
+        DataManager.Instance.PotionBag.RemoveAt(bagID);
+        potionClueMenu.gameObject.SetActive(false);
+        RefreshPotionBag();
+        EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
+    }
+    private void Speedup()
+    {
+        Time.timeScale = Time.timeScale == 1 ? 1.5f : 1;
+    }
     private IEnumerator BattleInitial()
     {
         RefreshPotionBag();
@@ -440,44 +496,11 @@ public class UIBattle : UIBase
         BattleManager.Instance.PlayerMoveCount = 2;
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Player);
     }
+    private void EventBattleInitial(params object[] args)
+    {
+        StartCoroutine(BattleInitial());
+    }
 
-    private void RefreshPotionBag()
-    {
-        for (int i = 0; i < potionGroupTrans.childCount; i++)
-        {
-            Destroy(potionGroupTrans.GetChild(i).gameObject);
-        }
-        for (int i = 0; i < DataManager.Instance.PotionBag.Count; i++)
-        {
-            int avoidClosure = i;
-            Button potion = Instantiate(potionPrefab, potionGroupTrans);
-            potion.onClick.AddListener(() => UsePotion(DataManager.Instance.PotionBag[avoidClosure].ItemID, avoidClosure));
-        }
-    }
-    private void UsePotion(int itemID, int bagID)
-    {
-        if (BattleManager.Instance.MyBattleType == BattleManager.BattleType.Enemy)
-            return;
-        potionClueMenu.gameObject.SetActive(true);
-        string[] effect = DataManager.Instance.ItemList[itemID].ItemEffectName.Split('=');
-        string effectName = effect[0];
-        int value = int.Parse(effect[1]);
-        Button yesButton = potionClueMenu.GetChild(0).GetComponent<Button>();
-        Button noButton = potionClueMenu.GetChild(1).GetComponent<Button>();
-        yesButton.onClick.RemoveAllListeners();
-        noButton.onClick.RemoveAllListeners();
-        yesButton.onClick.AddListener(() => UsePotionEffect(effectName, value, bagID));
-        noButton.onClick.AddListener(() => potionClueMenu.gameObject.SetActive(false));
-    }
-    private void UsePotionEffect(string effectName, int value, int bagID)
-    {
-        string playerLocation = BattleManager.Instance.CurrentLocationID;
-        EffectFactory.Instance.CreateEffect(effectName).ApplyEffect(value, playerLocation, playerLocation);
-        DataManager.Instance.PotionBag.RemoveAt(bagID);
-        potionClueMenu.gameObject.SetActive(false);
-        RefreshPotionBag();
-        EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
-    }
     private void EventPlayerTurn(params object[] args)
     {
         BattleManager.Instance.ManaMultiplier = 1;
@@ -487,6 +510,8 @@ public class UIBattle : UIBase
         CheckEnemyInfo();
         changeTurnButton.onClick.RemoveAllListeners();
         playerMoveButton.onClick.RemoveAllListeners();
+        speedupButton.onClick.RemoveAllListeners();
+        speedupButton.onClick.AddListener(Speedup);
         changeTurnButton.onClick.AddListener(ChangeTurn);
         playerMoveButton.onClick.AddListener(PlayerMove);
         roundTip.GetComponent<Image>().sprite = playerRound;

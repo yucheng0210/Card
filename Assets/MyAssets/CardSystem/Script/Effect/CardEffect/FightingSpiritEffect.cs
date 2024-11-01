@@ -18,7 +18,8 @@ public class FightingSpiritEffect : IEffect
             currentOnceBattlePositiveList.Add(typeName, 8);
         }
         int damage = currentOnceBattlePositiveList[typeName];
-        BattleManager.Instance.TakeDamage(BattleManager.Instance.CurrentPlayerData, BattleManager.Instance.CurrentEnemyList[toLocation], damage, toLocation, 0);
+        EnemyData enemyData = (EnemyData)BattleManager.Instance.IdentifyCharacter(toLocation);
+        BattleManager.Instance.TakeDamage(BattleManager.Instance.CurrentPlayerData, enemyData, damage, toLocation, 0);
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
 

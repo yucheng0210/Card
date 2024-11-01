@@ -7,6 +7,7 @@ using DG.Tweening;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
 using Unity.VisualScripting;
+using UnityEngine.TextCore.Text;
 
 public class BattleManager : Singleton<BattleManager>
 {
@@ -380,6 +381,10 @@ public class BattleManager : Singleton<BattleManager>
             if (CheckPlaceEmpty(newLocation, CheckEmptyType.EnemyAttack))
             {
                 linearAttackList.Add(newLocation);
+                if (newLocation == toLocation)
+                {
+                    break;
+                }
             }
             else
             {
@@ -481,6 +486,7 @@ public class BattleManager : Singleton<BattleManager>
                 rightNeighbor = ConvertCheckerboardPos(x - 1, y); // 下側座標
             }
 
+            straightChargeList.Add(emptyPlaceList[i]);
             // 檢查座標是否符合條件
             if (CheckPlaceEmpty(leftNeighbor, CheckEmptyType.EnemyAttack))
             {
@@ -691,11 +697,13 @@ public class BattleManager : Singleton<BattleManager>
     }
     public void AddMinions(int enemyID, int count, string location)
     {
-        List<string> emptyPlaceList = GetEmptyPlace(location, 2, CheckEmptyType.Move, true);
+        List<string> emptyPlaceList = GetEmptyPlace(location, 3, CheckEmptyType.Move, true);
         for (int i = 0; i < count; i++)
         {
             int randomIndex = Random.Range(0, emptyPlaceList.Count);
             EnemyData enemyData = DataManager.Instance.EnemyList[enemyID].DeepClone();
+            enemyData.CurrentHealth = enemyData.MaxHealth;
+            enemyData.CurrentAttack = enemyData.MinAttack;
             CurrentMinionsList.Add(emptyPlaceList[randomIndex], enemyData);
             emptyPlaceList.Remove(emptyPlaceList[randomIndex]);
         }
@@ -709,8 +717,8 @@ public class BattleManager : Singleton<BattleManager>
             enemy.EnemyImage.sprite = Resources.Load<Sprite>(CurrentMinionsList[key].EnemyImagePath);
             enemy.MyAnimator.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>(CurrentMinionsList[key].EnemyAniPath);
             CurrentMinionsList[key].EnemyTrans = enemy.GetComponent<RectTransform>();
-            CurrentMinionsList[key].CurrentHealth = DataManager.Instance.EnemyList[enemy.EnemyID].MaxHealth;
             enemy.MyEnemyData = CurrentMinionsList[key];
+            enemy.MyActionRangeType = ActionRangeType.None;
             string minionsLocation = GetEnemyKey(CurrentMinionsList[key]);
             TriggerEnemyPassiveSkill(minionsLocation, true);
         }
@@ -751,12 +759,33 @@ public class BattleManager : Singleton<BattleManager>
     }
     public CharacterData IdentifyCharacter(string location)
     {
-        return !CheckerboardList.ContainsKey(location) ? null : CurrentEnemyList.ContainsKey(location) ? CurrentEnemyList[location] : CurrentPlayerData;
+        if (!CheckerboardList.ContainsKey(location))
+        {
+            return null;
+        }
+
+        if (CurrentEnemyList.TryGetValue(location, out EnemyData enemy))
+        {
+            return enemy;
+        }
+
+        if (CurrentMinionsList.TryGetValue(location, out EnemyData minion))
+        {
+            return minion;
+        }
+
+        return location == CurrentLocationID ? CurrentPlayerData : null;
     }
     public string GetEnemyKey(EnemyData enemyData)
     {
         string key = CurrentEnemyList.FirstOrDefault(x => x.Value == enemyData).Key;
         key ??= CurrentMinionsList.FirstOrDefault(x => x.Value == enemyData).Key;
         return key;
+    }
+    public void Replace<TKey, TValue>(Dictionary<TKey, TValue> dictionary, TKey oldKey, TKey newKey)
+    {
+        TValue value = dictionary[oldKey];
+        dictionary.Remove(oldKey);
+        dictionary.Add(newKey, value);
     }
 }

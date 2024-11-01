@@ -52,7 +52,6 @@ public class BleedEffect : IEffect
 
     private void EventMove(params object[] args)
     {
-
         // Unregister the event if the defender is not at the current location
         if (!currentEnemyList.ContainsValue(attacker))
         {
@@ -60,7 +59,9 @@ public class BleedEffect : IEffect
             return;
         }
         if (!currentNegativeState.ContainsKey(typeName))
+        {
             return;
+        }
         // Apply damage to the player
         int bleedDamage = currentNegativeState[typeName];
         BattleManager.Instance.TakeDamage(attacker, BattleManager.Instance.CurrentPlayerData, bleedDamage, BattleManager.Instance.CurrentLocationID, 0.25f);
