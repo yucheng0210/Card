@@ -34,7 +34,8 @@ public class BattleManager : Singleton<BattleManager>
         Surrounding,
         Cone,
         Jump,
-        StraightCharge
+        StraightCharge,
+        Throw
     }
     public enum CheckEmptyType
     {
@@ -69,7 +70,6 @@ public class BattleManager : Singleton<BattleManager>
     //public List<float> CardAngleList { get; set; }
     public Dictionary<string, int> CurrentNegativeState { get; set; }
     public Dictionary<string, int> CurrentAbilityList { get; set; }
-    public Dictionary<string, string> CurrentTrapList { get; set; }
     public Dictionary<string, int> CurrentOnceBattlePositiveList { get; set; }
     public int ManaMultiplier { get; set; }
     public int CurrentConsumeMana { get; set; }
@@ -83,6 +83,7 @@ public class BattleManager : Singleton<BattleManager>
     //棋盤
     public string CurrentLocationID { get; set; }
     public Dictionary<string, Terrain> CurrentTerrainList { get; set; }
+    public Dictionary<string, TrapData> CurrentTrapList { get; set; }
     public Dictionary<string, string> CheckerboardList { get; set; }
     public RectTransform PlayerTrans { get; set; }
     public RectTransform CheckerboardTrans { get; set; }
@@ -91,16 +92,13 @@ public class BattleManager : Singleton<BattleManager>
     {
         base.Awake();
         IsDrag = false;
-        //CardItemList = new List<CardItem>();
-        /*CardPositionList = new List<Vector2>();
-        CardAngleList = new List<float>();*/
         CurrentEnemyList = new Dictionary<string, EnemyData>();
         CurrentMinionsList = new Dictionary<string, EnemyData>();
         CurrentAbilityList = new Dictionary<string, int>();
         CheckerboardList = new Dictionary<string, string>();
         CurrentTerrainList = new Dictionary<string, Terrain>();
         CurrentNegativeState = new Dictionary<string, int>();
-        CurrentTrapList = new Dictionary<string, string>();
+        CurrentTrapList = new();
         CurrentOnceBattlePositiveList = new Dictionary<string, int>();
     }
     private void Update()
@@ -257,44 +255,7 @@ public class BattleManager : Singleton<BattleManager>
         bool playerAttackCondition = checkEmptyType == CheckEmptyType.PlayerAttack && placeStatus == "Enemy";
         bool enemyAttackCondition = checkEmptyType == CheckEmptyType.EnemyAttack && placeStatus == "Player";
         bool allCharacterCondition = checkEmptyType == CheckEmptyType.ALLCharacter && (placeStatus == "Player" || placeStatus == "Enemy");
-        return playerAttackCondition || enemyAttackCondition || allCharacterCondition || placeStatus == "Empty";
-    }
-    public float CalculateDistance(string fromLocation, string toLocation)
-    {
-        int[] startPos = ConvertNormalPos(fromLocation);  // 從字符串位置轉換為座標
-        int[] endPos = ConvertNormalPos(toLocation);
-
-        int deltaX = endPos[0] - startPos[0];  // 計算 X 軸差異
-        int deltaY = endPos[1] - startPos[1];  // 計算 Y 軸差異
-
-        // 計算歐幾里得距離
-        return Mathf.Sqrt(deltaX * deltaX + deltaY * deltaY);
-    }
-    public List<string> GetAcitonRangeTypeList(string location, int stepCount, CheckEmptyType checkEmptyType, ActionRangeType actionRangeType)
-    {
-        List<string> emptyPlaceList = new List<string>();
-        switch (actionRangeType)
-        {
-            case ActionRangeType.Linear:
-                emptyPlaceList = GetLinearAttackList(location, CurrentLocationID, stepCount); // 特定條件
-                break;
-            case ActionRangeType.Surrounding:
-                emptyPlaceList = GetEmptyPlace(location, stepCount, checkEmptyType, false); // 特定條件
-                break;
-            case ActionRangeType.Cone:
-                emptyPlaceList = GetConeAttackList(location, CurrentLocationID, stepCount); // 特定條件
-                break;
-            case ActionRangeType.Default:
-                emptyPlaceList = GetEmptyPlace(location, stepCount, checkEmptyType, true);
-                break;
-            case ActionRangeType.Jump:
-                emptyPlaceList = GetEmptyPlace(location, stepCount, checkEmptyType, true);
-                break;
-            case ActionRangeType.StraightCharge:
-                emptyPlaceList = GetStraightChargeList(location, CurrentLocationID, stepCount);
-                break;
-        }
-        return emptyPlaceList;
+        return playerAttackCondition || enemyAttackCondition || allCharacterCondition || placeStatus == "Empty" || placeStatus == "Trap";
     }
     public List<string> GetRoute(string fromLocation, string toLocation, CheckEmptyType checkEmptyType)
     {
@@ -349,6 +310,47 @@ public class BattleManager : Singleton<BattleManager>
 
         // 若沒有找到路徑，則返回空列表
         return new List<string>();
+    }
+
+    public float CalculateDistance(string fromLocation, string toLocation)
+    {
+        int[] startPos = ConvertNormalPos(fromLocation);  // 從字符串位置轉換為座標
+        int[] endPos = ConvertNormalPos(toLocation);
+
+        int deltaX = endPos[0] - startPos[0];  // 計算 X 軸差異
+        int deltaY = endPos[1] - startPos[1];  // 計算 Y 軸差異
+
+        // 計算歐幾里得距離
+        return Mathf.Sqrt(deltaX * deltaX + deltaY * deltaY);
+    }
+    public List<string> GetAcitonRangeTypeList(string location, int stepCount, CheckEmptyType checkEmptyType, ActionRangeType actionRangeType)
+    {
+        List<string> emptyPlaceList = new();
+        switch (actionRangeType)
+        {
+            case ActionRangeType.Linear:
+                emptyPlaceList = GetLinearAttackList(location, CurrentLocationID, stepCount); // 特定條件
+                break;
+            case ActionRangeType.Surrounding:
+                emptyPlaceList = GetEmptyPlace(location, stepCount, checkEmptyType, false); // 特定條件
+                break;
+            case ActionRangeType.Cone:
+                emptyPlaceList = GetConeAttackList(location, CurrentLocationID, stepCount); // 特定條件
+                break;
+            case ActionRangeType.Default:
+                emptyPlaceList = GetEmptyPlace(location, stepCount, checkEmptyType, true);
+                break;
+            case ActionRangeType.Jump:
+                emptyPlaceList = GetThrowList(location, CurrentLocationID, stepCount);
+                break;
+            case ActionRangeType.StraightCharge:
+                emptyPlaceList = GetStraightChargeList(location, CurrentLocationID, stepCount);
+                break;
+            case ActionRangeType.Throw:
+                emptyPlaceList = GetThrowList(location, CurrentLocationID, stepCount);
+                break;
+        }
+        return emptyPlaceList;
     }
     public List<string> GetLinearAttackList(string fromLocation, string toLocation, int attackDistance)
     {
@@ -456,7 +458,7 @@ public class BattleManager : Singleton<BattleManager>
 
         return coneAttackList;
     }
-    public List<string> GetStraightChargeList(string fromLocation, string toLocation, int attackDistance)
+    private List<string> GetStraightChargeList(string fromLocation, string toLocation, int attackDistance)
     {
         List<string> emptyPlaceList = GetLinearAttackList(fromLocation, toLocation, attackDistance);
         List<string> straightChargeList = new List<string>();
@@ -500,7 +502,30 @@ public class BattleManager : Singleton<BattleManager>
 
         return straightChargeList;
     }
+    private List<string> GetThrowList(string fromLocation, string toLocation, int attackDistance)
+    {
+        string destinationLocation = GetCloseLocation(fromLocation, toLocation, attackDistance);
+        return GetAcitonRangeTypeList(destinationLocation, attackDistance, CheckEmptyType.EnemyAttack, ActionRangeType.Surrounding);
+    }
+    public string GetCloseLocation(string fromLocation, string toLocation, int attackDistance)
+    {
+        List<string> emptyPlaceList = GetAcitonRangeTypeList(fromLocation, attackDistance, CheckEmptyType.EnemyAttack, ActionRangeType.Default);
+        string minLocation = emptyPlaceList[0];
+        int minDistance = GetRoute(emptyPlaceList[0], toLocation, CheckEmptyType.EnemyAttack).Count;
 
+        // 找到最近的位置
+        for (int j = 1; j < emptyPlaceList.Count; j++)
+        {
+            string targetLocation = emptyPlaceList[j];
+            int targetDistance = GetRoute(emptyPlaceList[j], toLocation, CheckEmptyType.EnemyAttack).Count;
+            if (targetDistance < minDistance)
+            {
+                minLocation = targetLocation;
+                minDistance = targetDistance;
+            }
+        }
+        return minLocation;
+    }
     public void RefreshCheckerboardList()
     {
         CheckerboardList.Clear();
@@ -522,6 +547,10 @@ public class BattleManager : Singleton<BattleManager>
                 else if (CurrentTerrainList.ContainsKey(location))
                 {
                     CheckerboardList.Add(location, "Terrain");
+                }
+                else if (CurrentTrapList.ContainsKey(location))
+                {
+                    CheckerboardList.Add(location, "Trap");
                 }
                 else
                 {

@@ -15,6 +15,7 @@ public class DataManager : Singleton<DataManager>
     private readonly string dialogDataListPath = Application.streamingAssetsPath + "/DialogData";
     private readonly string terrainListPath = Application.streamingAssetsPath + "/TERRAINLIST.csv";
     private readonly string skillListPath = Application.streamingAssetsPath + "/SKILLLIST.csv";
+    private readonly string trapListPath = Application.streamingAssetsPath + "/TRAPLIST.csv";
     public Dictionary<int, CardData> CardList { get; set; }
     public List<CardData> CardBag { get; set; }
     public List<CardData> UsedCardBag { get; set; }
@@ -29,6 +30,7 @@ public class DataManager : Singleton<DataManager>
     public Dictionary<int, Item> Backpack { get; set; }
     public Dictionary<int, Item> ShopBag { get; set; }
     public Dictionary<int, Skill> SkillList { get; set; }
+    public Dictionary<int, TrapData> TrapList { get; set; }
     public Dictionary<string, List<Dialog>> DialogList { get; set; }
     public Dictionary<int, Terrain> TerrainList { get; set; }
     public int PlayerID { get; set; }
@@ -372,10 +374,41 @@ public class DataManager : Singleton<DataManager>
                     string id;
                     id = skillEffect[0];
                     if (int.TryParse(skillEffect[1], out int count))
+                    {
                         skill.SkillContent.Add(new ValueTuple<string, int>(id, count));
+                    }
                 }
             }
             SkillList.Add(skill.SkillID, skill);
+        }
+        #endregion
+        #region 陷阱列表
+        lineData = File.ReadAllLines(trapListPath);
+        for (int i = 1; i < lineData.Length; i++)
+        {
+            string[] row = lineData[i].Split(',');
+            TrapData trapData = new()
+            {
+                TrapID = int.Parse(row[0]),
+                TrapName = row[1],
+                MaxHealth = int.Parse(row[2]),
+                BaseAttack = int.Parse(row[3]),
+                TrapImagePath = row[5]
+
+            };
+            if (!string.IsNullOrEmpty(row[4]))
+            {
+                string[] trapSkills = row[4].Split(';');
+                for (int j = 0; j < trapSkills.Length; j++)
+                {
+                    string[] skillParts = trapSkills[j].Split('=');
+                    if (skillParts.Length == 2)
+                    {
+                        trapData.TriggerSkillList.Add(skillParts[0], int.Parse(skillParts[1]));
+                    }
+                }
+            }
+            TrapList.Add(trapData.TrapID, trapData);
         }
         #endregion
     }

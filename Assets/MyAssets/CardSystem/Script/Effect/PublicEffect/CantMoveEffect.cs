@@ -9,15 +9,7 @@ public class CantMoveEffect : IEffect
     {
         var negativeState = BattleManager.Instance.CurrentNegativeState;
         string effectName = GetType().Name;
-        if (negativeState.ContainsKey(effectName))
-        {
-            negativeState[effectName] += value;
-        }
-        else
-        {
-            negativeState.Add(effectName, value);
-        }
-
+        negativeState[effectName] = negativeState.ContainsKey(effectName) ? negativeState[effectName] + value : value;
         // 發送 UI 更新事件
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }

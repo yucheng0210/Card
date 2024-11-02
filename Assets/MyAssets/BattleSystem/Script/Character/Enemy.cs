@@ -106,16 +106,7 @@ public class Enemy : MonoBehaviour
     private void HandleAttack()
     {
         string attackOrder = MyEnemyData.AttackOrderStrs.ElementAt(MyEnemyData.CurrentAttackOrder).Item1;
-        Dictionary<string, BattleManager.ActionRangeType> attackTypeMap = new Dictionary<string, BattleManager.ActionRangeType>
-        {
-            { "LinearAttack", BattleManager.ActionRangeType.Linear },
-            { "SurroundingAttack", BattleManager.ActionRangeType.Surrounding },
-            { "ConeAttack",BattleManager.ActionRangeType.Cone },
-            { "JumpAttack",BattleManager.ActionRangeType.Jump },
-            {"StraightChargeAttack",BattleManager.ActionRangeType.StraightCharge}
-        };
-        actionRangeDistance = MyEnemyData.AttackDistance;
-        if (attackTypeMap.TryGetValue(attackOrder, out BattleManager.ActionRangeType attackType))
+        if (Enum.TryParse(attackOrder, out BattleManager.ActionRangeType attackType))
         {
             MyActionRangeType = attackType;
             MyActionType = ActionType.Attack;
@@ -205,19 +196,12 @@ public class Enemy : MonoBehaviour
         Vector2 startPoint = enemyRect.localPosition;
         Vector2 endPoint = BattleManager.Instance.PlayerTrans.localPosition;
         Vector2 midPoint = new(startPoint.x + distance / 2, startPoint.y + curveHeight);
-        MySequence.Append(
-        DOTween.To((t) =>
+        Tween moveTween = DOTween.To((t) =>
         {
             Vector2 position = UIManager.Instance.GetBezierCurve(startPoint, midPoint, endPoint, t);
             enemyRect.anchoredPosition = position;
-        }, 0, 1, 1).SetEase(Ease.InQuad));
-        MySequence.AppendCallback(() =>
-        {
-            EffectFactory.Instance.CreateEffect("KnockBackEffect").ApplyEffect(1, enemyLocation, playerLocation);
-            BattleManager.Instance.Replace(currentEnemyList, enemyLocation, playerLocation);
-            MySequence = null;
-        });
-        MySequence.Pause();
+        }, 0, 1, 1).SetEase(Ease.InQuad);
+        MySequence.Append(moveTween).AppendCallback(() => OnAttackComplete(true, enemyLocation, playerLocation)).Pause();
     }
     private void StraightChargeAttackSequence()
     {
@@ -231,14 +215,16 @@ public class Enemy : MonoBehaviour
         int checkerboardPoint = BattleManager.Instance.GetCheckerboardPoint(destinationLocation);
         Vector2 destinationPos = BattleManager.Instance.CheckerboardTrans.GetChild(checkerboardPoint).GetComponent<RectTransform>().localPosition;
         Tween moveTween = enemyRect.DOAnchorPos(destinationPos, 0.25f);
-        MySequence.Append(moveTween);
-        MySequence.AppendCallback(() =>
+        MySequence.Append(moveTween).AppendCallback(() => OnAttackComplete(true, enemyLocation, destinationLocation)).Pause();
+    }
+    private void OnAttackComplete(bool isKnockBack, string startLocation, string endLocation)
+    {
+        if (isKnockBack)
         {
-            EffectFactory.Instance.CreateEffect("KnockBackEffect").ApplyEffect(1, enemyLocation, destinationLocation);
-            BattleManager.Instance.Replace(currentEnemyList, enemyLocation, destinationLocation);
-            MySequence = null;
-        });
-        MySequence.Pause();
+            EffectFactory.Instance.CreateEffect("KnockBackEffect").ApplyEffect(1, startLocation, endLocation);
+        }
+        BattleManager.Instance.Replace(currentEnemyList, startLocation, endLocation);
+        MySequence = null;
     }
     private void EventPlayerTurn(params object[] args)
     {

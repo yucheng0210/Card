@@ -38,14 +38,20 @@ public class PoisonedEffect : IEffect
 
         // Apply poison effect if the attacker matches
         if (args.Length < 5)
+        {
             return;
+        }
         CharacterData damageSource = (CharacterData)args[4];
         if (attacker == damageSource)
         {
             if (currentNegativeState.ContainsKey(typeName))
+            {
                 currentNegativeState[typeName] += poisonCount;
+            }
             else
+            {
                 currentNegativeState.Add(typeName, poisonCount);
+            }
         }
     }
 
@@ -71,6 +77,6 @@ public class PoisonedEffect : IEffect
 
     public string SetDescriptionText()
     {
-        return  "攻擊疊加毒素。";
+        return "攻擊疊加毒素。";
     }
 }

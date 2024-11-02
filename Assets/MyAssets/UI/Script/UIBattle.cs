@@ -218,7 +218,7 @@ public class UIBattle : UIBase
             switch (enemy.MyActionType)
             {
                 case Enemy.ActionType.Move:
-                    yield return HandleEnemyMove(location, enemyData, enemyTrans, enemy, enemyImage, enemyList);  // 单独处理移动逻辑
+                    yield return HandleEnemyMove(location, enemyData, enemy, enemyImage, enemyList);  // 单独处理移动逻辑
                     moveHistoryList.Add(enemyData);
                     break;
                 case Enemy.ActionType.Attack:
@@ -255,40 +255,22 @@ public class UIBattle : UIBase
         enemyImage.transform.localRotation = Quaternion.Euler(0, shouldFlip ? 180 : 0, 0);
     }
     // 处理敌人移动
-    private IEnumerator HandleEnemyMove(string location, EnemyData enemyData, RectTransform enemyTrans, Enemy enemy, Image enemyImage, Dictionary<string, EnemyData> enemyDict)
+    private IEnumerator HandleEnemyMove(string location, EnemyData enemyData, Enemy enemy, Image enemyImage, Dictionary<string, EnemyData> enemyDict)
     {
-        BattleManager.ActionRangeType actionRangeType = BattleManager.ActionRangeType.Default;
-        List<string> emptyPlaceList = BattleManager.Instance.GetAcitonRangeTypeList(location, enemyData.StepCount, enemy.MyCheckEmptyType, actionRangeType);
-        string playerLocation = BattleManager.Instance.CurrentLocationID;
-        int[] minPoint = BattleManager.Instance.ConvertNormalPos(emptyPlaceList[0]);
-        int minDistance = BattleManager.Instance.GetRoute(emptyPlaceList[0], playerLocation, BattleManager.CheckEmptyType.EnemyAttack).Count;
-
-        // 找到最近的位置
-        for (int j = 1; j < emptyPlaceList.Count; j++)
-        {
-            int[] targetPoint = BattleManager.Instance.ConvertNormalPos(emptyPlaceList[j]);
-            int targetDistance = BattleManager.Instance.GetRoute(emptyPlaceList[j], playerLocation, BattleManager.CheckEmptyType.EnemyAttack).Count;
-            if (targetDistance < minDistance)
-            {
-                minPoint = targetPoint;
-                minDistance = targetDistance;
-            }
-            yield return null;
-        }
-        string newLocation = BattleManager.Instance.ConvertCheckerboardPos(minPoint[0], minPoint[1]);
-        List<string> routeList = BattleManager.Instance.GetRoute(location, newLocation, BattleManager.CheckEmptyType.Move);
+        string minLocation = BattleManager.Instance.GetCloseLocation(location, BattleManager.Instance.CurrentLocationID, enemyData.StepCount);
+        List<string> routeList = BattleManager.Instance.GetRoute(location, minLocation, BattleManager.CheckEmptyType.Move);
         for (int k = 0; k < routeList.Count; k++)
         {
             int childCount = BattleManager.Instance.GetCheckerboardPoint(routeList[k]);
             RectTransform emptyPlace = BattleManager.Instance.CheckerboardTrans.GetChild(childCount).GetComponent<RectTransform>();
             SetEnemyMoveRotation(enemyData, enemyImage, location, routeList[k]);
-            enemyTrans.DOAnchorPos(emptyPlace.localPosition, 0.5f);  // 移动动画
+            enemyData.EnemyTrans.DOAnchorPos(emptyPlace.localPosition, 0.5f);  // 移动动画
             enemy.MyAnimator.SetBool("isRunning", true);
             yield return new WaitForSeconds(0.5f);
             enemy.MyAnimator.SetBool("isRunning", false);
         }
-        SetEnemyAttackRotation(enemyData, enemyImage, newLocation);
-        BattleManager.Instance.Replace(enemyDict, location, newLocation);
+        SetEnemyAttackRotation(enemyData, enemyImage, minLocation);
+        BattleManager.Instance.Replace(enemyDict, location, minLocation);
         BattleManager.Instance.RefreshCheckerboardList();
     }
 
@@ -362,14 +344,15 @@ public class UIBattle : UIBase
     {
         EnemyData enemyData = (EnemyData)BattleManager.Instance.IdentifyCharacter(key);
         Enemy enemy = enemyData.EnemyTrans.GetComponent<Enemy>();
+        Dictionary<string, EnemyData> currentEnemyList = BattleManager.Instance.CurrentEnemyList;
         if (enemyData.CurrentHealth <= 0 && !enemy.IsDeath)
         {
             enemy.MyAnimator.SetTrigger("isDeath");
             if (!enemyData.PassiveSkills.ContainsKey("ResurrectionEffect"))
             {
-                if (BattleManager.Instance.CurrentEnemyList.ContainsKey(key))
+                if (currentEnemyList.ContainsKey(key))
                 {
-                    BattleManager.Instance.CurrentEnemyList.Remove(key);
+                    currentEnemyList.Remove(key);
                 }
                 else
                 {
@@ -386,13 +369,14 @@ public class UIBattle : UIBase
             enemy.MyAnimator.SetTrigger("isHited");
         }
         BattleManager.Instance.RefreshCheckerboardList();
-        if (BattleManager.Instance.CurrentEnemyList.Count == 0)
+        if (currentEnemyList.Count == 0)
         {
             BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Win);
             BattleManager.Instance.CurrentNegativeState.Clear();
-            BattleManager.Instance.CurrentEnemyList.Clear();
+            currentEnemyList.Clear();
             BattleManager.Instance.CurrentAbilityList.Clear();
             BattleManager.Instance.CurrentTerrainList.Clear();
+            BattleManager.Instance.CurrentTrapList.Clear();
             BattleManager.Instance.CurrentOnceBattlePositiveList.Clear();
             BattleManager.Instance.CurrentMinionsList.Clear();
             RemoveAllTerrian();
