@@ -87,6 +87,11 @@ public class UIBattle : UIBase
     private Sprite enemyRound;
     [SerializeField]
     private Button speedupButton;
+    [Header("陷阱")]
+    [SerializeField]
+    private GameObject trapPrefab;
+    [SerializeField]
+    private Transform trapGroupTrans;
     [Header("藥水")]
     [SerializeField]
     private Transform potionGroupTrans;
@@ -113,6 +118,8 @@ public class UIBattle : UIBase
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
         BattleManager.Instance.EnemyPrefab = enemyPrefab;
         BattleManager.Instance.EnemyTrans = enemyTrans;
+        BattleManager.Instance.TrapPrefab = trapPrefab;
+        BattleManager.Instance.TrapGroupTrans = trapGroupTrans;
         BattleManager.Instance.CheckerboardTrans = checkerboardTrans;
         Hide();
     }

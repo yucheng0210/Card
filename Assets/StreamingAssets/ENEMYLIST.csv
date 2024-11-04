@@ -4,6 +4,6 @@
 1003,大眼怪,47,20,20,EnemyImage/FlyingEye,2,3,99,Linear=1;Linear=1;SlowDownEffect=1;TeleportEffect=2,EnemyAnimation/FlyingEye,SniperEffect=50,0,FALSE
 1004,菇,84,10,10,EnemyImage/Mushroom,2,2,99,Jump=1;VortexMawEffect=2;Cone=2;IncreaseHealth=20,EnemyAnimation/Mushroom,ParasiticEffect=10,0,FALSE
 1005,沙漠狂獸,45,13,13,EnemyImage/Dog,3,4,99,CreateMinionsEffect=2;ApplyBuff=5;StraightCharge=1;StraightCharge=1;Shield=50,EnemyAnimation/Dog,GroupEffect=2005;BleedEffect=5,0,TRUE
-1006,毒刃劍蠍,45,10,15,EnemyImage/Scorpion,2,4,99,Throw=1;ThrowTraps=3;IncreaseHealth=22,EnemyAnimation/Scorpion,PoisonedEffect=2;LeaveBattleShieldEffect=5,0,TRUE
-1007,風沙追獵者,45,10,15,EnemyImage/Leopard,2,2,99,Surrounding=1;Surrounding=1;IncreaseHealth=23,EnemyAnimation/Leopard,ParasiticEffect=3,0,TRUE
+1006,毒刃劍蠍,45,10,15,EnemyImage/Scorpion,2,4,99,ThrowExplosion=1;ThrowTraps=1001;AddCurseEffect=5003,EnemyAnimation/Scorpion,PoisonedEffect=2;LeaveBattleShieldEffect=5,0,TRUE
+1007,風沙追獵者,45,10,15,EnemyImage/Leopard,2,2,99,Shield=30;StraightCharge=1;Cone=1;Cone=1,EnemyAnimation/Leopard,BleedEffect=5;VampireEffect=5;ComboEffect,0,TRUE
 2005,沙漠利爪,43,15,15,EnemyImage/Dog,2,2,99,Surrounding=1;Surrounding=1;IncreaseHealth=24,EnemyAnimation/Dog,BleedEffect=3,0,TRUE

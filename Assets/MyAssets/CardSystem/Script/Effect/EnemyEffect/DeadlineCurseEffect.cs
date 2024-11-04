@@ -15,15 +15,16 @@ public class DeadlineCurseEffect : IEffect
     private void EventPlayerTurn(params object[] args)
     {
         reciprocalCount--;
+        List<CardData> handCard = DataManager.Instance.HandCard;
         if (reciprocalCount <= 0)
         {
-            if (DataManager.Instance.HandCard.Contains(cardItem.MyCardData))
+            if (handCard.Contains(cardItem.MyCardData))
             {
                 string locationID = BattleManager.Instance.CurrentLocationID;
                 PlayerData playerData = BattleManager.Instance.CurrentPlayerData;
                 EnemyData enemyData = BattleManager.Instance.CurrentEnemyList[locationID];
                 BattleManager.Instance.TakeDamage(enemyData, playerData, DataManager.Instance.CardList[5001].CardAttack, locationID, 0);
-                DataManager.Instance.HandCard.Remove(cardItem.MyCardData);
+                handCard.Remove(cardItem.MyCardData);
                 DataManager.Instance.RemoveCardBag.Add(cardItem.MyCardData);
                 cardItem.gameObject.SetActive(false);
             }

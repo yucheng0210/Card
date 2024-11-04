@@ -50,7 +50,9 @@ public class ParasiticEffect : IEffect
         }
         sporeCount = BattleManager.Instance.GetCardCount(5002);
         if (sporeCount == 0)
+        {
             return;
+        }
         int currentDamage = damage * sporeCount;
         string enemyLocation = BattleManager.Instance.GetEnemyKey(parasite);
         CharacterData parasiteRepresent = new EnemyData();

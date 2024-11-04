@@ -6,7 +6,10 @@ public class ThrowTraps : IEffect
 {
     public void ApplyEffect(int value, string fromLocation, string toLocation)
     {
-
+        EnemyData enemyData = BattleManager.Instance.CurrentEnemyList[fromLocation];
+        BattleManager.CheckEmptyType checkEmptyType = BattleManager.CheckEmptyType.EnemyAttack;
+        List<string> trapList = BattleManager.Instance.GetAcitonRangeTypeList(fromLocation, enemyData.AttackDistance, checkEmptyType, SetEffectAttackType());
+        BattleManager.Instance.AddTrap(trapList, value);
     }
     public string SetTitleText()
     {
@@ -16,5 +19,5 @@ public class ThrowTraps : IEffect
     {
         throw new System.NotImplementedException();
     }
-    public BattleManager.ActionRangeType SetEffectAttackType() { return BattleManager.ActionRangeType.Throw; }
+    public BattleManager.ActionRangeType SetEffectAttackType() { return BattleManager.ActionRangeType.ThrowScattering; }
 }

@@ -35,7 +35,8 @@ public class BattleManager : Singleton<BattleManager>
         Cone,
         Jump,
         StraightCharge,
-        Throw
+        ThrowExplosion,
+        ThrowScattering
     }
     public enum CheckEmptyType
     {
@@ -65,9 +66,8 @@ public class BattleManager : Singleton<BattleManager>
     public Transform CardBagTrans { get; set; }
     public Button CardBagApplyButton { get; set; }
     public CardItem CardPrefab { get; set; }
-    //public List<CardItem> CardItemList { get; set; }
-    //public List<Vector2> CardPositionList { get; set; }
-    //public List<float> CardAngleList { get; set; }
+    public GameObject TrapPrefab { get; set; }
+    public Transform TrapGroupTrans { get; set; }
     public Dictionary<string, int> CurrentNegativeState { get; set; }
     public Dictionary<string, int> CurrentAbilityList { get; set; }
     public Dictionary<string, int> CurrentOnceBattlePositiveList { get; set; }
@@ -341,13 +341,16 @@ public class BattleManager : Singleton<BattleManager>
                 emptyPlaceList = GetEmptyPlace(location, stepCount, checkEmptyType, true);
                 break;
             case ActionRangeType.Jump:
-                emptyPlaceList = GetThrowList(location, CurrentLocationID, stepCount);
+                emptyPlaceList = GetThrowExplosionList(location, CurrentLocationID, stepCount);
                 break;
             case ActionRangeType.StraightCharge:
                 emptyPlaceList = GetStraightChargeList(location, CurrentLocationID, stepCount);
                 break;
-            case ActionRangeType.Throw:
-                emptyPlaceList = GetThrowList(location, CurrentLocationID, stepCount);
+            case ActionRangeType.ThrowExplosion:
+                emptyPlaceList = GetThrowExplosionList(location, CurrentLocationID, stepCount);
+                break;
+            case ActionRangeType.ThrowScattering:
+                emptyPlaceList = GetThrowScatteringList(location, CurrentLocationID, stepCount);
                 break;
         }
         return emptyPlaceList;
@@ -397,7 +400,6 @@ public class BattleManager : Singleton<BattleManager>
 
         return linearAttackList;
     }
-
     public List<string> GetConeAttackList(string fromLocation, string toLocation, int attackDistance)
     {
         // 如果起點和終點相同，直接返回空列表
@@ -502,9 +504,23 @@ public class BattleManager : Singleton<BattleManager>
 
         return straightChargeList;
     }
-    private List<string> GetThrowList(string fromLocation, string toLocation, int attackDistance)
+    private List<string> GetThrowExplosionList(string fromLocation, string toLocation, int attackDistance)
     {
         string destinationLocation = GetCloseLocation(fromLocation, toLocation, attackDistance);
+        return GetAcitonRangeTypeList(destinationLocation, attackDistance, CheckEmptyType.EnemyAttack, ActionRangeType.Surrounding);
+    }
+    private List<string> GetThrowScatteringList(string fromLocation, string toLocation, int attackDistance)
+    {
+        string destinationLocation = GetCloseLocation(fromLocation, toLocation, attackDistance);
+        List<string> emptyPlaceList = GetAcitonRangeTypeList(destinationLocation, 2, CheckEmptyType.Move, ActionRangeType.Surrounding);
+        List<string> throwLocationList = new();
+        int throwCount = emptyPlaceList.Count > 3 ? 3 : emptyPlaceList.Count;
+        for (int i = 0; i < throwCount; i++)
+        {
+            int randomIndex = Random.Range(0, emptyPlaceList.Count);
+            throwLocationList.Add(emptyPlaceList[randomIndex]);
+            emptyPlaceList.RemoveAt(randomIndex);
+        }
         return GetAcitonRangeTypeList(destinationLocation, attackDistance, CheckEmptyType.EnemyAttack, ActionRangeType.Surrounding);
     }
     public string GetCloseLocation(string fromLocation, string toLocation, int attackDistance)
@@ -583,7 +599,6 @@ public class BattleManager : Singleton<BattleManager>
         switch (MyBattleType)
         {
             case BattleType.None:
-                //UIManager.Instance.HideUI("UIBattle");
                 break;
             case BattleType.Explore:
                 Explore();
@@ -679,7 +694,9 @@ public class BattleManager : Singleton<BattleManager>
             string negativeState = CurrentNegativeState.ElementAt(i).Key;
             CurrentNegativeState[negativeState]--;
             if (CurrentNegativeState[negativeState] <= 0)
+            {
                 CurrentNegativeState.Remove(negativeState);
+            }
         }
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
         EventManager.Instance.DispatchEvent(EventDefinition.eventEnemyTurn);
@@ -750,6 +767,19 @@ public class BattleManager : Singleton<BattleManager>
             enemy.MyActionRangeType = ActionRangeType.None;
             string minionsLocation = GetEnemyKey(CurrentMinionsList[key]);
             TriggerEnemyPassiveSkill(minionsLocation, true);
+        }
+    }
+    public void AddTrap(List<string> trapList, int id)
+    {
+        for (int i = 0; i < trapList.Count; i++)
+        {
+            RectTransform trapRect = Instantiate(TrapPrefab, TrapGroupTrans).GetComponent<RectTransform>();
+            TrapData trapData = DataManager.Instance.TrapList[id].DeepClone();
+            int checkerboardPoint = GetCheckerboardPoint(trapList[i]);
+            trapRect.anchoredPosition = CheckerboardTrans.GetChild(checkerboardPoint).localPosition;
+            trapData.CurrentHealth = trapData.MaxHealth;
+            trapData.CurrentAttack = trapData.BaseAttack;
+            CurrentTrapList.Add(trapList[i], trapData);
         }
     }
     public int GetMinionsIDCount(int id)
