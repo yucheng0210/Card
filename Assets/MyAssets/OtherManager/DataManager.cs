@@ -55,6 +55,7 @@ public class DataManager : Singleton<DataManager>
         DialogList = new Dictionary<string, List<Dialog>>();
         TerrainList = new Dictionary<int, Terrain>();
         SkillList = new Dictionary<int, Skill>();
+        TrapList = new Dictionary<int, TrapData>();
         LoadData();
     }
 
@@ -393,6 +394,7 @@ public class DataManager : Singleton<DataManager>
                 TrapName = row[1],
                 MaxHealth = int.Parse(row[2]),
                 BaseAttack = int.Parse(row[3]),
+                TriggerSkillList = new(),
                 TrapImagePath = row[5]
 
             };

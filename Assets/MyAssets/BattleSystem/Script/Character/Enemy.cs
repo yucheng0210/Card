@@ -47,6 +47,7 @@ public class Enemy : MonoBehaviour
     private Dictionary<string, EnemyData> currentEnemyList = new();
     public EnemyData MyEnemyData { get; set; }
     private int actionRangeDistance;
+    public int AdditionAttackCount { get; set; }
     public enum ActionType
     {
         Move,

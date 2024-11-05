@@ -229,7 +229,7 @@ public class UIBattle : UIBase
                     moveHistoryList.Add(enemyData);
                     break;
                 case Enemy.ActionType.Attack:
-                    int attackCount = enemyData.AttackOrderStrs[enemyData.CurrentAttackOrder].Item2;
+                    int attackCount = enemyData.AttackOrderStrs[enemyData.CurrentAttackOrder].Item2 + enemy.AdditionAttackCount;
                     yield return HandleEnemyAttack(enemyData, enemy, playerData, attackCount); // 单独处理攻击逻辑
                     break;
                 case Enemy.ActionType.Shield:
