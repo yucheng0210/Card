@@ -39,7 +39,7 @@ public class Enemy : MonoBehaviour
     public List<string> CurrentActionRangeTypeList { get; set; }
     public int EnemyID { get; set; }
     public ActionType MyActionType { get; set; }
-    public BattleManager.ActionRangeType MyActionRangeType { get; set; }
+    public BattleManager.ActionRangeType MyNextAttackActionRangeType { get; set; }
     public BattleManager.CheckEmptyType MyCheckEmptyType { get; set; }
     public bool IsDeath { get; set; }
     public Dictionary<string, int> EnemyOnceBattlePositiveList { get; set; }
@@ -48,6 +48,7 @@ public class Enemy : MonoBehaviour
     public EnemyData MyEnemyData { get; set; }
     private int actionRangeDistance;
     public int AdditionAttackCount { get; set; }
+    public bool InRange { get; set; }
     public enum ActionType
     {
         Move,
@@ -59,6 +60,7 @@ public class Enemy : MonoBehaviour
     private void Start()
     {
         EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
+        //EventManager.Instance.AddEventRegister(EventDefinition.eventMove, EventMove);
         EnemyOnceBattlePositiveList = new Dictionary<string, int>();
         currentEnemyList = BattleManager.Instance.CurrentEnemyList;
     }
@@ -71,20 +73,21 @@ public class Enemy : MonoBehaviour
     {
         string location = BattleManager.Instance.GetEnemyKey(MyEnemyData);
         float distance = BattleManager.Instance.GetRoute(location, BattleManager.Instance.CurrentLocationID, BattleManager.CheckEmptyType.EnemyAttack).Count;
+        HandleAttack(location);
+        InRange = BattleManager.Instance.EnemyAttackInRange(this, location);
         ResetUIElements();
         if (distance == 0)
         {
             HandleNoAttack();
         }
-        else if (distance <= MyEnemyData.AttackDistance)
+        else if (InRange)
         {
-            HandleAttack();
+            HandleAttack(location);
         }
         else
         {
-            HandleMove();
+            HandleMove(location);
         }
-        CurrentActionRangeTypeList = BattleManager.Instance.GetAcitonRangeTypeList(location, actionRangeDistance, MyCheckEmptyType, MyActionRangeType);
         SetInfoGroupEventTrigger();
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
@@ -104,15 +107,16 @@ public class Enemy : MonoBehaviour
         enemyAttackIntentText.text = "?";
     }
 
-    private void HandleAttack()
+    private void HandleAttack(string location)
     {
         string attackOrder = MyEnemyData.AttackOrderStrs.ElementAt(MyEnemyData.CurrentAttackOrder).Item1;
+        MyCheckEmptyType = BattleManager.CheckEmptyType.EnemyAttack;
+        actionRangeDistance = MyEnemyData.AttackDistance;
         if (Enum.TryParse(attackOrder, out BattleManager.ActionRangeType attackType))
         {
-            MyActionRangeType = attackType;
+            MyNextAttackActionRangeType = attackType;
             MyActionType = ActionType.Attack;
-            MyCheckEmptyType = BattleManager.CheckEmptyType.EnemyAttack;
-            Attack();
+            ActiveAttack();
         }
         else if (attackOrder == "Shield")
         {
@@ -122,6 +126,7 @@ public class Enemy : MonoBehaviour
         {
             ActivateEffect(attackOrder);
         }
+        CurrentActionRangeTypeList = BattleManager.Instance.GetAcitonRangeTypeList(location, actionRangeDistance, MyCheckEmptyType, MyNextAttackActionRangeType);
     }
 
     private void ActivateShield()
@@ -130,18 +135,15 @@ public class Enemy : MonoBehaviour
         infoTitle.text = "護盾";
         infoDescription.text = "產生護盾。";
         MyActionType = ActionType.Shield;
-        MyActionRangeType = BattleManager.ActionRangeType.None;
-        MyCheckEmptyType = BattleManager.CheckEmptyType.EnemyAttack;
+        MyNextAttackActionRangeType = BattleManager.ActionRangeType.None;
         enemyAttackIntentText.text = shieldCount.ToString();
         enemyShield.SetActive(true);
     }
 
     private void ActivateEffect(string attackOrder)
     {
-        actionRangeDistance = MyEnemyData.AttackDistance;
         MyActionType = ActionType.Effect;
-        MyActionRangeType = EffectFactory.Instance.CreateEffect(attackOrder).SetEffectAttackType();
-        MyCheckEmptyType = BattleManager.CheckEmptyType.EnemyAttack;
+        MyNextAttackActionRangeType = EffectFactory.Instance.CreateEffect(attackOrder).SetEffectAttackType();
         Image enemyEffectImage = enemyEffect.GetComponent<Image>();
         infoTitle.text = "效果";
         infoDescription.text = "施展未知效果。";
@@ -150,14 +152,15 @@ public class Enemy : MonoBehaviour
         enemyEffect.SetActive(true);
     }
 
-    private void HandleMove()
+    private void HandleMove(string location)
     {
+        BattleManager.ActionRangeType actionRangeType = BattleManager.ActionRangeType.Default;
         actionRangeDistance = MyEnemyData.StepCount;
         infoTitle.text = "移動";
         infoDescription.text = "進行移動。";
         MyActionType = ActionType.Move;
-        MyActionRangeType = BattleManager.ActionRangeType.Default;
         MyCheckEmptyType = BattleManager.CheckEmptyType.Move;
+        CurrentActionRangeTypeList = BattleManager.Instance.GetAcitonRangeTypeList(location, actionRangeDistance, MyCheckEmptyType, actionRangeType);
         enemyAttackIntentText.enabled = false;
         enemyMove.SetActive(true);
     }
@@ -170,13 +173,13 @@ public class Enemy : MonoBehaviour
         BattleManager.Instance.SetEventTrigger(eventTrigger, unityAction_1, unityAction_2);
     }
 
-    private void Attack()
+    private void ActiveAttack()
     {
         infoTitle.text = "攻擊";
         infoDescription.text = "發動攻擊。";
         enemyAttackIntentText.text = MyEnemyData.CurrentAttack.ToString();
         enemyAttack.SetActive(true);
-        switch (MyActionRangeType)
+        switch (MyNextAttackActionRangeType)
         {
             case BattleManager.ActionRangeType.Jump:
                 JumpAttackSequence();
@@ -228,6 +231,11 @@ public class Enemy : MonoBehaviour
         MySequence = null;
     }
     private void EventPlayerTurn(params object[] args)
+    {
+        BattleManager.Instance.RefreshCheckerboardList();
+        RefreshAttackIntent();
+    }
+    private void EventMove(params object[] args)
     {
         BattleManager.Instance.RefreshCheckerboardList();
         RefreshAttackIntent();

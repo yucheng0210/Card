@@ -5,30 +5,37 @@ using UnityEngine;
 public class EventManager : Singleton<EventManager>
 {
     public delegate void EventHandler(params object[] args);
-    private Dictionary<string, EventHandler> eventListenters = new Dictionary<
-        string,
-        EventHandler
-    >();
+    private Dictionary<string, EventHandler> eventListenters = new();
 
     public void AddEventRegister(string eventName, EventHandler handler)
     {
         if (handler == null)
+        {
             return;
+        }
         if (eventListenters.ContainsKey(eventName))
+        {
             eventListenters[eventName] += handler;
+        }
         else
+        {
             eventListenters.Add(eventName, handler);
+        }
     }
 
     public void RemoveEventRegister(string eventName, EventHandler handler)
     {
         if (handler == null)
+        {
             return;
+        }
         if (eventListenters.ContainsKey(eventName))
         {
             eventListenters[eventName] -= handler;
             if (eventListenters[eventName] == null)
+            {
                 eventListenters.Remove(eventName);
+            }
         }
     }
 
@@ -38,7 +45,9 @@ public class EventManager : Singleton<EventManager>
         {
             EventHandler eventHandler = eventListenters[eventName];
             if (eventHandler != null)
+            {
                 eventHandler(objs);
+            }
         }
     }
 
@@ -46,6 +55,8 @@ public class EventManager : Singleton<EventManager>
     public void ClearEvents(string eventName)
     {
         if (eventListenters.ContainsKey(eventName))
+        {
             eventListenters.Remove(eventName);
+        }
     }
 }

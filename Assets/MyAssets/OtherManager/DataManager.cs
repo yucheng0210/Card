@@ -142,7 +142,7 @@ public class DataManager : Singleton<DataManager>
                 EnemyImagePath = row[5],
                 StepCount = int.Parse(row[6]),
                 AttackDistance = int.Parse(row[7]),
-                AlertDistance = int.Parse(row[8]),
+                MeleeAttackMode = bool.Parse(row[8]),
                 AttackOrderStrs = new List<(string, int)>(),
                 EnemyAniPath = row[10],
                 PassiveSkills = new Dictionary<string, int>(),

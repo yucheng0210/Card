@@ -110,7 +110,6 @@ public class CardCreater : MonoBehaviour
     private IEnumerator DrawCard(int addCardCount)
     {
         yield return new WaitForSecondsRealtime(1);
-        BattleManager.Instance.ChangeTurn(BattleManager.BattleType.DrawCard);
         List<CardData> handCard = DataManager.Instance.HandCard;
         List<CardData> cardBag = DataManager.Instance.CardBag;
         int maxCardCount = handCard.Count + addCardCount;
@@ -214,7 +213,6 @@ public class CardCreater : MonoBehaviour
         }
     }
 
-
     private void EventDrawCard(params object[] args)
     {
         StartCoroutine(DrawCard((int)args[0]));
@@ -236,7 +234,9 @@ public class CardCreater : MonoBehaviour
     private void EventPlayerTurn(params object[] args)
     {
         currentPosX = startPosition.x;
-        StartCoroutine(DrawCard(BattleManager.Instance.CurrentDrawCardCount));
+        BattleManager.Instance.ChangeTurn(BattleManager.BattleType.DrawCard);
+        EventManager.Instance.DispatchEvent(EventDefinition.eventDrawCard, BattleManager.Instance.CurrentDrawCardCount);
+        //StartCoroutine(DrawCard(BattleManager.Instance.CurrentDrawCardCount));
     }
 
     private void EventEnemyTurn(params object[] args)

@@ -8,7 +8,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.Events;
 using Unity.VisualScripting;
 using UnityEngine.TextCore.Text;
-
+using System;
 public class BattleManager : Singleton<BattleManager>
 {
     public enum BattleType
@@ -250,7 +250,9 @@ public class BattleManager : Singleton<BattleManager>
     public bool CheckPlaceEmpty(string place, CheckEmptyType checkEmptyType)
     {
         if (!CheckerboardList.ContainsKey(place))
+        {
             return false;
+        }
         string placeStatus = CheckerboardList[place];
         bool playerAttackCondition = checkEmptyType == CheckEmptyType.PlayerAttack && placeStatus == "Enemy";
         bool enemyAttackCondition = checkEmptyType == CheckEmptyType.EnemyAttack && placeStatus == "Player";
@@ -301,8 +303,10 @@ public class BattleManager : Singleton<BattleManager>
                 if (!visited.Contains(nextLocation) && CheckerboardList.ContainsKey(nextLocation) && CheckPlaceEmpty(nextLocation, checkEmptyType))
                 {
                     visited.Add(nextLocation); // 標記為已訪問
-                    var newPath = new List<string>(path);
-                    newPath.Add(nextLocation);
+                    var newPath = new List<string>(path)
+                    {
+                        nextLocation
+                    };
                     queue.Enqueue((nextPos, newPath));
                 }
             }
@@ -517,7 +521,7 @@ public class BattleManager : Singleton<BattleManager>
         int throwCount = emptyPlaceList.Count > 3 ? 3 : emptyPlaceList.Count;
         for (int i = 0; i < throwCount; i++)
         {
-            int randomIndex = Random.Range(0, emptyPlaceList.Count);
+            int randomIndex = UnityEngine.Random.Range(0, emptyPlaceList.Count);
             throwLocationList.Add(emptyPlaceList[randomIndex]);
             emptyPlaceList.RemoveAt(randomIndex);
         }
@@ -525,23 +529,45 @@ public class BattleManager : Singleton<BattleManager>
     }
     public string GetCloseLocation(string fromLocation, string toLocation, int attackDistance)
     {
-        List<string> emptyPlaceList = GetAcitonRangeTypeList(fromLocation, attackDistance, CheckEmptyType.EnemyAttack, ActionRangeType.Default);
-        string minLocation = emptyPlaceList[0];
-        int minDistance = GetRoute(emptyPlaceList[0], toLocation, CheckEmptyType.EnemyAttack).Count;
+        EnemyData enemyData = (EnemyData)IdentifyCharacter(fromLocation);
+        Enemy enemy = enemyData.EnemyTrans.GetComponent<Enemy>();
+        List<string> emptyPlaceList = GetAcitonRangeTypeList(fromLocation, attackDistance, CheckEmptyType.Move, ActionRangeType.Default);
 
-        // 找到最近的位置
+        string minLocation = emptyPlaceList[0];
+        int minDistance = GetRoute(minLocation, toLocation, CheckEmptyType.EnemyAttack).Count;
+
+        // 儲存符合 EnemyAttackInRange 的位置及距離
+        string bestInRangeLocation = null;
+        int bestInRangeDistance = enemyData.MeleeAttackMode ? int.MaxValue : int.MinValue;
+
+        // 遍歷空位列表
         for (int j = 1; j < emptyPlaceList.Count; j++)
         {
             string targetLocation = emptyPlaceList[j];
-            int targetDistance = GetRoute(emptyPlaceList[j], toLocation, CheckEmptyType.EnemyAttack).Count;
-            if (targetDistance < minDistance)
+            int targetDistance = GetRoute(targetLocation, toLocation, CheckEmptyType.EnemyAttack).Count;
+
+            // 若符合 EnemyAttackInRange 條件，並檢查距離
+            if (EnemyAttackInRange(enemy, targetLocation))
+            {
+                bool bestInRangeCondition = enemyData.MeleeAttackMode ? targetDistance < bestInRangeDistance : targetDistance > bestInRangeDistance;
+                if (bestInRangeCondition)
+                {
+                    bestInRangeLocation = targetLocation;
+                    bestInRangeDistance = targetDistance;
+                }
+            }
+            else if (bestInRangeLocation == null && targetDistance < minDistance)
             {
                 minLocation = targetLocation;
                 minDistance = targetDistance;
             }
         }
-        return minLocation;
+
+        // 若有符合 EnemyAttackInRange 的位置，則回傳距離最短的該選項
+        return bestInRangeLocation ?? minLocation;
     }
+
+
     public void RefreshCheckerboardList()
     {
         CheckerboardList.Clear();
@@ -712,7 +738,7 @@ public class BattleManager : Singleton<BattleManager>
         List<CardData> cardBag = DataManager.Instance.CardBag;
         for (int i = 0; i < cardBag.Count; i++)
         {
-            int randomIndex = Random.Range(0, cardBag.Count);
+            int randomIndex = UnityEngine.Random.Range(0, cardBag.Count);
             CardData temp = cardBag[randomIndex];
             cardBag[randomIndex] = cardBag[i];
             cardBag[i] = temp;
@@ -746,7 +772,7 @@ public class BattleManager : Singleton<BattleManager>
         List<string> emptyPlaceList = GetEmptyPlace(location, 3, CheckEmptyType.Move, true);
         for (int i = 0; i < count; i++)
         {
-            int randomIndex = Random.Range(0, emptyPlaceList.Count);
+            int randomIndex = UnityEngine.Random.Range(0, emptyPlaceList.Count);
             EnemyData enemyData = DataManager.Instance.EnemyList[enemyID].DeepClone();
             enemyData.CurrentHealth = enemyData.MaxHealth;
             enemyData.CurrentAttack = enemyData.MinAttack;
@@ -764,7 +790,7 @@ public class BattleManager : Singleton<BattleManager>
             enemy.MyAnimator.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>(CurrentMinionsList[key].EnemyAniPath);
             CurrentMinionsList[key].EnemyTrans = enemy.GetComponent<RectTransform>();
             enemy.MyEnemyData = CurrentMinionsList[key];
-            enemy.MyActionRangeType = ActionRangeType.None;
+            enemy.MyNextAttackActionRangeType = ActionRangeType.None;
             string minionsLocation = GetEnemyKey(CurrentMinionsList[key]);
             TriggerEnemyPassiveSkill(minionsLocation, true);
         }
@@ -846,5 +872,11 @@ public class BattleManager : Singleton<BattleManager>
         TValue value = dictionary[oldKey];
         dictionary.Remove(oldKey);
         dictionary.Add(newKey, value);
+    }
+    public bool EnemyAttackInRange(Enemy enemy, string location)
+    {
+        EnemyData enemyData = enemy.MyEnemyData;
+        List<string> attackRangeList = GetAcitonRangeTypeList(location, enemyData.AttackDistance, CheckEmptyType.EnemyAttack, enemy.MyNextAttackActionRangeType);
+        return attackRangeList.Contains(CurrentLocationID) || enemy.MyNextAttackActionRangeType == ActionRangeType.None;
     }
 }

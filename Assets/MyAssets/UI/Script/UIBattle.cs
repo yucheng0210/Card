@@ -99,7 +99,6 @@ public class UIBattle : UIBase
     private Button potionPrefab;
     [SerializeField]
     private Transform potionClueMenu;
-    private bool inRange;
     protected override void Start()
     {
         base.Start();
@@ -109,6 +108,7 @@ public class UIBattle : UIBase
         EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
         EventManager.Instance.AddEventRegister(EventDefinition.eventEnemyTurn, EventEnemyTurn);
         EventManager.Instance.AddEventRegister(EventDefinition.eventMove, EventMove);
+        EventManager.Instance.AddEventRegister(EventDefinition.eventDrawCard, EventDrawCard);
         //Hide();
         StartGame();
     }
@@ -135,11 +135,12 @@ public class UIBattle : UIBase
     }
     private void CheckEnemyInfo()
     {
+        BattleManager.Instance.ClearAllEventTriggers();
         UIManager.Instance.ClearMoveClue(false);
         for (int i = 0; i < checkerboardTrans.childCount; i++)
         {
             string location = BattleManager.Instance.ConvertCheckerboardPos(i);
-            if (!BattleManager.Instance.CurrentEnemyList.ContainsKey(location) || !BattleManager.Instance.CurrentMinionsList.ContainsKey(location))
+            if (!BattleManager.Instance.CurrentEnemyList.ContainsKey(location) && !BattleManager.Instance.CurrentMinionsList.ContainsKey(location))
             {
                 continue;
             }
@@ -163,9 +164,9 @@ public class UIBattle : UIBase
         {
             return;
         }
-        EnemyData enemyData = BattleManager.Instance.CurrentEnemyList[location];
+        EnemyData enemyData = (EnemyData)BattleManager.Instance.IdentifyCharacter(location);
         Enemy enemy = enemyData.EnemyTrans.GetComponent<Enemy>();
-        bool isMove = enemy.MyActionType == Enemy.ActionType.Move ? true : false;
+        bool isMove = enemy.MyActionType == Enemy.ActionType.Move;
         UIManager.Instance.ChangeCheckerboardColor(enemy.CurrentActionRangeTypeList, isMove);
         enemyInfo.SetActive(true);
         enemyName.text = enemyData.CharacterName;
@@ -207,21 +208,16 @@ public class UIBattle : UIBase
             var kvp = enemyList.ElementAt(i);
             string location = kvp.Key;
             EnemyData enemyData = kvp.Value;
-
             if (moveHistoryList.Contains(enemyData))  // 跳过已经移动过的敌人
             {
                 continue;
             }
-
             RectTransform enemyTrans = enemyData.EnemyTrans;
             Enemy enemy = enemyTrans.GetComponent<Enemy>();
             PlayerData playerData = BattleManager.Instance.CurrentPlayerData;
             Image enemyImage = enemy.EnemyImage;
             SetEnemyAttackRotation(enemyData, enemyImage, location);  // 设置敌人朝向
-
-            string playerLocation = BattleManager.Instance.CurrentLocationID;
-            inRange = enemy.CurrentActionRangeTypeList.Contains(playerLocation) || enemy.MyActionRangeType == BattleManager.ActionRangeType.None;
-
+            enemy.InRange = BattleManager.Instance.EnemyAttackInRange(enemy, location);
             switch (enemy.MyActionType)
             {
                 case Enemy.ActionType.Move:
@@ -237,10 +233,9 @@ public class UIBattle : UIBase
                     BattleManager.Instance.GetShield(enemyData, shieldCount);  // 处理护盾
                     break;
                 case Enemy.ActionType.Effect:
-                    ApplyEffect(enemyData, location);  // 处理效果
+                    ApplyEffect(enemy, enemyData, location);  // 处理效果
                     break;
             }
-
             UpdateAttackOrder(enemyData, enemy);  // 更新攻击顺序
             EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
             yield return new WaitForSecondsRealtime(0.5f);
@@ -264,6 +259,11 @@ public class UIBattle : UIBase
     // 处理敌人移动
     private IEnumerator HandleEnemyMove(string location, EnemyData enemyData, Enemy enemy, Image enemyImage, Dictionary<string, EnemyData> enemyDict)
     {
+        if (enemy.InRange)
+        {
+            SetEnemyAttackRotation(enemyData, enemyImage, BattleManager.Instance.CurrentLocationID);
+            yield break;
+        }
         string minLocation = BattleManager.Instance.GetCloseLocation(location, BattleManager.Instance.CurrentLocationID, enemyData.StepCount);
         List<string> routeList = BattleManager.Instance.GetRoute(location, minLocation, BattleManager.CheckEmptyType.Move);
         for (int k = 0; k < routeList.Count; k++)
@@ -294,8 +294,8 @@ public class UIBattle : UIBase
             {
                 enemy.MyAnimator.SetTrigger("isAttacking");
             }
-            yield return new WaitForSecondsRealtime(0.25f);
-            if (inRange)
+            yield return new WaitForSecondsRealtime(0.15f);
+            if (enemy.InRange)
             {
                 BattleManager.Instance.TakeDamage(enemyData, playerData, enemyData.CurrentAttack, BattleManager.Instance.CurrentLocationID, 0.5f);
             }
@@ -304,9 +304,9 @@ public class UIBattle : UIBase
     }
 
     // 应用敌人的效果
-    private void ApplyEffect(EnemyData enemyData, string location)
+    private void ApplyEffect(Enemy enemy, EnemyData enemyData, string location)
     {
-        if (inRange)
+        if (enemy.InRange)
         {
             string key = enemyData.AttackOrderStrs.ElementAt(enemyData.CurrentAttackOrder).Item1;
             int value = enemyData.AttackOrderStrs.ElementAt(enemyData.CurrentAttackOrder).Item2;
@@ -330,7 +330,9 @@ public class UIBattle : UIBase
     private void ChangeTurn()
     {
         if (BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack)
+        {
             return;
+        }
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Enemy);
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
@@ -366,7 +368,6 @@ public class UIBattle : UIBase
                     BattleManager.Instance.CurrentMinionsList.Remove(key);
                 }
                 Destroy(enemyData.EnemyTrans.gameObject, 1);
-                BattleManager.Instance.ClearAllEventTriggers();
                 CheckEnemyInfo();
             }
             enemy.IsDeath = true;
@@ -414,7 +415,9 @@ public class UIBattle : UIBase
     private void UsePotion(int itemID, int bagID)
     {
         if (BattleManager.Instance.MyBattleType == BattleManager.BattleType.Enemy)
+        {
             return;
+        }
         potionClueMenu.gameObject.SetActive(true);
         string[] effect = DataManager.Instance.ItemList[itemID].ItemEffectName.Split('=');
         string effectName = effect[0];
@@ -497,8 +500,6 @@ public class UIBattle : UIBase
         BattleManager.Instance.ManaMultiplier = 1;
         BattleManager.Instance.CurrentConsumeMana = 0;
         BattleManager.Instance.PlayerMoveCount++;
-        BattleManager.Instance.ClearAllEventTriggers();
-        CheckEnemyInfo();
         changeTurnButton.onClick.RemoveAllListeners();
         playerMoveButton.onClick.RemoveAllListeners();
         speedupButton.onClick.RemoveAllListeners();
@@ -507,6 +508,10 @@ public class UIBattle : UIBase
         playerMoveButton.onClick.AddListener(PlayerMove);
         roundTip.GetComponent<Image>().sprite = playerRound;
         StartCoroutine(UIManager.Instance.FadeOutIn(roundTip, 0.5f, 1, false));
+    }
+    private void EventDrawCard(params object[] args)
+    {
+        CheckEnemyInfo();
     }
     private void EventEnemyTurn(params object[] args)
     {
@@ -520,8 +525,7 @@ public class UIBattle : UIBase
     {
         BattleManager.Instance.RefreshCheckerboardList();
         UIManager.Instance.ClearMoveClue(true);
-        BattleManager.Instance.ClearAllEventTriggers();
-        CheckEnemyInfo();
+        //CheckEnemyInfo();
         // CheckBattleInfo();
     }
     private void EventTakeDamage(params object[] args)

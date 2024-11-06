@@ -11,7 +11,7 @@ public class EnemyData : CharacterData
     public string EnemyImagePath { get; set; }
     public string EnemyAniPath { get; set; }
     public RectTransform EnemyTrans { get; set; }
-    public int AlertDistance { get; set; }
+    public bool MeleeAttackMode { get; set; }
     public int AttackDistance { get; set; }
     public List<ValueTuple<string, int>> AttackOrderStrs { get; set; }
     public int CurrentAttackOrder { get; set; }
