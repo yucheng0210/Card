@@ -87,6 +87,8 @@ public class UIBattle : UIBase
     private Sprite enemyRound;
     [SerializeField]
     private Button speedupButton;
+    [SerializeField]
+    private CanvasGroup characterStatusClue;
     [Header("陷阱")]
     [SerializeField]
     private GameObject trapPrefab;
@@ -121,6 +123,7 @@ public class UIBattle : UIBase
         BattleManager.Instance.TrapPrefab = trapPrefab;
         BattleManager.Instance.TrapGroupTrans = trapGroupTrans;
         BattleManager.Instance.CheckerboardTrans = checkerboardTrans;
+        BattleManager.Instance.CharacterStatusClue = characterStatusClue;
         Hide();
     }
     private void CheckBattleInfo()
@@ -155,6 +158,7 @@ public class UIBattle : UIBase
                 UIManager.Instance.ClearMoveClue(false);
             };
             BattleManager.Instance.SetEventTrigger(eventTrigger, unityAction_1, unityAction_2);
+            BattleManager.Instance.TriggerEnemyPassiveSkill(location, false);
         }
     }
 
@@ -188,7 +192,7 @@ public class UIBattle : UIBase
     }
     private IEnumerator EnemyAttack()
     {
-        yield return new WaitForSecondsRealtime(1);
+        yield return new WaitForSecondsRealtime(1.5f);
         Dictionary<string, EnemyData> currentEnemyList = BattleManager.Instance.CurrentEnemyList;
         Dictionary<string, EnemyData> currentMinionsList = BattleManager.Instance.CurrentMinionsList;
         List<EnemyData> moveHistoryList = new();
@@ -311,6 +315,7 @@ public class UIBattle : UIBase
             string key = enemyData.AttackOrderStrs.ElementAt(enemyData.CurrentAttackOrder).Item1;
             int value = enemyData.AttackOrderStrs.ElementAt(enemyData.CurrentAttackOrder).Item2;
             EffectFactory.Instance.CreateEffect(key).ApplyEffect(value, location, BattleManager.Instance.CurrentLocationID);
+            BattleManager.Instance.ShowCharacterStatusClue(enemyData.EnemyTrans, EffectFactory.Instance.CreateEffect(key).SetTitleText());
         }
     }
 
@@ -343,6 +348,10 @@ public class UIBattle : UIBase
         bool containsCantMoveEffect = BattleManager.Instance.CurrentNegativeState.ContainsKey(nameof(CantMoveEffect));
         if (playerCantMove || notInAttack || containsCantMoveEffect)
         {
+            if (containsCantMoveEffect)
+            {
+                BattleManager.Instance.ShowCharacterStatusClue(BattleManager.Instance.PlayerTrans, "無法移動");
+            }
             return;
         }
         string playerLocation = BattleManager.Instance.CurrentLocationID;
@@ -357,7 +366,7 @@ public class UIBattle : UIBase
         if (enemyData.CurrentHealth <= 0 && !enemy.IsDeath)
         {
             enemy.MyAnimator.SetTrigger("isDeath");
-            if (!enemyData.PassiveSkills.ContainsKey("ResurrectionEffect"))
+            if (!enemy.EnemyOnceBattlePositiveList.ContainsKey(nameof(ResurrectionEffect)))
             {
                 if (currentEnemyList.ContainsKey(key))
                 {
@@ -433,6 +442,7 @@ public class UIBattle : UIBase
     {
         string playerLocation = BattleManager.Instance.CurrentLocationID;
         EffectFactory.Instance.CreateEffect(effectName).ApplyEffect(value, playerLocation, playerLocation);
+        BattleManager.Instance.ShowCharacterStatusClue(BattleManager.Instance.PlayerTrans, EffectFactory.Instance.CreateEffect(effectName).SetTitleText());
         DataManager.Instance.PotionBag.RemoveAt(bagID);
         potionClueMenu.gameObject.SetActive(false);
         RefreshPotionBag();
@@ -465,8 +475,7 @@ public class UIBattle : UIBase
             enemyData.EnemyTrans = enemyRect;
             enemyData.CurrentHealth = DataManager.Instance.EnemyList[enemy.EnemyID].MaxHealth;
             enemy.MyEnemyData = enemyData;
-            string location = BattleManager.Instance.GetEnemyKey(enemyData);
-            BattleManager.Instance.TriggerEnemyPassiveSkill(location, false);
+
             yield return null;
         }
 
@@ -534,10 +543,6 @@ public class UIBattle : UIBase
         if (BattleManager.Instance.CurrentLocationID != locationID)
         {
             RemoveEnemy(locationID);
-            if (BattleManager.Instance.CurrentEnemyList.ContainsKey(locationID))
-            {
-                BattleManager.Instance.TriggerEnemyPassiveSkill(locationID, false);
-            }
         }
         GameObject damageNum = Instantiate(damageNumPrefab, UI.transform);
         RectTransform damageRect = damageNum.GetComponent<RectTransform>();

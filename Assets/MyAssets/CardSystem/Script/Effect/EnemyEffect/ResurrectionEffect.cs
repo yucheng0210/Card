@@ -13,8 +13,10 @@ public class ResurrectionEffect : IEffect
 
     public void ApplyEffect(int value, string fromLocation, string toLocation)
     {
-        if (!BattleManager.Instance.CurrentEnemyList.TryGetValue(fromLocation, out enemyData) || enemyData.CurrentHealth > 0)
+        if (!BattleManager.Instance.CurrentEnemyList.TryGetValue(fromLocation, out enemyData))
+        {
             return;
+        }
         targetLocation = fromLocation;
         recoverCount = Mathf.RoundToInt(enemyData.MaxHealth * (value / 100f));
         enemy = enemyData.EnemyTrans.GetComponent<Enemy>();
@@ -24,7 +26,7 @@ public class ResurrectionEffect : IEffect
         enemyData.PassiveSkills.Remove(GetType().Name);
         enemyEffectImage.sprite = ((IEffect)this).SetIcon();
         enemy.EnemyEffectImage.SetActive(true);
-
+        enemy.EnemyOnceBattlePositiveList.Add(GetType().Name, 1);
         // 注册敌人回合结束事件
         EventManager.Instance.AddEventRegister(EventDefinition.eventEnemyTurn, EventEnemyTurn);
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
@@ -32,15 +34,15 @@ public class ResurrectionEffect : IEffect
 
     private void EventEnemyTurn(params object[] args)
     {
-        if (enemyData.CurrentHealth > 0) return;
-
+        if (enemyData.CurrentHealth > 0)
+        {
+            return;
+        }
+        enemy.EnemyOnceBattlePositiveList.Remove(GetType().Name);
         // 敌人复活
         enemy.IsDeath = false;
-        BattleManager.Instance.Recover(enemyData, recoverCount, targetLocation);
-
-        // 播放复活动画
         enemy.MyAnimator.SetTrigger("isResurrection");
-
+        BattleManager.Instance.Recover(enemyData, recoverCount, targetLocation);
         // 触发其他必要的事件
         EventManager.Instance.DispatchEvent(EventDefinition.eventMove);
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);

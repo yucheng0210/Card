@@ -60,7 +60,7 @@ public class Enemy : MonoBehaviour
     private void Start()
     {
         EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
-        //EventManager.Instance.AddEventRegister(EventDefinition.eventMove, EventMove);
+        EventManager.Instance.AddEventRegister(EventDefinition.eventRefreshUI, EventRefreshUI);
         EnemyOnceBattlePositiveList = new Dictionary<string, int>();
         currentEnemyList = BattleManager.Instance.CurrentEnemyList;
     }
@@ -226,6 +226,7 @@ public class Enemy : MonoBehaviour
         if (isKnockBack)
         {
             EffectFactory.Instance.CreateEffect("KnockBackEffect").ApplyEffect(1, startLocation, endLocation);
+            BattleManager.Instance.ShowCharacterStatusClue(transform, EffectFactory.Instance.CreateEffect(endLocation).SetTitleText());
         }
         BattleManager.Instance.Replace(currentEnemyList, startLocation, endLocation);
         MySequence = null;
@@ -235,9 +236,8 @@ public class Enemy : MonoBehaviour
         BattleManager.Instance.RefreshCheckerboardList();
         RefreshAttackIntent();
     }
-    private void EventMove(params object[] args)
+    private void EventRefreshUI(params object[] args)
     {
-        BattleManager.Instance.RefreshCheckerboardList();
-        RefreshAttackIntent();
+        enemyAttackIntentText.text = MyEnemyData.CurrentAttack.ToString();
     }
 }

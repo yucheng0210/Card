@@ -109,7 +109,7 @@ public class CardCreater : MonoBehaviour
     }
     private IEnumerator DrawCard(int addCardCount)
     {
-        yield return new WaitForSecondsRealtime(1);
+        yield return new WaitForSecondsRealtime(1.5f);
         List<CardData> handCard = DataManager.Instance.HandCard;
         List<CardData> cardBag = DataManager.Instance.CardBag;
         int maxCardCount = handCard.Count + addCardCount;

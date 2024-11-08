@@ -58,7 +58,9 @@ public class ThornsEffect : IEffect
         BattleManager.Instance.TakeDamage(counterattacker, counterattackTarget, counterattackDamage, targetLocationID, 0.5f);
 
         if (!currentEnemyList.ContainsKey(counterattackerID) && BattleManager.Instance.CurrentLocationID != counterattackerID)
+        {
             EventManager.Instance.RemoveEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
+        }
     }
     public string SetTitleText()
     {

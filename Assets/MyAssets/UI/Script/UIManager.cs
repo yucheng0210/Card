@@ -48,7 +48,9 @@ public class UIManager : Singleton<UIManager>
             yield return null;
         }
         if (canDestroy)
+        {
             Destroy(canvasGroup.gameObject);
+        }
     }
 
     public IEnumerator FadeOut(CanvasGroup canvasGroup, float fadeTime)
@@ -135,7 +137,7 @@ public class UIManager : Singleton<UIManager>
     public void ClearMoveClue(bool canRemove)
     {
         RectTransform checkerboardTrans = BattleManager.Instance.CheckerboardTrans;
-        Color color = new Color(1, 1, 1, 0);
+        Color color = new(1, 1, 1, 0);
         for (int i = 0; i < checkerboardTrans.childCount; i++)
         {
             Image checkerboardImage = checkerboardTrans.GetChild(i).GetComponent<Image>();
@@ -149,8 +151,7 @@ public class UIManager : Singleton<UIManager>
     }
     public void ChangeCheckerboardColor(List<string> emptyPlaceList, bool isMove)
     {
-        //ClearMoveClue(false);
-        Color color = new Color(1, 1, 1, 1);
+        Color color = new(1, 1, 1, 1);
         RectTransform checkerboardTrans = BattleManager.Instance.CheckerboardTrans;
         for (int i = 0; i < emptyPlaceList.Count; i++)
         {
@@ -182,7 +183,6 @@ public class UIManager : Singleton<UIManager>
     private void RefreshCardSelect(int removeID, UnityEngine.Events.UnityAction unityAction)
     {
         BattleManager.Instance.CardBagApplyButton.gameObject.SetActive(true);
-        // exitButton.gameObject.SetActive(true);
         CurrentRemoveID = removeID;
         BattleManager.Instance.CardBagApplyButton.onClick.RemoveAllListeners();
         for (int i = 0; i < BattleManager.Instance.CardMenuTrans.childCount; i++)

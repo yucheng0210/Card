@@ -33,7 +33,9 @@ public class FuriousEffect : IEffect
             return;
         }
         if (args.Length < 5)
+        {
             return;
+        }
         // 獲取攻擊者
         CharacterData attacker = (CharacterData)args[4];
 

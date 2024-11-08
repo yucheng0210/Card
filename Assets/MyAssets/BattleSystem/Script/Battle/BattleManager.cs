@@ -68,6 +68,7 @@ public class BattleManager : Singleton<BattleManager>
     public CardItem CardPrefab { get; set; }
     public GameObject TrapPrefab { get; set; }
     public Transform TrapGroupTrans { get; set; }
+    public CanvasGroup CharacterStatusClue { get; set; }
     public Dictionary<string, int> CurrentNegativeState { get; set; }
     public Dictionary<string, int> CurrentAbilityList { get; set; }
     public Dictionary<string, int> CurrentOnceBattlePositiveList { get; set; }
@@ -163,6 +164,7 @@ public class BattleManager : Singleton<BattleManager>
         {
             string key = enemyData.PassiveSkills.ElementAt(i).Key;
             EffectFactory.Instance.CreateEffect(key).ApplyEffect(enemyData.PassiveSkills[key], locationID, CurrentLocationID);
+            ShowCharacterStatusClue(enemyData.EnemyTrans, EffectFactory.Instance.CreateEffect(key).SetTitleText());
         }
     }
     public void SetEventTrigger(EventTrigger eventTrigger, UnityAction unityAction_1, UnityAction unityAction_2)
@@ -878,5 +880,13 @@ public class BattleManager : Singleton<BattleManager>
         EnemyData enemyData = enemy.MyEnemyData;
         List<string> attackRangeList = GetAcitonRangeTypeList(location, enemyData.AttackDistance, CheckEmptyType.EnemyAttack, enemy.MyNextAttackActionRangeType);
         return attackRangeList.Contains(CurrentLocationID) || enemy.MyNextAttackActionRangeType == ActionRangeType.None;
+    }
+    public void ShowCharacterStatusClue(Transform trans, string des)
+    {
+        CanvasGroup clue = Instantiate(CharacterStatusClue, trans);
+        Text clueText = clue.GetComponent<Text>();
+        clueText.text = des;
+        DG.Tweening.Sequence sequence = DOTween.Sequence();
+        sequence.Append(clue.transform.DOLocalMoveY(100, 0.5f)).AppendCallback(() => StartCoroutine(UIManager.Instance.FadeIn(clue, 1f)));
     }
 }

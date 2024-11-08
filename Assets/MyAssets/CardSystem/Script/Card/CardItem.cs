@@ -233,20 +233,21 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     private bool GetUseCardCondition()
     {
         PlayerData playerData = BattleManager.Instance.CurrentPlayerData;
-        return playerData.CurrentActionPoint >= MyCardData.CardCost && playerData.Mana >= MyCardData.CardManaCost;
+        bool hasEnoughActionPoints = playerData.CurrentActionPoint >= MyCardData.CardCost;
+        bool hasEnoughMana = playerData.Mana >= MyCardData.CardManaCost;
+        bool isNotInAttackPhase = BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack;
+        bool isCardCostNegative = MyCardData.CardCost < 0;
+        if (!hasEnoughActionPoints)
+        {
+            BattleManager.Instance.ShowCharacterStatusClue(BattleManager.Instance.PlayerTrans, "行動力不足");
+        }
+        return hasEnoughActionPoints && hasEnoughMana && !isNotInAttackPhase && !isCardCostNegative;
+
     }
     private void UseCard(string target)
     {
-        if (BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack)
-        {
-            return;
-        }
         CardData cardData = MyCardData;
         if (BattleManager.Instance.CurrentNegativeState.ContainsKey(nameof(CantMoveEffect)) && cardData.CardType == "移動")
-        {
-            return;
-        }
-        if (cardData.CardCost < 0)
         {
             return;
         }
@@ -288,6 +289,7 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                 continue;
             }
             EffectFactory.Instance.CreateEffect(effectID).ApplyEffect(effectCount, BattleManager.Instance.CurrentLocationID, target);
+            BattleManager.Instance.ShowCharacterStatusClue(BattleManager.Instance.PlayerTrans, EffectFactory.Instance.CreateEffect(effectID).SetTitleText());
         }
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
         gameObject.SetActive(false);
