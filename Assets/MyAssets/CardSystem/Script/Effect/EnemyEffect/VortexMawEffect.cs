@@ -7,7 +7,7 @@ public class VortexMawEffect : IEffect
 {
     public void ApplyEffect(int value, string fromLocation, string toLocation)
     {
-        List<string> emptyPlaceList = BattleManager.Instance.GetAcitonRangeTypeList(fromLocation, value, BattleManager.CheckEmptyType.EnemyAttack, SetEffectAttackType());
+        List<string> emptyPlaceList = BattleManager.Instance.GetActionRangeTypeList(fromLocation, value, BattleManager.CheckEmptyType.EnemyAttack, SetEffectAttackType());
         Dictionary<string, EnemyData> currentEnemyList = BattleManager.Instance.CurrentEnemyList;
         string playerLocation = BattleManager.Instance.CurrentLocationID;
         if (emptyPlaceList.Contains(playerLocation))

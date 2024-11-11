@@ -221,7 +221,7 @@ public class UIBattle : UIBase
             PlayerData playerData = BattleManager.Instance.CurrentPlayerData;
             Image enemyImage = enemy.EnemyImage;
             SetEnemyAttackRotation(enemyData, enemyImage, location);  // 设置敌人朝向
-            enemy.InRange = BattleManager.Instance.EnemyAttackInRange(enemy, location);
+            enemy.InRange = BattleManager.Instance.IsInEnemyAttackRange(enemy);
             switch (enemy.MyActionType)
             {
                 case Enemy.ActionType.Move:
@@ -263,12 +263,13 @@ public class UIBattle : UIBase
     // 处理敌人移动
     private IEnumerator HandleEnemyMove(string location, EnemyData enemyData, Enemy enemy, Image enemyImage, Dictionary<string, EnemyData> enemyDict)
     {
+        string playerLocation = BattleManager.Instance.CurrentLocationID;
         if (enemy.InRange)
         {
-            SetEnemyAttackRotation(enemyData, enemyImage, BattleManager.Instance.CurrentLocationID);
+            SetEnemyAttackRotation(enemyData, enemyImage, playerLocation);
             yield break;
         }
-        string minLocation = BattleManager.Instance.GetCloseLocation(location, BattleManager.Instance.CurrentLocationID, enemyData.StepCount);
+        string minLocation = BattleManager.Instance.GetCloseLocation(location, playerLocation, enemyData.StepCount, enemy.MyNextAttackActionRangeType);
         List<string> routeList = BattleManager.Instance.GetRoute(location, minLocation, BattleManager.CheckEmptyType.Move);
         for (int k = 0; k < routeList.Count; k++)
         {
@@ -343,12 +344,12 @@ public class UIBattle : UIBase
     }
     private void PlayerMove()
     {
-        bool playerCantMove = BattleManager.Instance.PlayerMoveCount <= 0;
+        bool playerCantMove = BattleManager.Instance.PlayerMoveCount < BattleManager.Instance.PlayerOnceMoveConsume;
         bool notInAttack = BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack;
         bool containsCantMoveEffect = BattleManager.Instance.CurrentNegativeState.ContainsKey(nameof(CantMoveEffect));
         if (playerCantMove || notInAttack || containsCantMoveEffect)
         {
-            if (containsCantMoveEffect)
+            if (containsCantMoveEffect || playerCantMove)
             {
                 BattleManager.Instance.ShowCharacterStatusClue(BattleManager.Instance.PlayerTrans, "無法移動");
             }

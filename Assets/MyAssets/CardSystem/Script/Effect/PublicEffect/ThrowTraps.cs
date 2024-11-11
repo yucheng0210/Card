@@ -8,7 +8,7 @@ public class ThrowTraps : IEffect
     {
         EnemyData enemyData = BattleManager.Instance.CurrentEnemyList[fromLocation];
         BattleManager.CheckEmptyType checkEmptyType = BattleManager.CheckEmptyType.EnemyAttack;
-        List<string> trapList = BattleManager.Instance.GetAcitonRangeTypeList(fromLocation, enemyData.AttackDistance, checkEmptyType, SetEffectAttackType());
+        List<string> trapList = BattleManager.Instance.GetActionRangeTypeList(fromLocation, enemyData.AttackDistance, checkEmptyType, SetEffectAttackType());
         BattleManager.Instance.AddTrap(trapList, value);
     }
     public string SetTitleText()

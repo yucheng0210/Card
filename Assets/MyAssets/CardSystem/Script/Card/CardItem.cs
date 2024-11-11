@@ -128,7 +128,7 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         transform.SetAsLastSibling();
         string location = BattleManager.Instance.CurrentLocationID;
         int cardAttackDistance = MyCardData.CardAttackDistance;
-        List<string> emptyPlaceList = BattleManager.Instance.GetAcitonRangeTypeList(location, cardAttackDistance, BattleManager.CheckEmptyType.PlayerAttack, BattleManager.ActionRangeType.Default);
+        List<string> emptyPlaceList = BattleManager.Instance.GetActionRangeTypeList(location, cardAttackDistance, BattleManager.CheckEmptyType.PlayerAttack, BattleManager.ActionRangeType.Default);
         UIManager.Instance.ChangeCheckerboardColor(emptyPlaceList, false);
     }
 
@@ -225,7 +225,7 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         BattleManager.CheckEmptyType checkEmptyType = BattleManager.CheckEmptyType.PlayerAttack;
         BattleManager.ActionRangeType actionRangeType = BattleManager.ActionRangeType.Default;
         // 獲取行動範圍內的空位置列表
-        List<string> emptyPlaceList = BattleManager.Instance.GetAcitonRangeTypeList(id, attackDistance, checkEmptyType, actionRangeType);
+        List<string> emptyPlaceList = BattleManager.Instance.GetActionRangeTypeList(id, attackDistance, checkEmptyType, actionRangeType);
         // 使用 List.Contains 簡化判斷
         return emptyPlaceList.Contains(enemyLocation);
     }

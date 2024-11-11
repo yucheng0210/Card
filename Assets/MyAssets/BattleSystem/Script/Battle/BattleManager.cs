@@ -329,7 +329,7 @@ public class BattleManager : Singleton<BattleManager>
         // 計算歐幾里得距離
         return Mathf.Sqrt(deltaX * deltaX + deltaY * deltaY);
     }
-    public List<string> GetAcitonRangeTypeList(string location, int stepCount, CheckEmptyType checkEmptyType, ActionRangeType actionRangeType)
+    public List<string> GetActionRangeTypeList(string location, int stepCount, CheckEmptyType checkEmptyType, ActionRangeType actionRangeType)
     {
         List<string> emptyPlaceList = new();
         switch (actionRangeType)
@@ -346,12 +346,10 @@ public class BattleManager : Singleton<BattleManager>
             case ActionRangeType.Default:
                 emptyPlaceList = GetEmptyPlace(location, stepCount, checkEmptyType, true);
                 break;
-            case ActionRangeType.Jump:
-                emptyPlaceList = GetThrowExplosionList(location, CurrentLocationID, stepCount);
-                break;
             case ActionRangeType.StraightCharge:
                 emptyPlaceList = GetStraightChargeList(location, CurrentLocationID, stepCount);
                 break;
+            case ActionRangeType.Jump:
             case ActionRangeType.ThrowExplosion:
                 emptyPlaceList = GetThrowExplosionList(location, CurrentLocationID, stepCount);
                 break;
@@ -512,13 +510,13 @@ public class BattleManager : Singleton<BattleManager>
     }
     private List<string> GetThrowExplosionList(string fromLocation, string toLocation, int attackDistance)
     {
-        string destinationLocation = GetCloseLocation(fromLocation, toLocation, attackDistance);
-        return GetAcitonRangeTypeList(destinationLocation, attackDistance, CheckEmptyType.EnemyAttack, ActionRangeType.Surrounding);
+        string destinationLocation = GetCloseLocation(fromLocation, toLocation, attackDistance, ActionRangeType.Surrounding);
+        return GetActionRangeTypeList(destinationLocation, attackDistance, CheckEmptyType.EnemyAttack, ActionRangeType.Surrounding);
     }
     private List<string> GetThrowScatteringList(string fromLocation, string toLocation, int attackDistance)
     {
-        string destinationLocation = GetCloseLocation(fromLocation, toLocation, attackDistance);
-        List<string> emptyPlaceList = GetAcitonRangeTypeList(destinationLocation, 2, CheckEmptyType.Move, ActionRangeType.Surrounding);
+        string destinationLocation = GetCloseLocation(fromLocation, toLocation, attackDistance, ActionRangeType.Surrounding);
+        List<string> emptyPlaceList = GetActionRangeTypeList(destinationLocation, 2, CheckEmptyType.Move, ActionRangeType.Surrounding);
         List<string> throwLocationList = new();
         int throwCount = emptyPlaceList.Count > 3 ? 3 : emptyPlaceList.Count;
         for (int i = 0; i < throwCount; i++)
@@ -527,29 +525,25 @@ public class BattleManager : Singleton<BattleManager>
             throwLocationList.Add(emptyPlaceList[randomIndex]);
             emptyPlaceList.RemoveAt(randomIndex);
         }
-        return GetAcitonRangeTypeList(destinationLocation, attackDistance, CheckEmptyType.EnemyAttack, ActionRangeType.Surrounding);
+        return GetActionRangeTypeList(destinationLocation, attackDistance, CheckEmptyType.EnemyAttack, ActionRangeType.Surrounding);
     }
-    public string GetCloseLocation(string fromLocation, string toLocation, int attackDistance)
+    public string GetCloseLocation(string fromLocation, string toLocation, int attackDistance, ActionRangeType enemyAttackAction)
     {
         EnemyData enemyData = (EnemyData)IdentifyCharacter(fromLocation);
         Enemy enemy = enemyData.EnemyTrans.GetComponent<Enemy>();
-        List<string> emptyPlaceList = GetAcitonRangeTypeList(fromLocation, attackDistance, CheckEmptyType.Move, ActionRangeType.Default);
+        List<string> emptyPlaceList = GetActionRangeTypeList(fromLocation, attackDistance, CheckEmptyType.Move, ActionRangeType.Default);
 
         string minLocation = emptyPlaceList[0];
         int minDistance = GetRoute(minLocation, toLocation, CheckEmptyType.EnemyAttack).Count;
 
-        // 儲存符合 EnemyAttackInRange 的位置及距離
         string bestInRangeLocation = null;
         int bestInRangeDistance = enemyData.MeleeAttackMode ? int.MaxValue : int.MinValue;
-
-        // 遍歷空位列表
         for (int j = 1; j < emptyPlaceList.Count; j++)
         {
             string targetLocation = emptyPlaceList[j];
             int targetDistance = GetRoute(targetLocation, toLocation, CheckEmptyType.EnemyAttack).Count;
 
-            // 若符合 EnemyAttackInRange 條件，並檢查距離
-            if (EnemyAttackInRange(enemy, targetLocation))
+            if (IsInEnemyAttackRange(enemy, targetLocation, enemyAttackAction))
             {
                 bool bestInRangeCondition = enemyData.MeleeAttackMode ? targetDistance < bestInRangeDistance : targetDistance > bestInRangeDistance;
                 if (bestInRangeCondition)
@@ -565,9 +559,9 @@ public class BattleManager : Singleton<BattleManager>
             }
         }
 
-        // 若有符合 EnemyAttackInRange 的位置，則回傳距離最短的該選項
         return bestInRangeLocation ?? minLocation;
     }
+
 
 
     public void RefreshCheckerboardList()
@@ -875,10 +869,17 @@ public class BattleManager : Singleton<BattleManager>
         dictionary.Remove(oldKey);
         dictionary.Add(newKey, value);
     }
-    public bool EnemyAttackInRange(Enemy enemy, string location)
+    public bool IsInEnemyAttackRange(Enemy enemy)
     {
         EnemyData enemyData = enemy.MyEnemyData;
-        List<string> attackRangeList = GetAcitonRangeTypeList(location, enemyData.AttackDistance, CheckEmptyType.EnemyAttack, enemy.MyNextAttackActionRangeType);
+        string location = GetEnemyKey(enemyData);
+        List<string> attackRangeList = GetActionRangeTypeList(location, enemyData.AttackDistance, CheckEmptyType.EnemyAttack, enemy.MyNextAttackActionRangeType);
+        return attackRangeList.Contains(CurrentLocationID) || enemy.MyNextAttackActionRangeType == ActionRangeType.None;
+    }
+    public bool IsInEnemyAttackRange(Enemy enemy, string enemyTargetLocation, ActionRangeType actionRangeType)
+    {
+        EnemyData enemyData = enemy.MyEnemyData;
+        List<string> attackRangeList = GetActionRangeTypeList(enemyTargetLocation, enemyData.AttackDistance, CheckEmptyType.EnemyAttack, actionRangeType);
         return attackRangeList.Contains(CurrentLocationID) || enemy.MyNextAttackActionRangeType == ActionRangeType.None;
     }
     public void ShowCharacterStatusClue(Transform trans, string des)

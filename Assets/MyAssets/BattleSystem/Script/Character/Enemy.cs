@@ -74,7 +74,7 @@ public class Enemy : MonoBehaviour
         string location = BattleManager.Instance.GetEnemyKey(MyEnemyData);
         float distance = BattleManager.Instance.GetRoute(location, BattleManager.Instance.CurrentLocationID, BattleManager.CheckEmptyType.EnemyAttack).Count;
         HandleAttack(location);
-        InRange = BattleManager.Instance.EnemyAttackInRange(this, location);
+        InRange = BattleManager.Instance.IsInEnemyAttackRange(this);
         ResetUIElements();
         if (distance == 0)
         {
@@ -126,7 +126,7 @@ public class Enemy : MonoBehaviour
         {
             ActivateEffect(attackOrder);
         }
-        CurrentActionRangeTypeList = BattleManager.Instance.GetAcitonRangeTypeList(location, actionRangeDistance, MyCheckEmptyType, MyNextAttackActionRangeType);
+        CurrentActionRangeTypeList = BattleManager.Instance.GetActionRangeTypeList(location, actionRangeDistance, MyCheckEmptyType, MyNextAttackActionRangeType);
     }
 
     private void ActivateShield()
@@ -160,7 +160,7 @@ public class Enemy : MonoBehaviour
         infoDescription.text = "進行移動。";
         MyActionType = ActionType.Move;
         MyCheckEmptyType = BattleManager.CheckEmptyType.Move;
-        CurrentActionRangeTypeList = BattleManager.Instance.GetAcitonRangeTypeList(location, actionRangeDistance, MyCheckEmptyType, actionRangeType);
+        CurrentActionRangeTypeList = BattleManager.Instance.GetActionRangeTypeList(location, actionRangeDistance, MyCheckEmptyType, actionRangeType);
         enemyAttackIntentText.enabled = false;
         enemyMove.SetActive(true);
     }
@@ -213,7 +213,7 @@ public class Enemy : MonoBehaviour
         string enemyLocation = BattleManager.Instance.GetEnemyKey(MyEnemyData);
         int attackDistance = MyEnemyData.AttackDistance;
         BattleManager.ActionRangeType actionRangeType = BattleManager.ActionRangeType.Linear;
-        List<string> emptyPlaceList = BattleManager.Instance.GetAcitonRangeTypeList(enemyLocation, attackDistance, MyCheckEmptyType, actionRangeType);
+        List<string> emptyPlaceList = BattleManager.Instance.GetActionRangeTypeList(enemyLocation, attackDistance, MyCheckEmptyType, actionRangeType);
         string destinationLocation = emptyPlaceList.Count > 0 ? emptyPlaceList[^1] : enemyLocation;
         RectTransform enemyRect = GetComponent<RectTransform>();
         int checkerboardPoint = BattleManager.Instance.GetCheckerboardPoint(destinationLocation);
