@@ -13,8 +13,12 @@ public class KnockBackEffect : IEffect
         Vector2 direction;
         Vector2Int destinationPoint;
         targetData = BattleManager.Instance.IdentifyCharacter(toLocation);
-        direction = new Vector2(defenderPos[0] - attackerPos[0], defenderPos[1] - attackerPos[1]).normalized;
-        destinationPoint = new Vector2Int(defenderPos[0] + (int)direction.x, defenderPos[1] + (int)direction.y);
+        direction = new Vector2(defenderPos[0] - attackerPos[0], defenderPos[1] - attackerPos[1]);
+        // 將向量的分量限制在 [-1, 1]，使用 Mathf.Round 進行舍入
+        int limitedX = Mathf.Clamp(Mathf.RoundToInt(direction.x), -1, 1);
+        int limitedY = Mathf.Clamp(Mathf.RoundToInt(direction.y), -1, 1);
+        // 計算目標位置
+        destinationPoint = new Vector2Int(defenderPos[0] + limitedX, defenderPos[1] + limitedY);
         string destinationLocation = BattleManager.Instance.ConvertCheckerboardPos(destinationPoint.x, destinationPoint.y);
         if (!BattleManager.Instance.CheckerboardList.ContainsKey(destinationLocation))
         {
@@ -25,7 +29,7 @@ public class KnockBackEffect : IEffect
         if (toLocation == BattleManager.Instance.CurrentLocationID)
         {
             BattleManager.Instance.PlayerTrans.DOAnchorPos(destination, 0.2f);
-            BattleManager.Instance.CurrentLocationID = destinationLocation; ;
+            BattleManager.Instance.CurrentLocationID = destinationLocation;
         }
         else
         {
@@ -37,11 +41,11 @@ public class KnockBackEffect : IEffect
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
 
-    public string SetDescriptionText()
-    {
-        throw new System.NotImplementedException();
-    }
     public string SetTitleText()
+    {
+        return "擊退";
+    }
+    public string SetDescriptionText()
     {
         throw new System.NotImplementedException();
     }

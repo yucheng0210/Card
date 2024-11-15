@@ -179,6 +179,10 @@ public class Enemy : MonoBehaviour
         infoDescription.text = "發動攻擊。";
         enemyAttackIntentText.text = MyEnemyData.CurrentAttack.ToString();
         enemyAttack.SetActive(true);
+        SetAttackActionRangeType();
+    }
+    private void SetAttackActionRangeType()
+    {
         switch (MyNextAttackActionRangeType)
         {
             case BattleManager.ActionRangeType.Jump:
@@ -226,7 +230,7 @@ public class Enemy : MonoBehaviour
         if (isKnockBack)
         {
             EffectFactory.Instance.CreateEffect("KnockBackEffect").ApplyEffect(1, startLocation, endLocation);
-            BattleManager.Instance.ShowCharacterStatusClue(transform, EffectFactory.Instance.CreateEffect(endLocation).SetTitleText());
+            BattleManager.Instance.ShowCharacterStatusClue(transform, EffectFactory.Instance.CreateEffect("KnockBackEffect").SetTitleText());
         }
         BattleManager.Instance.Replace(currentEnemyList, startLocation, endLocation);
         MySequence = null;
@@ -239,5 +243,9 @@ public class Enemy : MonoBehaviour
     private void EventRefreshUI(params object[] args)
     {
         enemyAttackIntentText.text = MyEnemyData.CurrentAttack.ToString();
+        if (MyActionType == ActionType.Attack)
+        {
+            SetAttackActionRangeType();
+        }
     }
 }

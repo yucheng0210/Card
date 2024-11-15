@@ -293,17 +293,24 @@ public class UIBattle : UIBase
         {
             if (enemy.MySequence != null)
             {
+                enemy.MySequence.AppendCallback(() =>
+                {
+                    if (enemy.InRange)
+                    {
+                        BattleManager.Instance.TakeDamage(enemyData, playerData, enemyData.CurrentAttack, BattleManager.Instance.CurrentLocationID, 0);
+                    }
+                });
                 enemy.MySequence.Play();
             }
             else
             {
+                if (enemy.InRange)
+                {
+                    BattleManager.Instance.TakeDamage(enemyData, playerData, enemyData.CurrentAttack, BattleManager.Instance.CurrentLocationID, 0.15f);
+                }
                 enemy.MyAnimator.SetTrigger("isAttacking");
             }
-            yield return new WaitForSecondsRealtime(0.15f);
-            if (enemy.InRange)
-            {
-                BattleManager.Instance.TakeDamage(enemyData, playerData, enemyData.CurrentAttack, BattleManager.Instance.CurrentLocationID, 0.5f);
-            }
+
             yield return new WaitForSecondsRealtime(0.5f);
         }
     }
