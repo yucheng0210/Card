@@ -32,6 +32,7 @@ public class BattleManager : Singleton<BattleManager>
         Default,
         Linear,
         Surrounding,
+        SurroundingExplosion,
         Cone,
         Jump,
         StraightCharge,
@@ -106,11 +107,11 @@ public class BattleManager : Singleton<BattleManager>
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            for (int i = 0; i < CurrentEnemyList.Count; i++)
+            /*for (int i = 0; i < CurrentEnemyList.Count; i++)
             {
                 CharacterData value = CurrentEnemyList.ElementAt(i).Value;
                 TakeDamage(CurrentPlayerData, value, 20, CurrentEnemyList.ElementAt(i).Key, 0);
-            }
+            }*/
             /* for (int i = 0; i < CurrentEnemyList.Count; i++)
              {
                  Debug.Log(CurrentEnemyList.ElementAt(i).Key == CurrentEnemyList[CurrentEnemyList.ElementAt(i).Key].EnemyTrans.GetComponent<Enemy>().EnemyLocation);
@@ -220,7 +221,7 @@ public class BattleManager : Singleton<BattleManager>
         string[] points = point.Split(' ');
         return int.Parse(points[0]) + int.Parse(points[1]) * 8;
     }
-    private List<string> GetEmptyPlace(string location, int stepCount, CheckEmptyType checkEmptyType, bool isBFS)
+    private List<string> GetEmptyPlace(string location, int stepCount, CheckEmptyType checkEmptyType, bool isBFS, bool isContainStartPos)
     {
         List<string> emptyPlaceList = new();
         int[] pos = ConvertNormalPos(location);
@@ -233,18 +234,22 @@ public class BattleManager : Singleton<BattleManager>
         {
             for (int y = minY; y <= maxY; y++)
             {
-                string targetPos = ConvertCheckerboardPos(x, y);
-                int testStepCount = GetRoute(location, targetPos, checkEmptyType).Count;
+                string targetLocation = ConvertCheckerboardPos(x, y);
+                int testStepCount = GetRoute(location, targetLocation, checkEmptyType).Count;
                 // 跳過起始點
-                if ((x == point.x && y == point.y) || testStepCount == 0)
+                if (targetLocation == location || testStepCount == 0)
                 {
                     continue;
                 }
-                if ((testStepCount <= stepCount || !isBFS) && CheckPlaceEmpty(targetPos, checkEmptyType))
+                if ((testStepCount <= stepCount || !isBFS) && CheckPlaceEmpty(targetLocation, checkEmptyType))
                 {
-                    emptyPlaceList.Add(targetPos);
+                    emptyPlaceList.Add(targetLocation);
                 }
             }
+        }
+        if (isContainStartPos)
+        {
+            emptyPlaceList.Insert(0, location);
         }
         return emptyPlaceList;
     }
@@ -317,7 +322,6 @@ public class BattleManager : Singleton<BattleManager>
         // 若沒有找到路徑，則返回空列表
         return new List<string>();
     }
-
     public float CalculateDistance(string fromLocation, string toLocation)
     {
         int[] startPos = ConvertNormalPos(fromLocation);  // 從字符串位置轉換為座標
@@ -338,23 +342,26 @@ public class BattleManager : Singleton<BattleManager>
                 emptyPlaceList = GetLinearAttackList(location, CurrentLocationID, stepCount); // 特定條件
                 break;
             case ActionRangeType.Surrounding:
-                emptyPlaceList = GetEmptyPlace(location, stepCount, checkEmptyType, false); // 特定條件
+                emptyPlaceList = GetEmptyPlace(location, stepCount, checkEmptyType, false, false); // 特定條件
+                break;
+            case ActionRangeType.SurroundingExplosion:
+                emptyPlaceList = GetEmptyPlace(location, stepCount, checkEmptyType, false, true); // 特定條件
                 break;
             case ActionRangeType.Cone:
                 emptyPlaceList = GetConeAttackList(location, CurrentLocationID, stepCount); // 特定條件
                 break;
             case ActionRangeType.Default:
-                emptyPlaceList = GetEmptyPlace(location, stepCount, checkEmptyType, true);
+                emptyPlaceList = GetEmptyPlace(location, stepCount, checkEmptyType, true, false);
                 break;
             case ActionRangeType.StraightCharge:
                 emptyPlaceList = GetStraightChargeList(location, CurrentLocationID, stepCount);
                 break;
             case ActionRangeType.Jump:
             case ActionRangeType.ThrowExplosion:
-                emptyPlaceList = GetThrowExplosionList(location, CurrentLocationID, stepCount);
+                emptyPlaceList = GetThrowExplosionList(stepCount);
                 break;
             case ActionRangeType.ThrowScattering:
-                emptyPlaceList = GetThrowScatteringList(location, CurrentLocationID, stepCount);
+                emptyPlaceList = GetThrowScatteringList(stepCount);
                 break;
         }
         return emptyPlaceList;
@@ -508,15 +515,13 @@ public class BattleManager : Singleton<BattleManager>
 
         return straightChargeList;
     }
-    private List<string> GetThrowExplosionList(string fromLocation, string toLocation, int attackDistance)
+    private List<string> GetThrowExplosionList(int attackDistance)
     {
-        string destinationLocation = GetCloseLocation(fromLocation, toLocation, attackDistance, ActionRangeType.Surrounding);
-        return GetActionRangeTypeList(destinationLocation, attackDistance, CheckEmptyType.EnemyAttack, ActionRangeType.Surrounding);
+        return GetActionRangeTypeList(CurrentLocationID, attackDistance, CheckEmptyType.EnemyAttack, ActionRangeType.SurroundingExplosion);
     }
-    private List<string> GetThrowScatteringList(string fromLocation, string toLocation, int attackDistance)
+    private List<string> GetThrowScatteringList(int attackDistance)
     {
-        string destinationLocation = GetCloseLocation(fromLocation, toLocation, attackDistance, ActionRangeType.Surrounding);
-        List<string> emptyPlaceList = GetActionRangeTypeList(destinationLocation, 2, CheckEmptyType.Move, ActionRangeType.Surrounding);
+        List<string> emptyPlaceList = GetActionRangeTypeList(CurrentLocationID, 2, CheckEmptyType.EnemyAttack, ActionRangeType.SurroundingExplosion);
         List<string> throwLocationList = new();
         int throwCount = emptyPlaceList.Count > 3 ? 3 : emptyPlaceList.Count;
         for (int i = 0; i < throwCount; i++)
@@ -525,25 +530,22 @@ public class BattleManager : Singleton<BattleManager>
             throwLocationList.Add(emptyPlaceList[randomIndex]);
             emptyPlaceList.RemoveAt(randomIndex);
         }
-        return GetActionRangeTypeList(destinationLocation, attackDistance, CheckEmptyType.EnemyAttack, ActionRangeType.Surrounding);
+        return GetActionRangeTypeList(CurrentLocationID, attackDistance, CheckEmptyType.EnemyAttack, ActionRangeType.Surrounding);
     }
-    public string GetCloseLocation(string fromLocation, string toLocation, int attackDistance, ActionRangeType enemyAttackAction)
+    public string GetCloseLocation(string fromLocation, string toLocation, int attackDistance, ActionRangeType enemyAttackAction, CheckEmptyType checkEmptyType)
     {
         EnemyData enemyData = (EnemyData)IdentifyCharacter(fromLocation);
         Enemy enemy = enemyData.EnemyTrans.GetComponent<Enemy>();
-        List<string> emptyPlaceList = GetActionRangeTypeList(fromLocation, attackDistance, CheckEmptyType.Move, ActionRangeType.Default);
-
+        List<string> emptyPlaceList = GetActionRangeTypeList(fromLocation, attackDistance, checkEmptyType, ActionRangeType.Default);
         string minLocation = emptyPlaceList[0];
         int minDistance = GetRoute(minLocation, toLocation, CheckEmptyType.EnemyAttack).Count;
-
         string bestInRangeLocation = null;
         int bestInRangeDistance = enemyData.MeleeAttackMode ? int.MaxValue : int.MinValue;
         for (int j = 1; j < emptyPlaceList.Count; j++)
         {
             string targetLocation = emptyPlaceList[j];
             int targetDistance = GetRoute(targetLocation, toLocation, CheckEmptyType.EnemyAttack).Count;
-
-            if (IsInEnemyAttackRange(enemy, targetLocation, enemyAttackAction))
+            if (enemy.InRange)
             {
                 bool bestInRangeCondition = enemyData.MeleeAttackMode ? targetDistance < bestInRangeDistance : targetDistance > bestInRangeDistance;
                 if (bestInRangeCondition)
@@ -561,9 +563,6 @@ public class BattleManager : Singleton<BattleManager>
 
         return bestInRangeLocation ?? minLocation;
     }
-
-
-
     public void RefreshCheckerboardList()
     {
         CheckerboardList.Clear();
@@ -765,7 +764,7 @@ public class BattleManager : Singleton<BattleManager>
     }
     public void AddMinions(int enemyID, int count, string location)
     {
-        List<string> emptyPlaceList = GetEmptyPlace(location, 3, CheckEmptyType.Move, true);
+        List<string> emptyPlaceList = GetEmptyPlace(location, 3, CheckEmptyType.Move, true, false);
         for (int i = 0; i < count; i++)
         {
             int randomIndex = UnityEngine.Random.Range(0, emptyPlaceList.Count);
@@ -869,19 +868,7 @@ public class BattleManager : Singleton<BattleManager>
         dictionary.Remove(oldKey);
         dictionary.Add(newKey, value);
     }
-    public bool IsInEnemyAttackRange(Enemy enemy)
-    {
-        EnemyData enemyData = enemy.MyEnemyData;
-        string location = GetEnemyKey(enemyData);
-        List<string> attackRangeList = GetActionRangeTypeList(location, enemyData.AttackDistance, CheckEmptyType.EnemyAttack, enemy.MyNextAttackActionRangeType);
-        return attackRangeList.Contains(CurrentLocationID) || enemy.MyNextAttackActionRangeType == ActionRangeType.None;
-    }
-    public bool IsInEnemyAttackRange(Enemy enemy, string enemyTargetLocation, ActionRangeType actionRangeType)
-    {
-        EnemyData enemyData = enemy.MyEnemyData;
-        List<string> attackRangeList = GetActionRangeTypeList(enemyTargetLocation, enemyData.AttackDistance, CheckEmptyType.EnemyAttack, actionRangeType);
-        return attackRangeList.Contains(CurrentLocationID) || enemy.MyNextAttackActionRangeType == ActionRangeType.None;
-    }
+
     public void ShowCharacterStatusClue(Transform trans, string des)
     {
         CanvasGroup clue = Instantiate(CharacterStatusClue, trans);

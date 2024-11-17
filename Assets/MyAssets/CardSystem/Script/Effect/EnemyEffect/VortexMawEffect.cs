@@ -33,4 +33,5 @@ public class VortexMawEffect : IEffect
         return "將周圍的敵人吸引過來。";
     }
     public BattleManager.ActionRangeType SetEffectAttackType() { return BattleManager.ActionRangeType.Surrounding; }
+    public int SetEffectDistance() { return 2; }
 }

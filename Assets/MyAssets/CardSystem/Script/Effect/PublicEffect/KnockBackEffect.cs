@@ -7,12 +7,15 @@ public class KnockBackEffect : IEffect
 {
     public void ApplyEffect(int value, string fromLocation, string toLocation)
     {
-        CharacterData targetData;
+        CharacterData targetData = BattleManager.Instance.IdentifyCharacter(toLocation);
+        if (targetData == null)
+        {
+            return;
+        }
         int[] attackerPos = BattleManager.Instance.ConvertNormalPos(fromLocation);
         int[] defenderPos = BattleManager.Instance.ConvertNormalPos(toLocation);
         Vector2 direction;
         Vector2Int destinationPoint;
-        targetData = BattleManager.Instance.IdentifyCharacter(toLocation);
         direction = new Vector2(defenderPos[0] - attackerPos[0], defenderPos[1] - attackerPos[1]);
         // 將向量的分量限制在 [-1, 1]，使用 Mathf.Round 進行舍入
         int limitedX = Mathf.Clamp(Mathf.RoundToInt(direction.x), -1, 1);
@@ -30,12 +33,14 @@ public class KnockBackEffect : IEffect
         {
             BattleManager.Instance.PlayerTrans.DOAnchorPos(destination, 0.2f);
             BattleManager.Instance.CurrentLocationID = destinationLocation;
+            BattleManager.Instance.ShowCharacterStatusClue(BattleManager.Instance.PlayerTrans, EffectFactory.Instance.CreateEffect("KnockBackEffect").SetTitleText());
         }
         else
         {
             EnemyData enemyData = (EnemyData)targetData;
             BattleManager.Instance.Replace(BattleManager.Instance.CurrentEnemyList, toLocation, destinationLocation);
             enemyData.EnemyTrans.DOAnchorPos(destination, 0.2f);
+            BattleManager.Instance.ShowCharacterStatusClue(enemyData.EnemyTrans, EffectFactory.Instance.CreateEffect("KnockBackEffect").SetTitleText());
         }
         EventManager.Instance.DispatchEvent(EventDefinition.eventMove);
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);

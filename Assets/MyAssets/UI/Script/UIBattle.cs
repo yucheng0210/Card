@@ -200,7 +200,7 @@ public class UIBattle : UIBase
         // 將敵人的攻擊邏輯提取到單獨的方法中
         yield return ExecuteEnemyActions(currentMinionsList, moveHistoryList);
         yield return ExecuteEnemyActions(currentEnemyList, moveHistoryList);
-
+        yield return new WaitForSecondsRealtime(1);
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Player);
     }
 
@@ -218,10 +218,9 @@ public class UIBattle : UIBase
             }
             RectTransform enemyTrans = enemyData.EnemyTrans;
             Enemy enemy = enemyTrans.GetComponent<Enemy>();
-            PlayerData playerData = BattleManager.Instance.CurrentPlayerData;
             Image enemyImage = enemy.EnemyImage;
+            PlayerData playerData = BattleManager.Instance.CurrentPlayerData;
             SetEnemyAttackRotation(enemyData, enemyImage, location);  // 设置敌人朝向
-            enemy.InRange = BattleManager.Instance.IsInEnemyAttackRange(enemy);
             switch (enemy.MyActionType)
             {
                 case Enemy.ActionType.Move:
@@ -269,8 +268,9 @@ public class UIBattle : UIBase
             SetEnemyAttackRotation(enemyData, enemyImage, playerLocation);
             yield break;
         }
-        string minLocation = BattleManager.Instance.GetCloseLocation(location, playerLocation, enemyData.StepCount, enemy.MyNextAttackActionRangeType);
-        List<string> routeList = BattleManager.Instance.GetRoute(location, minLocation, BattleManager.CheckEmptyType.Move);
+        BattleManager.CheckEmptyType checkEmptyType = BattleManager.CheckEmptyType.Move;
+        string minLocation = BattleManager.Instance.GetCloseLocation(location, playerLocation, enemyData.StepCount, BattleManager.ActionRangeType.Default, checkEmptyType);
+        List<string> routeList = BattleManager.Instance.GetRoute(location, minLocation, checkEmptyType);
         for (int k = 0; k < routeList.Count; k++)
         {
             int childCount = BattleManager.Instance.GetCheckerboardPoint(routeList[k]);
@@ -291,18 +291,7 @@ public class UIBattle : UIBase
     {
         for (int i = 0; i < attackCount; i++)
         {
-            if (enemy.MySequence != null)
-            {
-                enemy.MySequence.AppendCallback(() =>
-                {
-                    if (enemy.InRange)
-                    {
-                        BattleManager.Instance.TakeDamage(enemyData, playerData, enemyData.CurrentAttack, BattleManager.Instance.CurrentLocationID, 0);
-                    }
-                });
-                enemy.MySequence.Play();
-            }
-            else
+            if (enemy.MySequence == null)
             {
                 if (enemy.InRange)
                 {
@@ -310,7 +299,10 @@ public class UIBattle : UIBase
                 }
                 enemy.MyAnimator.SetTrigger("isAttacking");
             }
-
+            else
+            {
+                enemy.MySequence.Play();
+            }
             yield return new WaitForSecondsRealtime(0.5f);
         }
     }
@@ -542,7 +534,7 @@ public class UIBattle : UIBase
     {
         BattleManager.Instance.RefreshCheckerboardList();
         UIManager.Instance.ClearMoveClue(true);
-        //CheckEnemyInfo();
+        CheckEnemyInfo();
         // CheckBattleInfo();
     }
     private void EventTakeDamage(params object[] args)

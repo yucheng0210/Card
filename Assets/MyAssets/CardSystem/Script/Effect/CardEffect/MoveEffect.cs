@@ -21,13 +21,13 @@ public class MoveEffect : IEffect
             int playerOnceMoveConsume = BattleManager.Instance.PlayerOnceMoveConsume;
             int moveCount = BattleManager.Instance.GetRoute(fromLocation, emptyPlaceList[i], BattleManager.CheckEmptyType.Move).Count * playerOnceMoveConsume;
             RectTransform emptyPlace = BattleManager.Instance.CheckerboardTrans.GetChild(checkerboardPoint).GetComponent<RectTransform>();
-            UnityEngine.Events.UnityAction moveAction = () => Move(emptyPlace.localPosition, emptyPlaceList[avoidClosure], moveCount);
+            UnityEngine.Events.UnityAction moveAction = () => Move(emptyPlaceList[avoidClosure], moveCount);
             emptyPlace.GetComponent<Button>().onClick.AddListener(moveAction);
             removeList.Add(moveAction);
         }
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.UsingEffect);
     }
-    private void Move(Vector3 destination, string locationID, int moveCount)
+    private void Move(string locationID, int moveCount)
     {
         for (int i = 0; i < emptyPlaceList.Count; i++)
         {
@@ -38,7 +38,7 @@ public class MoveEffect : IEffect
         BattleManager.Instance.PlayerMoveCount -= moveCount;
         PlayerMoveAction(BattleManager.Instance.CurrentLocationID, locationID);
         BattleManager.Instance.CurrentLocationID = locationID;
-        EventManager.Instance.DispatchEvent(EventDefinition.eventMove);
+        UIManager.Instance.ClearMoveClue(true);
     }
     private void PlayerMoveAction(string fromLocation, string toLocation)
     {
@@ -54,6 +54,7 @@ public class MoveEffect : IEffect
         {
             BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Attack);
             EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
+            EventManager.Instance.DispatchEvent(EventDefinition.eventMove);
         }
         );
         sequence.Play();

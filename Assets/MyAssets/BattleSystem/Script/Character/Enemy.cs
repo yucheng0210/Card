@@ -46,7 +46,7 @@ public class Enemy : MonoBehaviour
     public Sequence MySequence { get; set; }
     private Dictionary<string, EnemyData> currentEnemyList = new();
     public EnemyData MyEnemyData { get; set; }
-    private int actionRangeDistance;
+    public int CurrentAttackDistance { get; set; }
     public int AdditionAttackCount { get; set; }
     public bool InRange { get; set; }
     public enum ActionType
@@ -60,7 +60,7 @@ public class Enemy : MonoBehaviour
     private void Start()
     {
         EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
-        EventManager.Instance.AddEventRegister(EventDefinition.eventRefreshUI, EventRefreshUI);
+        EventManager.Instance.AddEventRegister(EventDefinition.eventMove, EventMove);
         EnemyOnceBattlePositiveList = new Dictionary<string, int>();
         currentEnemyList = BattleManager.Instance.CurrentEnemyList;
     }
@@ -71,18 +71,19 @@ public class Enemy : MonoBehaviour
     }
     private void RefreshAttackIntent()
     {
+        MySequence = null;
         string location = BattleManager.Instance.GetEnemyKey(MyEnemyData);
         float distance = BattleManager.Instance.GetRoute(location, BattleManager.Instance.CurrentLocationID, BattleManager.CheckEmptyType.EnemyAttack).Count;
-        HandleAttack(location);
-        InRange = BattleManager.Instance.IsInEnemyAttackRange(this);
+        HandleAttack(location, true);
+        InRange = CurrentActionRangeTypeList.Contains(BattleManager.Instance.CurrentLocationID);
         ResetUIElements();
         if (distance == 0)
         {
             HandleNoAttack();
         }
-        else if (InRange)
+        else if (InRange || MyNextAttackActionRangeType == BattleManager.ActionRangeType.None)
         {
-            HandleAttack(location);
+            HandleAttack(location, false);
         }
         else
         {
@@ -107,16 +108,19 @@ public class Enemy : MonoBehaviour
         enemyAttackIntentText.text = "?";
     }
 
-    private void HandleAttack(string location)
+    private void HandleAttack(string location, bool isCheck)
     {
         string attackOrder = MyEnemyData.AttackOrderStrs.ElementAt(MyEnemyData.CurrentAttackOrder).Item1;
         MyCheckEmptyType = BattleManager.CheckEmptyType.EnemyAttack;
-        actionRangeDistance = MyEnemyData.AttackDistance;
+        CurrentAttackDistance = MyEnemyData.AttackDistance;
         if (Enum.TryParse(attackOrder, out BattleManager.ActionRangeType attackType))
         {
             MyNextAttackActionRangeType = attackType;
             MyActionType = ActionType.Attack;
-            ActiveAttack();
+            if (!isCheck)
+            {
+                ActiveAttack();
+            }
         }
         else if (attackOrder == "Shield")
         {
@@ -126,7 +130,7 @@ public class Enemy : MonoBehaviour
         {
             ActivateEffect(attackOrder);
         }
-        CurrentActionRangeTypeList = BattleManager.Instance.GetActionRangeTypeList(location, actionRangeDistance, MyCheckEmptyType, MyNextAttackActionRangeType);
+        CurrentActionRangeTypeList = BattleManager.Instance.GetActionRangeTypeList(location, CurrentAttackDistance, MyCheckEmptyType, MyNextAttackActionRangeType);
     }
 
     private void ActivateShield()
@@ -144,6 +148,11 @@ public class Enemy : MonoBehaviour
     {
         MyActionType = ActionType.Effect;
         MyNextAttackActionRangeType = EffectFactory.Instance.CreateEffect(attackOrder).SetEffectAttackType();
+        CurrentAttackDistance = EffectFactory.Instance.CreateEffect(attackOrder).SetEffectDistance();
+        if (CurrentAttackDistance <= 0)
+        {
+            CurrentAttackDistance = MyEnemyData.AttackDistance;
+        }
         Image enemyEffectImage = enemyEffect.GetComponent<Image>();
         infoTitle.text = "效果";
         infoDescription.text = "施展未知效果。";
@@ -155,12 +164,12 @@ public class Enemy : MonoBehaviour
     private void HandleMove(string location)
     {
         BattleManager.ActionRangeType actionRangeType = BattleManager.ActionRangeType.Default;
-        actionRangeDistance = MyEnemyData.StepCount;
+        CurrentAttackDistance = MyEnemyData.StepCount;
         infoTitle.text = "移動";
         infoDescription.text = "進行移動。";
         MyActionType = ActionType.Move;
         MyCheckEmptyType = BattleManager.CheckEmptyType.Move;
-        CurrentActionRangeTypeList = BattleManager.Instance.GetActionRangeTypeList(location, actionRangeDistance, MyCheckEmptyType, actionRangeType);
+        CurrentActionRangeTypeList = BattleManager.Instance.GetActionRangeTypeList(location, CurrentAttackDistance, MyCheckEmptyType, actionRangeType);
         enemyAttackIntentText.enabled = false;
         enemyMove.SetActive(true);
     }
@@ -195,25 +204,27 @@ public class Enemy : MonoBehaviour
     }
     private void JumpAttackSequence()
     {
-        MySequence = DOTween.Sequence();
-        string playerLocation = BattleManager.Instance.CurrentLocationID;
+        MySequence = DOTween.Sequence().Pause();
+        string destinationLocation = BattleManager.Instance.CurrentLocationID;
         string enemyLocation = BattleManager.Instance.GetEnemyKey(MyEnemyData);
-        float distance = BattleManager.Instance.CalculateDistance(enemyLocation, playerLocation);
+        float distance = BattleManager.Instance.CalculateDistance(enemyLocation, destinationLocation);
+        int checkerboardPoint = BattleManager.Instance.GetCheckerboardPoint(destinationLocation);
+        RectTransform destinationPlace = BattleManager.Instance.CheckerboardTrans.GetChild(checkerboardPoint).GetComponent<RectTransform>();
         RectTransform enemyRect = GetComponent<RectTransform>();
-        int curveHeight = 500;
+        int curveHeight = 350;
         Vector2 startPoint = enemyRect.localPosition;
-        Vector2 endPoint = BattleManager.Instance.PlayerTrans.localPosition;
+        Vector2 endPoint = destinationPlace.localPosition;
         Vector2 midPoint = new(startPoint.x + distance / 2, startPoint.y + curveHeight);
         Tween moveTween = DOTween.To((t) =>
         {
             Vector2 position = UIManager.Instance.GetBezierCurve(startPoint, midPoint, endPoint, t);
             enemyRect.anchoredPosition = position;
         }, 0, 1, 1).SetEase(Ease.InQuad);
-        MySequence.Append(moveTween).AppendCallback(() => OnAttackComplete(true, enemyLocation, playerLocation)).Pause();
+        MySequence.Append(moveTween).AppendCallback(() => OnAttackComplete(true, enemyLocation, destinationLocation));
     }
     private void StraightChargeAttackSequence()
     {
-        MySequence = DOTween.Sequence();
+        MySequence = DOTween.Sequence().Pause();
         string enemyLocation = BattleManager.Instance.GetEnemyKey(MyEnemyData);
         int attackDistance = MyEnemyData.AttackDistance;
         BattleManager.ActionRangeType actionRangeType = BattleManager.ActionRangeType.Linear;
@@ -223,29 +234,36 @@ public class Enemy : MonoBehaviour
         int checkerboardPoint = BattleManager.Instance.GetCheckerboardPoint(destinationLocation);
         Vector2 destinationPos = BattleManager.Instance.CheckerboardTrans.GetChild(checkerboardPoint).GetComponent<RectTransform>().localPosition;
         Tween moveTween = enemyRect.DOAnchorPos(destinationPos, 0.25f);
-        MySequence.Append(moveTween).AppendCallback(() => OnAttackComplete(true, enemyLocation, destinationLocation)).Pause();
+        MySequence.Append(moveTween).AppendCallback(() => OnAttackComplete(true, enemyLocation, destinationLocation));
     }
     private void OnAttackComplete(bool isKnockBack, string startLocation, string endLocation)
     {
+        PlayerData playerData = BattleManager.Instance.CurrentPlayerData;
+        if (InRange)
+        {
+            BattleManager.Instance.TakeDamage(MyEnemyData, playerData, MyEnemyData.CurrentAttack, BattleManager.Instance.CurrentLocationID, 0);
+        }
         if (isKnockBack)
         {
             EffectFactory.Instance.CreateEffect("KnockBackEffect").ApplyEffect(1, startLocation, endLocation);
-            BattleManager.Instance.ShowCharacterStatusClue(transform, EffectFactory.Instance.CreateEffect("KnockBackEffect").SetTitleText());
         }
         BattleManager.Instance.Replace(currentEnemyList, startLocation, endLocation);
-        MySequence = null;
+        //Debug.Log(startLocation + "   " + endLocation);
     }
     private void EventPlayerTurn(params object[] args)
     {
         BattleManager.Instance.RefreshCheckerboardList();
         RefreshAttackIntent();
     }
-    private void EventRefreshUI(params object[] args)
+    private void EventMove(params object[] args)
     {
         enemyAttackIntentText.text = MyEnemyData.CurrentAttack.ToString();
-        if (MyActionType == ActionType.Attack)
-        {
-            SetAttackActionRangeType();
-        }
+        InRange = CurrentActionRangeTypeList.Contains(BattleManager.Instance.CurrentLocationID);
+        /* if (MyActionType == ActionType.Attack)
+         {
+             SetAttackActionRangeType();
+             string location = BattleManager.Instance.GetEnemyKey(MyEnemyData);
+             CurrentActionRangeTypeList = BattleManager.Instance.GetActionRangeTypeList(location, CurrentAttackDistance, MyCheckEmptyType, MyNextAttackActionRangeType);
+         }*/
     }
 }
