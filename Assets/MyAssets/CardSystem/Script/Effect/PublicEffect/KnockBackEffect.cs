@@ -12,38 +12,67 @@ public class KnockBackEffect : IEffect
         {
             return;
         }
+
         int[] attackerPos = BattleManager.Instance.ConvertNormalPos(fromLocation);
         int[] defenderPos = BattleManager.Instance.ConvertNormalPos(toLocation);
-        Vector2 direction;
-        Vector2Int destinationPoint;
-        direction = new Vector2(defenderPos[0] - attackerPos[0], defenderPos[1] - attackerPos[1]);
-        // 將向量的分量限制在 [-1, 1]，使用 Mathf.Round 進行舍入
+
+        // 計算擊退方向
+        Vector2 direction = new(defenderPos[0] - attackerPos[0], defenderPos[1] - attackerPos[1]);
         int limitedX = Mathf.Clamp(Mathf.RoundToInt(direction.x), -1, 1);
         int limitedY = Mathf.Clamp(Mathf.RoundToInt(direction.y), -1, 1);
-        // 計算目標位置
-        destinationPoint = new Vector2Int(defenderPos[0] + limitedX, defenderPos[1] + limitedY);
-        string destinationLocation = BattleManager.Instance.ConvertCheckerboardPos(destinationPoint.x, destinationPoint.y);
-        if (!BattleManager.Instance.CheckerboardList.ContainsKey(destinationLocation))
-        {
-            destinationLocation = toLocation;
-        }
+        // 獲取有效目標位置
+        Vector2Int initialDestinationPos = new(defenderPos[0] + limitedX, defenderPos[1] + limitedY);
+        string destinationLocation = GetValidDestination(initialDestinationPos)
+        ?? throw new System.Exception("No valid destination found in CheckerboardList.");
+        // 獲取目標 UI 座標
         int checkerboardPoint = BattleManager.Instance.GetCheckerboardPoint(destinationLocation);
-        Vector3 destination = BattleManager.Instance.CheckerboardTrans.GetChild(checkerboardPoint).GetComponent<RectTransform>().localPosition;
+        Vector3 destinationPos = BattleManager.Instance.CheckerboardTrans.GetChild(checkerboardPoint).GetComponent<RectTransform>().localPosition;
+
+        // 處理角色位置與顯示提示
         if (toLocation == BattleManager.Instance.CurrentLocationID)
         {
-            BattleManager.Instance.PlayerTrans.DOAnchorPos(destination, 0.2f);
+            BattleManager.Instance.PlayerTrans.DOAnchorPos(destinationPos, 0.2f);
             BattleManager.Instance.CurrentLocationID = destinationLocation;
-            BattleManager.Instance.ShowCharacterStatusClue(BattleManager.Instance.PlayerTrans, EffectFactory.Instance.CreateEffect("KnockBackEffect").SetTitleText());
+            ShowStatusClue(BattleManager.Instance.PlayerTrans, "KnockBackEffect");
         }
         else
         {
             EnemyData enemyData = (EnemyData)targetData;
             BattleManager.Instance.Replace(BattleManager.Instance.CurrentEnemyList, toLocation, destinationLocation);
-            enemyData.EnemyTrans.DOAnchorPos(destination, 0.2f);
-            BattleManager.Instance.ShowCharacterStatusClue(enemyData.EnemyTrans, EffectFactory.Instance.CreateEffect("KnockBackEffect").SetTitleText());
+            enemyData.EnemyTrans.DOAnchorPos(destinationPos, 0.2f);
+            ShowStatusClue(enemyData.EnemyTrans, "KnockBackEffect");
         }
+
+        // 派發事件
         EventManager.Instance.DispatchEvent(EventDefinition.eventMove);
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
+    }
+
+    // 獲取有效目標位置
+    private string GetValidDestination(Vector2Int destinationPoint)
+    {
+        Vector2Int[] offsets = new Vector2Int[]
+        {
+            new(0, destinationPoint[1]), new(destinationPoint[0], 0), new(-destinationPoint[0], destinationPoint[1]),
+            new(destinationPoint[0], -destinationPoint[1]), new(0, -destinationPoint[1]), new(-destinationPoint[0], 0),
+            new(-destinationPoint[0], -destinationPoint[1])
+        };
+
+        for (int i = 0; i < offsets.Length; i++)
+        {
+            string newLocation = BattleManager.Instance.ConvertCheckerboardPos(offsets[i].x, offsets[i].y);
+            if (BattleManager.Instance.CheckerboardList.ContainsKey(newLocation))
+            {
+                return newLocation;
+            }
+        }
+        return null; // 無效位置
+    }
+
+    // 顯示角色狀態提示
+    private void ShowStatusClue(RectTransform characterTrans, string effectName)
+    {
+        BattleManager.Instance.ShowCharacterStatusClue(characterTrans, EffectFactory.Instance.CreateEffect(effectName).SetTitleText());
     }
 
     public string SetTitleText()
