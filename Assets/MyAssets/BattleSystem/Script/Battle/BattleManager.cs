@@ -397,10 +397,10 @@ public class BattleManager : Singleton<BattleManager>
             if (CheckPlaceEmpty(newLocation, CheckEmptyType.EnemyAttack))
             {
                 linearAttackList.Add(newLocation);
-                if (newLocation == toLocation)
+                /*if (newLocation == toLocation)
                 {
                     break;
-                }
+                }*/
             }
             else
             {
@@ -532,7 +532,7 @@ public class BattleManager : Singleton<BattleManager>
         }
         return GetActionRangeTypeList(CurrentLocationID, attackDistance, CheckEmptyType.EnemyAttack, ActionRangeType.Surrounding);
     }
-    public string GetCloseLocation(string fromLocation, string toLocation, int attackDistance, ActionRangeType enemyAttackAction, CheckEmptyType checkEmptyType)
+    public string GetCloseLocation(string fromLocation, string toLocation, int attackDistance, CheckEmptyType checkEmptyType)
     {
         EnemyData enemyData = (EnemyData)IdentifyCharacter(fromLocation);
         Enemy enemy = enemyData.EnemyTrans.GetComponent<Enemy>();
@@ -545,9 +545,9 @@ public class BattleManager : Singleton<BattleManager>
         {
             string targetLocation = emptyPlaceList[j];
             int targetDistance = GetRoute(targetLocation, toLocation, CheckEmptyType.EnemyAttack).Count;
-            if (enemy.InRange)
+            if (IsOtherLocationInRange(enemy, targetLocation))
             {
-                bool bestInRangeCondition = enemyData.MeleeAttackMode ? targetDistance < bestInRangeDistance : targetDistance > bestInRangeDistance;
+                bool bestInRangeCondition = enemyData.MeleeAttackMode == (targetDistance < bestInRangeDistance);
                 if (bestInRangeCondition)
                 {
                     bestInRangeLocation = targetLocation;
@@ -562,6 +562,23 @@ public class BattleManager : Singleton<BattleManager>
         }
 
         return bestInRangeLocation ?? minLocation;
+    }
+    public void CheckPlayerLocationInRange(Enemy enemy)
+    {
+        string playerLocation = CurrentLocationID;
+        CheckEmptyType checkEmptyType = CheckEmptyType.EnemyAttack;
+        int attackDistance = enemy.MyEnemyData.AttackDistance;
+        string location = GetEnemyKey(enemy.MyEnemyData);
+        List<string> nextAttackRangeList = GetActionRangeTypeList(location, attackDistance, checkEmptyType, enemy.MyNextAttackActionRangeType);
+        enemy.InRange = nextAttackRangeList.Contains(playerLocation) || enemy.MyNextAttackActionRangeType == ActionRangeType.None;
+    }
+    private bool IsOtherLocationInRange(Enemy enemy, string location)
+    {
+        string playerLocation = CurrentLocationID;
+        CheckEmptyType checkEmptyType = CheckEmptyType.EnemyAttack;
+        int attackDistance = enemy.MyEnemyData.AttackDistance;
+        List<string> nextAttackRangeList = GetActionRangeTypeList(location, attackDistance, checkEmptyType, enemy.MyNextAttackActionRangeType);
+        return nextAttackRangeList.Contains(playerLocation) || enemy.MyNextAttackActionRangeType == ActionRangeType.None;
     }
     public void RefreshCheckerboardList()
     {

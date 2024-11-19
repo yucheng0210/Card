@@ -45,7 +45,7 @@ public class ThornsEffect : IEffect
 
     private void EventTakeDamage(params object[] args)
     {
-        if (counterattackerID != (string)args[2])
+        if (counterattackerID != (string)args[2] || args.Length < 5)
         {
             return;
         }
@@ -70,9 +70,5 @@ public class ThornsEffect : IEffect
     public string SetDescriptionText()
     {
         return "受到攻擊時，將部分比例的傷害反彈回去。";
-    }
-    public BattleManager.ActionRangeType SetEffectAttackType()
-    {
-        return BattleManager.ActionRangeType.None; // 自訂攻擊類型
     }
 }

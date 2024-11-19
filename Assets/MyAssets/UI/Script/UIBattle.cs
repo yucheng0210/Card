@@ -189,6 +189,14 @@ public class UIBattle : UIBase
             passive.sprite = image;
             UpdateStateUI(enemyPassiveGroupTrans, enemyData.MaxPassiveSkillsList, negativeLPrefab, true);
         }
+        for (int i = 0; i < enemy.EnemyOnceBattlePositiveList.Count; i++)
+        {
+            string key = enemy.EnemyOnceBattlePositiveList.ElementAt(i).Key;
+            Image passive = Instantiate(negativeLPrefab, enemyPassiveGroupTrans).BattleStateImage;
+            Sprite image = EffectFactory.Instance.CreateEffect(key).SetIcon();
+            passive.sprite = image;
+            UpdateStateUI(enemyPassiveGroupTrans, enemy.EnemyOnceBattlePositiveList, negativeLPrefab, true);
+        }
     }
     private IEnumerator EnemyAttack()
     {
@@ -269,7 +277,7 @@ public class UIBattle : UIBase
             yield break;
         }
         BattleManager.CheckEmptyType checkEmptyType = BattleManager.CheckEmptyType.Move;
-        string minLocation = BattleManager.Instance.GetCloseLocation(location, playerLocation, enemyData.StepCount, BattleManager.ActionRangeType.Default, checkEmptyType);
+        string minLocation = BattleManager.Instance.GetCloseLocation(location, playerLocation, enemyData.StepCount, checkEmptyType);
         List<string> routeList = BattleManager.Instance.GetRoute(location, minLocation, checkEmptyType);
         for (int k = 0; k < routeList.Count; k++)
         {
@@ -377,8 +385,8 @@ public class UIBattle : UIBase
                     BattleManager.Instance.CurrentMinionsList.Remove(key);
                 }
                 Destroy(enemyData.EnemyTrans.gameObject, 1);
-                CheckEnemyInfo();
             }
+
             enemy.IsDeath = true;
         }
         else
@@ -527,6 +535,7 @@ public class UIBattle : UIBase
         UIManager.Instance.ClearMoveClue(true);
         BattleManager.Instance.ClearAllEventTriggers();
         roundTip.GetComponent<Image>().sprite = enemyRound;
+        enemyInfo.SetActive(false);
         StartCoroutine(UIManager.Instance.FadeOutIn(roundTip, 0.5f, 1, false));
         StartCoroutine(EnemyAttack());
     }
@@ -539,10 +548,12 @@ public class UIBattle : UIBase
     }
     private void EventTakeDamage(params object[] args)
     {
-        string locationID = (string)args[2];
-        if (BattleManager.Instance.CurrentLocationID != locationID)
+        string defenderLocation = (string)args[2];
+        if (BattleManager.Instance.CurrentLocationID != defenderLocation)
         {
-            RemoveEnemy(locationID);
+            CheckEnemyInfo();
+            RefreshEnemyInfo(defenderLocation);
+            RemoveEnemy(defenderLocation);
         }
         GameObject damageNum = Instantiate(damageNumPrefab, UI.transform);
         RectTransform damageRect = damageNum.GetComponent<RectTransform>();

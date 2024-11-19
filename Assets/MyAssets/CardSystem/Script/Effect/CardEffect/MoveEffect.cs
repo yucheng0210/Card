@@ -12,13 +12,14 @@ public class MoveEffect : IEffect
 
     public void ApplyEffect(int value, string fromLocation, string toLocation)
     {
-        emptyPlaceList = BattleManager.Instance.GetActionRangeTypeList(fromLocation, value, BattleManager.CheckEmptyType.Move, BattleManager.ActionRangeType.Default);
+        int playerOnceMoveConsume = BattleManager.Instance.PlayerOnceMoveConsume;
+        int canMoveCount = value / playerOnceMoveConsume;
+        emptyPlaceList = BattleManager.Instance.GetActionRangeTypeList(fromLocation, canMoveCount, BattleManager.CheckEmptyType.Move, BattleManager.ActionRangeType.Default);
         UIManager.Instance.ChangeCheckerboardColor(emptyPlaceList, true);
         for (int i = 0; i < emptyPlaceList.Count; i++)
         {
             int avoidClosure = i;
             int checkerboardPoint = BattleManager.Instance.GetCheckerboardPoint(emptyPlaceList[i]);
-            int playerOnceMoveConsume = BattleManager.Instance.PlayerOnceMoveConsume;
             int moveCount = BattleManager.Instance.GetRoute(fromLocation, emptyPlaceList[i], BattleManager.CheckEmptyType.Move).Count * playerOnceMoveConsume;
             RectTransform emptyPlace = BattleManager.Instance.CheckerboardTrans.GetChild(checkerboardPoint).GetComponent<RectTransform>();
             UnityEngine.Events.UnityAction moveAction = () => Move(emptyPlaceList[avoidClosure], moveCount);

@@ -49,6 +49,7 @@ public class Enemy : MonoBehaviour
     public int CurrentAttackDistance { get; set; }
     public int AdditionAttackCount { get; set; }
     public bool InRange { get; set; }
+    private string location;
     public enum ActionType
     {
         Move,
@@ -61,6 +62,7 @@ public class Enemy : MonoBehaviour
     {
         EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
         EventManager.Instance.AddEventRegister(EventDefinition.eventMove, EventMove);
+        EventManager.Instance.AddEventRegister(EventDefinition.eventRefreshUI, EventRefreshUI);
         EnemyOnceBattlePositiveList = new Dictionary<string, int>();
         currentEnemyList = BattleManager.Instance.CurrentEnemyList;
     }
@@ -72,27 +74,26 @@ public class Enemy : MonoBehaviour
     private void RefreshAttackIntent()
     {
         MySequence = null;
-        string location = BattleManager.Instance.GetEnemyKey(MyEnemyData);
+        location = BattleManager.Instance.GetEnemyKey(MyEnemyData);
         float distance = BattleManager.Instance.GetRoute(location, BattleManager.Instance.CurrentLocationID, BattleManager.CheckEmptyType.EnemyAttack).Count;
-        HandleAttack(location, true);
-        InRange = CurrentActionRangeTypeList.Contains(BattleManager.Instance.CurrentLocationID);
+        HandleAttack(true);
         ResetUIElements();
+        BattleManager.Instance.CheckPlayerLocationInRange(this);
         if (distance == 0)
         {
             HandleNoAttack();
         }
-        else if (InRange || MyNextAttackActionRangeType == BattleManager.ActionRangeType.None)
+        else if (InRange)
         {
-            HandleAttack(location, false);
+            HandleAttack(false);
         }
         else
         {
-            HandleMove(location);
+            HandleMove();
         }
         SetInfoGroupEventTrigger();
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
-
     private void ResetUIElements()
     {
         enemyAttack.SetActive(false);
@@ -108,7 +109,7 @@ public class Enemy : MonoBehaviour
         enemyAttackIntentText.text = "?";
     }
 
-    private void HandleAttack(string location, bool isCheck)
+    private void HandleAttack(bool isCheck)
     {
         string attackOrder = MyEnemyData.AttackOrderStrs.ElementAt(MyEnemyData.CurrentAttackOrder).Item1;
         MyCheckEmptyType = BattleManager.CheckEmptyType.EnemyAttack;
@@ -161,7 +162,7 @@ public class Enemy : MonoBehaviour
         enemyEffect.SetActive(true);
     }
 
-    private void HandleMove(string location)
+    private void HandleMove()
     {
         BattleManager.ActionRangeType actionRangeType = BattleManager.ActionRangeType.Default;
         CurrentAttackDistance = MyEnemyData.StepCount;
@@ -257,13 +258,16 @@ public class Enemy : MonoBehaviour
     }
     private void EventMove(params object[] args)
     {
-        enemyAttackIntentText.text = MyEnemyData.CurrentAttack.ToString();
-        InRange = CurrentActionRangeTypeList.Contains(BattleManager.Instance.CurrentLocationID);
+        BattleManager.Instance.CheckPlayerLocationInRange(this);
         /* if (MyActionType == ActionType.Attack)
          {
              SetAttackActionRangeType();
              string location = BattleManager.Instance.GetEnemyKey(MyEnemyData);
              CurrentActionRangeTypeList = BattleManager.Instance.GetActionRangeTypeList(location, CurrentAttackDistance, MyCheckEmptyType, MyNextAttackActionRangeType);
          }*/
+    }
+    private void EventRefreshUI(params object[] args)
+    {
+        enemyAttackIntentText.text = MyEnemyData.CurrentAttack.ToString();
     }
 }

@@ -44,7 +44,7 @@ public class ResurrectionEffect : IEffect
         enemy.MyAnimator.SetTrigger("isResurrection");
         BattleManager.Instance.Recover(enemyData, recoverCount, targetLocation);
         // 触发其他必要的事件
-        EventManager.Instance.DispatchEvent(EventDefinition.eventMove);
+        //EventManager.Instance.DispatchEvent(EventDefinition.eventMove);
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
 
         // 移除事件注册
