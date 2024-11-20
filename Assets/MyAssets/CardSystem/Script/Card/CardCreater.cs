@@ -202,7 +202,7 @@ public class CardCreater : MonoBehaviour
         List<CardData> usedCardBag = DataManager.Instance.UsedCardBag;
         for (int i = 0; i < usedCardBag.Count; i++)
         {
-            StartCoroutine(UIManager.Instance.FadeIn(usedCardBag[i].MyCardItem.GetComponent<CanvasGroup>(), moveTime / 2));
+            StartCoroutine(UIManager.Instance.FadeIn(usedCardBag[i].MyCardItem.GetComponent<CanvasGroup>(), moveTime / 2, false));
             yield return null;
         }
         yield return new WaitForSecondsRealtime(moveTime);

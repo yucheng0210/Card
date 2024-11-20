@@ -62,12 +62,16 @@ public class UIManager : Singleton<UIManager>
         }
     }
 
-    public IEnumerator FadeIn(CanvasGroup canvasGroup, float fadeTime)
+    public IEnumerator FadeIn(CanvasGroup canvasGroup, float fadeTime, bool canDestroy)
     {
         while (canvasGroup.alpha > 0)
         {
             canvasGroup.alpha -= Time.unscaledDeltaTime / fadeTime;
             yield return null;
+        }
+        if (canDestroy)
+        {
+            Destroy(canvasGroup.gameObject);
         }
     }
 

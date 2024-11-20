@@ -53,7 +53,7 @@ public class SceneController : Singleton<SceneController>
     {
         progressSlider.value = 1.0f;
         progressText.text = (int)(progressSlider.value * 100) + "%";
-        yield return StartCoroutine(UIManager.Instance.FadeIn(sceneFaderPrefab, 1));
+        yield return StartCoroutine(UIManager.Instance.FadeIn(sceneFaderPrefab, 1, false));
         progressSlider.gameObject.SetActive(false);
     }
 }

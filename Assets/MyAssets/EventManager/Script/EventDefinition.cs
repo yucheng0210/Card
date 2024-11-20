@@ -13,6 +13,7 @@ public class EventDefinition
     //戰鬥：卡牌相關
     public const string eventUseCard = "EVENT_USE_CARD";
     public const string eventTakeDamage = "EVENT_TAKE_DAMAGE";
+    public const string eventRecover = "EVENT_RECOVER";
     public const string eventDrawCard = "EVENT_DRAW_CARD";
     public const string eventMove = "EVENT_MOVE";
 

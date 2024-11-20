@@ -149,14 +149,14 @@ public class BattleManager : Singleton<BattleManager>
         int point = GetCheckerboardPoint(location);
         Vector2 pos = new(CheckerboardTrans.GetChild(point).localPosition.x, CheckerboardTrans.GetChild(point).localPosition.y);
         Color color = Color.green;
-        EventManager.Instance.DispatchEvent(EventDefinition.eventTakeDamage, pos, damage, location, color);
+        EventManager.Instance.DispatchEvent(EventDefinition.eventRecover, pos, damage, location, color);
     }
     public void Recover(CharacterData defender, int damage)
     {
         defender.CurrentHealth += damage;
         Vector2 screenCenter = new Vector2(Screen.width / 2, Screen.height / 2);
         Color color = Color.green;
-        EventManager.Instance.DispatchEvent(EventDefinition.eventTakeDamage, screenCenter, damage, CurrentLocationID, color);
+        EventManager.Instance.DispatchEvent(EventDefinition.eventRecover, screenCenter, damage, CurrentLocationID, color);
     }
     public void TriggerEnemyPassiveSkill(string locationID, bool isMinion)
     {
@@ -220,6 +220,10 @@ public class BattleManager : Singleton<BattleManager>
     {
         string[] points = point.Split(' ');
         return int.Parse(points[0]) + int.Parse(points[1]) * 8;
+    }
+    public Vector2 GetCheckerboardPos(string location)
+    {
+        return CheckerboardTrans.GetChild(GetCheckerboardPoint(location)).localPosition;
     }
     private List<string> GetEmptyPlace(string location, int stepCount, CheckEmptyType checkEmptyType, bool isBFS, bool isContainStartPos)
     {
@@ -532,15 +536,15 @@ public class BattleManager : Singleton<BattleManager>
         }
         return GetActionRangeTypeList(CurrentLocationID, attackDistance, CheckEmptyType.EnemyAttack, ActionRangeType.Surrounding);
     }
-    public string GetCloseLocation(string fromLocation, string toLocation, int attackDistance, CheckEmptyType checkEmptyType)
+    public string GetCloseLocation(string fromLocation, string toLocation, int attackDistance, CheckEmptyType checkEmptyType, ActionRangeType findType)
     {
         EnemyData enemyData = (EnemyData)IdentifyCharacter(fromLocation);
         Enemy enemy = enemyData.EnemyTrans.GetComponent<Enemy>();
-        List<string> emptyPlaceList = GetActionRangeTypeList(fromLocation, attackDistance, checkEmptyType, ActionRangeType.Default);
-        string minLocation = emptyPlaceList[0];
-        int minDistance = GetRoute(minLocation, toLocation, CheckEmptyType.EnemyAttack).Count;
         string bestInRangeLocation = null;
         int bestInRangeDistance = enemyData.MeleeAttackMode ? int.MaxValue : int.MinValue;
+        List<string> emptyPlaceList = GetActionRangeTypeList(fromLocation, attackDistance, checkEmptyType, findType);
+        string minLocation = emptyPlaceList[0];
+        int minDistance = GetRoute(minLocation, toLocation, CheckEmptyType.EnemyAttack).Count;
         for (int j = 1; j < emptyPlaceList.Count; j++)
         {
             string targetLocation = emptyPlaceList[j];
@@ -567,7 +571,7 @@ public class BattleManager : Singleton<BattleManager>
     {
         string playerLocation = CurrentLocationID;
         CheckEmptyType checkEmptyType = CheckEmptyType.EnemyAttack;
-        int attackDistance = enemy.MyEnemyData.AttackDistance;
+        int attackDistance = enemy.CurrentAttackDistance;
         string location = GetEnemyKey(enemy.MyEnemyData);
         List<string> nextAttackRangeList = GetActionRangeTypeList(location, attackDistance, checkEmptyType, enemy.MyNextAttackActionRangeType);
         enemy.InRange = nextAttackRangeList.Contains(playerLocation) || enemy.MyNextAttackActionRangeType == ActionRangeType.None;
@@ -892,6 +896,6 @@ public class BattleManager : Singleton<BattleManager>
         Text clueText = clue.GetComponent<Text>();
         clueText.text = des;
         DG.Tweening.Sequence sequence = DOTween.Sequence();
-        sequence.Append(clue.transform.DOLocalMoveY(100, 0.5f)).AppendCallback(() => StartCoroutine(UIManager.Instance.FadeIn(clue, 1f)));
+        sequence.Append(clue.transform.DOLocalMoveY(100, 0.5f)).AppendCallback(() => StartCoroutine(UIManager.Instance.FadeIn(clue, 1f, true)));
     }
 }

@@ -17,10 +17,14 @@ public class VortexMawEffect : IEffect
             sequence.Append(BattleManager.Instance.PlayerTrans.DOAnchorPos(enemyRect.localPosition, 0.25f));
             sequence.AppendCallback(() =>
             {
-                EffectFactory.Instance.CreateEffect("KnockBackEffect").ApplyEffect(1, fromLocation, toLocation);
+                BattleManager.CheckEmptyType checkEmptyType = BattleManager.CheckEmptyType.Move;
+                BattleManager.ActionRangeType actionRangeType = BattleManager.ActionRangeType.Surrounding;
+                List<string> emptyPlaceList = BattleManager.Instance.GetActionRangeTypeList(fromLocation, 1, checkEmptyType, actionRangeType);
+                Vector2 destinationPos = BattleManager.Instance.GetCheckerboardPos(emptyPlaceList[0]);
+                BattleManager.Instance.PlayerTrans.DOAnchorPos(destinationPos, 0.25f);
                 EffectFactory.Instance.CreateEffect("CantMoveEffect").ApplyEffect(1, fromLocation, toLocation);
+                BattleManager.Instance.CurrentLocationID = emptyPlaceList[0];
             });
-            sequence.Play();
         }
     }
 

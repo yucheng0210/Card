@@ -19,7 +19,7 @@ public class ParasiticEffect : IEffect
             return;
         }
         host = BattleManager.Instance.CurrentPlayerData;
-        damage = Mathf.RoundToInt(value * (host.MaxHealth / 100f));
+        damage = value;
         parasite.PassiveSkills.Remove(GetType().Name);
         EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
         // Register enemy turn event
@@ -68,6 +68,6 @@ public class ParasiticEffect : IEffect
 
     public string SetDescriptionText()
     {
-        return "給予寄生卡片。";
+        return "攻擊時給予寄生卡片。";
     }
 }

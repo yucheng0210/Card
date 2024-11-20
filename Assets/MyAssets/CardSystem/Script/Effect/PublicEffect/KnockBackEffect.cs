@@ -61,7 +61,7 @@ public class KnockBackEffect : IEffect
         for (int i = 0; i < offsets.Length; i++)
         {
             string newLocation = BattleManager.Instance.ConvertCheckerboardPos(offsets[i].x, offsets[i].y);
-            if (BattleManager.Instance.CheckerboardList.ContainsKey(newLocation))
+            if (BattleManager.Instance.CheckerboardList.ContainsKey(newLocation) && BattleManager.Instance.CheckPlaceEmpty(newLocation, BattleManager.CheckEmptyType.Move))
             {
                 return newLocation;
             }

@@ -106,6 +106,7 @@ public class UIBattle : UIBase
         base.Start();
         EventManager.Instance.AddEventRegister(EventDefinition.eventRefreshUI, EventRefreshUI);
         EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
+        EventManager.Instance.AddEventRegister(EventDefinition.eventRecover, EventRecover);
         EventManager.Instance.AddEventRegister(EventDefinition.eventBattleInitial, EventBattleInitial);
         EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
         EventManager.Instance.AddEventRegister(EventDefinition.eventEnemyTurn, EventEnemyTurn);
@@ -277,7 +278,7 @@ public class UIBattle : UIBase
             yield break;
         }
         BattleManager.CheckEmptyType checkEmptyType = BattleManager.CheckEmptyType.Move;
-        string minLocation = BattleManager.Instance.GetCloseLocation(location, playerLocation, enemyData.StepCount, checkEmptyType);
+        string minLocation = BattleManager.Instance.GetCloseLocation(location, playerLocation, enemyData.StepCount, checkEmptyType, BattleManager.ActionRangeType.Default);
         List<string> routeList = BattleManager.Instance.GetRoute(location, minLocation, checkEmptyType);
         for (int k = 0; k < routeList.Count; k++)
         {
@@ -386,7 +387,6 @@ public class UIBattle : UIBase
                 }
                 Destroy(enemyData.EnemyTrans.gameObject, 1);
             }
-
             enemy.IsDeath = true;
         }
         else
@@ -549,12 +549,16 @@ public class UIBattle : UIBase
     private void EventTakeDamage(params object[] args)
     {
         string defenderLocation = (string)args[2];
-        if (BattleManager.Instance.CurrentLocationID != defenderLocation)
+        if (BattleManager.Instance.CurrentEnemyList.ContainsKey(defenderLocation))
         {
             CheckEnemyInfo();
             RefreshEnemyInfo(defenderLocation);
             RemoveEnemy(defenderLocation);
         }
+        EventRecover(args);
+    }
+    private void EventRecover(params object[] args)
+    {
         GameObject damageNum = Instantiate(damageNumPrefab, UI.transform);
         RectTransform damageRect = damageNum.GetComponent<RectTransform>();
         Text damageText = damageNum.GetComponentInChildren<Text>();
@@ -574,7 +578,6 @@ public class UIBattle : UIBase
         damageRect.DOScale(endScale, 1);
         StartCoroutine(UIManager.Instance.FadeOutIn(damageNum.GetComponent<CanvasGroup>(), 1f, 0, true));
     }
-
     private void EventRefreshUI(params object[] args)
     {
         // 提取局部变量

@@ -240,13 +240,13 @@ public class Enemy : MonoBehaviour
     private void OnAttackComplete(bool isKnockBack, string startLocation, string endLocation)
     {
         PlayerData playerData = BattleManager.Instance.CurrentPlayerData;
-        if (InRange)
-        {
-            BattleManager.Instance.TakeDamage(MyEnemyData, playerData, MyEnemyData.CurrentAttack, BattleManager.Instance.CurrentLocationID, 0);
-        }
         if (isKnockBack)
         {
             EffectFactory.Instance.CreateEffect("KnockBackEffect").ApplyEffect(1, startLocation, endLocation);
+        }
+        if (InRange)
+        {
+            BattleManager.Instance.TakeDamage(MyEnemyData, playerData, MyEnemyData.CurrentAttack, BattleManager.Instance.CurrentLocationID, 0);
         }
         BattleManager.Instance.Replace(currentEnemyList, startLocation, endLocation);
         //Debug.Log(startLocation + "   " + endLocation);
