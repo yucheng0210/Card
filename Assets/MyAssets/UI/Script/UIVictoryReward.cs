@@ -69,11 +69,17 @@ public class UIVictoryReward : UIBase
             int cardType = Random.Range(0, 100);
             int rewardID;
             if (cardType >= 95)
+            {
                 continue;
+            }
             else if (cardType >= 80)
+            {
                 rewardID = rareCardList[Random.Range(0, rareCardList.Count)];
+            }
             else
+            {
                 rewardID = normalCardList[Random.Range(0, normalCardList.Count)];
+            }
             Dictionary<int, CardData> cardList = DataManager.Instance.CardList;
             cardRewardMenu.SetActive(true);
             CardItem cardItem = Instantiate(cardPrefab, cardRewardGroupTrans);

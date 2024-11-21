@@ -17,11 +17,11 @@ public class ApplyBuff : IEffect
 
     public string SetTitleText()
     {
-        throw new System.NotImplementedException();
+        return "爪牙增益";
     }
     public string SetDescriptionText()
     {
-        throw new System.NotImplementedException();
+        return "給予場上所有爪牙增益。";
     }
 
 }

@@ -18,17 +18,15 @@ public class EnemyData : CharacterData
     public Dictionary<string, int> PassiveSkills { get; set; }
     public Dictionary<string, int> MaxPassiveSkillsList { get; set; }
     public bool ImageFlip { get; set; }
+    public int SpecialAttackCondition { get; set; }
+    public List<ValueTuple<string, int>> SpecialAttackOrderStrs { get; set; }
     public EnemyData DeepClone()
     {
         EnemyData clone = (EnemyData)this.MemberwiseClone();
-
-        // 深拷贝 AttackOrderStrs
         clone.AttackOrderStrs = new List<ValueTuple<string, int>>(this.AttackOrderStrs);
-
-        // 深拷贝 PassiveSkills
         clone.PassiveSkills = new Dictionary<string, int>(this.PassiveSkills);
         clone.MaxPassiveSkillsList = new Dictionary<string, int>(this.MaxPassiveSkillsList);
-
+        clone.SpecialAttackOrderStrs = new List<ValueTuple<string, int>>(this.SpecialAttackOrderStrs);
         return clone;
     }
 }

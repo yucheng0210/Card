@@ -22,7 +22,6 @@ public class PoisonedEffect : IEffect
         typeName = GetType().Name;
 
         // Remove this skill from attacker's passive skills
-        attacker.PassiveSkills.Remove(typeName);
         currentEnemyList = BattleManager.Instance.CurrentEnemyList;
         currentNegativeState = BattleManager.Instance.CurrentNegativeState;
     }

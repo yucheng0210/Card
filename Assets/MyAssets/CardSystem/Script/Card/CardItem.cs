@@ -239,7 +239,7 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         bool isCardCostNegative = MyCardData.CardCost < 0;
         if (!hasEnoughActionPoints)
         {
-            BattleManager.Instance.ShowCharacterStatusClue(BattleManager.Instance.PlayerTrans, "行動力不足");
+            BattleManager.Instance.ShowCharacterStatusClue(BattleManager.Instance.CurrentPlayer.StatusClueTrans, "行動力不足");
         }
         return hasEnoughActionPoints && hasEnoughMana && !isNotInAttackPhase && !isCardCostNegative;
 
@@ -288,8 +288,9 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             {
                 continue;
             }
+            Transform statusClueTrans = BattleManager.Instance.CurrentPlayer.StatusClueTrans;
             EffectFactory.Instance.CreateEffect(effectID).ApplyEffect(effectCount, BattleManager.Instance.CurrentLocationID, target);
-            BattleManager.Instance.ShowCharacterStatusClue(BattleManager.Instance.PlayerTrans, EffectFactory.Instance.CreateEffect(effectID).SetTitleText());
+            BattleManager.Instance.ShowCharacterStatusClue(statusClueTrans, EffectFactory.Instance.CreateEffect(effectID).SetTitleText());
         }
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
         gameObject.SetActive(false);

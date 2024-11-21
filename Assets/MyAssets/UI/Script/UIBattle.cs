@@ -159,7 +159,7 @@ public class UIBattle : UIBase
                 UIManager.Instance.ClearMoveClue(false);
             };
             BattleManager.Instance.SetEventTrigger(eventTrigger, unityAction_1, unityAction_2);
-            BattleManager.Instance.TriggerEnemyPassiveSkill(location, false);
+            BattleManager.Instance.TriggerEnemyPassiveSkill(location);
         }
     }
 
@@ -324,21 +324,25 @@ public class UIBattle : UIBase
             string key = enemyData.AttackOrderStrs.ElementAt(enemyData.CurrentAttackOrder).Item1;
             int value = enemyData.AttackOrderStrs.ElementAt(enemyData.CurrentAttackOrder).Item2;
             EffectFactory.Instance.CreateEffect(key).ApplyEffect(value, location, BattleManager.Instance.CurrentLocationID);
-            BattleManager.Instance.ShowCharacterStatusClue(enemyData.EnemyTrans, EffectFactory.Instance.CreateEffect(key).SetTitleText());
+            BattleManager.Instance.ShowCharacterStatusClue(enemy.StatusClueTrans, EffectFactory.Instance.CreateEffect(key).SetTitleText());
         }
     }
 
     // 更新攻击顺序
     private void UpdateAttackOrder(EnemyData enemyData, Enemy enemy)
     {
-        if (enemyData.CurrentAttackOrder >= enemyData.AttackOrderStrs.Count - 1)
+        if (enemy.MyActionType != Enemy.ActionType.Move)
         {
-            enemyData.CurrentAttackOrder = 0;
+            if (enemyData.CurrentAttackOrder >= enemyData.AttackOrderStrs.Count - 1)
+            {
+                enemyData.CurrentAttackOrder = 0;
+            }
+            else
+            {
+                enemyData.CurrentAttackOrder++;
+            }
         }
-        else if (enemy.MyActionType != Enemy.ActionType.Move)
-        {
-            enemyData.CurrentAttackOrder++;
-        }
+        //Debug.Log(enemyData.CurrentAttackOrder + "/" + (enemyData.AttackOrderStrs.Count - 1).ToString());
     }
 
     private void ChangeTurn()
@@ -359,7 +363,7 @@ public class UIBattle : UIBase
         {
             if (containsCantMoveEffect || playerCantMove)
             {
-                BattleManager.Instance.ShowCharacterStatusClue(BattleManager.Instance.PlayerTrans, "無法移動");
+                BattleManager.Instance.ShowCharacterStatusClue(BattleManager.Instance.CurrentPlayer.StatusClueTrans, "無法移動");
             }
             return;
         }
@@ -449,8 +453,9 @@ public class UIBattle : UIBase
     private void UsePotionEffect(string effectName, int value, int bagID)
     {
         string playerLocation = BattleManager.Instance.CurrentLocationID;
+        Transform statusClueTrans = BattleManager.Instance.CurrentPlayer.StatusClueTrans;
         EffectFactory.Instance.CreateEffect(effectName).ApplyEffect(value, playerLocation, playerLocation);
-        BattleManager.Instance.ShowCharacterStatusClue(BattleManager.Instance.PlayerTrans, EffectFactory.Instance.CreateEffect(effectName).SetTitleText());
+        BattleManager.Instance.ShowCharacterStatusClue(statusClueTrans, EffectFactory.Instance.CreateEffect(effectName).SetTitleText());
         DataManager.Instance.PotionBag.RemoveAt(bagID);
         potionClueMenu.gameObject.SetActive(false);
         RefreshPotionBag();

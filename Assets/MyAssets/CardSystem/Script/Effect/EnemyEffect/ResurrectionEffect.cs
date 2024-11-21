@@ -10,35 +10,41 @@ public class ResurrectionEffect : IEffect
     private Enemy enemy;
     private Image enemyEffectImage;
     private string targetLocation;
-
+    private string typeName;
     public void ApplyEffect(int value, string fromLocation, string toLocation)
     {
         if (!BattleManager.Instance.CurrentEnemyList.TryGetValue(fromLocation, out enemyData))
         {
             return;
         }
+        typeName = GetType().Name;
         targetLocation = fromLocation;
         recoverCount = Mathf.RoundToInt(enemyData.MaxHealth * (value / 100f));
         enemy = enemyData.EnemyTrans.GetComponent<Enemy>();
         enemyEffectImage = enemy.EnemyEffectImage.GetComponent<Image>();
-
-        // 移除被动技能并设置复活效果图标
-        enemyData.PassiveSkills.Remove(GetType().Name);
+        enemy.EnemyOnceBattlePositiveList.Add(typeName, 1);
+        EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
+        EventManager.Instance.AddEventRegister(EventDefinition.eventEnemyTurn, EventEnemyTurn);
+    }
+    private void EventTakeDamage(params object[] args)
+    {
+        if (enemyData.CurrentHealth > 0)
+        {
+            return;
+        }
+        enemy.MyActionType = Enemy.ActionType.None;
         enemyEffectImage.sprite = ((IEffect)this).SetIcon();
         enemy.EnemyEffectImage.SetActive(true);
-        enemy.EnemyOnceBattlePositiveList.Add(GetType().Name, 1);
-        // 注册敌人回合结束事件
-        EventManager.Instance.AddEventRegister(EventDefinition.eventEnemyTurn, EventEnemyTurn);
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
+        EventManager.Instance.RemoveEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
     }
-
     private void EventEnemyTurn(params object[] args)
     {
         if (enemyData.CurrentHealth > 0)
         {
             return;
         }
-        enemy.EnemyOnceBattlePositiveList.Remove(GetType().Name);
+        enemy.EnemyOnceBattlePositiveList.Remove(typeName);
         // 敌人复活
         enemy.IsDeath = false;
         enemy.MyAnimator.SetTrigger("isResurrection");

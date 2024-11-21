@@ -5,12 +5,16 @@ using UnityEngine.UI;
 
 public class GroupEffect : IEffect
 {
+    private EnemyData attacker;
     private string leaderLocation;
     private int minionsID;
+    private string typeName;
     public void ApplyEffect(int value, string fromLocation, string toLocation)
     {
+        typeName = GetType().Name;
         leaderLocation = fromLocation;
         minionsID = value;
+        attacker = (EnemyData)BattleManager.Instance.IdentifyCharacter(fromLocation);
         EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
     }
     private void EventTakeDamage(params object[] args)

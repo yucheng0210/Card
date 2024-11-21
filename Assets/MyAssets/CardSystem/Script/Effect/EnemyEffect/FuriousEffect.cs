@@ -16,10 +16,6 @@ public class FuriousEffect : IEffect
         if (enemyList.TryGetValue(fromLocation, out enemyData))
         {
             attackIncreaseCount = Mathf.RoundToInt(enemyData.CurrentAttack * (value / 100f));
-            // 移除被動技能
-            enemyData.PassiveSkills.Remove(GetType().Name);
-
-            // 註冊事件
             EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
         }
     }

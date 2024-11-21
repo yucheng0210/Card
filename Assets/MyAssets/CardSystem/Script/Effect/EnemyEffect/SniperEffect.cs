@@ -15,7 +15,6 @@ public class SniperEffect : IEffect
             attackMultiplier = value;
             EventManager.Instance.AddEventRegister(EventDefinition.eventMove, EventMove);
             EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
-            enemyData.PassiveSkills.Remove(GetType().Name);
         }
     }
 

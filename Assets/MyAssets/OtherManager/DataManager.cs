@@ -149,6 +149,8 @@ public class DataManager : Singleton<DataManager>
                 MaxPassiveSkillsList = new Dictionary<string, int>(),
                 DamageReduction = int.Parse(row[12]),
                 ImageFlip = bool.Parse(row[13]),
+                SpecialAttackCondition = int.Parse(row[14]),
+                SpecialAttackOrderStrs = new List<(string, int)>()
             };
             if (!string.IsNullOrEmpty(row[9]))
             {
@@ -175,9 +177,20 @@ public class DataManager : Singleton<DataManager>
                     }
                 }
             }
+            if (!string.IsNullOrEmpty(row[15]))
+            {
+                string[] specialAttackOrders = row[15].Split(';');
+                for (int j = 0; j < specialAttackOrders.Length; j++)
+                {
+                    string[] orderParts = specialAttackOrders[j].Split('=');
+                    if (orderParts.Length == 2)
+                    {
+                        enemyData.SpecialAttackOrderStrs.Add((orderParts[0], int.Parse(orderParts[1])));
+                    }
+                }
+            }
             EnemyList.Add(enemyData.CharacterID, enemyData);
         }
-
         #endregion
         #region 關卡列表
         /* lineData = File.ReadAllLines(levelListPath);

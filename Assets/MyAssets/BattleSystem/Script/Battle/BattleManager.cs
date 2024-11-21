@@ -76,6 +76,7 @@ public class BattleManager : Singleton<BattleManager>
     public int ManaMultiplier { get; set; }
     public int CurrentConsumeMana { get; set; }
     public PlayerData CurrentPlayerData { get; set; }
+    public Player CurrentPlayer { get; set; }
     //敵人
     public Dictionary<string, EnemyData> CurrentEnemyList { get; set; }
     public Dictionary<string, EnemyData> CurrentMinionsList { get; set; }
@@ -107,11 +108,11 @@ public class BattleManager : Singleton<BattleManager>
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            /*for (int i = 0; i < CurrentEnemyList.Count; i++)
+            for (int i = 0; i < CurrentEnemyList.Count; i++)
             {
                 CharacterData value = CurrentEnemyList.ElementAt(i).Value;
                 TakeDamage(CurrentPlayerData, value, 20, CurrentEnemyList.ElementAt(i).Key, 0);
-            }*/
+            }
             /* for (int i = 0; i < CurrentEnemyList.Count; i++)
              {
                  Debug.Log(CurrentEnemyList.ElementAt(i).Key == CurrentEnemyList[CurrentEnemyList.ElementAt(i).Key].EnemyTrans.GetComponent<Enemy>().EnemyLocation);
@@ -158,15 +159,21 @@ public class BattleManager : Singleton<BattleManager>
         Color color = Color.green;
         EventManager.Instance.DispatchEvent(EventDefinition.eventRecover, screenCenter, damage, CurrentLocationID, color);
     }
-    public void TriggerEnemyPassiveSkill(string locationID, bool isMinion)
+    public void TriggerEnemyPassiveSkill(string location)
     {
-        EnemyData enemyData = isMinion ? CurrentMinionsList[locationID] : CurrentEnemyList[locationID];
+        EnemyData enemyData = (EnemyData)IdentifyCharacter(location);
+        Enemy enemy = enemyData.EnemyTrans.GetComponent<Enemy>();
+        if (enemyData == null)
+        {
+            return;
+        }
         for (int i = 0; i < enemyData.PassiveSkills.Count; i++)
         {
             string key = enemyData.PassiveSkills.ElementAt(i).Key;
-            EffectFactory.Instance.CreateEffect(key).ApplyEffect(enemyData.PassiveSkills[key], locationID, CurrentLocationID);
-            ShowCharacterStatusClue(enemyData.EnemyTrans, EffectFactory.Instance.CreateEffect(key).SetTitleText());
+            EffectFactory.Instance.CreateEffect(key).ApplyEffect(enemyData.PassiveSkills[key], location, CurrentLocationID);
+            ShowCharacterStatusClue(enemy.StatusClueTrans, EffectFactory.Instance.CreateEffect(key).SetTitleText());
         }
+        enemyData.PassiveSkills.Clear();
     }
     public void SetEventTrigger(EventTrigger eventTrigger, UnityAction unityAction_1, UnityAction unityAction_2)
     {
@@ -694,6 +701,7 @@ public class BattleManager : Singleton<BattleManager>
             string locationID = MapManager.Instance.MapNodes[levelCount][levelID].l.TerrainIDList.ElementAt(i).Key;
             CurrentTerrainList.Add(locationID, DataManager.Instance.TerrainList[terrainID].Clone());
         }
+        RefreshCheckerboardList();
         EventManager.Instance.DispatchEvent(EventDefinition.eventBattleInitial);
     }
     private void Attack()
@@ -807,8 +815,8 @@ public class BattleManager : Singleton<BattleManager>
             CurrentMinionsList[key].EnemyTrans = enemy.GetComponent<RectTransform>();
             enemy.MyEnemyData = CurrentMinionsList[key];
             enemy.MyNextAttackActionRangeType = ActionRangeType.None;
-            string minionsLocation = GetEnemyKey(CurrentMinionsList[key]);
-            TriggerEnemyPassiveSkill(minionsLocation, true);
+            /*string minionsLocation = GetEnemyKey(CurrentMinionsList[key]);
+            TriggerEnemyPassiveSkill(minionsLocation, true);*/
         }
     }
     public void AddTrap(List<string> trapList, int id)
@@ -874,7 +882,6 @@ public class BattleManager : Singleton<BattleManager>
         {
             return minion;
         }
-
         return location == CurrentLocationID ? CurrentPlayerData : null;
     }
     public string GetEnemyKey(EnemyData enemyData)
@@ -892,10 +899,45 @@ public class BattleManager : Singleton<BattleManager>
 
     public void ShowCharacterStatusClue(Transform trans, string des)
     {
+        StartCoroutine(ShowCharacterStatusClueCoroutine(trans, des));
+    }
+    private IEnumerator ShowCharacterStatusClueCoroutine(Transform trans, string des)
+    {
+        for (int i = 0; i < trans.childCount; i++)
+        {
+            if (trans.GetChild(i).GetComponent<Text>().text == des)
+            {
+                yield break;
+            }
+        }
+        if (trans.childCount > 6)
+        {
+            yield break;
+        }
+        if (trans.childCount > 0)
+        {
+            yield return new WaitForSeconds(0.5f);
+        }
+        // 創建新提示
         CanvasGroup clue = Instantiate(CharacterStatusClue, trans);
+        RectTransform clueRect = clue.GetComponent<RectTransform>();
         Text clueText = clue.GetComponent<Text>();
-        clueText.text = des;
+        // 獲取上一個子物件的終點位置
+        if (trans.childCount > 1)
+        {
+            RectTransform lastChildRect = trans.GetChild(trans.childCount - 2).GetComponent<RectTransform>();
+            clueRect.anchoredPosition = lastChildRect.anchoredPosition + new Vector2(0, 25); // 終點向上偏移
+        }
+        else
+        {
+            clueRect.anchoredPosition = Vector2.zero; // 預設位置
+        }
+
+        // 動畫和文字設定
         DG.Tweening.Sequence sequence = DOTween.Sequence();
-        sequence.Append(clue.transform.DOLocalMoveY(100, 0.5f)).AppendCallback(() => StartCoroutine(UIManager.Instance.FadeIn(clue, 1f, true)));
+        clueText.text = des;
+
+        // 動畫序列
+        sequence.Append(clueRect.DOLocalMoveY(clueRect.anchoredPosition.y + 75, 0.5f)).AppendCallback(() => StartCoroutine(UIManager.Instance.FadeIn(clue, 1f, true)));
     }
 }

@@ -20,7 +20,6 @@ public class ParasiticEffect : IEffect
         }
         host = BattleManager.Instance.CurrentPlayerData;
         damage = value;
-        parasite.PassiveSkills.Remove(GetType().Name);
         EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
         // Register enemy turn event
         EventManager.Instance.AddEventRegister(EventDefinition.eventEnemyTurn, EventEnemyTurn);

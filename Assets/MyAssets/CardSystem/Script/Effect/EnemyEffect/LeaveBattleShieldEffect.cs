@@ -15,8 +15,6 @@ public class LeaveBattleShieldEffect : IEffect
         wasAttackedLastTurn = false;
         targetCharacter = currentEnemyList.ContainsKey(fromLocation) ? currentEnemyList[fromLocation] : BattleManager.Instance.CurrentPlayerData;
         shieldCount = value;
-        if (currentEnemyList.ContainsKey(fromLocation))
-            currentEnemyList[fromLocation].PassiveSkills.Remove(GetType().Name);
         Debug.Log(wasAttackedLastTurn);
         // 監聽攻擊事件
         EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);

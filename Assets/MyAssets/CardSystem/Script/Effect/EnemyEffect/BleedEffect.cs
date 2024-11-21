@@ -15,16 +15,12 @@ public class BleedEffect : IEffect
         currentEnemyList = BattleManager.Instance.CurrentEnemyList;
         currentNegativeState = BattleManager.Instance.CurrentNegativeState;
         // Set attacker and bleedCount
-        attacker = currentEnemyList.ContainsKey(fromLocation) ? currentEnemyList[fromLocation] : BattleManager.Instance.CurrentMinionsList[fromLocation];
+        attacker = (EnemyData)BattleManager.Instance.IdentifyCharacter(fromLocation);
         bleedCount = value;
         typeName = GetType().Name;
         // Register events
         EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
         EventManager.Instance.AddEventRegister(EventDefinition.eventMove, EventMove);
-
-        // Remove this effect from attacker's passive skills
-        attacker.PassiveSkills.Remove(typeName);
-
     }
 
     private void EventTakeDamage(params object[] args)
