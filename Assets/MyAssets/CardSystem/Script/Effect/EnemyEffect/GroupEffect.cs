@@ -5,19 +5,15 @@ using UnityEngine.UI;
 
 public class GroupEffect : IEffect
 {
-    private EnemyData attacker;
     private string leaderLocation;
     private int minionsID;
-    private string typeName;
     public void ApplyEffect(int value, string fromLocation, string toLocation)
     {
-        typeName = GetType().Name;
         leaderLocation = fromLocation;
         minionsID = value;
-        attacker = (EnemyData)BattleManager.Instance.IdentifyCharacter(fromLocation);
-        EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
+        EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
     }
-    private void EventTakeDamage(params object[] args)
+    private void EventPlayerTurn(params object[] args)
     {
         if (!BattleManager.Instance.CurrentEnemyList.ContainsKey(leaderLocation))
         {
@@ -36,6 +32,6 @@ public class GroupEffect : IEffect
 
     public string SetDescriptionText()
     {
-        return "場上每多一隻爪牙減傷和攻擊上升";
+        return "場上每多一隻爪牙減傷和攻擊上升。";
     }
 }

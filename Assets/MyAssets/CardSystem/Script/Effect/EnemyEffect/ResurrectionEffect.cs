@@ -35,6 +35,9 @@ public class ResurrectionEffect : IEffect
         enemy.MyActionType = Enemy.ActionType.None;
         enemyEffectImage.sprite = ((IEffect)this).SetIcon();
         enemy.EnemyEffectImage.SetActive(true);
+        enemy.InfoTitle.text = SetTitleText();
+        enemy.InfoDescription.text = SetDescriptionText();
+        enemy.SetInfoGroupEventTrigger();
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
         EventManager.Instance.RemoveEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
     }

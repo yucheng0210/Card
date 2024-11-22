@@ -14,26 +14,22 @@ public class BleedEffect : IEffect
     {
         currentEnemyList = BattleManager.Instance.CurrentEnemyList;
         currentNegativeState = BattleManager.Instance.CurrentNegativeState;
-        // Set attacker and bleedCount
         attacker = (EnemyData)BattleManager.Instance.IdentifyCharacter(fromLocation);
         bleedCount = value;
         typeName = GetType().Name;
-        // Register events
         EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
-        EventManager.Instance.AddEventRegister(EventDefinition.eventMove, EventMove);
+        EventManager.Instance.AddEventRegister(EventDefinition.eventUseCard, EventUseCard);
     }
 
     private void EventTakeDamage(params object[] args)
     {
-        // Unregister the event if the defender is not at the current location
         if (!currentEnemyList.ContainsValue(attacker))
         {
             EventManager.Instance.RemoveEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
             return;
         }
-        // Apply bleed effect if the attacker matches the damage source
         CharacterData damageSource = (CharacterData)args[4];
-        if (attacker == damageSource)
+        if (attacker == damageSource && BattleManager.Instance.MyBattleType == BattleManager.BattleType.Enemy)
         {
             if (currentNegativeState.ContainsKey(typeName))
             {
@@ -46,12 +42,12 @@ public class BleedEffect : IEffect
         }
     }
 
-    private void EventMove(params object[] args)
+    private void EventUseCard(params object[] args)
     {
         // Unregister the event if the defender is not at the current location
         if (!currentEnemyList.ContainsValue(attacker))
         {
-            EventManager.Instance.RemoveEventRegister(EventDefinition.eventMove, EventMove);
+            EventManager.Instance.RemoveEventRegister(EventDefinition.eventUseCard, EventUseCard);
             return;
         }
         if (!currentNegativeState.ContainsKey(typeName))
@@ -70,7 +66,7 @@ public class BleedEffect : IEffect
 
     public string SetDescriptionText()
     {
-        return "移動時會受到等同於流血效果層數的傷害。";
+        return "攻擊時會受到等同於流血效果層數的傷害。";
     }
     public string SetPassiveEffectDescriptionText()
     {

@@ -35,6 +35,9 @@ public class Enemy : MonoBehaviour
     private Text infoTitle;
     [SerializeField]
     private Text infoDescription;
+    public Text InfoTitle { get { return infoTitle; } set { infoTitle = value; } }
+    public Text InfoDescription { get { return infoDescription; } set { infoDescription = value; } }
+    public Text EnemyAttackIntentText { get { return enemyAttackIntentText; } set { enemyAttackIntentText = value; } }
     public Transform StatusClueTrans { get { return statusClueTrans; } set { statusClueTrans = value; } }
     public Image EnemyImage { get { return enemyImage; } set { enemyImage = value; } }
     public GameObject EnemyEffectImage { get { return enemyEffect; } set { enemyEffect = value; } }
@@ -49,6 +52,7 @@ public class Enemy : MonoBehaviour
     public Sequence MySequence { get; set; }
     private Dictionary<string, EnemyData> currentEnemyList = new();
     public EnemyData MyEnemyData { get; set; }
+    public string MasterLocation { get; set; }
     public int CurrentAttackDistance { get; set; }
     public int AdditionAttackCount { get; set; }
     public bool InRange { get; set; }
@@ -178,7 +182,7 @@ public class Enemy : MonoBehaviour
         enemyMove.SetActive(true);
     }
 
-    private void SetInfoGroupEventTrigger()
+    public void SetInfoGroupEventTrigger()
     {
         EventTrigger eventTrigger = infoGroupTrans.GetComponent<EventTrigger>();
         UnityAction unityAction_1 = () => { infoGroupTrans.GetChild(0).gameObject.SetActive(true); };
@@ -262,12 +266,12 @@ public class Enemy : MonoBehaviour
     private void EventMove(params object[] args)
     {
         BattleManager.Instance.CheckPlayerLocationInRange(this);
-        /* if (MyActionType == ActionType.Attack)
-         {
-             SetAttackActionRangeType();
-             string location = BattleManager.Instance.GetEnemyKey(MyEnemyData);
-             CurrentActionRangeTypeList = BattleManager.Instance.GetActionRangeTypeList(location, CurrentAttackDistance, MyCheckEmptyType, MyNextAttackActionRangeType);
-         }*/
+        /*if (MyActionType == ActionType.Attack && MyNextAttackActionRangeType == BattleManager.ActionRangeType.StraightCharge)
+        {
+            SetAttackActionRangeType();
+            string location = BattleManager.Instance.GetEnemyKey(MyEnemyData);
+            CurrentActionRangeTypeList = BattleManager.Instance.GetActionRangeTypeList(location, CurrentAttackDistance, MyCheckEmptyType, MyNextAttackActionRangeType);
+        }*/
     }
     private void EventRefreshUI(params object[] args)
     {

@@ -392,6 +392,7 @@ public class UIBattle : UIBase
                 Destroy(enemyData.EnemyTrans.gameObject, 1);
             }
             enemy.IsDeath = true;
+            CheckEnemyInfo();
         }
         else
         {
@@ -554,7 +555,7 @@ public class UIBattle : UIBase
     private void EventTakeDamage(params object[] args)
     {
         string defenderLocation = (string)args[2];
-        if (BattleManager.Instance.CurrentEnemyList.ContainsKey(defenderLocation))
+        if (BattleManager.Instance.CurrentEnemyList.ContainsKey(defenderLocation) || BattleManager.Instance.CurrentMinionsList.ContainsKey(defenderLocation))
         {
             CheckEnemyInfo();
             RefreshEnemyInfo(defenderLocation);

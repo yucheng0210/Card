@@ -108,15 +108,11 @@ public class BattleManager : Singleton<BattleManager>
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            for (int i = 0; i < CurrentEnemyList.Count; i++)
+            for (int i = 0; i < CurrentMinionsList.Count; i++)
             {
-                CharacterData value = CurrentEnemyList.ElementAt(i).Value;
-                TakeDamage(CurrentPlayerData, value, 20, CurrentEnemyList.ElementAt(i).Key, 0);
+                CharacterData value = CurrentMinionsList.ElementAt(i).Value;
+                TakeDamage(CurrentPlayerData, value, 5, CurrentMinionsList.ElementAt(i).Key, 0);
             }
-            /* for (int i = 0; i < CurrentEnemyList.Count; i++)
-             {
-                 Debug.Log(CurrentEnemyList.ElementAt(i).Key == CurrentEnemyList[CurrentEnemyList.ElementAt(i).Key].EnemyTrans.GetComponent<Enemy>().EnemyLocation);
-             }*/
         }
     }
     public void TakeDamage(CharacterData attacker, CharacterData defender, int damage, string location, float delay)
@@ -812,11 +808,10 @@ public class BattleManager : Singleton<BattleManager>
             enemy.EnemyID = CurrentMinionsList[key].CharacterID;
             enemy.EnemyImage.sprite = Resources.Load<Sprite>(CurrentMinionsList[key].EnemyImagePath);
             enemy.MyAnimator.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>(CurrentMinionsList[key].EnemyAniPath);
+            enemy.MasterLocation = location;
             CurrentMinionsList[key].EnemyTrans = enemy.GetComponent<RectTransform>();
             enemy.MyEnemyData = CurrentMinionsList[key];
             enemy.MyNextAttackActionRangeType = ActionRangeType.None;
-            /*string minionsLocation = GetEnemyKey(CurrentMinionsList[key]);
-            TriggerEnemyPassiveSkill(minionsLocation, true);*/
         }
     }
     public void AddTrap(List<string> trapList, int id)
@@ -835,9 +830,9 @@ public class BattleManager : Singleton<BattleManager>
     public int GetMinionsIDCount(int id)
     {
         int count = 0;
-        for (int i = 0; i < CurrentEnemyList.Count; i++)
+        for (int i = 0; i < CurrentMinionsList.Count; i++)
         {
-            EnemyData enemyData = CurrentEnemyList.ElementAt(i).Value;
+            EnemyData enemyData = CurrentMinionsList.ElementAt(i).Value;
             if (enemyData.CharacterID == id)
             {
                 count++;
