@@ -106,12 +106,21 @@ public class BattleManager : Singleton<BattleManager>
     }
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.KeypadEnter))
         {
-            for (int i = 0; i < CurrentMinionsList.Count; i++)
+            /*for (int i = 0; i < CurrentMinionsList.Count; i++)
             {
                 CharacterData value = CurrentMinionsList.ElementAt(i).Value;
                 TakeDamage(CurrentPlayerData, value, 5, CurrentMinionsList.ElementAt(i).Key, 0);
+            }*/
+            for (int i = 0; i < CurrentEnemyList.Count; i++)
+            {
+                EnemyData enemyData = CurrentEnemyList.ElementAt(i).Value;
+                Enemy enemy = enemyData.EnemyTrans.GetComponent<Enemy>();
+                for (int j = 0; j < enemy.CurrentActionRangeTypeList.Count; j++)
+                {
+                    Debug.Log(enemy.CurrentActionRangeTypeList[j]);
+                }
             }
         }
     }
@@ -224,9 +233,9 @@ public class BattleManager : Singleton<BattleManager>
         string[] points = point.Split(' ');
         return int.Parse(points[0]) + int.Parse(points[1]) * 8;
     }
-    public Vector2 GetCheckerboardPos(string location)
+    public Transform GetCheckerboardTrans(string location)
     {
-        return CheckerboardTrans.GetChild(GetCheckerboardPoint(location)).localPosition;
+        return CheckerboardTrans.GetChild(GetCheckerboardPoint(location));
     }
     private List<string> GetEmptyPlace(string location, int stepCount, CheckEmptyType checkEmptyType, bool isBFS, bool isContainStartPos)
     {
@@ -260,7 +269,6 @@ public class BattleManager : Singleton<BattleManager>
         }
         return emptyPlaceList;
     }
-
     public bool CheckPlaceEmpty(string place, CheckEmptyType checkEmptyType)
     {
         if (!CheckerboardList.ContainsKey(place))
@@ -272,6 +280,22 @@ public class BattleManager : Singleton<BattleManager>
         bool enemyAttackCondition = checkEmptyType == CheckEmptyType.EnemyAttack && placeStatus == "Player";
         bool allCharacterCondition = checkEmptyType == CheckEmptyType.ALLCharacter && (placeStatus == "Player" || placeStatus == "Enemy");
         return playerAttackCondition || enemyAttackCondition || allCharacterCondition || placeStatus == "Empty" || placeStatus == "Trap";
+    }
+    public void CheckPlayerLocationInTrapRange()
+    {
+        if (CurrentTrapList.ContainsKey(CurrentLocationID))
+        {
+            TrapData trapData = CurrentTrapList[CurrentLocationID];
+            for (int i = 0; i < trapData.TriggerSkillList.Count; i++)
+            {
+                string key = trapData.TriggerSkillList.ElementAt(i).Key;
+                EffectFactory.Instance.CreateEffect(key).ApplyEffect(trapData.TriggerSkillList[key], CurrentLocationID, CurrentLocationID);
+                ShowCharacterStatusClue(CurrentPlayer.StatusClueTrans, EffectFactory.Instance.CreateEffect(key).SetTitleText());
+            }
+            TakeDamage(CurrentPlayerData, CurrentPlayerData, trapData.CurrentAttack, CurrentLocationID, 0);
+            CurrentTrapList.Remove(CurrentLocationID);
+            Destroy(trapData.TrapTrans.gameObject);
+        }
     }
     public List<string> GetRoute(string fromLocation, string toLocation, CheckEmptyType checkEmptyType)
     {
@@ -368,7 +392,7 @@ public class BattleManager : Singleton<BattleManager>
                 emptyPlaceList = GetThrowExplosionList(stepCount);
                 break;
             case ActionRangeType.ThrowScattering:
-                emptyPlaceList = GetThrowScatteringList(stepCount);
+                emptyPlaceList = GetThrowScatteringList();
                 break;
         }
         return emptyPlaceList;
@@ -526,18 +550,19 @@ public class BattleManager : Singleton<BattleManager>
     {
         return GetActionRangeTypeList(CurrentLocationID, attackDistance, CheckEmptyType.EnemyAttack, ActionRangeType.SurroundingExplosion);
     }
-    private List<string> GetThrowScatteringList(int attackDistance)
+    private List<string> GetThrowScatteringList()
     {
-        List<string> emptyPlaceList = GetActionRangeTypeList(CurrentLocationID, 2, CheckEmptyType.EnemyAttack, ActionRangeType.SurroundingExplosion);
+        List<string> emptyPlaceList = GetActionRangeTypeList(CurrentLocationID, 5, CheckEmptyType.EnemyAttack, ActionRangeType.SurroundingExplosion);
         List<string> throwLocationList = new();
-        int throwCount = emptyPlaceList.Count > 3 ? 3 : emptyPlaceList.Count;
+        int throwCount = emptyPlaceList.Count > 5 ? 5 : emptyPlaceList.Count;
+        throwLocationList.Add(CurrentLocationID);
         for (int i = 0; i < throwCount; i++)
         {
             int randomIndex = UnityEngine.Random.Range(0, emptyPlaceList.Count);
             throwLocationList.Add(emptyPlaceList[randomIndex]);
             emptyPlaceList.RemoveAt(randomIndex);
         }
-        return GetActionRangeTypeList(CurrentLocationID, attackDistance, CheckEmptyType.EnemyAttack, ActionRangeType.Surrounding);
+        return throwLocationList;
     }
     public string GetCloseLocation(string fromLocation, string toLocation, int attackDistance, CheckEmptyType checkEmptyType, ActionRangeType findType)
     {
@@ -573,19 +598,15 @@ public class BattleManager : Singleton<BattleManager>
     public void CheckPlayerLocationInRange(Enemy enemy)
     {
         string playerLocation = CurrentLocationID;
-        CheckEmptyType checkEmptyType = CheckEmptyType.EnemyAttack;
-        int attackDistance = enemy.CurrentAttackDistance;
-        string location = GetEnemyKey(enemy.MyEnemyData);
-        List<string> nextAttackRangeList = GetActionRangeTypeList(location, attackDistance, checkEmptyType, enemy.MyNextAttackActionRangeType);
-        enemy.InRange = nextAttackRangeList.Contains(playerLocation) || enemy.MyNextAttackActionRangeType == ActionRangeType.None;
+        enemy.InRange = enemy.CurrentActionRangeTypeList.Contains(playerLocation) || enemy.MyNextAttackActionRangeType == ActionRangeType.None || enemy.noNeedCheckInRange;
     }
     private bool IsOtherLocationInRange(Enemy enemy, string location)
     {
         string playerLocation = CurrentLocationID;
         CheckEmptyType checkEmptyType = CheckEmptyType.EnemyAttack;
-        int attackDistance = enemy.MyEnemyData.AttackDistance;
+        int attackDistance = enemy.MyEnemyData.AttackRange;
         List<string> nextAttackRangeList = GetActionRangeTypeList(location, attackDistance, checkEmptyType, enemy.MyNextAttackActionRangeType);
-        return nextAttackRangeList.Contains(playerLocation) || enemy.MyNextAttackActionRangeType == ActionRangeType.None;
+        return nextAttackRangeList.Contains(playerLocation) || enemy.MyNextAttackActionRangeType == ActionRangeType.None || enemy.noNeedCheckInRange;
     }
     public void RefreshCheckerboardList()
     {
@@ -820,10 +841,10 @@ public class BattleManager : Singleton<BattleManager>
         {
             RectTransform trapRect = Instantiate(TrapPrefab, TrapGroupTrans).GetComponent<RectTransform>();
             TrapData trapData = DataManager.Instance.TrapList[id].DeepClone();
-            int checkerboardPoint = GetCheckerboardPoint(trapList[i]);
-            trapRect.anchoredPosition = CheckerboardTrans.GetChild(checkerboardPoint).localPosition;
+            trapRect.anchoredPosition = GetCheckerboardTrans(trapList[i]).localPosition;
             trapData.CurrentHealth = trapData.MaxHealth;
             trapData.CurrentAttack = trapData.BaseAttack;
+            trapData.TrapTrans = trapRect;
             CurrentTrapList.Add(trapList[i], trapData);
         }
     }
@@ -891,7 +912,6 @@ public class BattleManager : Singleton<BattleManager>
         dictionary.Remove(oldKey);
         dictionary.Add(newKey, value);
     }
-
     public void ShowCharacterStatusClue(Transform trans, string des)
     {
         StartCoroutine(ShowCharacterStatusClueCoroutine(trans, des));

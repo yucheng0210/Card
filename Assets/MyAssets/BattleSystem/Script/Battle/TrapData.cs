@@ -12,6 +12,7 @@ public class TrapData
     public int CurrentAttack { get; set; }
     public Dictionary<string, int> TriggerSkillList { get; set; }
     public string TrapImagePath { get; set; }
+    public Transform TrapTrans { get; set; }
     public TrapData DeepClone()
     {
         TrapData clone = (TrapData)this.MemberwiseClone();

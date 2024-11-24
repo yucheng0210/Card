@@ -23,4 +23,6 @@ public class SlowDownEffect : IEffect
     {
         return BattleManager.ActionRangeType.Surrounding;
     }
+    public int SetEffectRange() { return 2; }
+
 }

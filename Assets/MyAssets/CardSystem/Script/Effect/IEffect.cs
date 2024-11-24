@@ -9,7 +9,7 @@ public interface IEffect
     Sprite SetIcon() { return Resources.Load<Sprite>("EffectImage/" + GetType().Name); }
     string SetPassiveEffectDescriptionText() { return SetDescriptionText(); }
     BattleManager.ActionRangeType SetEffectAttackType() { return BattleManager.ActionRangeType.None; }
-    int SetEffectDistance() { return -1; }
+    int SetEffectRange() { return -1; }
     string SetTitleText();
     string SetDescriptionText();
 }

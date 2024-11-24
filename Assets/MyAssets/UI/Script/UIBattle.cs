@@ -278,7 +278,8 @@ public class UIBattle : UIBase
             yield break;
         }
         BattleManager.CheckEmptyType checkEmptyType = BattleManager.CheckEmptyType.Move;
-        string minLocation = BattleManager.Instance.GetCloseLocation(location, playerLocation, enemyData.StepCount, checkEmptyType, BattleManager.ActionRangeType.Default);
+        BattleManager.ActionRangeType actionRangeType = BattleManager.ActionRangeType.Default;
+        string minLocation = BattleManager.Instance.GetCloseLocation(location, playerLocation, enemyData.StepCount, checkEmptyType, actionRangeType);
         List<string> routeList = BattleManager.Instance.GetRoute(location, minLocation, checkEmptyType);
         for (int k = 0; k < routeList.Count; k++)
         {
@@ -302,7 +303,7 @@ public class UIBattle : UIBase
         {
             if (enemy.MySequence == null)
             {
-                if (enemy.InRange)
+                if (enemy.InRange && !enemy.noNeedCheckInRange)
                 {
                     BattleManager.Instance.TakeDamage(enemyData, playerData, enemyData.CurrentAttack, BattleManager.Instance.CurrentLocationID, 0.15f);
                 }

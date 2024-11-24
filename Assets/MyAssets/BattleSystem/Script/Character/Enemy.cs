@@ -53,8 +53,9 @@ public class Enemy : MonoBehaviour
     private Dictionary<string, EnemyData> currentEnemyList = new();
     public EnemyData MyEnemyData { get; set; }
     public string MasterLocation { get; set; }
-    public int CurrentAttackDistance { get; set; }
+    public int CurrentActionRange { get; set; }
     public int AdditionAttackCount { get; set; }
+    public bool noNeedCheckInRange { get; set; }
     public bool InRange { get; set; }
     private string location;
     public enum ActionType
@@ -120,7 +121,7 @@ public class Enemy : MonoBehaviour
     {
         string attackOrder = MyEnemyData.AttackOrderStrs.ElementAt(MyEnemyData.CurrentAttackOrder).Item1;
         MyCheckEmptyType = BattleManager.CheckEmptyType.EnemyAttack;
-        CurrentAttackDistance = MyEnemyData.AttackDistance;
+        CurrentActionRange = MyEnemyData.AttackRange;
         if (Enum.TryParse(attackOrder, out BattleManager.ActionRangeType attackType))
         {
             MyNextAttackActionRangeType = attackType;
@@ -138,7 +139,8 @@ public class Enemy : MonoBehaviour
         {
             ActivateEffect(attackOrder);
         }
-        CurrentActionRangeTypeList = BattleManager.Instance.GetActionRangeTypeList(location, CurrentAttackDistance, MyCheckEmptyType, MyNextAttackActionRangeType);
+        CurrentActionRangeTypeList = BattleManager.Instance.GetActionRangeTypeList(location, CurrentActionRange, MyCheckEmptyType, MyNextAttackActionRangeType);
+        SetAttackActionRangeType();
     }
 
     private void ActivateShield()
@@ -156,10 +158,10 @@ public class Enemy : MonoBehaviour
     {
         MyActionType = ActionType.Effect;
         MyNextAttackActionRangeType = EffectFactory.Instance.CreateEffect(attackOrder).SetEffectAttackType();
-        CurrentAttackDistance = EffectFactory.Instance.CreateEffect(attackOrder).SetEffectDistance();
-        if (CurrentAttackDistance <= 0)
+        CurrentActionRange = EffectFactory.Instance.CreateEffect(attackOrder).SetEffectRange();
+        if (CurrentActionRange <= 0)
         {
-            CurrentAttackDistance = MyEnemyData.AttackDistance;
+            CurrentActionRange = MyEnemyData.AttackRange;
         }
         Image enemyEffectImage = enemyEffect.GetComponent<Image>();
         infoTitle.text = "效果";
@@ -172,12 +174,12 @@ public class Enemy : MonoBehaviour
     private void HandleMove()
     {
         BattleManager.ActionRangeType actionRangeType = BattleManager.ActionRangeType.Default;
-        CurrentAttackDistance = MyEnemyData.StepCount;
+        CurrentActionRange = MyEnemyData.StepCount;
         infoTitle.text = "移動";
         infoDescription.text = "進行移動。";
         MyActionType = ActionType.Move;
         MyCheckEmptyType = BattleManager.CheckEmptyType.Move;
-        CurrentActionRangeTypeList = BattleManager.Instance.GetActionRangeTypeList(location, CurrentAttackDistance, MyCheckEmptyType, actionRangeType);
+        CurrentActionRangeTypeList = BattleManager.Instance.GetActionRangeTypeList(location, CurrentActionRange, MyCheckEmptyType, actionRangeType);
         enemyAttackIntentText.enabled = false;
         enemyMove.SetActive(true);
     }
@@ -196,7 +198,6 @@ public class Enemy : MonoBehaviour
         infoDescription.text = "發動攻擊。";
         enemyAttackIntentText.text = MyEnemyData.CurrentAttack.ToString();
         enemyAttack.SetActive(true);
-        SetAttackActionRangeType();
     }
     private void SetAttackActionRangeType()
     {
@@ -207,6 +208,9 @@ public class Enemy : MonoBehaviour
                 break;
             case BattleManager.ActionRangeType.StraightCharge:
                 StraightChargeAttackSequence();
+                break;
+            case BattleManager.ActionRangeType.ThrowScattering:
+                ThrowScatteringAttack();
                 break;
         }
     }
@@ -234,7 +238,7 @@ public class Enemy : MonoBehaviour
     {
         MySequence = DOTween.Sequence().Pause();
         string enemyLocation = BattleManager.Instance.GetEnemyKey(MyEnemyData);
-        int attackDistance = MyEnemyData.AttackDistance;
+        int attackDistance = MyEnemyData.AttackRange;
         BattleManager.ActionRangeType actionRangeType = BattleManager.ActionRangeType.Linear;
         List<string> emptyPlaceList = BattleManager.Instance.GetActionRangeTypeList(enemyLocation, attackDistance, MyCheckEmptyType, actionRangeType);
         string destinationLocation = emptyPlaceList.Count > 0 ? emptyPlaceList[^1] : enemyLocation;
@@ -243,6 +247,10 @@ public class Enemy : MonoBehaviour
         Vector2 destinationPos = BattleManager.Instance.CheckerboardTrans.GetChild(checkerboardPoint).GetComponent<RectTransform>().localPosition;
         Tween moveTween = enemyRect.DOAnchorPos(destinationPos, 0.25f);
         MySequence.Append(moveTween).AppendCallback(() => OnAttackComplete(true, enemyLocation, destinationLocation));
+    }
+    private void ThrowScatteringAttack()
+    {
+        noNeedCheckInRange = true;
     }
     private void OnAttackComplete(bool isKnockBack, string startLocation, string endLocation)
     {
@@ -260,17 +268,19 @@ public class Enemy : MonoBehaviour
     }
     private void EventPlayerTurn(params object[] args)
     {
+        noNeedCheckInRange = false;
         BattleManager.Instance.RefreshCheckerboardList();
         RefreshAttackIntent();
     }
     private void EventMove(params object[] args)
     {
         BattleManager.Instance.CheckPlayerLocationInRange(this);
+        BattleManager.Instance.CheckPlayerLocationInTrapRange();
         /*if (MyActionType == ActionType.Attack && MyNextAttackActionRangeType == BattleManager.ActionRangeType.StraightCharge)
         {
             SetAttackActionRangeType();
             string location = BattleManager.Instance.GetEnemyKey(MyEnemyData);
-            CurrentActionRangeTypeList = BattleManager.Instance.GetActionRangeTypeList(location, CurrentAttackDistance, MyCheckEmptyType, MyNextAttackActionRangeType);
+            CurrentActionRangeTypeList = BattleManager.Instance.GetActionRangeTypeList(location, CurrentActionRange, MyCheckEmptyType, MyNextAttackActionRangeType);
         }*/
     }
     private void EventRefreshUI(params object[] args)

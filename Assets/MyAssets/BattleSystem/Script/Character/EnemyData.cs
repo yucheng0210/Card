@@ -12,7 +12,7 @@ public class EnemyData : CharacterData
     public string EnemyAniPath { get; set; }
     public RectTransform EnemyTrans { get; set; }
     public bool MeleeAttackMode { get; set; }
-    public int AttackDistance { get; set; }
+    public int AttackRange { get; set; }
     public List<ValueTuple<string, int>> AttackOrderStrs { get; set; }
     public int CurrentAttackOrder { get; set; }
     public Dictionary<string, int> PassiveSkills { get; set; }

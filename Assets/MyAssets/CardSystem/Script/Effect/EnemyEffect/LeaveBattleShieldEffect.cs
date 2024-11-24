@@ -13,9 +13,8 @@ public class LeaveBattleShieldEffect : IEffect
     {
         // 初始化狀態
         wasAttackedLastTurn = false;
-        targetCharacter = currentEnemyList.ContainsKey(fromLocation) ? currentEnemyList[fromLocation] : BattleManager.Instance.CurrentPlayerData;
+        targetCharacter = BattleManager.Instance.IdentifyCharacter(fromLocation);
         shieldCount = value;
-        Debug.Log(wasAttackedLastTurn);
         // 監聽攻擊事件
         EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
 
@@ -26,20 +25,25 @@ public class LeaveBattleShieldEffect : IEffect
     private void EventTakeDamage(params object[] args)
     {
         if (args.Length < 6)
+        {
             return;
+        }
         CharacterData attackedCharacterID = (CharacterData)args[5];
 
         // 如果這個角色被攻擊了，更新狀態
         if (attackedCharacterID == targetCharacter)
+        {
             wasAttackedLastTurn = true;
+        }
     }
 
     private void EventEnemyTurn(params object[] args)
     {
         // 如果這個回合沒有被攻擊，給予護盾
         if (!wasAttackedLastTurn)
+        {
             BattleManager.Instance.GetShield(targetCharacter, shieldCount);
-        Debug.Log(wasAttackedLastTurn);
+        }
         // 重置狀態，準備下一回合
         wasAttackedLastTurn = false;
     }
