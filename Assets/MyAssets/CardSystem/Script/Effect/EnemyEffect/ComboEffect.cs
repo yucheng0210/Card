@@ -17,9 +17,14 @@ public class ComboEffect : IEffect
     }
     private void EventTakeDamage(params object[] args)
     {
+        if (args.Length < 5)
+        {
+            return;
+        }
         if (args[4] == characterData)
         {
             enemy.AdditionAttackCount = comboCount++;
+            enemy.EnemyOnceBattlePositiveList.Add(GetType().Name, comboCount);
             isCombo = true;
         }
         else if (args[5] == characterData && ((CharacterData)args[5]).CurrentShield <= 0)
@@ -39,11 +44,11 @@ public class ComboEffect : IEffect
     }
     public string SetTitleText()
     {
-        return "";
+        return "連續拳";
     }
     public string SetDescriptionText()
     {
-        return "";
+        return "每次攻擊擊中，增加額攻擊次數，破盾後重置。";
     }
 
 }

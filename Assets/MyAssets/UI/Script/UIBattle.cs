@@ -303,29 +303,29 @@ public class UIBattle : UIBase
         {
             if (enemy.MySequence == null)
             {
-                if (enemy.InRange && !enemy.noNeedCheckInRange)
+                if (enemy.InRange)
                 {
                     BattleManager.Instance.TakeDamage(enemyData, playerData, enemyData.CurrentAttack, BattleManager.Instance.CurrentLocationID, 0.15f);
                 }
                 enemy.MyAnimator.SetTrigger("isAttacking");
+                yield return new WaitForSecondsRealtime(0.5f);
             }
             else
             {
-                enemy.MySequence.Play();
+                enemy.MySequence.Play().WaitForCompletion();
             }
-            yield return new WaitForSecondsRealtime(0.5f);
         }
     }
 
     // 应用敌人的效果
     private void ApplyEffect(Enemy enemy, EnemyData enemyData, string location)
     {
-        if (enemy.InRange)
+        if (enemy.InRange || enemy.noNeedCheckInRange)
         {
             string key = enemyData.AttackOrderStrs.ElementAt(enemyData.CurrentAttackOrder).Item1;
             int value = enemyData.AttackOrderStrs.ElementAt(enemyData.CurrentAttackOrder).Item2;
             EffectFactory.Instance.CreateEffect(key).ApplyEffect(value, location, BattleManager.Instance.CurrentLocationID);
-            BattleManager.Instance.ShowCharacterStatusClue(enemy.StatusClueTrans, EffectFactory.Instance.CreateEffect(key).SetTitleText());
+            BattleManager.Instance.ShowCharacterStatusClue(enemy.StatusClueTrans, EffectFactory.Instance.CreateEffect(key).SetTitleText(), 0);
         }
     }
 
@@ -364,7 +364,7 @@ public class UIBattle : UIBase
         {
             if (containsCantMoveEffect || playerCantMove)
             {
-                BattleManager.Instance.ShowCharacterStatusClue(BattleManager.Instance.CurrentPlayer.StatusClueTrans, "無法移動");
+                BattleManager.Instance.ShowCharacterStatusClue(BattleManager.Instance.CurrentPlayer.StatusClueTrans, "無法移動", 0);
             }
             return;
         }
@@ -457,7 +457,7 @@ public class UIBattle : UIBase
         string playerLocation = BattleManager.Instance.CurrentLocationID;
         Transform statusClueTrans = BattleManager.Instance.CurrentPlayer.StatusClueTrans;
         EffectFactory.Instance.CreateEffect(effectName).ApplyEffect(value, playerLocation, playerLocation);
-        BattleManager.Instance.ShowCharacterStatusClue(statusClueTrans, EffectFactory.Instance.CreateEffect(effectName).SetTitleText());
+        BattleManager.Instance.ShowCharacterStatusClue(statusClueTrans, EffectFactory.Instance.CreateEffect(effectName).SetTitleText(), 0);
         DataManager.Instance.PotionBag.RemoveAt(bagID);
         potionClueMenu.gameObject.SetActive(false);
         RefreshPotionBag();

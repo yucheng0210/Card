@@ -18,7 +18,7 @@ public class PoisonedEffect : IEffect
         poisonCount = value;
         // Register events
         EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
-        EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
+        EventManager.Instance.AddEventRegister(EventDefinition.eventMove, EventMove);
         typeName = GetType().Name;
 
         // Remove this skill from attacker's passive skills
@@ -54,20 +54,14 @@ public class PoisonedEffect : IEffect
         }
     }
 
-    private void EventPlayerTurn(params object[] args)
+    private void EventMove(params object[] args)
     {
-
-        // If the defender is no longer valid, unregister event and exit
         if (!currentEnemyList.ContainsValue(attacker))
         {
-            EventManager.Instance.RemoveEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
+            EventManager.Instance.RemoveEventRegister(EventDefinition.eventMove, EventMove);
             return;
         }
-        if (!currentNegativeState.ContainsKey(typeName))
-            return;
-        // Double the poison effect on player's turn
-        if (currentNegativeState.ContainsKey(typeName))
-            currentNegativeState[typeName] *= 2;
+        BattleManager.Instance.TakeDamage(attacker, BattleManager.Instance.CurrentPlayerData, currentNegativeState[typeName], BattleManager.Instance.CurrentLocationID, 0);
     }
     public string SetTitleText()
     {

@@ -16,7 +16,6 @@ public class AddCurseEffect : IEffect
             {
                 int key = cardList.ElementAt(i).Key;
                 CardData cardData = cardList[key];
-
                 if (cardData.CardType == "詛咒")
                 {
                     string cardEffect = cardData.CardEffectList[0].Item1;
@@ -33,11 +32,11 @@ public class AddCurseEffect : IEffect
 
     public string SetTitleText()
     {
-        throw new System.NotImplementedException();
+        return "詛咒";
     }
     public string SetDescriptionText()
     {
-        throw new System.NotImplementedException();
+        return "將詛咒卡塞入卡組裡。";
     }
 
 }

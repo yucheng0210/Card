@@ -175,8 +175,10 @@ public class BattleManager : Singleton<BattleManager>
         for (int i = 0; i < enemyData.PassiveSkills.Count; i++)
         {
             string key = enemyData.PassiveSkills.ElementAt(i).Key;
+            string clueStrs = EffectFactory.Instance.CreateEffect(key).SetTitleText();
+            float waitTime = 0.5f * i;
             EffectFactory.Instance.CreateEffect(key).ApplyEffect(enemyData.PassiveSkills[key], location, CurrentLocationID);
-            ShowCharacterStatusClue(enemy.StatusClueTrans, EffectFactory.Instance.CreateEffect(key).SetTitleText());
+            ShowCharacterStatusClue(enemy.StatusClueTrans, clueStrs, waitTime);
         }
         enemyData.PassiveSkills.Clear();
     }
@@ -289,8 +291,10 @@ public class BattleManager : Singleton<BattleManager>
             for (int i = 0; i < trapData.TriggerSkillList.Count; i++)
             {
                 string key = trapData.TriggerSkillList.ElementAt(i).Key;
+                string clueStrs = EffectFactory.Instance.CreateEffect(key).SetTitleText();
+                float waitTime = 0.5f * i;
                 EffectFactory.Instance.CreateEffect(key).ApplyEffect(trapData.TriggerSkillList[key], CurrentLocationID, CurrentLocationID);
-                ShowCharacterStatusClue(CurrentPlayer.StatusClueTrans, EffectFactory.Instance.CreateEffect(key).SetTitleText());
+                ShowCharacterStatusClue(CurrentPlayer.StatusClueTrans, clueStrs, waitTime);
             }
             TakeDamage(CurrentPlayerData, CurrentPlayerData, trapData.CurrentAttack, CurrentLocationID, 0);
             CurrentTrapList.Remove(CurrentLocationID);
@@ -598,7 +602,7 @@ public class BattleManager : Singleton<BattleManager>
     public void CheckPlayerLocationInRange(Enemy enemy)
     {
         string playerLocation = CurrentLocationID;
-        enemy.InRange = enemy.CurrentActionRangeTypeList.Contains(playerLocation) || enemy.MyNextAttackActionRangeType == ActionRangeType.None || enemy.noNeedCheckInRange;
+        enemy.InRange = enemy.CurrentActionRangeTypeList.Contains(playerLocation) || enemy.MyNextAttackActionRangeType == ActionRangeType.None;
     }
     private bool IsOtherLocationInRange(Enemy enemy, string location)
     {
@@ -606,7 +610,7 @@ public class BattleManager : Singleton<BattleManager>
         CheckEmptyType checkEmptyType = CheckEmptyType.EnemyAttack;
         int attackDistance = enemy.MyEnemyData.AttackRange;
         List<string> nextAttackRangeList = GetActionRangeTypeList(location, attackDistance, checkEmptyType, enemy.MyNextAttackActionRangeType);
-        return nextAttackRangeList.Contains(playerLocation) || enemy.MyNextAttackActionRangeType == ActionRangeType.None || enemy.noNeedCheckInRange;
+        return nextAttackRangeList.Contains(playerLocation) || enemy.MyNextAttackActionRangeType == ActionRangeType.None;
     }
     public void RefreshCheckerboardList()
     {
@@ -723,8 +727,8 @@ public class BattleManager : Singleton<BattleManager>
     }
     private void Attack()
     {
-        //StartCoroutine(UIManager.Instance.RefreshEnemyAlert());
         RefreshCheckerboardList();
+        EventManager.Instance.DispatchEvent(EventDefinition.eventAttack);
     }
     private void Explore()
     {
@@ -912,11 +916,11 @@ public class BattleManager : Singleton<BattleManager>
         dictionary.Remove(oldKey);
         dictionary.Add(newKey, value);
     }
-    public void ShowCharacterStatusClue(Transform trans, string des)
+    public void ShowCharacterStatusClue(Transform trans, string des, float waitTime)
     {
-        StartCoroutine(ShowCharacterStatusClueCoroutine(trans, des));
+        StartCoroutine(ShowCharacterStatusClueCoroutine(trans, des, waitTime));
     }
-    private IEnumerator ShowCharacterStatusClueCoroutine(Transform trans, string des)
+    private IEnumerator ShowCharacterStatusClueCoroutine(Transform trans, string des, float waitTime)
     {
         for (int i = 0; i < trans.childCount; i++)
         {
@@ -931,7 +935,7 @@ public class BattleManager : Singleton<BattleManager>
         }
         if (trans.childCount > 0)
         {
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(waitTime);
         }
         // 創建新提示
         CanvasGroup clue = Instantiate(CharacterStatusClue, trans);

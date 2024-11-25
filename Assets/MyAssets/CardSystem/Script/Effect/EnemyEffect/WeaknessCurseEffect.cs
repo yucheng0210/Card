@@ -8,24 +8,25 @@ public class WeaknessCurseEffect : IEffect
     public void ApplyEffect(int value, string fromLocation, string toLocation)
     {
         cardItem = BattleManager.Instance.AddCard(5003);
-        EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
+        EventManager.Instance.AddEventRegister(EventDefinition.eventAttack, EventAttack);
     }
-    private void EventPlayerTurn(params object[] args)
+    private void EventAttack(params object[] args)
     {
         List<CardData> handCard = DataManager.Instance.HandCard;
         if (handCard.Contains(cardItem.MyCardData))
         {
             BattleManager.Instance.PlayerMoveCount = 0;
-            EventManager.Instance.RemoveEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
+            EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
+            EventManager.Instance.RemoveEventRegister(EventDefinition.eventAttack, EventAttack);
         }
     }
     public string SetTitleText()
     {
-        throw new System.NotImplementedException();
+        return "虛弱";
     }
     public string SetDescriptionText()
     {
-        throw new System.NotImplementedException();
+        return "抽到此卡回合移動點數歸零。";
     }
 
 }

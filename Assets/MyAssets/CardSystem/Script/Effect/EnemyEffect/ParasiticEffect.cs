@@ -21,7 +21,6 @@ public class ParasiticEffect : IEffect
         host = BattleManager.Instance.CurrentPlayerData;
         damage = value;
         EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
-        // Register enemy turn event
         EventManager.Instance.AddEventRegister(EventDefinition.eventEnemyTurn, EventEnemyTurn);
     }
 

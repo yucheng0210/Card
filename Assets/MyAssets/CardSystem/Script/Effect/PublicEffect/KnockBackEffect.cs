@@ -33,14 +33,14 @@ public class KnockBackEffect : IEffect
         {
             BattleManager.Instance.PlayerTrans.DOAnchorPos(destinationPos, 0.2f);
             BattleManager.Instance.CurrentLocationID = destinationLocation;
-            ShowStatusClue(BattleManager.Instance.PlayerTrans, "KnockBackEffect");
+            ShowStatusClue(BattleManager.Instance.CurrentPlayer.StatusClueTrans);
         }
         else
         {
             EnemyData enemyData = (EnemyData)targetData;
             BattleManager.Instance.Replace(BattleManager.Instance.CurrentEnemyList, toLocation, destinationLocation);
             enemyData.EnemyTrans.DOAnchorPos(destinationPos, 0.2f);
-            ShowStatusClue(enemyData.EnemyTrans, "KnockBackEffect");
+            ShowStatusClue(enemyData.EnemyTrans);
         }
 
         // 派發事件
@@ -70,9 +70,9 @@ public class KnockBackEffect : IEffect
     }
 
     // 顯示角色狀態提示
-    private void ShowStatusClue(RectTransform characterTrans, string effectName)
+    private void ShowStatusClue(Transform characterTrans)
     {
-        BattleManager.Instance.ShowCharacterStatusClue(characterTrans, EffectFactory.Instance.CreateEffect(effectName).SetTitleText());
+        BattleManager.Instance.ShowCharacterStatusClue(characterTrans, EffectFactory.Instance.CreateEffect(GetType().Name).SetTitleText(), 0);
     }
 
     public string SetTitleText()
@@ -81,6 +81,6 @@ public class KnockBackEffect : IEffect
     }
     public string SetDescriptionText()
     {
-        throw new System.NotImplementedException();
+        return "擊退敵人。";
     }
 }

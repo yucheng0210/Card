@@ -119,7 +119,15 @@ public class Enemy : MonoBehaviour
 
     private void HandleAttack(bool isCheck)
     {
-        string attackOrder = MyEnemyData.AttackOrderStrs.ElementAt(MyEnemyData.CurrentAttackOrder).Item1;
+        string attackOrder;
+        if (MyEnemyData.CurrentHealth <= MyEnemyData.SpecialAttackCondition)
+        {
+            attackOrder = MyEnemyData.SpecialAttackOrderStrs.ElementAt(MyEnemyData.CurrentAttackOrder).Item1;
+        }
+        else
+        {
+            attackOrder = MyEnemyData.AttackOrderStrs.ElementAt(MyEnemyData.CurrentAttackOrder).Item1;
+        }
         MyCheckEmptyType = BattleManager.CheckEmptyType.EnemyAttack;
         CurrentActionRange = MyEnemyData.AttackRange;
         if (Enum.TryParse(attackOrder, out BattleManager.ActionRangeType attackType))

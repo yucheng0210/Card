@@ -9,6 +9,7 @@ public class EventDefinition
     public const string eventBattleInitial = "EVENT_BATTLE_INITIAL";
     public const string eventEnemyTurn = "EVENT_ENEMY_TURN";
     public const string eventBattleWin = "EVENT_BATTLE_WIN";
+    public const string eventAttack = "EVENT_ATTACK";
 
     //戰鬥：卡牌相關
     public const string eventUseCard = "EVENT_USE_CARD";
