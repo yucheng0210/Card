@@ -6,11 +6,23 @@ using UnityEngine;
 
 public class TeleportEffect : IEffect
 {
-    private CharacterData characterData;
+    private string initialLocation;
     public void ApplyEffect(int value, string fromLocation, string toLocation)
     {
-        characterData = BattleManager.Instance.IdentifyCharacter(fromLocation);
-        float minDistance = BattleManager.Instance.CalculateDistance(fromLocation, BattleManager.Instance.CurrentLocationID);
+        initialLocation = fromLocation;
+        if (value == -1)
+        {
+            EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
+        }
+        else
+        {
+            Teleport();
+        }
+    }
+    private void Teleport()
+    {
+        float minDistance = BattleManager.Instance.CalculateDistance(initialLocation, BattleManager.Instance.CurrentLocationID);
+
         List<string> teleportList = new();
         for (int i = 0; i < BattleManager.Instance.CheckerboardList.Count; i++)
         {
@@ -22,11 +34,17 @@ public class TeleportEffect : IEffect
             }
         }
         int randomIndex = Random.Range(0, teleportList.Count);
-        BattleManager.Instance.CurrentEnemyList.Remove(fromLocation);
-        BattleManager.Instance.CurrentEnemyList.Add(teleportList[randomIndex], (EnemyData)characterData);
+        BattleManager.Instance.Replace(BattleManager.Instance.CurrentEnemyList, initialLocation, teleportList[randomIndex]);
         int childCount = BattleManager.Instance.GetCheckerboardPoint(teleportList[randomIndex]);
         RectTransform emptyPlace = BattleManager.Instance.CheckerboardTrans.GetChild(childCount).GetComponent<RectTransform>();
         BattleManager.Instance.CurrentEnemyList[teleportList[randomIndex]].EnemyTrans.DOAnchorPos(emptyPlace.localPosition, 0);
+    }
+    private void EventTakeDamage(params object[] args)
+    {
+        if ((int)args[6] > 0 && args[5] == BattleManager.Instance.CurrentPlayerData)
+        {
+            Teleport();
+        }
     }
     public string SetTitleText()
     {

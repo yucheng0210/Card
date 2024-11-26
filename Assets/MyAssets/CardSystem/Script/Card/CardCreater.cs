@@ -250,10 +250,10 @@ public class CardCreater : MonoBehaviour
                 freezeCardList.Add(handCard[i]);
                 continue;
             }
-            handCard[i].MyCardItem.gameObject.SetActive(true);
-            handCard[i].MyCardItem.CantMove = true;
-            handCard[i].MyCardItem.transform.SetParent(usedCardTrans);
-            handCard[i].MyCardItem.GetComponent<RectTransform>().DOAnchorPos(usedCardTrans.GetComponent<RectTransform>().anchoredPosition, moveTime);
+            CardItem cardItem = handCard[i].MyCardItem;
+            cardItem.CantMove = true;
+            cardItem.transform.SetParent(usedCardTrans);
+            cardItem.GetComponent<RectTransform>().DOAnchorPos(usedCardTrans.GetComponent<RectTransform>().anchoredPosition, moveTime);
             DataManager.Instance.UsedCardBag.Add(handCard[i]);
         }
         handCard.Clear();
