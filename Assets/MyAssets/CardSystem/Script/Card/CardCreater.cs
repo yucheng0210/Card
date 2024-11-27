@@ -47,6 +47,7 @@ public class CardCreater : MonoBehaviour
         EventManager.Instance.AddEventRegister(EventDefinition.eventBattleInitial, EventBattleInitial);
         EventManager.Instance.AddEventRegister(EventDefinition.eventDrawCard, EventDrawCard);
         BattleManager.Instance.CardBagTrans = transform;
+        BattleManager.Instance.UseCardBagTrans = usedCardTrans;
     }
 
     private void CreateCard()

@@ -320,7 +320,7 @@ public class UIBattle : UIBase
     // 应用敌人的效果
     private void ApplyEffect(Enemy enemy, EnemyData enemyData, string location)
     {
-        if (enemy.InRange || enemy.noNeedCheckInRange)
+        if (enemy.InRange || enemy.NoNeedCheckInRange)
         {
             string key = enemyData.AttackOrderStrs.ElementAt(enemyData.CurrentAttackOrder).Item1;
             int value = enemyData.AttackOrderStrs.ElementAt(enemyData.CurrentAttackOrder).Item2;

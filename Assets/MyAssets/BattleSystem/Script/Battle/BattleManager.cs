@@ -65,6 +65,7 @@ public class BattleManager : Singleton<BattleManager>
     public BattleType MyBattleType { get; set; }
     public Transform CardMenuTrans { get; set; }
     public Transform CardBagTrans { get; set; }
+    public Transform UseCardBagTrans { get; set; }
     public Button CardBagApplyButton { get; set; }
     public CardItem CardPrefab { get; set; }
     public GameObject TrapPrefab { get; set; }
@@ -958,5 +959,16 @@ public class BattleManager : Singleton<BattleManager>
 
         // 動畫序列
         sequence.Append(clueRect.DOLocalMoveY(clueRect.anchoredPosition.y + 75, 0.5f)).AppendCallback(() => StartCoroutine(UIManager.Instance.FadeIn(clue, 1f, true)));
+    }
+    public void ThrowAwayHandCard(int childCardIndex, float moveTime)
+    {
+        List<CardData> handCard = DataManager.Instance.HandCard;
+        CardItem cardItem = handCard[childCardIndex].MyCardItem;
+        cardItem.CantMove = true;
+        cardItem.transform.SetParent(UseCardBagTrans, false);
+        cardItem.GetComponent<RectTransform>().DOAnchorPos(UseCardBagTrans.GetComponent<RectTransform>().anchoredPosition, moveTime);
+        DataManager.Instance.UsedCardBag.Add(handCard[childCardIndex]);
+        handCard.RemoveAt(childCardIndex);
+        EventManager.Instance.DispatchEvent(EventDefinition.eventUseCard);
     }
 }

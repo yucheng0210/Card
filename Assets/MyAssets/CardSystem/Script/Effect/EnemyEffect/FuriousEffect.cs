@@ -16,17 +16,29 @@ public class FuriousEffect : IEffect
         if (enemyList.TryGetValue(fromLocation, out enemyData))
         {
             attackIncreaseCount = Mathf.RoundToInt(enemyData.CurrentAttack * (value / 100f));
-            EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
+            EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
         }
     }
 
-    private void EventPlayerTurn(params object[] args)
+    private void EventTakeDamage(params object[] args)
     {
         if (!enemyList.ContainsValue(enemyData))
         {
             // 移除事件監聽
-            EventManager.Instance.RemoveEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
+            EventManager.Instance.RemoveEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
             return;
+        }
+        if (args.Length < 5)
+        {
+            return;
+        }
+        // 獲取攻擊者
+        CharacterData attacker = (CharacterData)args[4];
+
+        // 如果攻擊者是目標敵人，增加攻擊力
+        if (enemyData == attacker)
+        {
+            enemyData.CurrentAttack += attackIncreaseCount;
         }
         enemyData.CurrentAttack += attackIncreaseCount;
     }
@@ -38,6 +50,6 @@ public class FuriousEffect : IEffect
 
     public string SetDescriptionText()
     {
-        return "每回合提升自身的攻擊力。";
+        return "每次擊中敵人提升自身的攻擊力。";
     }
 }

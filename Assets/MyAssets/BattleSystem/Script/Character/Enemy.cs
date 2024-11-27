@@ -55,7 +55,7 @@ public class Enemy : MonoBehaviour
     public string MasterLocation { get; set; }
     public int CurrentActionRange { get; set; }
     public int AdditionAttackCount { get; set; }
-    public bool noNeedCheckInRange { get; set; }
+    public bool NoNeedCheckInRange { get; set; }
     public bool InRange { get; set; }
     private string location;
     public enum ActionType
@@ -258,7 +258,7 @@ public class Enemy : MonoBehaviour
     }
     private void ThrowScatteringAttack()
     {
-        noNeedCheckInRange = true;
+        NoNeedCheckInRange = true;
     }
     private void OnAttackComplete(bool isKnockBack, string startLocation, string endLocation)
     {
@@ -276,7 +276,7 @@ public class Enemy : MonoBehaviour
     }
     private void EventPlayerTurn(params object[] args)
     {
-        noNeedCheckInRange = false;
+        NoNeedCheckInRange = false;
         BattleManager.Instance.RefreshCheckerboardList();
         RefreshAttackIntent();
     }

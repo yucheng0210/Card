@@ -1,4 +1,4 @@
-﻿標籤,名稱,總血量,最低攻擊力,最高攻擊力,圖片位置,移動步數,攻擊距離,近戰模式,行動順序,動畫位置,被動技能,減傷率,圖片翻轉,特殊行動條件,特殊行動順序,特殊被動技能,特殊觸發技能
+﻿標籤,名稱,總血量,最低攻擊力,最高攻擊力,圖片位置,移動步數,攻擊距離,近戰模式,行動順序,動畫位置,被動技能,減傷率,圖片翻轉,特殊行動條件,特殊行動順序,特殊機制,特殊觸發技能
 1001,沙漠哥布林,32,12,12,EnemyImage/Goblin,3,2,FALSE,CantMoveEffect=1;Cone=1;Cone=2,EnemyAnimation/Goblin,FuriousEffect=50,0,FALSE,-1,,,
 1002,骷髏人,55,5,5,EnemyImage/Skeleton,2,1,TRUE,Shield=15;ThornsEffect=20;Surrounding=1,EnemyAnimation/Skeleton,ResurrectionEffect=30,0,FALSE,-1,,,
 1003,大眼怪,47,20,20,EnemyImage/FlyingEye,2,3,FALSE,Linear=1;Linear=1;SlowDownEffect=1;TeleportEffect=2,EnemyAnimation/FlyingEye,SniperEffect=50,0,FALSE,-1,,,
