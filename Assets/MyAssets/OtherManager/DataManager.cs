@@ -150,7 +150,9 @@ public class DataManager : Singleton<DataManager>
                 DamageReduction = int.Parse(row[12]),
                 ImageFlip = bool.Parse(row[13]),
                 SpecialAttackCondition = int.Parse(row[14]),
-                SpecialAttackOrderStrs = new List<(string, int)>()
+                SpecialAttackOrderStrs = new List<(string, int)>(),
+                SpecialMechanismList = new Dictionary<string, int>(),
+                SpecialTriggerSkill = new(),
             };
             if (!string.IsNullOrEmpty(row[9]))
             {
@@ -187,6 +189,26 @@ public class DataManager : Singleton<DataManager>
                     {
                         enemyData.SpecialAttackOrderStrs.Add((orderParts[0], int.Parse(orderParts[1])));
                     }
+                }
+            }
+            if (!string.IsNullOrEmpty(row[16]))
+            {
+                string[] specialMechanismList = row[16].Split(';');
+                for (int j = 0; j < specialMechanismList.Length; j++)
+                {
+                    string[] orderParts = specialMechanismList[j].Split('=');
+                    if (orderParts.Length == 2)
+                    {
+                        enemyData.SpecialMechanismList.Add(orderParts[0], int.Parse(orderParts[1]));
+                    }
+                }
+            }
+            if (!string.IsNullOrEmpty(row[17]))
+            {
+                string[] specialTriggerSkill = row[17].Split('=');
+                if (specialTriggerSkill.Length == 2)
+                {
+                    enemyData.SpecialMechanismList.Add(specialTriggerSkill[0], int.Parse(specialTriggerSkill[1]));
                 }
             }
             EnemyList.Add(enemyData.CharacterID, enemyData);

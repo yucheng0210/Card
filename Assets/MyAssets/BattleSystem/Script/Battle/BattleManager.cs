@@ -109,20 +109,20 @@ public class BattleManager : Singleton<BattleManager>
     {
         if (Input.GetKeyDown(KeyCode.KeypadEnter))
         {
-            /*for (int i = 0; i < CurrentMinionsList.Count; i++)
-            {
-                CharacterData value = CurrentMinionsList.ElementAt(i).Value;
-                TakeDamage(CurrentPlayerData, value, 5, CurrentMinionsList.ElementAt(i).Key, 0);
-            }*/
             for (int i = 0; i < CurrentEnemyList.Count; i++)
             {
-                EnemyData enemyData = CurrentEnemyList.ElementAt(i).Value;
-                Enemy enemy = enemyData.EnemyTrans.GetComponent<Enemy>();
-                for (int j = 0; j < enemy.CurrentActionRangeTypeList.Count; j++)
-                {
-                    Debug.Log(enemy.CurrentActionRangeTypeList[j]);
-                }
+                CharacterData value = CurrentEnemyList.ElementAt(i).Value;
+                TakeDamage(CurrentPlayerData, value, 5, CurrentEnemyList.ElementAt(i).Key, 0);
             }
+            /*  for (int i = 0; i < CurrentEnemyList.Count; i++)
+              {
+                  EnemyData enemyData = CurrentEnemyList.ElementAt(i).Value;
+                  Enemy enemy = enemyData.EnemyTrans.GetComponent<Enemy>();
+                  for (int j = 0; j < enemy.CurrentActionRangeTypeList.Count; j++)
+                  {
+                      Debug.Log(enemy.CurrentActionRangeTypeList[j]);
+                  }
+              }*/
         }
     }
     public void TakeDamage(CharacterData attacker, CharacterData defender, int damage, string location, float delay)
@@ -969,6 +969,6 @@ public class BattleManager : Singleton<BattleManager>
         cardItem.GetComponent<RectTransform>().DOAnchorPos(UseCardBagTrans.GetComponent<RectTransform>().anchoredPosition, moveTime);
         DataManager.Instance.UsedCardBag.Add(handCard[childCardIndex]);
         handCard.RemoveAt(childCardIndex);
-        EventManager.Instance.DispatchEvent(EventDefinition.eventUseCard);
+        EventManager.Instance.DispatchEvent(EventDefinition.eventUseCard, cardItem);
     }
 }

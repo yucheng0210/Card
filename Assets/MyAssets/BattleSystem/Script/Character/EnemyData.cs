@@ -20,6 +20,9 @@ public class EnemyData : CharacterData
     public bool ImageFlip { get; set; }
     public int SpecialAttackCondition { get; set; }
     public List<ValueTuple<string, int>> SpecialAttackOrderStrs { get; set; }
+    public Dictionary<string, int> SpecialMechanismList { get; set; }
+    public ValueTuple<string, int> SpecialTriggerSkill { get; set; }
+
     public EnemyData DeepClone()
     {
         EnemyData clone = (EnemyData)this.MemberwiseClone();

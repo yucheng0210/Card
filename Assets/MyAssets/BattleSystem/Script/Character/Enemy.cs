@@ -58,6 +58,7 @@ public class Enemy : MonoBehaviour
     public bool NoNeedCheckInRange { get; set; }
     public bool InRange { get; set; }
     private string location;
+    private bool isSpecailAction;
     public enum ActionType
     {
         Move,
@@ -122,6 +123,21 @@ public class Enemy : MonoBehaviour
         string attackOrder;
         if (MyEnemyData.CurrentHealth <= MyEnemyData.SpecialAttackCondition)
         {
+            if (!isSpecailAction)
+            {
+                ValueTuple<string, int> triggerSkill = MyEnemyData.SpecialTriggerSkill;
+                Dictionary<string, int> mechanismSkill = MyEnemyData.SpecialMechanismList;
+                //EffectFactory.Instance.CreateEffect(triggerSkill.Item1).ApplyEffect(triggerSkill.Item2, location, BattleManager.Instance.CurrentLocationID);
+                for (int i = 0; i < mechanismSkill.Count; i++)
+                {
+                    string key = mechanismSkill.ElementAt(i).Key;
+                    string clueStrs = EffectFactory.Instance.CreateEffect(key).SetTitleText();
+                    float waitTime = 0.5f * i;
+                    EffectFactory.Instance.CreateEffect(key).ApplyEffect(mechanismSkill[key], location, BattleManager.Instance.CurrentLocationID);
+                    BattleManager.Instance.ShowCharacterStatusClue(StatusClueTrans, clueStrs, waitTime);
+                }
+                isSpecailAction = true;
+            }
             attackOrder = MyEnemyData.SpecialAttackOrderStrs.ElementAt(MyEnemyData.CurrentAttackOrder).Item1;
         }
         else

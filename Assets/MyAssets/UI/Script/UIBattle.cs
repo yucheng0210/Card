@@ -421,7 +421,6 @@ public class UIBattle : UIBase
         }
     }
 
-
     private void RefreshPotionBag()
     {
         for (int i = 0; i < potionGroupTrans.childCount; i++)
