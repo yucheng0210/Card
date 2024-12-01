@@ -6,9 +6,9 @@ public class ThrowTraps : IEffect
 {
     public void ApplyEffect(int value, string fromLocation, string toLocation)
     {
-        EnemyData enemyData = BattleManager.Instance.CurrentEnemyList[fromLocation];
-        Enemy enemy = enemyData.EnemyTrans.GetComponent<Enemy>();
-        List<string> trapList = enemy.CurrentActionRangeTypeList;
+        BattleManager.CheckEmptyType checkEmptyType = BattleManager.CheckEmptyType.Move;
+        BattleManager.ActionRangeType actionRangeType = BattleManager.ActionRangeType.Surrounding;
+        List<string> trapList = BattleManager.Instance.GetActionRangeTypeList(fromLocation, 5, checkEmptyType, actionRangeType);
         BattleManager.Instance.AddTrap(trapList, value);
         BattleManager.Instance.CheckPlayerLocationInTrapRange();
     }

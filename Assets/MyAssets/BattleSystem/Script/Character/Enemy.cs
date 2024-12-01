@@ -58,7 +58,7 @@ public class Enemy : MonoBehaviour
     public bool NoNeedCheckInRange { get; set; }
     public bool InRange { get; set; }
     private string location;
-    private bool isSpecailAction;
+    public bool IsSpecialAction { get; set; }
     public enum ActionType
     {
         Move,
@@ -88,6 +88,7 @@ public class Enemy : MonoBehaviour
         HandleAttack(true);
         ResetUIElements();
         BattleManager.Instance.CheckPlayerLocationInRange(this);
+        Debug.Log(InRange);
         if (distance == 0)
         {
             HandleNoAttack();
@@ -123,11 +124,11 @@ public class Enemy : MonoBehaviour
         string attackOrder;
         if (MyEnemyData.CurrentHealth <= MyEnemyData.SpecialAttackCondition)
         {
-            if (!isSpecailAction)
+            if (!IsSpecialAction)
             {
                 ValueTuple<string, int> triggerSkill = MyEnemyData.SpecialTriggerSkill;
                 Dictionary<string, int> mechanismSkill = MyEnemyData.SpecialMechanismList;
-                //EffectFactory.Instance.CreateEffect(triggerSkill.Item1).ApplyEffect(triggerSkill.Item2, location, BattleManager.Instance.CurrentLocationID);
+                EffectFactory.Instance.CreateEffect(triggerSkill.Item1).ApplyEffect(triggerSkill.Item2, location, BattleManager.Instance.CurrentLocationID);
                 for (int i = 0; i < mechanismSkill.Count; i++)
                 {
                     string key = mechanismSkill.ElementAt(i).Key;
@@ -136,7 +137,8 @@ public class Enemy : MonoBehaviour
                     EffectFactory.Instance.CreateEffect(key).ApplyEffect(mechanismSkill[key], location, BattleManager.Instance.CurrentLocationID);
                     BattleManager.Instance.ShowCharacterStatusClue(StatusClueTrans, clueStrs, waitTime);
                 }
-                isSpecailAction = true;
+                MyEnemyData.CurrentAttackOrder = 0;
+                IsSpecialAction = true;
             }
             attackOrder = MyEnemyData.SpecialAttackOrderStrs.ElementAt(MyEnemyData.CurrentAttackOrder).Item1;
         }
@@ -300,6 +302,7 @@ public class Enemy : MonoBehaviour
     {
         BattleManager.Instance.CheckPlayerLocationInRange(this);
         BattleManager.Instance.CheckPlayerLocationInTrapRange();
+        Debug.Log(InRange);
         /*if (MyActionType == ActionType.Attack && MyNextAttackActionRangeType == BattleManager.ActionRangeType.StraightCharge)
         {
             SetAttackActionRangeType();

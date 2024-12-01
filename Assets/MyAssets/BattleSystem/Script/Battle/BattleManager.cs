@@ -842,15 +842,17 @@ public class BattleManager : Singleton<BattleManager>
     }
     public void AddTrap(List<string> trapList, int id)
     {
-        for (int i = 0; i < trapList.Count; i++)
+        for (int i = 0; i < 3; i++)
         {
+            int randomIndex = UnityEngine.Random.Range(0, trapList.Count);
             RectTransform trapRect = Instantiate(TrapPrefab, TrapGroupTrans).GetComponent<RectTransform>();
             TrapData trapData = DataManager.Instance.TrapList[id].DeepClone();
-            trapRect.anchoredPosition = GetCheckerboardTrans(trapList[i]).localPosition;
+            trapRect.anchoredPosition = GetCheckerboardTrans(trapList[randomIndex]).localPosition;
             trapData.CurrentHealth = trapData.MaxHealth;
             trapData.CurrentAttack = trapData.BaseAttack;
             trapData.TrapTrans = trapRect;
-            CurrentTrapList.Add(trapList[i], trapData);
+            CurrentTrapList.Add(trapList[randomIndex], trapData);
+            trapList.RemoveAt(randomIndex);
         }
     }
     public int GetMinionsIDCount(int id)
@@ -964,11 +966,14 @@ public class BattleManager : Singleton<BattleManager>
     {
         List<CardData> handCard = DataManager.Instance.HandCard;
         CardItem cardItem = handCard[childCardIndex].MyCardItem;
+        RectTransform cardItemRect = cardItem.GetComponent<RectTransform>();
+        RectTransform useCardBagRect = UseCardBagTrans.GetComponent<RectTransform>();
         cardItem.CantMove = true;
         cardItem.transform.SetParent(UseCardBagTrans, false);
-        cardItem.GetComponent<RectTransform>().DOAnchorPos(UseCardBagTrans.GetComponent<RectTransform>().anchoredPosition, moveTime);
+        cardItemRect.DOAnchorPos(useCardBagRect.anchoredPosition, moveTime);
         DataManager.Instance.UsedCardBag.Add(handCard[childCardIndex]);
         handCard.RemoveAt(childCardIndex);
         EventManager.Instance.DispatchEvent(EventDefinition.eventUseCard, cardItem);
+        EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
 }

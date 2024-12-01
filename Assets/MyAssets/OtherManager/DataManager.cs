@@ -208,7 +208,7 @@ public class DataManager : Singleton<DataManager>
                 string[] specialTriggerSkill = row[17].Split('=');
                 if (specialTriggerSkill.Length == 2)
                 {
-                    enemyData.SpecialMechanismList.Add(specialTriggerSkill[0], int.Parse(specialTriggerSkill[1]));
+                    enemyData.SpecialTriggerSkill = (specialTriggerSkill[0], int.Parse(specialTriggerSkill[1]));
                 }
             }
             EnemyList.Add(enemyData.CharacterID, enemyData);

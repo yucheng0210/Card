@@ -334,7 +334,8 @@ public class UIBattle : UIBase
     {
         if (enemy.MyActionType != Enemy.ActionType.Move)
         {
-            if (enemyData.CurrentAttackOrder >= enemyData.AttackOrderStrs.Count - 1)
+            List<(string, int)> attackOrder = enemy.IsSpecialAction ? enemyData.SpecialAttackOrderStrs : enemyData.AttackOrderStrs;
+            if (enemyData.CurrentAttackOrder >= attackOrder.Count - 1)
             {
                 enemyData.CurrentAttackOrder = 0;
             }
