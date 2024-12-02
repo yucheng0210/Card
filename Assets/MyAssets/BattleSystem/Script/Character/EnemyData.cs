@@ -13,8 +13,9 @@ public class EnemyData : CharacterData
     public RectTransform EnemyTrans { get; set; }
     public bool MeleeAttackMode { get; set; }
     public int AttackRange { get; set; }
+    public List<ValueTuple<string, int>> CurrentAttackOrderStrs { get; set; }
     public List<ValueTuple<string, int>> AttackOrderStrs { get; set; }
-    public int CurrentAttackOrder { get; set; }
+    public int CurrentAttackOrderIndex { get; set; }
     public Dictionary<string, int> PassiveSkills { get; set; }
     public Dictionary<string, int> MaxPassiveSkillsList { get; set; }
     public bool ImageFlip { get; set; }
@@ -30,6 +31,8 @@ public class EnemyData : CharacterData
         clone.PassiveSkills = new Dictionary<string, int>(this.PassiveSkills);
         clone.MaxPassiveSkillsList = new Dictionary<string, int>(this.MaxPassiveSkillsList);
         clone.SpecialAttackOrderStrs = new List<ValueTuple<string, int>>(this.SpecialAttackOrderStrs);
+        clone.SpecialMechanismList = new Dictionary<string, int>(this.SpecialMechanismList);
+        clone.CurrentAttackOrderStrs = new List<ValueTuple<string, int>>(this.CurrentAttackOrderStrs);
         return clone;
     }
 }

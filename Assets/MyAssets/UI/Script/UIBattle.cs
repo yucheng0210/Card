@@ -237,11 +237,11 @@ public class UIBattle : UIBase
                     moveHistoryList.Add(enemyData);
                     break;
                 case Enemy.ActionType.Attack:
-                    int attackCount = enemyData.AttackOrderStrs[enemyData.CurrentAttackOrder].Item2 + enemy.AdditionAttackCount;
+                    int attackCount = enemyData.CurrentAttackOrderStrs[i].Item2 + enemy.AdditionAttackCount;
                     yield return HandleEnemyAttack(enemyData, enemy, playerData, attackCount); // 单独处理攻击逻辑
                     break;
                 case Enemy.ActionType.Shield:
-                    int shieldCount = enemyData.AttackOrderStrs[enemyData.CurrentAttackOrder].Item2;
+                    int shieldCount = enemyData.CurrentAttackOrderStrs[enemyData.CurrentAttackOrderIndex].Item2;
                     BattleManager.Instance.GetShield(enemyData, shieldCount);  // 处理护盾
                     break;
                 case Enemy.ActionType.Effect:
@@ -322,8 +322,8 @@ public class UIBattle : UIBase
     {
         if (enemy.InRange || enemy.NoNeedCheckInRange)
         {
-            string key = enemyData.AttackOrderStrs.ElementAt(enemyData.CurrentAttackOrder).Item1;
-            int value = enemyData.AttackOrderStrs.ElementAt(enemyData.CurrentAttackOrder).Item2;
+            string key = enemyData.CurrentAttackOrderStrs.ElementAt(enemyData.CurrentAttackOrderIndex).Item1;
+            int value = enemyData.CurrentAttackOrderStrs.ElementAt(enemyData.CurrentAttackOrderIndex).Item2;
             EffectFactory.Instance.CreateEffect(key).ApplyEffect(value, location, BattleManager.Instance.CurrentLocationID);
             BattleManager.Instance.ShowCharacterStatusClue(enemy.StatusClueTrans, EffectFactory.Instance.CreateEffect(key).SetTitleText(), 0);
         }
@@ -334,17 +334,17 @@ public class UIBattle : UIBase
     {
         if (enemy.MyActionType != Enemy.ActionType.Move)
         {
-            List<(string, int)> attackOrder = enemy.IsSpecialAction ? enemyData.SpecialAttackOrderStrs : enemyData.AttackOrderStrs;
-            if (enemyData.CurrentAttackOrder >= attackOrder.Count - 1)
+            List<(string, int)> attackOrder = enemyData.CurrentAttackOrderStrs;
+            if (enemyData.CurrentAttackOrderIndex >= attackOrder.Count - 1)
             {
-                enemyData.CurrentAttackOrder = 0;
+                enemyData.CurrentAttackOrderIndex = 0;
             }
             else
             {
-                enemyData.CurrentAttackOrder++;
+                enemyData.CurrentAttackOrderIndex++;
             }
         }
-        //Debug.Log(enemyData.CurrentAttackOrder + "/" + (enemyData.AttackOrderStrs.Count - 1).ToString());
+        //Debug.Log(enemyData.CurrentAttackOrderIndex + "/" + (enemyData.AttackOrderStrs.Count - 1).ToString());
     }
 
     private void ChangeTurn()

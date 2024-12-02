@@ -11,6 +11,7 @@ public class ThrowTraps : IEffect
         List<string> trapList = BattleManager.Instance.GetActionRangeTypeList(fromLocation, 5, checkEmptyType, actionRangeType);
         BattleManager.Instance.AddTrap(trapList, value);
         BattleManager.Instance.CheckPlayerLocationInTrapRange();
+        BattleManager.Instance.RefreshCheckerboardList();
     }
     public string SetTitleText()
     {

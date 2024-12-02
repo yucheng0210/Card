@@ -74,6 +74,7 @@ public class Enemy : MonoBehaviour
         EventManager.Instance.AddEventRegister(EventDefinition.eventRefreshUI, EventRefreshUI);
         EnemyOnceBattlePositiveList = new Dictionary<string, int>();
         currentEnemyList = BattleManager.Instance.CurrentEnemyList;
+        MyEnemyData.CurrentAttackOrderStrs = MyEnemyData.AttackOrderStrs;
     }
 
     private void OnDisable()
@@ -137,15 +138,12 @@ public class Enemy : MonoBehaviour
                     EffectFactory.Instance.CreateEffect(key).ApplyEffect(mechanismSkill[key], location, BattleManager.Instance.CurrentLocationID);
                     BattleManager.Instance.ShowCharacterStatusClue(StatusClueTrans, clueStrs, waitTime);
                 }
-                MyEnemyData.CurrentAttackOrder = 0;
+                MyEnemyData.CurrentAttackOrderIndex = 0;
+                MyEnemyData.CurrentAttackOrderStrs = MyEnemyData.SpecialAttackOrderStrs;
                 IsSpecialAction = true;
             }
-            attackOrder = MyEnemyData.SpecialAttackOrderStrs.ElementAt(MyEnemyData.CurrentAttackOrder).Item1;
         }
-        else
-        {
-            attackOrder = MyEnemyData.AttackOrderStrs.ElementAt(MyEnemyData.CurrentAttackOrder).Item1;
-        }
+        attackOrder = MyEnemyData.CurrentAttackOrderStrs.ElementAt(MyEnemyData.CurrentAttackOrderIndex).Item1;
         MyCheckEmptyType = BattleManager.CheckEmptyType.EnemyAttack;
         CurrentActionRange = MyEnemyData.AttackRange;
         if (Enum.TryParse(attackOrder, out BattleManager.ActionRangeType attackType))
@@ -171,7 +169,7 @@ public class Enemy : MonoBehaviour
 
     private void ActivateShield()
     {
-        int shieldCount = MyEnemyData.AttackOrderStrs.ElementAt(MyEnemyData.CurrentAttackOrder).Item2;
+        int shieldCount = MyEnemyData.CurrentAttackOrderStrs.ElementAt(MyEnemyData.CurrentAttackOrderIndex).Item2;
         infoTitle.text = "護盾";
         infoDescription.text = "產生護盾。";
         MyActionType = ActionType.Shield;

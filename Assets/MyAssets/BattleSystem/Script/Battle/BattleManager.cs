@@ -133,7 +133,6 @@ public class BattleManager : Singleton<BattleManager>
     {
         // 等待指定的秒數
         yield return new WaitForSeconds(delay);
-
         // 執行原本的 TakeDamage 邏輯
         int currentDamage = damage * (100 - defender.DamageReduction) / 100 - defender.CurrentShield;
         if (currentDamage < 0)
@@ -449,64 +448,68 @@ public class BattleManager : Singleton<BattleManager>
     }
     public List<string> GetConeAttackList(string fromLocation, string toLocation, int attackDistance)
     {
-        // 如果起點和終點相同，直接返回空列表
-        if (fromLocation == toLocation)
-        {
-            return null;
-        }
-
         List<string> coneAttackList = new List<string>();
 
-        // 取得起點和目標點的座標
+        // 取得起點的座標
         int[] fromPos = ConvertNormalPos(fromLocation);
-        int[] toPos = ConvertNormalPos(toLocation);
 
-        // 計算x和y座標的差距來決定攻擊方向
-        int dx = toPos[0] - fromPos[0];
-        int dy = toPos[1] - fromPos[1];
+        // 四個方向 (上下左右) 的偏移向量
+        int[,] directions = new int[,] { { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } };
 
-        // 根據目標點相對起點的方位來確定攻擊方向
-        int directionX = (dx != 0) ? (dx > 0 ? 1 : -1) : 0;  // x軸方向
-        int directionY = (dy != 0) ? (dy > 0 ? 1 : -1) : 0;  // y軸方向
-
-        bool prioritizeYDirection = directionY != 0;  // 是否以y方向為主
-        int mainDirection = prioritizeYDirection ? directionY : directionX;
-
-        // 生成等腰三角形範圍，根據攻擊距離
-        for (int h = 0; h < attackDistance; h++)
+        for (int d = 0; d < 4; d++) // 遍歷四個方向
         {
-            // 計算對應高（h）位置的寬度範圍 (如 1, 3, 5...)
-            int range = (2 * h) + 1;
-            int offset = (h + 1) * mainDirection;  // 方向偏移量
-            int halfRange = range / 2;  // 左右擴展範圍
-            int breakCount = 0;
-            for (int w = -halfRange; w <= halfRange; w++)
+            int directionX = directions[d, 0];
+            int directionY = directions[d, 1];
+
+            for (int h = 0; h < attackDistance; h++) // 遍歷每一層距離
             {
-                // 計算當前點的x和y座標
-                int currentX = prioritizeYDirection ? fromPos[0] + w : fromPos[0] + offset;
-                int currentY = prioritizeYDirection ? fromPos[1] + offset : fromPos[1] + w;
+                int range = (2 * h) + 1; // 寬度範圍 (如 1, 3, 5...)
+                int offsetX = (h + 1) * directionX; // x方向偏移
+                int offsetY = (h + 1) * directionY; // y方向偏移
+                int halfRange = range / 2; // 左右擴展範圍
+                int breakCount = 0;
 
-                // 將座標轉為棋盤位置
-                string newLocation = ConvertCheckerboardPos(currentX, currentY);
-
-                // 確認位置是否為空位且無障礙物
-                if (CheckPlaceEmpty(newLocation, CheckEmptyType.EnemyAttack))
+                for (int w = -halfRange; w <= halfRange; w++) // 遍歷當層寬度
                 {
-                    coneAttackList.Add(newLocation);
+                    // 計算當前點的x和y座標
+                    int currentX = directionX != 0 ? fromPos[0] + offsetX : fromPos[0] + w;
+                    int currentY = directionY != 0 ? fromPos[1] + offsetY : fromPos[1] + w;
+
+                    // 將座標轉為棋盤位置
+                    string newLocation = ConvertCheckerboardPos(currentX, currentY);
+
+                    // 確認位置是否為空位且無障礙物
+                    if (CheckPlaceEmpty(newLocation, CheckEmptyType.EnemyAttack))
+                    {
+                        if (!coneAttackList.Contains(newLocation)) // 避免重複
+                        {
+                            coneAttackList.Add(newLocation);
+                        }
+                    }
+                    else
+                    {
+                        breakCount++;
+                    }
                 }
-                else
+
+                if (breakCount == range)
                 {
-                    breakCount++;
+                    break; // 提前結束該層距離的計算
                 }
             }
-            if (breakCount == range)
+            if (coneAttackList.Contains(toLocation) || d == 3)
             {
                 break;
+            }
+            else
+            {
+                coneAttackList.Clear();
             }
         }
 
         return coneAttackList;
     }
+
     private List<string> GetStraightChargeList(string fromLocation, string toLocation, int attackDistance)
     {
         List<string> emptyPlaceList = GetLinearAttackList(fromLocation, toLocation, attackDistance);

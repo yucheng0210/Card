@@ -153,6 +153,7 @@ public class DataManager : Singleton<DataManager>
                 SpecialAttackOrderStrs = new List<(string, int)>(),
                 SpecialMechanismList = new Dictionary<string, int>(),
                 SpecialTriggerSkill = new(),
+                CurrentAttackOrderStrs = new()
             };
             if (!string.IsNullOrEmpty(row[9]))
             {

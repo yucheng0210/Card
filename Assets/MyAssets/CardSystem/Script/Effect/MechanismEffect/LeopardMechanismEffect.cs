@@ -13,19 +13,21 @@ public class LeopardMechanismEffect : IEffect
     {
         enemyData = BattleManager.Instance.CurrentEnemyList[fromLocation];
         enemy = enemyData.EnemyTrans.GetComponent<Enemy>();
+        enemy.EnemyOnceBattlePositiveList.Add(GetType().Name, 1);
         EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
         EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
         EventManager.Instance.AddEventRegister(EventDefinition.eventEnemyTurn, EventEnemyTurn);
+        EventPlayerTurn();
     }
     private void EventPlayerTurn(params object[] args)
     {
-        additionAttackCount = 3;
+        additionAttackCount = 2;
         enemy.AdditionAttackCount = Mathf.Max(additionAttackCount, 0);
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
     private void EventTakeDamage(params object[] args)
     {
-        if (args[4] == enemyData)
+        if (args[4] == BattleManager.Instance.CurrentPlayerData && BattleManager.Instance.MyBattleType == BattleManager.BattleType.Attack)
         {
             additionAttackCount--;
             enemy.AdditionAttackCount = Mathf.Max(additionAttackCount, 0);
