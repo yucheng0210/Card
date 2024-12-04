@@ -526,7 +526,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -817,6 +817,7 @@ MonoBehaviour:
   pointerEnterSpacing: 150
   pointerEnterReduceCount: 50
   moveTime: 0.5
+  cardCollision: {fileID: 6644801660954765168}
 --- !u!222 &3561320526990298476
 CanvasRenderer:
   m_ObjectHideFlags: 0

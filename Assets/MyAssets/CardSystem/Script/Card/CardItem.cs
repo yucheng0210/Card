@@ -37,7 +37,9 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     [SerializeField]
     private float moveTime;
-
+    [SerializeField]
+    private Image cardCollision;
+    public Image CardCollision { get { return cardCollision; } set { cardCollision = value; } }
     private CardItem rightCard, leftCard;
     private bool isAttackCard;
     private Enemy enemy;
@@ -97,7 +99,9 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public void OnPointerEnter(PointerEventData eventData)
     {
         if (BattleManager.Instance.IsDrag || CantMove || BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack)
+        {
             return;
+        }
         index = transform.GetSiblingIndex();
         Quaternion zeroRotation = Quaternion.Euler(0, 0, 0);
         transform.DOScale(2f, moveTime);
@@ -128,14 +132,18 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         transform.SetAsLastSibling();
         string location = BattleManager.Instance.CurrentLocationID;
         int cardAttackDistance = MyCardData.CardAttackDistance;
-        List<string> emptyPlaceList = BattleManager.Instance.GetActionRangeTypeList(location, cardAttackDistance, BattleManager.CheckEmptyType.PlayerAttack, BattleManager.ActionRangeType.Default);
+        BattleManager.CheckEmptyType checkEmptyType = BattleManager.CheckEmptyType.PlayerAttack;
+        BattleManager.ActionRangeType actionRangeType = BattleManager.ActionRangeType.Default;
+        List<string> emptyPlaceList = BattleManager.Instance.GetActionRangeTypeList(location, cardAttackDistance, checkEmptyType, actionRangeType);
         UIManager.Instance.ChangeCheckerboardColor(emptyPlaceList, false);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
         if (BattleManager.Instance.IsDrag && !isAttackCard || CantMove || BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack)
+        {
             return;
+        }
         transform.DOScale(1f, moveTime);
         transform.DORotateQuaternion(Quaternion.Euler(0, 0, CurrentAngle), moveTime);
         CardRectTransform.DOAnchorPos(CurrentPos, moveTime);
@@ -156,20 +164,26 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public void OnPointerDown(PointerEventData eventData)
     {
         if (CantMove || BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack)
+        {
             return;
+        }
         isAttackCard = MyCardData.CardType == "攻擊";
     }
 
     public void OnDrag(PointerEventData eventData)
     {
         if (CantMove || BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack)
+        {
             return;
+        }
         BattleManager.Instance.IsDrag = true;
         Cursor.visible = false;
         Vector2 dragPosition;
         RectTransform parentRect = transform.parent.GetComponent<RectTransform>();
         if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(parentRect, eventData.position, eventData.pressEventCamera, out dragPosition))
+        {
             return;
+        }
         if (isAttackCard)
         {
             EventManager.Instance.DispatchEvent(EventDefinition.eventAttackLine, true, CardRectTransform.anchoredPosition, dragPosition);
@@ -299,7 +313,8 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     }
     private void EventRefreshUI(params object[] args)
     {
-        if (BattleManager.Instance.CurrentPlayerData.CurrentActionPoint >= MyCardData.CardCost && BattleManager.Instance.CurrentPlayerData.Mana >= MyCardData.CardManaCost)
+        int currentActionPoint = BattleManager.Instance.CurrentPlayerData.CurrentActionPoint;
+        if (currentActionPoint >= MyCardData.CardCost && BattleManager.Instance.CurrentPlayerData.Mana >= MyCardData.CardManaCost)
         {
             UIManager.Instance.ChangeOutline(outline, 10);
         }

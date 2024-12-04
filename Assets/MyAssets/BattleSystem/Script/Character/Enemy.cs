@@ -89,7 +89,6 @@ public class Enemy : MonoBehaviour
         HandleAttack(true);
         ResetUIElements();
         BattleManager.Instance.CheckPlayerLocationInRange(this);
-        Debug.Log(InRange);
         if (distance == 0)
         {
             HandleNoAttack();
@@ -300,7 +299,6 @@ public class Enemy : MonoBehaviour
     {
         BattleManager.Instance.CheckPlayerLocationInRange(this);
         BattleManager.Instance.CheckPlayerLocationInTrapRange();
-        Debug.Log(InRange);
         /*if (MyActionType == ActionType.Attack && MyNextAttackActionRangeType == BattleManager.ActionRangeType.StraightCharge)
         {
             SetAttackActionRangeType();

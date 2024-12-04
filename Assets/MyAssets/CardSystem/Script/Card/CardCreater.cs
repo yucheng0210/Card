@@ -74,15 +74,13 @@ public class CardCreater : MonoBehaviour
         // 計算初始位置，處理偶數牌位偏移
         Vector2 cardPos = startPosition;
         float halfCardCount = adjustCount / 2 - isOddCount;
-        cardPos.x -= (halfCardCount + (isOddCount / 2)) * cardXSpacing;
+        cardPos.x -= (halfCardCount + (float)(isOddCount / 2f)) * cardXSpacing;
         cardPos.y -= (1 + halfCardCount) * (adjustCount / 2f - isOddCount) / 2 * cardYSpacing;
         // 確定迴圈次數，避免超過卡包數量
         for (int i = 0; i < adjustCount; i++)
         {
-
             // 獲取當前卡片
             CardItem cardItem = cardBag[i].MyCardItem;
-
             // 設置當前卡片位置與角度
             cardItem.CurrentPos = cardPos;
             cardItem.CurrentAngle = startAngle;
@@ -131,7 +129,7 @@ public class CardCreater : MonoBehaviour
             CardItem cardItem = handCard[i].MyCardItem;
             RectTransform handCardRect = cardItem.GetComponent<RectTransform>();
             cardItem.transform.SetParent(handCardTrans); // 將卡片設定為手牌的子物件
-            cardItem.GetComponent<Image>().raycastTarget = false;
+            cardItem.CardCollision.raycastTarget = false;
             cardItem.gameObject.SetActive(true); // 啟用卡片物件
             EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
             yield return null;
@@ -159,13 +157,12 @@ public class CardCreater : MonoBehaviour
         HandCardRaycast();
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Attack);
     }
-
     private void HandCardRaycast()
     {
         List<CardData> handCard = DataManager.Instance.HandCard;
         for (int i = 0; i < handCard.Count; i++)
         {
-            handCard[i].MyCardItem.GetComponent<Image>().raycastTarget = true;
+            handCard[i].MyCardItem.CardCollision.raycastTarget = true;
         }
     }
     private void DrawnAllCards(int count)
@@ -213,12 +210,10 @@ public class CardCreater : MonoBehaviour
             yield return null;
         }
     }
-
     private void EventDrawCard(params object[] args)
     {
         StartCoroutine(DrawCard((int)args[0]));
     }
-
     private void EventUseCard(params object[] args)
     {
         currentPosX -= cardXSpacing / 2;
@@ -226,12 +221,10 @@ public class CardCreater : MonoBehaviour
         cardItem.transform.SetParent(usedCardTrans);
         AdjustCard(DataManager.Instance.HandCard.Count);
     }
-
     private void EventBattleInitial(params object[] args)
     {
         CreateCard();
     }
-
     private void EventPlayerTurn(params object[] args)
     {
         currentPosX = startPosition.x;
@@ -239,7 +232,6 @@ public class CardCreater : MonoBehaviour
         EventManager.Instance.DispatchEvent(EventDefinition.eventDrawCard, BattleManager.Instance.CurrentDrawCardCount);
         //StartCoroutine(DrawCard(BattleManager.Instance.CurrentDrawCardCount));
     }
-
     private void EventEnemyTurn(params object[] args)
     {
         List<CardData> freezeCardList = new List<CardData>();
@@ -262,7 +254,6 @@ public class CardCreater : MonoBehaviour
         AdjustCard(handCard.Count);
         StartCoroutine(HideAllCards());
     }
-
     private void EventBattleWin(params object[] args)
     {
         List<CardData> handCard = DataManager.Instance.HandCard;

@@ -969,13 +969,13 @@ public class BattleManager : Singleton<BattleManager>
     {
         List<CardData> handCard = DataManager.Instance.HandCard;
         CardItem cardItem = handCard[childCardIndex].MyCardItem;
+        CardData cardData = cardItem.MyCardData;
         RectTransform cardItemRect = cardItem.GetComponent<RectTransform>();
         RectTransform useCardBagRect = UseCardBagTrans.GetComponent<RectTransform>();
+        handCard.Remove(cardData);
         cardItem.CantMove = true;
-        cardItem.transform.SetParent(UseCardBagTrans, false);
         cardItemRect.DOAnchorPos(useCardBagRect.anchoredPosition, moveTime);
         DataManager.Instance.UsedCardBag.Add(handCard[childCardIndex]);
-        handCard.RemoveAt(childCardIndex);
         EventManager.Instance.DispatchEvent(EventDefinition.eventUseCard, cardItem);
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
