@@ -38,8 +38,6 @@ public class UIVictoryReward : UIBase
         EventManager.Instance.AddEventRegister(EventDefinition.eventBattleWin, EventBattleWin);
     }
 
-
-
     private void GetReward(int rewardID, GameObject reward)
     {
         BackpackManager.Instance.AddItem(rewardID, DataManager.Instance.Backpack);

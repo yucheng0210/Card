@@ -20,6 +20,7 @@ public class MapManager : Singleton<MapManager>
     public MapNode[][] MapNodes { get { return mapNodes; } }
     public int LevelCount { get; set; }
     public int LevelID { get; set; }
+    public int ChapterCount { get; set; }
     protected override void Awake()
     {
         base.Awake();

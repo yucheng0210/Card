@@ -6,9 +6,21 @@ using UnityEngine.UI;
 public class UISkyIsland : UIBase
 {
     [SerializeField]
-    private Image plantationGardenMenu;
+    private Button plantationGardenButton;
     [SerializeField]
-    private Image guildMenu;
+    private Button guildButton;
     [SerializeField]
-    private Image shopMenu;
+    private Button shopButton;
+    protected override void Start()
+    {
+        base.Start();
+        Initialize();
+    }
+    private void Initialize()
+    {
+        plantationGardenButton.onClick.AddListener(() => UIManager.Instance.ShowUI("UIPlantationGarden"));
+        guildButton.onClick.AddListener(() => UIManager.Instance.ShowUI("UIGuild"));
+        shopButton.onClick.AddListener(() => UIManager.Instance.ShowUI("UIShop"));
+    }
+
 }

@@ -25,15 +25,16 @@ public class UIMap : UIBase
     protected override void Start()
     {
         base.Start();
-        StartGame();
+        NextChapter();
     }
     public override void Show()
     {
         base.Show();
         CanEnterEffect();
     }
-    private void StartGame()
+    private void NextChapter()
     {
+        MapManager.Instance.ChapterCount++;
         // 初始化列表
         InitializeLists();
         // 遍歷每一行節點
@@ -73,7 +74,7 @@ public class UIMap : UIBase
         // 進入效果
         CanEnterEffect();
     }
-    #region StartGame
+    #region NextChapter
     private void InitializeLists()
     {
         mapList = new Button[MapManager.Instance.MapNodes.Length][];
@@ -274,14 +275,20 @@ public class UIMap : UIBase
     private void EntryPoint(int count, int id)
     {
         if (CantEnter(count, id))
+        {
             return;
+        }
         MapManager.Instance.LevelID = id;
         MapManager.Instance.LevelCount = count;
         UIManager.Instance.HideUI("UIMap");
         if (MapManager.Instance.MapNodes[count][id].left != null)
+        {
             MapManager.Instance.MapNodes[count][id].left.l.LevelActive = true;
+        }
         if (MapManager.Instance.MapNodes[count][id].right != null)
+        {
             MapManager.Instance.MapNodes[count][id].right.l.LevelActive = true;
+        }
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Explore);
     }
 }

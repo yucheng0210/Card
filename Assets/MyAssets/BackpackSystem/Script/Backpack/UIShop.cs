@@ -43,6 +43,7 @@ public class UIShop : UIBase
             CardItem cardItem = Instantiate(cardPrefab, cardGroupTrans);
             Text cardPriceText = cardItem.transform.GetChild(cardItem.transform.childCount - 1).GetComponent<Text>();
             cardItem.GetComponent<CanvasGroup>().alpha = 1;
+            cardItem.MyCardData = cardData;
             cardItem.MyCardData.CardID = randomCard.Key;
             cardItem.CantMove = true;
             cardPriceText.text = cardData.CardBuyPrice.ToString();

@@ -1,3 +1,4 @@
 ﻿編號,名稱,圖片,資訊,購買價格,出售價值,效果名稱,稀有度,類型
 3001,狂獸尖牙,NULL,沙漠狂獸的犬齒，可以用來加工成藥水。,10,1,null,普通,素材
 1001,治癒藥水,PotionImage/HealingPotion,立刻回復15%血量。,50,5,IncreaseHealth=15,普通,藥水
+2001,初階種子,SeedImage/PrimarySeed,初階種子。,10,1,null,普通,種子

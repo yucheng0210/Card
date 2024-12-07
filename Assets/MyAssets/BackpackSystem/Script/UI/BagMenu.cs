@@ -32,16 +32,10 @@ public class BagMenu : UIBase
         base.Start();
         showButton.onClick.AddListener(Show);
         hideButton.onClick.AddListener(Hide);
-         EventManager.Instance.AddEventRegister(EventDefinition.eventAddItemToBag, EventAddItem);
-         EventManager.Instance.AddEventRegister(
-             EventDefinition.eventRemoveItemToBag,
-             EventRemoveItem
-         );
-         EventManager.Instance.AddEventRegister(
-             EventDefinition.eventReviseMoneyToBag,
-             EventReviseMoney
-         );
-         EventManager.Instance.AddEventRegister(EventDefinition.eventOnClickedToBag, EventOnClicked);
+        EventManager.Instance.AddEventRegister(EventDefinition.eventAddItemToBag, EventAddItem);
+        EventManager.Instance.AddEventRegister(EventDefinition.eventRemoveItemToBag, EventRemoveItem);
+        EventManager.Instance.AddEventRegister(EventDefinition.eventReviseMoneyToBag, EventReviseMoney);
+        EventManager.Instance.AddEventRegister(EventDefinition.eventOnClickedToBag, EventOnClicked);
     }
 
     public override void Show()
