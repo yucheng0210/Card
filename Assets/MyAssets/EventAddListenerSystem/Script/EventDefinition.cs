@@ -10,6 +10,7 @@ public class EventDefinition
     public const string eventEnemyTurn = "EVENT_ENEMY_TURN";
     public const string eventBattleWin = "EVENT_BATTLE_WIN";
     public const string eventAttack = "EVENT_ATTACK";
+    public const string eventNextChapter = "EVENT_NEXT_CHAPTER";
 
     //戰鬥：卡牌相關
     public const string eventUseCard = "EVENT_USE_CARD";
@@ -17,7 +18,6 @@ public class EventDefinition
     public const string eventRecover = "EVENT_RECOVER";
     public const string eventDrawCard = "EVENT_DRAW_CARD";
     public const string eventMove = "EVENT_MOVE";
-
     //探索相關
     public const string eventExplore = "EVENT_EXPLORE";
 
@@ -30,6 +30,8 @@ public class EventDefinition
     public const string eventReviseMoneyToBag = "EVENT_REVISE_MONEY_TO_BAG";
     public const string eventRemoveItemToBag = "EVENT_REMOVE_ITEM_TO_BAG";
     public const string eventAddItemToBag = "EVENT_ADD_ITEM_TO_BAG";
+    public const string eventOnClickedToFarmland = "EVENT_ONCLICKED_TO_FARMLAND";
+    public const string eventUseItem = "EVENT_USE_ITEM";
 
     //其他
     public const string eventStartGame = "EVENT_START_GAME";

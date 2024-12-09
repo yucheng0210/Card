@@ -26,13 +26,14 @@ public class UIMap : UIBase
     {
         base.Start();
         NextChapter();
+        EventManager.Instance.AddEventRegister(EventDefinition.eventNextChapter, NextChapter);
     }
     public override void Show()
     {
         base.Show();
         CanEnterEffect();
     }
-    private void NextChapter()
+    private void NextChapter(params object[] args)
     {
         MapManager.Instance.ChapterCount++;
         // 初始化列表

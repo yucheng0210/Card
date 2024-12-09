@@ -31,6 +31,7 @@ public class UIGuild : UIBase
             goButton.onClick.AddListener(() => RefreshQuestInfo(goButton, chapterID));
             go.SetActive(!go.activeSelf);
         }
+        applyButton.gameObject.SetActive(!applyButton.gameObject.activeSelf);
     }
     private void RefreshQuestInfo(Button quest, int chapterID)
     {
@@ -80,6 +81,13 @@ public class UIGuild : UIBase
         else if (chapterID == MapManager.Instance.ChapterCount + 1)
         {
             applyText.text = "接取";
+            applyButton.onClick.AddListener(() =>
+            {
+                UI.SetActive(false);
+                UIManager.Instance.HideUI("UISkyIsland");
+                EventManager.Instance.DispatchEvent(EventDefinition.eventNextChapter);
+                applyButton.onClick.RemoveAllListeners();
+            });
         }
         else if (chapterID < MapManager.Instance.ChapterCount)
         {

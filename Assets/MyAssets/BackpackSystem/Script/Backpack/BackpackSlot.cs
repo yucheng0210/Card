@@ -31,7 +31,7 @@ public class BackpackSlot : MonoBehaviour
 
     private void Start()
     {
-        gameObject.GetComponent<Button>().onClick.AddListener(OnClicked);
+        GetComponent<Button>().onClick.AddListener(OnClicked);
     }
 
     public void OnClicked()

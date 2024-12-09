@@ -70,10 +70,10 @@ public class BagMenu : UIBase
     public void EventOnClicked(params object[] args)
     {
         UpdateItemInfo(((Item)args[0]).ItemInfo.ToString(), ((Item)args[0]).ItemName.ToString());
-        useButton.onClick.RemoveAllListeners();
         useButton.onClick.AddListener(() =>
         {
             BackpackManager.Instance.UseItem(((Item)args[0]).ItemID);
+            useButton.onClick.RemoveAllListeners();
         });
     }
 }
