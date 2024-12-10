@@ -72,7 +72,7 @@ public class UIGuild : UIBase
                 applyText.text = "領取";
                 applyButton.onClick.AddListener(() =>
                 {
-                    GetPotion(DataManager.Instance.ItemList[rewardList[rewardID]], applyText);
+                    GetPotion(DataManager.Instance.PotionList[rewardList[rewardID]], applyText);
                     isReceiveReward = true;
                     applyButton.onClick.RemoveAllListeners(); // 避免重複添加 Listener
                 });
@@ -98,7 +98,7 @@ public class UIGuild : UIBase
             applyText.text = "???";
         }
     }
-    private void GetPotion(Item potionItem, Text applyText)
+    private void GetPotion(Potion potionItem, Text applyText)
     {
         Debug.Log("領取");
         applyText.text = "已領取";

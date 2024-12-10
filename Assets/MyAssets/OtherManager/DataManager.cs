@@ -12,6 +12,7 @@ public class DataManager : Singleton<DataManager>
     private readonly string enemyListPath = Application.streamingAssetsPath + "/ENEMYLIST.csv";
     private readonly string levelTypeListPath = Application.streamingAssetsPath + "/LEVELTYPELIST.csv";
     private readonly string itemListPath = Application.streamingAssetsPath + "/ITEMLIST.csv";
+    private readonly string potionListPath = Application.streamingAssetsPath + "/POTIONLIST.csv";
     private readonly string dialogDataListPath = Application.streamingAssetsPath + "/DialogData";
     private readonly string terrainListPath = Application.streamingAssetsPath + "/TERRAINLIST.csv";
     private readonly string skillListPath = Application.streamingAssetsPath + "/SKILLLIST.csv";
@@ -21,12 +22,13 @@ public class DataManager : Singleton<DataManager>
     public List<CardData> UsedCardBag { get; set; }
     public List<CardData> RemoveCardBag { get; set; }
     public List<CardData> HandCard { get; set; }
-    public List<Item> PotionBag { get; set; }
+    public List<Potion> PotionBag { get; set; }
     public Dictionary<int, PlayerData> PlayerList { get; set; }
     public Dictionary<int, EnemyData> EnemyList { get; set; }
     public Dictionary<int, Level> LevelList { get; set; }
     public Dictionary<int, Level> LevelTypeList { get; set; }
     public Dictionary<int, Item> ItemList { get; set; }
+    public Dictionary<int, Potion> PotionList { get; set; }
     public Dictionary<int, Item> Backpack { get; set; }
     public Dictionary<int, Item> ShopBag { get; set; }
     public Dictionary<int, Skill> SkillList { get; set; }
@@ -43,13 +45,14 @@ public class DataManager : Singleton<DataManager>
         CardBag = new List<CardData>();
         UsedCardBag = new List<CardData>();
         RemoveCardBag = new List<CardData>();
-        PotionBag = new List<Item>();
+        PotionBag = new List<Potion>();
         HandCard = new List<CardData>();
         PlayerList = new Dictionary<int, PlayerData>();
         EnemyList = new Dictionary<int, EnemyData>();
         LevelList = new Dictionary<int, Level>();
         LevelTypeList = new Dictionary<int, Level>();
         ItemList = new Dictionary<int, Item>();
+        PotionList = new Dictionary<int, Potion>();
         Backpack = new Dictionary<int, Item>();
         ShopBag = new Dictionary<int, Item>();
         DialogList = new Dictionary<string, List<Dialog>>();
@@ -349,6 +352,36 @@ public class DataManager : Singleton<DataManager>
             ItemList.Add(item.ItemID, item);
         }
         #endregion
+        #region 藥水列表
+        lineData = File.ReadAllLines(potionListPath);
+        for (int i = 1; i < lineData.Length; i++)
+        {
+            string[] row = lineData[i].Split(',');
+            Potion item = new()
+            {
+                ItemID = int.Parse(row[0]),
+                ItemName = row[1],
+                ItemImagePath = row[2],
+                ItemInfo = row[3],
+                ItemBuyPrice = int.Parse(row[4]),
+                ItemSellPrice = int.Parse(row[5]),
+                ItemEffectName = row[6],
+                ItemRarity = row[7],
+                ItemType = row[8],
+                SynthesisItemList = new List<Item>()
+            };
+            if (!string.IsNullOrEmpty(row[9]))
+            {
+                string[] potions = row[9].Split(';');
+                for (int j = 0; j < potions.Length; j++)
+                {
+                    Item synthesisItem = ItemList[int.Parse(potions[j])];
+                    item.SynthesisItemList.Add(synthesisItem);
+                }
+            }
+            PotionList.Add(item.ItemID, item);
+        }
+        #endregion
         #region 對話列表
         foreach (string file in Directory.GetFiles(dialogDataListPath, "*.csv"))
         {
@@ -472,7 +505,7 @@ public class DataManager : Singleton<DataManager>
 
         // Add items to backpack and potion bag
         BackpackManager.Instance.AddItem(3001, Backpack);
-        PotionBag.Add(ItemList[1001]);
+        PotionBag.Add(PotionList[1001]);
 
         // Set current player data
         BattleManager.Instance.CurrentPlayerData = PlayerList[PlayerID];
@@ -491,7 +524,9 @@ public class DataManager : Singleton<DataManager>
 
         // Add items to backpack and potion bag
         BackpackManager.Instance.AddItem(2001, Backpack);
-        PotionBag.Add(ItemList[1001]);
+        BackpackManager.Instance.AddItem(2002, Backpack);
+        BackpackManager.Instance.AddItem(2003, Backpack);
+        PotionBag.Add(PotionList[1001]);
 
         // Set current player data
         BattleManager.Instance.CurrentPlayerData = PlayerList[PlayerID];

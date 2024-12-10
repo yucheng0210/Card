@@ -8131,7 +8131,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.00068685063, y: 3397.9832}
+  m_AnchoredPosition: {x: 0.00068685063, y: 3397.9844}
   m_SizeDelta: {x: 0, y: 4477.983}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &303874182
@@ -23272,8 +23272,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 194137555}
   m_HandleRect: {fileID: 194137554}
   m_Direction: 2
-  m_Value: -0.0000000718487
-  m_Size: 0.24118005
+  m_Value: -0.00000043109216
+  m_Size: 0.22594687
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -38168,6 +38168,22 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 48.231
       objectReference: {fileID: 0}
+    - target: {fileID: 4036358746611656698, guid: 022852561063e1940b7a1465aa6267a9, type: 3}
+      propertyPath: m_Spacing.x
+      value: 92.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4036358746611656698, guid: 022852561063e1940b7a1465aa6267a9, type: 3}
+      propertyPath: m_Spacing.y
+      value: 75
+      objectReference: {fileID: 0}
+    - target: {fileID: 4036358746611656698, guid: 022852561063e1940b7a1465aa6267a9, type: 3}
+      propertyPath: m_Padding.m_Top
+      value: 17
+      objectReference: {fileID: 0}
+    - target: {fileID: 4036358746611656698, guid: 022852561063e1940b7a1465aa6267a9, type: 3}
+      propertyPath: m_Padding.m_Left
+      value: 20
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 022852561063e1940b7a1465aa6267a9, type: 3}
 --- !u!114 &1725527279 stripped
@@ -48439,11 +48455,10 @@ MonoBehaviour:
   harvestButton: {fileID: 121708553}
   wateringButton: {fileID: 1886142718}
   shopButton: {fileID: 1336189284}
-  fertilizeTexture: {fileID: 0}
-  harvestTexture: {fileID: 0}
-  wateringTexture: {fileID: 0}
-  shopTexture: {fileID: 0}
-  farmList:
+  fertilizeTexture: {fileID: 2800000, guid: 53afbf80b7d10684bb7ec0c2cb0f6022, type: 3}
+  harvestTexture: {fileID: 2800000, guid: b57caf4fa623a924c9d99404e320cb53, type: 3}
+  wateringTexture: {fileID: 2800000, guid: c3e8873fed902374e9c8b911186c57ad, type: 3}
+  farmButtonList:
   - {fileID: 1127511664}
   - {fileID: 1216448855}
   - {fileID: 2089042509}

@@ -77,9 +77,11 @@ public class UIShop : UIBase
     }
     private void AddPotion(int potionID, GameObject potion)
     {
-        Item item = DataManager.Instance.ItemList[potionID];
+        Potion item = DataManager.Instance.PotionList[potionID];
         if (DataManager.Instance.MoneyCount < item.ItemBuyPrice)
+        {
             return;
+        }
         DataManager.Instance.MoneyCount -= item.ItemBuyPrice;
         DataManager.Instance.PotionBag.Add(item);
         Destroy(potion);
