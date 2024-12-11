@@ -25,6 +25,8 @@ public class UIPlantationGarden : UIBase
     [Header("農地")]
     [SerializeField]
     private List<Button> farmButtonList = new();
+    [SerializeField]
+    private Button exitButton;
     private Dictionary<Button, Item> farmList = new();
     protected override void Start()
     {
@@ -38,6 +40,7 @@ public class UIPlantationGarden : UIBase
         wateringButton.onClick.AddListener(Watering);
         harvestButton.onClick.AddListener(Harvest);
         shopButton.onClick.AddListener(() => UIManager.Instance.ShowUI("UIShop"));
+        exitButton.onClick.AddListener(() => UIManager.Instance.ShowUI(GetType().Name));
         for (int i = 0; i < farmButtonList.Count; i++)
         {
             farmList.Add(farmButtonList[i], null);

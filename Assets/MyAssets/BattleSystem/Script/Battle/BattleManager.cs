@@ -296,9 +296,11 @@ public class BattleManager : Singleton<BattleManager>
                 EffectFactory.Instance.CreateEffect(key).ApplyEffect(trapData.TriggerSkillList[key], CurrentLocationID, CurrentLocationID);
                 ShowCharacterStatusClue(CurrentPlayer.StatusClueTrans, clueStrs, waitTime);
             }
-            TakeDamage(CurrentPlayerData, CurrentPlayerData, trapData.CurrentAttack, CurrentLocationID, 0);
+            Animator ani = trapData.TrapTrans.GetComponent<Animator>();
+            ani.SetTrigger("isAttacking");
+            TakeDamage(CurrentPlayerData, CurrentPlayerData, trapData.CurrentAttack, CurrentLocationID, 0.12f);
             CurrentTrapList.Remove(CurrentLocationID);
-            Destroy(trapData.TrapTrans.gameObject);
+            Destroy(trapData.TrapTrans.gameObject, 1);
         }
     }
     public List<string> GetRoute(string fromLocation, string toLocation, CheckEmptyType checkEmptyType)
@@ -845,7 +847,7 @@ public class BattleManager : Singleton<BattleManager>
     }
     public void AddTrap(List<string> trapList, int id)
     {
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < trapList.Count;)
         {
             int randomIndex = UnityEngine.Random.Range(0, trapList.Count);
             RectTransform trapRect = Instantiate(TrapPrefab, TrapGroupTrans).GetComponent<RectTransform>();

@@ -41,7 +41,7 @@ public class TeleportEffect : IEffect
     }
     private void EventTakeDamage(params object[] args)
     {
-        if ((int)args[6] > 0 && args[5] == BattleManager.Instance.CurrentPlayerData)
+        if ((int)args[6] > 0 && args[4] == BattleManager.Instance.CurrentPlayerData)
         {
             Teleport();
         }

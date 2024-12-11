@@ -11,6 +11,8 @@ public class UIGuild : UIBase
     private Button applyButton;
     [SerializeField]
     private List<int> rewardList = new List<int>();
+    [SerializeField]
+    private Button exitButton;
     private bool isReceiveReward;
     protected override void Start()
     {
@@ -20,6 +22,7 @@ public class UIGuild : UIBase
     private void Initialize()
     {
         mainQuestButton.onClick.AddListener(() => ShowQuest(mainQuestButton));
+        exitButton.onClick.AddListener(() => UIManager.Instance.ShowUI(GetType().Name));
     }
     private void ShowQuest(Button quest)
     {
@@ -100,7 +103,6 @@ public class UIGuild : UIBase
     }
     private void GetPotion(Potion potionItem, Text applyText)
     {
-        Debug.Log("領取");
         applyText.text = "已領取";
         DataManager.Instance.PotionBag.Add(potionItem);
         applyButton.onClick.RemoveAllListeners();
