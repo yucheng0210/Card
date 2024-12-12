@@ -569,7 +569,8 @@ public class UIBattle : UIBase
         GameObject damageNum = Instantiate(damageNumPrefab, UI.transform);
         RectTransform damageRect = damageNum.GetComponent<RectTransform>();
         Text damageText = damageNum.GetComponentInChildren<Text>();
-        damageText.text = args[1].ToString();
+        string damageStr = args.Length > 6 ? args[6].ToString() : args[1].ToString();
+        damageText.text = damageStr;
         Color color = (Color)args[3];
         damageText.DOColor(color, 0.75f);
         xOffset *= -1;
