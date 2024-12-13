@@ -65,9 +65,20 @@ public class CardCreater : MonoBehaviour
         }
     }
 
-    private void CalculatePositionAngle(int cardCount, List<CardData> cardBag)
+    private void CalculatePositionAngle(int cardCount)
     {
-        int adjustCount = Mathf.Min(cardCount, cardBag.Count);
+        List<CardData> mergeList = new();
+        List<CardData> cardBag = DataManager.Instance.CardBag;
+        List<CardData> handCard = DataManager.Instance.HandCard;
+        for (int i = 0; i < handCard.Count; i++)
+        {
+            mergeList.Add(handCard[i]);
+        }
+        for (int i = 0; i < cardBag.Count; i++)
+        {
+            mergeList.Add(cardBag[i]);
+        }
+        int adjustCount = Mathf.Min(cardCount, mergeList.Count);
         // 計算是否為偶數，並確定開始角度
         int isOddCount = adjustCount % 2 != 0 ? 0 : 1;
         float startAngle = (adjustCount / 2 - isOddCount) * minCardAngle;
@@ -80,7 +91,7 @@ public class CardCreater : MonoBehaviour
         for (int i = 0; i < adjustCount; i++)
         {
             // 獲取當前卡片
-            CardItem cardItem = cardBag[i].MyCardItem;
+            CardItem cardItem = mergeList[i].MyCardItem;
             // 設置當前卡片位置與角度
             cardItem.CurrentPos = cardPos;
             cardItem.CurrentAngle = startAngle;
@@ -112,7 +123,7 @@ public class CardCreater : MonoBehaviour
         List<CardData> handCard = DataManager.Instance.HandCard;
         List<CardData> cardBag = DataManager.Instance.CardBag;
         int maxCardCount = handCard.Count + addCardCount;
-        CalculatePositionAngle(maxCardCount, cardBag);
+        CalculatePositionAngle(maxCardCount);
         for (int i = handCard.Count; i < maxCardCount; i++)
         {
             if (cardBag.Count == 0)
@@ -121,7 +132,7 @@ public class CardCreater : MonoBehaviour
                 {
                     break;
                 }
-                DrawnAllCards(maxCardCount - i);
+                DrawnAllCards(maxCardCount);
             }
             // 根據抽卡數量將卡片添加到手牌中
             handCard.Add(cardBag[0]);
@@ -179,14 +190,14 @@ public class CardCreater : MonoBehaviour
             cardItem.transform.SetParent(transform);
             cardItem.GetComponent<RectTransform>().anchoredPosition = transform.position;
         }
-        DataManager.Instance.UsedCardBag.Clear();
+        usedCardBag.Clear();
         BattleManager.Instance.Shuffle();
-        CalculatePositionAngle(count, cardBag);
+        CalculatePositionAngle(count);
     }
-    private void AdjustCard(int count)
+    private void AdjustCard()
     {
         List<CardData> handCard = DataManager.Instance.HandCard;
-        CalculatePositionAngle(count, DataManager.Instance.HandCard);
+        CalculatePositionAngle(handCard.Count);
         for (int i = 0; i < handCard.Count; i++)
         {
             CardItem cardItem = handCard[i].MyCardItem;
@@ -219,7 +230,7 @@ public class CardCreater : MonoBehaviour
         currentPosX -= cardXSpacing / 2;
         CardItem cardItem = (CardItem)args[0];
         cardItem.transform.SetParent(usedCardTrans);
-        AdjustCard(DataManager.Instance.HandCard.Count);
+        AdjustCard();
     }
     private void EventBattleInitial(params object[] args)
     {
@@ -251,7 +262,7 @@ public class CardCreater : MonoBehaviour
         }
         handCard.Clear();
         handCard = freezeCardList;
-        AdjustCard(handCard.Count);
+        AdjustCard();
         StartCoroutine(HideAllCards());
     }
     private void EventBattleWin(params object[] args)

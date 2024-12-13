@@ -40,7 +40,7 @@ public class UIPlantationGarden : UIBase
         wateringButton.onClick.AddListener(Watering);
         harvestButton.onClick.AddListener(Harvest);
         shopButton.onClick.AddListener(() => UIManager.Instance.ShowUI("UIShop"));
-        exitButton.onClick.AddListener(() => UIManager.Instance.ShowUI(GetType().Name));
+        exitButton.onClick.AddListener(() => UIManager.Instance.HideUI(GetType().Name));
         for (int i = 0; i < farmButtonList.Count; i++)
         {
             farmList.Add(farmButtonList[i], null);

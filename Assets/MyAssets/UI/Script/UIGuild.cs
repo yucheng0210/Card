@@ -22,7 +22,7 @@ public class UIGuild : UIBase
     private void Initialize()
     {
         mainQuestButton.onClick.AddListener(() => ShowQuest(mainQuestButton));
-        exitButton.onClick.AddListener(() => UIManager.Instance.ShowUI(GetType().Name));
+        exitButton.onClick.AddListener(() => UIManager.Instance.HideUI(GetType().Name));
     }
     private void ShowQuest(Button quest)
     {

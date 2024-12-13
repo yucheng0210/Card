@@ -808,14 +808,15 @@ public class BattleManager : Singleton<BattleManager>
     {
         CardItem cardItem = Instantiate(CardPrefab, CardBagTrans);
         CardData cardData = DataManager.Instance.CardList[id].DeepClone();
-        cardItem.transform.SetParent(CardBagTrans);
         RectTransform rectTransform = cardItem.GetComponent<RectTransform>();
+        cardItem.transform.SetParent(CardBagTrans);
         rectTransform.anchoredPosition = CardBagTrans.position;
         cardItem.gameObject.SetActive(false);
         cardData.CardID = id;
         cardData.MyCardItem = cardItem;
         cardItem.MyCardData = cardData;
-        DataManager.Instance.CardBag.Add(cardData);
+        int randomIndex = UnityEngine.Random.Range(0, DataManager.Instance.CardBag.Count);
+        DataManager.Instance.CardBag.Insert(randomIndex, cardData);
         return cardItem;
     }
     public void AddMinions(int enemyID, int count, string location)
