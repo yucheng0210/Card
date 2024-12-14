@@ -269,7 +269,6 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         DataManager.Instance.HandCard.Remove(MyCardData);
         BattleManager.Instance.ConsumeActionPoint(cardData.CardCost);
         BattleManager.Instance.ConsumeMana(cardData.CardManaCost);
-        BattleManager.Instance.GetShield(BattleManager.Instance.CurrentPlayerData, cardData.CardShield);
         if (cardData.CardAttack != 0 && cardData.CardType != "詛咒")
         {
             BattleManager.Instance.TakeDamage(BattleManager.Instance.CurrentPlayerData, BattleManager.Instance.CurrentEnemyList[target], cardData.CardAttack, target, 0);
@@ -282,6 +281,15 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         {
             DataManager.Instance.RemoveCardBag.Add(MyCardData);
         }
+        if (BattleManager.Instance.CurrentNegativeState.ContainsKey(nameof(CharmEffect)))
+        {
+            BattleManager.Instance.ReduceNegativeState(nameof(CharmEffect));
+            EventManager.Instance.DispatchEvent(EventDefinition.eventUseCard, this);
+            EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
+            gameObject.SetActive(false);
+            return;
+        }
+        BattleManager.Instance.GetShield(BattleManager.Instance.CurrentPlayerData, cardData.CardShield);
         EventManager.Instance.DispatchEvent(EventDefinition.eventUseCard, this);
         for (int i = 0; i < cardData.CardEffectList.Count; i++)
         {

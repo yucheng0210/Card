@@ -769,16 +769,19 @@ public class BattleManager : Singleton<BattleManager>
         for (int i = 0; i < CurrentNegativeState.Count; i++)
         {
             string negativeState = CurrentNegativeState.ElementAt(i).Key;
-            CurrentNegativeState[negativeState]--;
-            if (CurrentNegativeState[negativeState] <= 0)
-            {
-                CurrentNegativeState.Remove(negativeState);
-            }
+            ReduceNegativeState(negativeState);
         }
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
         EventManager.Instance.DispatchEvent(EventDefinition.eventEnemyTurn);
     }
-
+    public void ReduceNegativeState(string negativeState)
+    {
+        CurrentNegativeState[negativeState]--;
+        if (CurrentNegativeState[negativeState] <= 0)
+        {
+            CurrentNegativeState.Remove(negativeState);
+        }
+    }
     private void Win()
     {
         EventManager.Instance.DispatchEvent(EventDefinition.eventBattleWin);
@@ -981,5 +984,17 @@ public class BattleManager : Singleton<BattleManager>
         DataManager.Instance.UsedCardBag.Add(handCard[childCardIndex]);
         EventManager.Instance.DispatchEvent(EventDefinition.eventUseCard, cardItem);
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
+    }
+    public void ClearAllMinions()
+    {
+        for (int i = 0; i < CurrentMinionsList.Count; i++)
+        {
+            string key = CurrentMinionsList.ElementAt(i).Key;
+            EnemyData value = CurrentMinionsList.ElementAt(i).Value;
+            Enemy enemy = value.EnemyTrans.GetComponent<Enemy>();
+            enemy.MyAnimator.SetTrigger("isDeath");
+            CurrentMinionsList.Remove(key);
+            Destroy(enemy.gameObject, 1);
+        }
     }
 }
