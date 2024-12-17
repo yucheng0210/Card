@@ -59,6 +59,7 @@ public class Enemy : MonoBehaviour
     public bool InRange { get; set; }
     private string location;
     public bool IsSpecialAction { get; set; }
+    public bool IsDizziness { get; set; }
     public enum ActionType
     {
         Move,
@@ -89,7 +90,7 @@ public class Enemy : MonoBehaviour
         HandleAttack(true);
         ResetUIElements();
         BattleManager.Instance.CheckPlayerLocationInRange(this);
-        if (distance == 0)
+        if (distance == 0 || IsDizziness)
         {
             HandleNoAttack();
         }

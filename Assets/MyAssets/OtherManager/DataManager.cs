@@ -156,7 +156,8 @@ public class DataManager : Singleton<DataManager>
                 SpecialAttackOrderStrs = new List<(string, int)>(),
                 SpecialMechanismList = new Dictionary<string, int>(),
                 SpecialTriggerSkill = new(),
-                CurrentAttackOrderStrs = new()
+                CurrentAttackOrderStrs = new(),
+                IsMinion = bool.Parse(row[18]),
             };
             if (!string.IsNullOrEmpty(row[9]))
             {

@@ -23,7 +23,7 @@ public class EnemyData : CharacterData
     public List<ValueTuple<string, int>> SpecialAttackOrderStrs { get; set; }
     public Dictionary<string, int> SpecialMechanismList { get; set; }
     public ValueTuple<string, int> SpecialTriggerSkill { get; set; }
-
+    public bool IsMinion { get; set; }
     public EnemyData DeepClone()
     {
         EnemyData clone = (EnemyData)this.MemberwiseClone();

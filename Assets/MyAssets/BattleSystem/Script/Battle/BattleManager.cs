@@ -719,8 +719,15 @@ public class BattleManager : Singleton<BattleManager>
         for (int i = 0; i < MapManager.Instance.MapNodes[levelCount][levelID].l.EnemyIDList.Count; i++)
         {
             int enemyID = MapManager.Instance.MapNodes[levelCount][levelID].l.EnemyIDList.ElementAt(i).Value;
-            string loactionID = MapManager.Instance.MapNodes[levelCount][levelID].l.EnemyIDList.ElementAt(i).Key;
-            CurrentEnemyList.Add(loactionID, DataManager.Instance.EnemyList[enemyID].DeepClone());
+            string location = MapManager.Instance.MapNodes[levelCount][levelID].l.EnemyIDList.ElementAt(i).Key;
+            if (DataManager.Instance.EnemyList[enemyID].IsMinion)
+            {
+                CurrentMinionsList.Add(location, DataManager.Instance.EnemyList[enemyID].DeepClone());
+            }
+            else
+            {
+                CurrentEnemyList.Add(location, DataManager.Instance.EnemyList[enemyID].DeepClone());
+            }
         }
         for (int i = 0; i < MapManager.Instance.MapNodes[levelCount][levelID].l.TerrainIDList.Count; i++)
         {
@@ -995,6 +1002,17 @@ public class BattleManager : Singleton<BattleManager>
             enemy.MyAnimator.SetTrigger("isDeath");
             CurrentMinionsList.Remove(key);
             Destroy(enemy.gameObject, 1);
+            EventManager.Instance.DispatchEvent(EventDefinition.eventMove);
         }
+    }
+    public void RemoveMinion(string location)
+    {
+        EnemyData value = CurrentMinionsList[location];
+        Enemy enemy = value.EnemyTrans.GetComponent<Enemy>();
+        enemy.MyAnimator.SetTrigger("isDeath");
+        CurrentMinionsList.Remove(location);
+        Destroy(enemy.gameObject, 1);
+        EventManager.Instance.DispatchEvent(EventDefinition.eventMove);
+
     }
 }

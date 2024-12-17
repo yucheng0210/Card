@@ -473,6 +473,7 @@ public class UIBattle : UIBase
 
         // 获取当前的敌人列表和地形列表
         var enemyList = BattleManager.Instance.CurrentEnemyList;
+        var minionList = BattleManager.Instance.CurrentMinionsList;
         var terrainList = BattleManager.Instance.CurrentTerrainList;
         // 处理敌人列表
         for (int i = 0; i < enemyList.Count; i++)
@@ -493,7 +494,24 @@ public class UIBattle : UIBase
 
             yield return null;
         }
+        for (int i = 0; i < minionList.Count; i++)
+        {
+            string key = minionList.ElementAt(i).Key;
+            EnemyData enemyData = minionList.ElementAt(i).Value;
+            int checkerboardPoint = BattleManager.Instance.GetCheckerboardPoint(key);
+            Enemy enemy = Instantiate(enemyPrefab, enemyTrans);
+            RectTransform enemyRect = enemy.GetComponent<RectTransform>();
+            enemyRect.anchoredPosition = checkerboardTrans.GetChild(checkerboardPoint).localPosition;
+            enemy.EnemyID = enemyData.CharacterID;
+            enemy.EnemyImage.sprite = Resources.Load<Sprite>(enemyData.EnemyImagePath);
+            enemy.MyAnimator.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>(enemyData.EnemyAniPath);
+            enemyData.CurrentAttack = enemyData.MinAttack;
+            enemyData.EnemyTrans = enemyRect;
+            enemyData.CurrentHealth = DataManager.Instance.EnemyList[enemy.EnemyID].MaxHealth;
+            enemy.MyEnemyData = enemyData;
 
+            yield return null;
+        }
         // 处理地形列表
         for (int i = 0; i < terrainList.Count; i++)
         {
