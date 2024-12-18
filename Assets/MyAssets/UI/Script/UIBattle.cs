@@ -170,6 +170,10 @@ public class UIBattle : UIBase
             return;
         }
         EnemyData enemyData = (EnemyData)BattleManager.Instance.IdentifyCharacter(location);
+        if (enemyData == null)
+        {
+            return;
+        }
         Enemy enemy = enemyData.EnemyTrans.GetComponent<Enemy>();
         bool isMove = enemy.MyActionType == Enemy.ActionType.Move;
         UIManager.Instance.ChangeCheckerboardColor(enemy.CurrentActionRangeTypeList, isMove);
@@ -322,10 +326,21 @@ public class UIBattle : UIBase
     {
         if (enemy.InRange || enemy.NoNeedCheckInRange)
         {
-            string key = enemyData.CurrentAttackOrderStrs.ElementAt(enemyData.CurrentAttackOrderIndex).Item1;
-            int value = enemyData.CurrentAttackOrderStrs.ElementAt(enemyData.CurrentAttackOrderIndex).Item2;
-            EffectFactory.Instance.CreateEffect(key).ApplyEffect(value, location, BattleManager.Instance.CurrentLocationID);
-            BattleManager.Instance.ShowCharacterStatusClue(enemy.StatusClueTrans, EffectFactory.Instance.CreateEffect(key).SetTitleText(), 0);
+            if (enemy.TemporaryEffect != "")
+            {
+                string[] effects = enemy.TemporaryEffect.Split("=");
+                string key = effects[0];
+                int value = int.Parse(effects[1]);
+                EffectFactory.Instance.CreateEffect(key).ApplyEffect(value, location, BattleManager.Instance.CurrentLocationID);
+                BattleManager.Instance.ShowCharacterStatusClue(enemy.StatusClueTrans, EffectFactory.Instance.CreateEffect(key).SetTitleText(), 0);
+            }
+            else
+            {
+                string key = enemyData.CurrentAttackOrderStrs.ElementAt(enemyData.CurrentAttackOrderIndex).Item1;
+                int value = enemyData.CurrentAttackOrderStrs.ElementAt(enemyData.CurrentAttackOrderIndex).Item2;
+                EffectFactory.Instance.CreateEffect(key).ApplyEffect(value, location, BattleManager.Instance.CurrentLocationID);
+                BattleManager.Instance.ShowCharacterStatusClue(enemy.StatusClueTrans, EffectFactory.Instance.CreateEffect(key).SetTitleText(), 0);
+            }
         }
     }
 
@@ -370,7 +385,6 @@ public class UIBattle : UIBase
             return;
         }
         string playerLocation = BattleManager.Instance.CurrentLocationID;
-        BattleManager.Instance.ChangeTurn(BattleManager.BattleType.UsingEffect);
         EffectFactory.Instance.CreateEffect(nameof(MoveEffect)).ApplyEffect(BattleManager.Instance.PlayerMoveCount, playerLocation, playerLocation);
     }
     private void RemoveEnemy(string key)
@@ -391,6 +405,7 @@ public class UIBattle : UIBase
                 {
                     BattleManager.Instance.CurrentMinionsList.Remove(key);
                 }
+                EventManager.Instance.ClearEvents(enemyData);
                 Destroy(enemyData.EnemyTrans.gameObject, 1);
             }
             enemy.IsDeath = true;

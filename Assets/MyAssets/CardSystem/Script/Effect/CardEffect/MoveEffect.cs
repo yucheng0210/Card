@@ -56,6 +56,7 @@ public class MoveEffect : IEffect
             BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Attack);
             EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
             EventManager.Instance.DispatchEvent(EventDefinition.eventMove);
+            BattleManager.Instance.SwitchHandCardRaycast();
         }
         );
         sequence.Play();

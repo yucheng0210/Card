@@ -511,7 +511,6 @@ public class BattleManager : Singleton<BattleManager>
 
         return coneAttackList;
     }
-
     private List<string> GetStraightChargeList(string fromLocation, string toLocation, int attackDistance)
     {
         List<string> emptyPlaceList = GetLinearAttackList(fromLocation, toLocation, attackDistance);
@@ -685,6 +684,9 @@ public class BattleManager : Singleton<BattleManager>
             case BattleType.Attack:
                 Attack();
                 break;
+            case BattleType.UsingEffect:
+                UsingEffect();
+                break;
             case BattleType.Dialog:
                 Dialog();
                 break;
@@ -742,6 +744,10 @@ public class BattleManager : Singleton<BattleManager>
     {
         RefreshCheckerboardList();
         EventManager.Instance.DispatchEvent(EventDefinition.eventAttack);
+    }
+    private void UsingEffect()
+    {
+        SwitchHandCardRaycast();
     }
     private void Explore()
     {
@@ -831,7 +837,7 @@ public class BattleManager : Singleton<BattleManager>
     }
     public void AddMinions(int enemyID, int count, string location)
     {
-        List<string> emptyPlaceList = GetEmptyPlace(location, 3, CheckEmptyType.Move, true, false);
+        List<string> emptyPlaceList = GetEmptyPlace(location, count, CheckEmptyType.Move, true, false);
         for (int i = 0; i < count; i++)
         {
             int randomIndex = UnityEngine.Random.Range(0, emptyPlaceList.Count);
@@ -996,14 +1002,13 @@ public class BattleManager : Singleton<BattleManager>
     {
         for (int i = 0; i < CurrentMinionsList.Count; i++)
         {
-            string key = CurrentMinionsList.ElementAt(i).Key;
             EnemyData value = CurrentMinionsList.ElementAt(i).Value;
             Enemy enemy = value.EnemyTrans.GetComponent<Enemy>();
             enemy.MyAnimator.SetTrigger("isDeath");
-            CurrentMinionsList.Remove(key);
             Destroy(enemy.gameObject, 1);
             EventManager.Instance.DispatchEvent(EventDefinition.eventMove);
         }
+        CurrentMinionsList.Clear();
     }
     public void RemoveMinion(string location)
     {
@@ -1014,5 +1019,13 @@ public class BattleManager : Singleton<BattleManager>
         Destroy(enemy.gameObject, 1);
         EventManager.Instance.DispatchEvent(EventDefinition.eventMove);
 
+    }
+    public void SwitchHandCardRaycast()
+    {
+        List<CardData> handCard = DataManager.Instance.HandCard;
+        for (int i = 0; i < handCard.Count; i++)
+        {
+            handCard[i].MyCardItem.CardImage.raycastTarget = !handCard[i].MyCardItem.CardImage.raycastTarget;
+        }
     }
 }

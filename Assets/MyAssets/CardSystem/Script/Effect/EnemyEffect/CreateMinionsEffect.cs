@@ -7,7 +7,8 @@ public class CreateMinionsEffect : IEffect
 {
     public void ApplyEffect(int value, string fromLocation, string toLocation)
     {
-        BattleManager.Instance.AddMinions(2005, value, fromLocation);
+        int minionID = BattleManager.Instance.CurrentEnemyList[fromLocation].CharacterID + 1000;
+        BattleManager.Instance.AddMinions(minionID, value, fromLocation);
     }
     public string SetTitleText()
     {

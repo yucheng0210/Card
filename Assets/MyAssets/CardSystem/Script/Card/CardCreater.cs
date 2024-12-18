@@ -140,7 +140,7 @@ public class CardCreater : MonoBehaviour
             CardItem cardItem = handCard[i].MyCardItem;
             RectTransform handCardRect = cardItem.GetComponent<RectTransform>();
             cardItem.transform.SetParent(handCardTrans); // 將卡片設定為手牌的子物件
-            cardItem.CardCollision.raycastTarget = false;
+            cardItem.CardImage.raycastTarget = false;
             cardItem.gameObject.SetActive(true); // 啟用卡片物件
             EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
             yield return null;
@@ -165,17 +165,10 @@ public class CardCreater : MonoBehaviour
             EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
         }
         yield return new WaitForSecondsRealtime(moveTime);
-        HandCardRaycast();
+        BattleManager.Instance.SwitchHandCardRaycast();
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Attack);
     }
-    private void HandCardRaycast()
-    {
-        List<CardData> handCard = DataManager.Instance.HandCard;
-        for (int i = 0; i < handCard.Count; i++)
-        {
-            handCard[i].MyCardItem.CardCollision.raycastTarget = true;
-        }
-    }
+
     private void DrawnAllCards(int count)
     {
         List<CardData> usedCardBag = DataManager.Instance.UsedCardBag;

@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Unity.VisualStudio.Editor;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class PhantomEffect : IEffect
 {
     private EnemyData enemyData;
@@ -19,17 +20,25 @@ public class PhantomEffect : IEffect
         enemyLocation = fromLocation;
         enemyData.PassiveSkills.Remove(GetType().Name);
         phantomCount = value;
-        EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
+        EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, enemyData, EventTakeDamage);
         if (enemyData.IsMinion)
         {
             return;
         }
-        EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
-        EventManager.Instance.AddEventRegister(EventDefinition.eventEnemyTurn, EventEnemyTurn);
+        EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, enemyData, EventPlayerTurn);
         //BattleManager.Instance.AddMinions(2009, value, fromLocation);
     }
     private void EventPlayerTurn(params object[] args)
     {
+        if (currentMinionsList.Count == 0)
+        {
+            return;
+        }
+        for (int i = 0; i < currentMinionsList.Count; i++)
+        {
+            string key = currentMinionsList.ElementAt(i).Key;
+            currentMinionsList[key].CurrentHealth = enemyData.CurrentHealth;
+        }
         attackCount = 2;
         int randomIndex = Random.Range(0, currentMinionsList.Count);
         string minionLocation = currentMinionsList.ElementAt(randomIndex).Key;
@@ -40,14 +49,7 @@ public class PhantomEffect : IEffect
         BattleManager.Instance.Replace(currentMinionsList, minionLocation, enemyLocation);
         enemyLocation = minionLocation;
     }
-    private void EventEnemyTurn(params object[] args)
-    {
-        if (enemy.IsDizziness)
-        {
-            BattleManager.Instance.AddMinions(2009, phantomCount, enemyLocation);
-            enemy.IsDizziness = false;
-        }
-    }
+
     private void EventTakeDamage(params object[] args)
     {
         if (args[5] == enemyData)
@@ -66,7 +68,14 @@ public class PhantomEffect : IEffect
                 attackCount--;
                 if (attackCount <= 0)
                 {
-                    enemy.IsDizziness = true;
+                    enemy.EnemyAttackIntentText.text = "";
+                    enemy.ResetUIElements();
+                    enemy.EnemyEffectImage.SetActive(true);
+                    enemy.EnemyEffectImage.GetComponent<UnityEngine.UI.Image>().sprite = EffectFactory.Instance.CreateEffect("CreateMinionsEffect").SetIcon();
+                    enemy.MyActionType = Enemy.ActionType.Effect;
+                    enemy.TemporaryEffect = "CreateMinionsEffect=5";
+                    enemy.NoNeedCheckInRange = true;
+                    enemy.CurrentActionRangeTypeList.Clear();
                     BattleManager.Instance.ClearAllMinions();
                 }
             }

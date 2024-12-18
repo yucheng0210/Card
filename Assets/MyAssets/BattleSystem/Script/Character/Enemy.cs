@@ -56,6 +56,7 @@ public class Enemy : MonoBehaviour
     public int CurrentActionRange { get; set; }
     public int AdditionAttackCount { get; set; }
     public bool NoNeedCheckInRange { get; set; }
+    public string TemporaryEffect { get; set; }
     public bool InRange { get; set; }
     private string location;
     public bool IsSpecialAction { get; set; }
@@ -105,7 +106,7 @@ public class Enemy : MonoBehaviour
         SetInfoGroupEventTrigger();
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
-    private void ResetUIElements()
+    public void ResetUIElements()
     {
         enemyAttack.SetActive(false);
         enemyShield.SetActive(false);
@@ -294,6 +295,7 @@ public class Enemy : MonoBehaviour
     {
         NoNeedCheckInRange = false;
         BattleManager.Instance.RefreshCheckerboardList();
+        TemporaryEffect = "";
         RefreshAttackIntent();
     }
     private void EventMove(params object[] args)

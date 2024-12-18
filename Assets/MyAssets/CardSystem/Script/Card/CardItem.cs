@@ -23,8 +23,6 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     [SerializeField]
     private Image cardImage;
-    [SerializeField]
-    private Image cardBackground;
 
     [SerializeField]
     private float pointerEnterUpY;
@@ -37,9 +35,6 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     [SerializeField]
     private float moveTime;
-    [SerializeField]
-    private Image cardCollision;
-    public Image CardCollision { get { return cardCollision; } set { cardCollision = value; } }
     private CardItem rightCard, leftCard;
     private bool isAttackCard;
     private Enemy enemy;
@@ -256,7 +251,6 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             BattleManager.Instance.ShowCharacterStatusClue(BattleManager.Instance.CurrentPlayer.StatusClueTrans, "行動力不足", 0);
         }
         return hasEnoughActionPoints && hasEnoughMana && !isNotInAttackPhase && !isCardCostNegative;
-
     }
     private void UseCard(string target)
     {
@@ -321,7 +315,7 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     }
     private void EventRefreshUI(params object[] args)
     {
-        int currentActionPoint = BattleManager.Instance.CurrentPlayerData.CurrentActionPoint;
+        /*int currentActionPoint = BattleManager.Instance.CurrentPlayerData.CurrentActionPoint;
         if (currentActionPoint >= MyCardData.CardCost && BattleManager.Instance.CurrentPlayerData.Mana >= MyCardData.CardManaCost)
         {
             UIManager.Instance.ChangeOutline(outline, 10);
@@ -329,6 +323,6 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         else
         {
             UIManager.Instance.ChangeOutline(outline, 0);
-        }
+        }*/
     }
 }
