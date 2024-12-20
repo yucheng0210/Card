@@ -74,15 +74,13 @@ public class Enemy : MonoBehaviour
         EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
         EventManager.Instance.AddEventRegister(EventDefinition.eventMove, EventMove);
         EventManager.Instance.AddEventRegister(EventDefinition.eventRefreshUI, EventRefreshUI);
+        EventManager.Instance.AddEventRegister(EventDefinition.eventEnemyTurn, EventEnemyTurn);
         EnemyOnceBattlePositiveList = new Dictionary<string, int>();
         currentEnemyList = BattleManager.Instance.CurrentEnemyList;
         MyEnemyData.CurrentAttackOrderStrs = MyEnemyData.AttackOrderStrs;
+        RefreshAttackIntent();
     }
 
-    private void OnDisable()
-    {
-        EventManager.Instance.RemoveEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
-    }
     private void RefreshAttackIntent()
     {
         MySequence = null;
@@ -124,25 +122,22 @@ public class Enemy : MonoBehaviour
     private void HandleAttack(bool isCheck)
     {
         string attackOrder;
-        if (MyEnemyData.CurrentHealth <= MyEnemyData.SpecialAttackCondition)
+        if (IsSpecialAction)
         {
-            if (!IsSpecialAction)
+            ValueTuple<string, int> triggerSkill = MyEnemyData.SpecialTriggerSkill;
+            Dictionary<string, int> mechanismSkill = MyEnemyData.SpecialMechanismList;
+            EffectFactory.Instance.CreateEffect(triggerSkill.Item1).ApplyEffect(triggerSkill.Item2, location, BattleManager.Instance.CurrentLocationID);
+            for (int i = 0; i < mechanismSkill.Count; i++)
             {
-                ValueTuple<string, int> triggerSkill = MyEnemyData.SpecialTriggerSkill;
-                Dictionary<string, int> mechanismSkill = MyEnemyData.SpecialMechanismList;
-                EffectFactory.Instance.CreateEffect(triggerSkill.Item1).ApplyEffect(triggerSkill.Item2, location, BattleManager.Instance.CurrentLocationID);
-                for (int i = 0; i < mechanismSkill.Count; i++)
-                {
-                    string key = mechanismSkill.ElementAt(i).Key;
-                    string clueStrs = EffectFactory.Instance.CreateEffect(key).SetTitleText();
-                    float waitTime = 0.5f * i;
-                    EffectFactory.Instance.CreateEffect(key).ApplyEffect(mechanismSkill[key], location, BattleManager.Instance.CurrentLocationID);
-                    BattleManager.Instance.ShowCharacterStatusClue(StatusClueTrans, clueStrs, waitTime);
-                }
-                MyEnemyData.CurrentAttackOrderIndex = 0;
-                MyEnemyData.CurrentAttackOrderStrs = MyEnemyData.SpecialAttackOrderStrs;
-                IsSpecialAction = true;
+                string key = mechanismSkill.ElementAt(i).Key;
+                string clueStrs = EffectFactory.Instance.CreateEffect(key).SetTitleText();
+                float waitTime = 0.5f * i;
+                EffectFactory.Instance.CreateEffect(key).ApplyEffect(mechanismSkill[key], location, BattleManager.Instance.CurrentLocationID);
+                BattleManager.Instance.ShowCharacterStatusClue(StatusClueTrans, clueStrs, waitTime);
             }
+            MyEnemyData.CurrentAttackOrderIndex = 0;
+            MyEnemyData.CurrentAttackOrderStrs = MyEnemyData.SpecialAttackOrderStrs;
+            IsSpecialAction = false;
         }
         attackOrder = MyEnemyData.CurrentAttackOrderStrs.ElementAt(MyEnemyData.CurrentAttackOrderIndex).Item1;
         MyCheckEmptyType = BattleManager.CheckEmptyType.EnemyAttack;
@@ -297,6 +292,13 @@ public class Enemy : MonoBehaviour
         BattleManager.Instance.RefreshCheckerboardList();
         TemporaryEffect = "";
         RefreshAttackIntent();
+    }
+    private void EventEnemyTurn(params object[] args)
+    {
+        if (MyEnemyData.CurrentHealth <= MyEnemyData.SpecialAttackCondition)
+        {
+            IsSpecialAction = true;
+        }
     }
     private void EventMove(params object[] args)
     {

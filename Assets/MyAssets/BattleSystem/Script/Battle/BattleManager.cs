@@ -861,6 +861,7 @@ public class BattleManager : Singleton<BattleManager>
             enemy.MyEnemyData = CurrentMinionsList[key];
             enemy.MyNextAttackActionRangeType = ActionRangeType.None;
         }
+        EventManager.Instance.DispatchEvent(EventDefinition.eventMove);
     }
     public void AddTrap(List<string> trapList, int id)
     {
@@ -1027,5 +1028,26 @@ public class BattleManager : Singleton<BattleManager>
         {
             handCard[i].MyCardItem.CardImage.raycastTarget = !handCard[i].MyCardItem.CardImage.raycastTarget;
         }
+    }
+    public void ExchangePos(Transform transA, Dictionary<string, EnemyData> enemyListA, string locationA, Transform transB, string locationB, Dictionary<string, EnemyData> enemyListB)
+    {
+        Vector3 tempPosition = transA.localPosition;
+        transA.localPosition = transB.localPosition;
+        transB.localPosition = tempPosition;
+        Replace(enemyListA, locationA, locationB);
+        Replace(enemyListB, locationB, locationA);
+        EventManager.Instance.DispatchEvent(EventDefinition.eventMove);
+    }
+    public void TemporaryChangeEffect(Enemy enemy, string effectName)
+    {
+        string[] effectNames = effectName.Split('=');
+        enemy.EnemyAttackIntentText.text = "";
+        enemy.ResetUIElements();
+        enemy.EnemyEffectImage.SetActive(true);
+        enemy.EnemyEffectImage.GetComponent<Image>().sprite = EffectFactory.Instance.CreateEffect(effectNames[0]).SetIcon();
+        enemy.MyActionType = Enemy.ActionType.Effect;
+        enemy.TemporaryEffect = effectName;
+        enemy.NoNeedCheckInRange = true;
+        enemy.CurrentActionRangeTypeList.Clear();
     }
 }

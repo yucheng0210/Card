@@ -13,7 +13,7 @@ public class RechargeEffect : IEffect
     }
     private void EventTakeDamage(params object[] args)
     {
-        if (args.Length >= 5 && args[4] == enemyData)
+        if (args[4] == enemyData)
         {
             enemyData.CurrentAttack = enemyData.MinAttack;
             EventManager.Instance.RemoveEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);

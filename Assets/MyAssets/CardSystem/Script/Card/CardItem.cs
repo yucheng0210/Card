@@ -76,10 +76,6 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         SetCardInfo();
         EventManager.Instance.AddEventRegister(EventDefinition.eventRefreshUI, EventRefreshUI);
     }
-    private void OnDisable()
-    {
-        EventManager.Instance.RemoveEventRegister(EventDefinition.eventRefreshUI, EventRefreshUI);
-    }
 
     private void SetCardInfo()
     {
@@ -255,7 +251,8 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     private void UseCard(string target)
     {
         CardData cardData = MyCardData;
-        if (BattleManager.Instance.CurrentNegativeState.ContainsKey(nameof(CantMoveEffect)) && cardData.CardType == "移動")
+        if ((BattleManager.Instance.CurrentNegativeState.ContainsKey(nameof(CantMoveEffect)) && cardData.CardType == "移動")
+        || BattleManager.Instance.CurrentNegativeState.ContainsKey(nameof(TauntEffect)))
         {
             return;
         }
