@@ -331,14 +331,14 @@ public class UIBattle : UIBase
                 string[] effects = enemy.TemporaryEffect.Split("=");
                 string key = effects[0];
                 int value = int.Parse(effects[1]);
-                EffectFactory.Instance.CreateEffect(key).ApplyEffect(value, location, BattleManager.Instance.CurrentLocationID);
+                EffectFactory.Instance.CreateEffect(key).ApplyEffect(value, location, enemy.TargetLocation);
                 BattleManager.Instance.ShowCharacterStatusClue(enemy.StatusClueTrans, EffectFactory.Instance.CreateEffect(key).SetTitleText(), 0);
             }
             else
             {
                 string key = enemyData.CurrentAttackOrderStrs.ElementAt(enemyData.CurrentAttackOrderIndex).Item1;
                 int value = enemyData.CurrentAttackOrderStrs.ElementAt(enemyData.CurrentAttackOrderIndex).Item2;
-                EffectFactory.Instance.CreateEffect(key).ApplyEffect(value, location, BattleManager.Instance.CurrentLocationID);
+                EffectFactory.Instance.CreateEffect(key).ApplyEffect(value, location, enemy.TargetLocation);
                 BattleManager.Instance.ShowCharacterStatusClue(enemy.StatusClueTrans, EffectFactory.Instance.CreateEffect(key).SetTitleText(), 0);
             }
         }

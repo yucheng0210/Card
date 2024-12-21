@@ -12,29 +12,47 @@ public class PolarIceBearMechanismEffect : IEffect
     private string meleeEnemyLocation;
     private string longDistanceEnemyLocation;
     private bool isInExchangeRange;
+    private Dictionary<string, EnemyData> currentEnemyList;
     public void ApplyEffect(int value, string fromLocation, string toLocation)
     {
-        meleeEnemyLocation = BattleManager.Instance.CurrentEnemyList.ElementAt(0).Key;
-        longDistanceEnemyLocation = BattleManager.Instance.CurrentMinionsList.ElementAt(0).Key;
-        meleeEnemyData = BattleManager.Instance.CurrentEnemyList[meleeEnemyLocation];
-        longDistanceEnemyData = BattleManager.Instance.CurrentMinionsList[longDistanceEnemyLocation];
+        currentEnemyList = BattleManager.Instance.CurrentEnemyList;
+        meleeEnemyLocation = currentEnemyList.ElementAt(0).Key;
+        longDistanceEnemyLocation = currentEnemyList.ElementAt(1).Key;
+        meleeEnemyData = currentEnemyList[meleeEnemyLocation];
+        longDistanceEnemyData = currentEnemyList[longDistanceEnemyLocation];
         meleeEnemy = meleeEnemyData.EnemyTrans.GetComponent<Enemy>();
         longDistanceEnemy = longDistanceEnemyData.EnemyTrans.GetComponent<Enemy>();
+        EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, meleeEnemyData, EventPlayerTurn);
         EventManager.Instance.AddEventRegister(EventDefinition.eventMove, meleeEnemyData, EventMove);
         EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, meleeEnemyData, EventTakeDamage);
     }
+    private void EventPlayerTurn(params object[] args)
+    {
+        meleeEnemyLocation = currentEnemyList.ElementAt(0).Key;
+        longDistanceEnemyLocation = currentEnemyList.ElementAt(1).Key;
+    }
     private void EventMove(params object[] args)
     {
-        List<string> surroundingsLocationList = BattleManager.Instance.GetActionRangeTypeList(longDistanceEnemyLocation, 1, BattleManager.CheckEmptyType.EnemyAttack, BattleManager.ActionRangeType.Surrounding);
+        List<string> surroundingsLocationList = BattleManager.Instance.GetActionRangeTypeList(longDistanceEnemyLocation, 1,
+        BattleManager.CheckEmptyType.EnemyAttack, BattleManager.ActionRangeType.Surrounding);
         isInExchangeRange = surroundingsLocationList.Contains(BattleManager.Instance.CurrentLocationID);
     }
     private void EventTakeDamage(params object[] args)
     {
-        if (args[5] == longDistanceEnemyData && isInExchangeRange)
+        if (args[5] == longDistanceEnemyData)
         {
-            BattleManager.Instance.ExchangePos(meleeEnemyData.EnemyTrans, BattleManager.Instance.CurrentEnemyList, meleeEnemyLocation, longDistanceEnemyData.EnemyTrans, longDistanceEnemyLocation, BattleManager.Instance.CurrentMinionsList);
+            if (isInExchangeRange)
+            {
+                BattleManager.Instance.ExchangePos(meleeEnemyData.EnemyTrans, currentEnemyList, meleeEnemyLocation, longDistanceEnemyData.EnemyTrans, longDistanceEnemyLocation, currentEnemyList);
+            }
+            int healthCount = BattleManager.Instance.GetPercentage(longDistanceEnemyData.MaxHealth, 30);
+            if (longDistanceEnemyData.CurrentHealth <= BattleManager.Instance.GetPercentage(longDistanceEnemyData.MaxHealth, 40) && meleeEnemyData.CurrentHealth > healthCount)
+            {
+                string effectName = "HealthBalanceEffect=" + healthCount.ToString();
+                BattleManager.Instance.TemporaryChangeEffect(meleeEnemy, effectName);
+                meleeEnemy.TargetLocation = longDistanceEnemyLocation;
+            }
         }
-
     }
     public string SetTitleText()
     {

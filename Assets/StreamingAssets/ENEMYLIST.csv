@@ -8,7 +8,7 @@
 1007,風沙追獵者,45,10,15,EnemyImage/Leopard,4,3,FALSE,Shield=30;Cone=1;Cone=1,EnemyAnimation/Leopard,FuriousEffect=50,0,TRUE,30,Cone=1;Cone=1;ThrowTraps=1002,LeopardMechanismEffect=0,ThrowTraps=1002,FALSE
 1008,冰角鯨,230,15,15,EnemyImage/IceWhale,2,1,TRUE,StraightCharge=1;VortexMawEffect=2;Surrounding=2;SlowDownEffect=1,EnemyAnimation/IceWhale,DivingEffect=0,0,TRUE,-1,,,,FALSE
 1009,雪羽妖鴞,91,15,15,EnemyImage/SnowOwl,2,1,TRUE,ThrowExplosion=1;ThrowExplosion=1,EnemyAnimation/SnowOwl,PhantomEffect=5,0,TRUE,-1,,,,FALSE
-1010,極冰巨熊近,43,15,15,EnemyImage/PolarIceBear,2,1,TRUE,Surrounding=1;Surrounding=1;IncreaseHealth=25,EnemyAnimation/PolarIceBear,ResurrectionEffect=100,0,TRUE,0,TauntEffect=1;Surrounding=1;IncreaseHealth=25,PolarIceBearMechanismEffect=0,CreateMinionsEffect=1,FALSE
+1010,冰河君主,330,15,15,EnemyImage/PolarIceBear,2,1,TRUE,Jump=1;TauntEffect=1;Surrounding=1;IncreaseHealth=25,EnemyAnimation/PolarIceBear,PolarIceBearMechanismEffect=0,0,TRUE,0,Surrounding=1,,Shield=100,FALSE
+1011,霜塔神使,150,15,15,EnemyImage/PolarIceBear,2,1,TRUE,RechargeEffect=50;ThrowExplosion=1,EnemyAnimation/PolarIceBear,SniperEffect=50,0,TRUE,0,TauntEffect=1;Surrounding=1;IncreaseHealth=25,,CreateMinionsEffect=1,FALSE
 2005,沙漠利爪,43,15,15,EnemyImage/Dog,2,1,TRUE,Surrounding=1;Surrounding=1;IncreaseHealth=24,EnemyAnimation/Dog,BleedEffect=3;SacrificeEffect=40,0,TRUE,-1,,,,TRUE
 2009,雪羽妖鴞,90,15,15,EnemyImage/SnowOwl,2,1,TRUE,ThrowExplosion=1;ThrowExplosion=1,EnemyAnimation/SnowOwl,PhantomEffect=-1,0,TRUE,-1,,,,TRUE
-2010,極冰巨熊遠,43,15,15,EnemyImage/PolarIceBear,2,1,TRUE,RechargeEffect=50;ThrowExplosion=1,EnemyAnimation/PolarIceBear,,0,TRUE,-1,,,,TRUE

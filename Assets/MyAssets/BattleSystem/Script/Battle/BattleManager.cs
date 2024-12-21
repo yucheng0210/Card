@@ -1034,13 +1034,24 @@ public class BattleManager : Singleton<BattleManager>
         Vector3 tempPosition = transA.localPosition;
         transA.localPosition = transB.localPosition;
         transB.localPosition = tempPosition;
-        Replace(enemyListA, locationA, locationB);
-        Replace(enemyListB, locationB, locationA);
+        // 獲取要交換的值，避免直接修改字典
+        EnemyData dataA = enemyListA[locationA];
+        EnemyData dataB = enemyListB[locationB];
+
+        // 執行交換，先移除舊的鍵
+        enemyListA.Remove(locationA);
+        enemyListB.Remove(locationB);
+
+        // 添加新的鍵值對
+        enemyListA[locationB] = dataA;
+        enemyListB[locationA] = dataB;
         EventManager.Instance.DispatchEvent(EventDefinition.eventMove);
     }
     public void TemporaryChangeEffect(Enemy enemy, string effectName)
     {
         string[] effectNames = effectName.Split('=');
+        enemy.InfoTitle.text = "效果";
+        enemy.InfoDescription.text = "施展未知效果。";
         enemy.EnemyAttackIntentText.text = "";
         enemy.ResetUIElements();
         enemy.EnemyEffectImage.SetActive(true);
@@ -1048,6 +1059,13 @@ public class BattleManager : Singleton<BattleManager>
         enemy.MyActionType = Enemy.ActionType.Effect;
         enemy.TemporaryEffect = effectName;
         enemy.NoNeedCheckInRange = true;
-        enemy.CurrentActionRangeTypeList.Clear();
+        int effectRange = EffectFactory.Instance.CreateEffect(effectNames[0]).SetEffectRange();
+        ActionRangeType actionRangeType = EffectFactory.Instance.CreateEffect(effectNames[0]).SetEffectAttackType();
+        GetActionRangeTypeList(GetEnemyKey(enemy.MyEnemyData), effectRange, CheckEmptyType.EnemyAttack, actionRangeType);
+        enemy.CurrentActionRangeTypeList = GetActionRangeTypeList(GetEnemyKey(enemy.MyEnemyData), effectRange, CheckEmptyType.EnemyAttack, actionRangeType);
+    }
+    public int GetPercentage(int maxCount, int percentage)
+    {
+        return Mathf.RoundToInt(maxCount * (percentage / 100f));
     }
 }

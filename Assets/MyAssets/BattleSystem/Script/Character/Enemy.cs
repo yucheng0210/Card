@@ -57,6 +57,7 @@ public class Enemy : MonoBehaviour
     public int AdditionAttackCount { get; set; }
     public bool NoNeedCheckInRange { get; set; }
     public string TemporaryEffect { get; set; }
+    public string TargetLocation { get; set; }
     public bool InRange { get; set; }
     private string location;
     public bool IsSpecialAction { get; set; }
@@ -121,18 +122,26 @@ public class Enemy : MonoBehaviour
 
     private void HandleAttack(bool isCheck)
     {
+        TargetLocation = BattleManager.Instance.CurrentLocationID;
         string attackOrder;
         if (IsSpecialAction)
         {
             ValueTuple<string, int> triggerSkill = MyEnemyData.SpecialTriggerSkill;
             Dictionary<string, int> mechanismSkill = MyEnemyData.SpecialMechanismList;
-            EffectFactory.Instance.CreateEffect(triggerSkill.Item1).ApplyEffect(triggerSkill.Item2, location, BattleManager.Instance.CurrentLocationID);
+            if (triggerSkill.Item1 == "Shield")
+            {
+                BattleManager.Instance.GetShield(MyEnemyData, triggerSkill.Item2);
+            }
+            else
+            {
+                EffectFactory.Instance.CreateEffect(triggerSkill.Item1).ApplyEffect(triggerSkill.Item2, location, TargetLocation);
+            }
             for (int i = 0; i < mechanismSkill.Count; i++)
             {
                 string key = mechanismSkill.ElementAt(i).Key;
                 string clueStrs = EffectFactory.Instance.CreateEffect(key).SetTitleText();
                 float waitTime = 0.5f * i;
-                EffectFactory.Instance.CreateEffect(key).ApplyEffect(mechanismSkill[key], location, BattleManager.Instance.CurrentLocationID);
+                EffectFactory.Instance.CreateEffect(key).ApplyEffect(mechanismSkill[key], location, TargetLocation);
                 BattleManager.Instance.ShowCharacterStatusClue(StatusClueTrans, clueStrs, waitTime);
             }
             MyEnemyData.CurrentAttackOrderIndex = 0;
@@ -189,6 +198,7 @@ public class Enemy : MonoBehaviour
         enemyAttackIntentText.enabled = false;
         enemyEffectImage.sprite = EffectFactory.Instance.CreateEffect(attackOrder).SetIcon();
         enemyEffect.SetActive(true);
+        TargetLocation = BattleManager.Instance.CurrentLocationID;
     }
 
     private void HandleMove()

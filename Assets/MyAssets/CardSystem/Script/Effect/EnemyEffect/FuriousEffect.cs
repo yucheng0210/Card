@@ -15,23 +15,13 @@ public class FuriousEffect : IEffect
 
         if (enemyList.TryGetValue(fromLocation, out enemyData))
         {
-            attackIncreaseCount = Mathf.RoundToInt(enemyData.CurrentAttack * (value / 100f));
-            EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
+            attackIncreaseCount = BattleManager.Instance.GetPercentage(enemyData.CurrentAttack, value);
+            EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, enemyData, EventTakeDamage);
         }
     }
 
     private void EventTakeDamage(params object[] args)
     {
-        if (!enemyList.ContainsValue(enemyData))
-        {
-            // 移除事件監聽
-            EventManager.Instance.RemoveEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
-            return;
-        }
-        if (args.Length < 5)
-        {
-            return;
-        }
         // 獲取攻擊者
         CharacterData attacker = (CharacterData)args[4];
 
