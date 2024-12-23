@@ -19,12 +19,13 @@ public class ResurrectionEffect : IEffect
         }
         typeName = GetType().Name;
         targetLocation = fromLocation;
-        recoverCount = Mathf.RoundToInt(enemyData.MaxHealth * (value / 100f));
+        recoverCount = BattleManager.Instance.GetPercentage(enemyData.MaxHealth, value);
         enemy = enemyData.EnemyTrans.GetComponent<Enemy>();
         enemyEffectImage = enemy.EnemyEffectImage.GetComponent<Image>();
         enemy.EnemyOnceBattlePositiveList.Add(typeName, 1);
-        EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
-        EventManager.Instance.AddEventRegister(EventDefinition.eventEnemyTurn, EventEnemyTurn);
+        enemy.IsSuspendedAnimation = true;
+        EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, enemyData, EventTakeDamage);
+        EventManager.Instance.AddEventRegister(EventDefinition.eventEnemyTurn, enemyData, EventEnemyTurn);
     }
     private void EventTakeDamage(params object[] args)
     {
@@ -50,6 +51,7 @@ public class ResurrectionEffect : IEffect
         enemy.EnemyOnceBattlePositiveList.Remove(typeName);
         // 敌人复活
         enemy.IsDeath = false;
+        enemy.IsSuspendedAnimation = false;
         enemy.MyAnimator.SetTrigger("isResurrection");
         BattleManager.Instance.Recover(enemyData, recoverCount, targetLocation);
         // 触发其他必要的事件
@@ -67,6 +69,6 @@ public class ResurrectionEffect : IEffect
 
     public string SetDescriptionText()
     {
-        return "當生命歸零時，角色進入復甦狀態，在自己的回合開始時，角色將以特定比例的生命復活，且該被動技能將被移除。";
+        return "生命歸零時進入復甦，回合開始時按比例復活並移除技能。";
     }
 }

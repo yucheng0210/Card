@@ -22,6 +22,7 @@ public class PolarIceBearMechanismEffect : IEffect
         longDistanceEnemyData = currentEnemyList[longDistanceEnemyLocation];
         meleeEnemy = meleeEnemyData.EnemyTrans.GetComponent<Enemy>();
         longDistanceEnemy = longDistanceEnemyData.EnemyTrans.GetComponent<Enemy>();
+        longDistanceEnemy.IsSuspendedAnimation = true;
         EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, meleeEnemyData, EventPlayerTurn);
         EventManager.Instance.AddEventRegister(EventDefinition.eventMove, meleeEnemyData, EventMove);
         EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, meleeEnemyData, EventTakeDamage);
@@ -46,11 +47,21 @@ public class PolarIceBearMechanismEffect : IEffect
                 BattleManager.Instance.ExchangePos(meleeEnemyData.EnemyTrans, currentEnemyList, meleeEnemyLocation, longDistanceEnemyData.EnemyTrans, longDistanceEnemyLocation, currentEnemyList);
             }
             int healthCount = BattleManager.Instance.GetPercentage(longDistanceEnemyData.MaxHealth, 30);
-            if (longDistanceEnemyData.CurrentHealth <= BattleManager.Instance.GetPercentage(longDistanceEnemyData.MaxHealth, 40) && meleeEnemyData.CurrentHealth > healthCount)
+            if (longDistanceEnemyData.CurrentHealth <= 0 && meleeEnemyData.CurrentHealth > healthCount)
             {
                 string effectName = "HealthBalanceEffect=" + healthCount.ToString();
                 BattleManager.Instance.TemporaryChangeEffect(meleeEnemy, effectName);
                 meleeEnemy.TargetLocation = longDistanceEnemyLocation;
+                longDistanceEnemy.MyActionType = Enemy.ActionType.None;
+                longDistanceEnemy.InfoTitle.text = "?";
+                longDistanceEnemy.InfoDescription.text = "???";
+            }
+        }
+        if (args[5] == meleeEnemyData)
+        {
+            if (BattleManager.Instance.CurrentOnceBattlePositiveList.ContainsKey(nameof(ExplosiveMarkEffect)))
+            {
+                BattleManager.Instance.TakeDamage(meleeEnemyData, BattleManager.Instance.CurrentPlayerData, BattleManager.Instance.CurrentOnceBattlePositiveList[nameof(ExplosiveMarkEffect)], BattleManager.Instance.CurrentLocationID, 0);
             }
         }
     }

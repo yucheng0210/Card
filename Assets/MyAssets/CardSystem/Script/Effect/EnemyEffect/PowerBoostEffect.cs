@@ -1,9 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class FuriousEffect : IEffect
+public class PowerBoostEffect : IEffect
 {
     private int attackIncreaseCount;
     private EnemyData enemyData;
@@ -16,11 +15,12 @@ public class FuriousEffect : IEffect
         if (enemyList.TryGetValue(fromLocation, out enemyData))
         {
             attackIncreaseCount = value;
-            EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, enemyData, EventTakeDamage);
+            enemyData.PassiveSkills.Remove(GetType().Name);
+            EventManager.Instance.AddEventRegister(EventDefinition.eventEnemyTurn, enemyData, EventEnemyTurn);
         }
     }
 
-    private void EventTakeDamage(params object[] args)
+    private void EventEnemyTurn(params object[] args)
     {
         // 獲取攻擊者
         CharacterData attacker = (CharacterData)args[4];
@@ -30,15 +30,16 @@ public class FuriousEffect : IEffect
         {
             enemyData.CurrentAttack += attackIncreaseCount;
         }
+        enemyData.CurrentAttack += attackIncreaseCount;
     }
 
     public string SetTitleText()
     {
-        return "狂怒";
+        return "力量增幅";
     }
 
     public string SetDescriptionText()
     {
-        return "每次命中敵人提升攻擊力。";
+        return "每回合提升自身的攻擊力。";
     }
 }

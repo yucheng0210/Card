@@ -20,7 +20,7 @@ public class CantMoveEffect : IEffect
     }
     public string SetDescriptionText()
     {
-        return "封印移動的負面效果。";
+        return "封印移動。";
     }
 
     public BattleManager.ActionRangeType SetEffectAttackType()

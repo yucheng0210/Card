@@ -62,6 +62,7 @@ public class Enemy : MonoBehaviour
     private string location;
     public bool IsSpecialAction { get; set; }
     public bool IsDizziness { get; set; }
+    public bool IsSuspendedAnimation { get; set; }
     public enum ActionType
     {
         Move,

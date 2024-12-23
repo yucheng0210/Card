@@ -30,14 +30,16 @@ public class ThornsEffect : IEffect
             Debug.LogWarning($"Target {fromLocation} not found in CurrentEnemyList.");
             return;
         }
-
-        if (!currentOnceBattlePositiveList.TryGetValue(typeName, out var existingValue))
+        if (!currentOnceBattlePositiveList.ContainsKey(typeName))
         {
-            existingValue = 0;
+            currentOnceBattlePositiveList.Add(typeName, value);
+            EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, counterattacker, EventTakeDamage);
         }
-        currentOnceBattlePositiveList[typeName] = existingValue + value;
+        else
+        {
+            currentOnceBattlePositiveList[typeName] += value;
+        }
         counterattackerID = fromLocation;
-        EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
     }
 
     private void EventTakeDamage(params object[] args)
@@ -47,14 +49,10 @@ public class ThornsEffect : IEffect
             return;
         }
         var damage = (int)args[1];
-        var counterattackDamage = Mathf.RoundToInt(damage * (currentOnceBattlePositiveList[typeName] / 100f));
+        var counterattackDamage = BattleManager.Instance.GetPercentage(damage, currentOnceBattlePositiveList[typeName]);
         var counterattackTarget = (CharacterData)args[4];
         var targetLocationID = currentEnemyList.FirstOrDefault(x => x.Value == counterattackTarget).Key ?? BattleManager.Instance.CurrentLocationID;
         BattleManager.Instance.TakeDamage(counterattacker, counterattackTarget, counterattackDamage, targetLocationID, 0.5f);
-        if (!currentEnemyList.ContainsKey(counterattackerID) && BattleManager.Instance.CurrentLocationID != counterattackerID)
-        {
-            EventManager.Instance.RemoveEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
-        }
     }
     public string SetTitleText()
     {
@@ -63,6 +61,6 @@ public class ThornsEffect : IEffect
 
     public string SetDescriptionText()
     {
-        return "受到攻擊時，將部分比例的傷害反彈回去。";
+        return "受擊時反彈部分攻擊傷害。";
     }
 }

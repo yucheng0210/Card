@@ -395,7 +395,7 @@ public class UIBattle : UIBase
         if (enemyData.CurrentHealth <= 0 && !enemy.IsDeath)
         {
             enemy.MyAnimator.SetTrigger("isDeath");
-            if (!enemy.EnemyOnceBattlePositiveList.ContainsKey(nameof(ResurrectionEffect)))
+            if (!enemy.IsSuspendedAnimation)
             {
                 if (currentEnemyList.ContainsKey(key))
                 {
@@ -603,6 +603,10 @@ public class UIBattle : UIBase
         RectTransform damageRect = damageNum.GetComponent<RectTransform>();
         Text damageText = damageNum.GetComponentInChildren<Text>();
         string damageStr = args.Length > 6 ? args[6].ToString() : args[1].ToString();
+        if (damageStr == "0")
+        {
+            damageStr = "格擋";
+        }
         damageText.text = damageStr;
         Color color = (Color)args[3];
         damageText.DOColor(color, 0.75f);

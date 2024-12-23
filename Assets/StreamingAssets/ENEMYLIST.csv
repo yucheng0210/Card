@@ -1,5 +1,5 @@
 ﻿標籤,名稱,總血量,最低攻擊力,最高攻擊力,圖片位置,移動步數,攻擊距離,近戰模式,行動順序,動畫位置,被動技能,減傷率,圖片翻轉,特殊行動條件,特殊行動順序,特殊機制,特殊觸發技能,是爪牙
-1001,沙漠哥布林,32,12,12,EnemyImage/Goblin,3,2,FALSE,CantMoveEffect=1;Cone=1;Cone=2,EnemyAnimation/Goblin,FuriousEffect=50,0,FALSE,-1,,,,FALSE
+1001,沙漠哥布林,32,12,12,EnemyImage/Goblin,3,2,FALSE,CantMoveEffect=1;Cone=1;Cone=2,EnemyAnimation/Goblin,FuriousEffect=5,0,FALSE,-1,,,,FALSE
 1002,骷髏人,55,5,5,EnemyImage/Skeleton,2,1,TRUE,Shield=15;ThornsEffect=20;Surrounding=1,EnemyAnimation/Skeleton,ResurrectionEffect=30,0,FALSE,-1,,,,FALSE
 1003,大眼怪,47,20,20,EnemyImage/FlyingEye,2,3,FALSE,Linear=1;Linear=1;SlowDownEffect=1;TeleportEffect=2,EnemyAnimation/FlyingEye,SniperEffect=50,0,FALSE,-1,,,,FALSE
 1004,菇,84,10,10,EnemyImage/Mushroom,2,1,TRUE,Jump=1;VortexMawEffect=2;Surrounding=2;IncreaseHealth=20,EnemyAnimation/Mushroom,ParasiticEffect=2,0,FALSE,-1,,,,FALSE
@@ -8,7 +8,7 @@
 1007,風沙追獵者,45,10,15,EnemyImage/Leopard,4,3,FALSE,Shield=30;Cone=1;Cone=1,EnemyAnimation/Leopard,FuriousEffect=50,0,TRUE,30,Cone=1;Cone=1;ThrowTraps=1002,LeopardMechanismEffect=0,ThrowTraps=1002,FALSE
 1008,冰角鯨,230,15,15,EnemyImage/IceWhale,2,1,TRUE,StraightCharge=1;VortexMawEffect=2;Surrounding=2;SlowDownEffect=1,EnemyAnimation/IceWhale,DivingEffect=0,0,TRUE,-1,,,,FALSE
 1009,雪羽妖鴞,91,15,15,EnemyImage/SnowOwl,2,1,TRUE,ThrowExplosion=1;ThrowExplosion=1,EnemyAnimation/SnowOwl,PhantomEffect=5,0,TRUE,-1,,,,FALSE
-1010,冰河君主,330,15,15,EnemyImage/PolarIceBear,2,1,TRUE,Jump=1;TauntEffect=1;Surrounding=1;IncreaseHealth=25,EnemyAnimation/PolarIceBear,PolarIceBearMechanismEffect=0,0,TRUE,0,Surrounding=1,,Shield=100,FALSE
-1011,霜塔神使,150,15,15,EnemyImage/PolarIceBear,2,1,TRUE,RechargeEffect=50;ThrowExplosion=1,EnemyAnimation/PolarIceBear,SniperEffect=50,0,TRUE,0,TauntEffect=1;Surrounding=1;IncreaseHealth=25,,CreateMinionsEffect=1,FALSE
+1010,冰河君主,330,15,15,EnemyImage/PolarIceBear,2,1,TRUE,Jump=1;TauntEffect=1;Surrounding=1;IncreaseHealth=25,EnemyAnimation/PolarIceBear,PolarIceBearMechanismEffect=0,0,TRUE,-1,,,,FALSE
+1011,霜塔神使,150,15,15,EnemyImage/PolarIceBear,2,1,TRUE,RechargeEffect=50;ThrowExplosion=1,EnemyAnimation/PolarIceBear,ExplosiveMarkEffect=-1,0,TRUE,-1,ThrowExplosion=1,PowerBoostEffect=5,CantMoveEffect=3,FALSE
 2005,沙漠利爪,43,15,15,EnemyImage/Dog,2,1,TRUE,Surrounding=1;Surrounding=1;IncreaseHealth=24,EnemyAnimation/Dog,BleedEffect=3;SacrificeEffect=40,0,TRUE,-1,,,,TRUE
 2009,雪羽妖鴞,90,15,15,EnemyImage/SnowOwl,2,1,TRUE,ThrowExplosion=1;ThrowExplosion=1,EnemyAnimation/SnowOwl,PhantomEffect=-1,0,TRUE,-1,,,,TRUE
