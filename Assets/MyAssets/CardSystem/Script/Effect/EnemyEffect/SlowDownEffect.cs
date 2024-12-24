@@ -17,7 +17,7 @@ public class SlowDownEffect : IEffect
     }
     public string SetDescriptionText()
     {
-        return "移動需要耗費更多點數。";
+        return "移動消耗更多點數。";
     }
     public BattleManager.ActionRangeType SetEffectAttackType()
     {

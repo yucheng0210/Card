@@ -91,7 +91,7 @@ public class BattleManager : Singleton<BattleManager>
     public Dictionary<string, string> CheckerboardList { get; set; }
     public RectTransform PlayerTrans { get; set; }
     public RectTransform CheckerboardTrans { get; set; }
-
+    public Texture2D DefaultCursor { get; set; }
     protected override void Awake()
     {
         base.Awake();
@@ -104,6 +104,8 @@ public class BattleManager : Singleton<BattleManager>
         CurrentNegativeState = new Dictionary<string, int>();
         CurrentTrapList = new();
         CurrentOnceBattlePositiveList = new Dictionary<string, int>();
+        DefaultCursor = Resources.Load<Texture2D>("DefaultCursor");
+        Cursor.SetCursor(DefaultCursor, Vector2.zero, CursorMode.Auto);
     }
     private void Update()
     {

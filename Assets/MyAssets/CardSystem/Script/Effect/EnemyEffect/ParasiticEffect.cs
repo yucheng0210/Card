@@ -66,6 +66,6 @@ public class ParasiticEffect : IEffect
 
     public string SetDescriptionText()
     {
-        return "攻擊時給予寄生卡片。";
+        return "攻擊時添加寄生詛咒卡片。";
     }
 }

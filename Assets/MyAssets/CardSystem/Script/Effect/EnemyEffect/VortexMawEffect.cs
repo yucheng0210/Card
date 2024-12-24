@@ -30,11 +30,11 @@ public class VortexMawEffect : IEffect
 
     public string SetTitleText()
     {
-        return "漩渦巨口";
+        return "鯨吞";
     }
     public string SetDescriptionText()
     {
-        return "將周圍的敵人吸引過來。";
+        return "拉近周圍敵人。";
     }
     public BattleManager.ActionRangeType SetEffectAttackType() { return BattleManager.ActionRangeType.Surrounding; }
     public int SetEffectRange() { return 2; }

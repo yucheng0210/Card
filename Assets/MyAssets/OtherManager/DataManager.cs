@@ -531,7 +531,6 @@ public class DataManager : Singleton<DataManager>
 
         // Set current player data
         BattleManager.Instance.CurrentPlayerData = PlayerList[PlayerID];
-
     }
 
     private void StartGame_ExtinctionRayEffect()

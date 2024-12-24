@@ -603,12 +603,13 @@ public class UIBattle : UIBase
         RectTransform damageRect = damageNum.GetComponent<RectTransform>();
         Text damageText = damageNum.GetComponentInChildren<Text>();
         string damageStr = args.Length > 6 ? args[6].ToString() : args[1].ToString();
-        if (damageStr == "0")
+        Color color = (Color)args[3];
+        if (damageStr == "0" && args.Length > 6)
         {
             damageStr = "格擋";
+            color = Color.white;
         }
         damageText.text = damageStr;
-        Color color = (Color)args[3];
         damageText.DOColor(color, 0.75f);
         xOffset *= -1;
         Vector2 startPoint = (Vector2)args[0];

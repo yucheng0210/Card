@@ -13,8 +13,8 @@ public class SniperEffect : IEffect
         if (BattleManager.Instance.CurrentEnemyList.TryGetValue(fromLocation, out enemyData))
         {
             attackMultiplier = value;
-            EventManager.Instance.AddEventRegister(EventDefinition.eventMove, EventMove);
-            EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
+            EventManager.Instance.AddEventRegister(EventDefinition.eventMove, enemyData, EventMove);
+            EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, enemyData, EventPlayerTurn);
         }
     }
 
@@ -29,14 +29,6 @@ public class SniperEffect : IEffect
     }
     private void RefreshAttack()
     {
-        // Assuming args[4] contains the attacking enemy data
-        Dictionary<string, EnemyData> currentEnemyList = BattleManager.Instance.CurrentEnemyList;
-        if (!currentEnemyList.ContainsValue(enemyData))
-        {
-            EventManager.Instance.RemoveEventRegister(EventDefinition.eventMove, EventMove);
-            EventManager.Instance.RemoveEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
-            return;
-        }
         string defenderLocation = BattleManager.Instance.GetEnemyKey(enemyData);
         int distance = BattleManager.Instance.GetRoute(defenderLocation, BattleManager.Instance.CurrentLocationID, BattleManager.CheckEmptyType.EnemyAttack).Count;
         enemyData.CurrentAttack = enemyData.MinAttack + Mathf.RoundToInt(enemyData.MinAttack * (distance - 1) * (attackMultiplier / 100f));
@@ -45,7 +37,7 @@ public class SniperEffect : IEffect
 
     public string SetTitleText()
     {
-        return "地圖炮";
+        return "地圖砲";
     }
 
     public string SetDescriptionText()
