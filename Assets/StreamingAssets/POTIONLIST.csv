@@ -1,4 +1,4 @@
 ﻿編號,名稱,圖片,資訊,購買價格,出售價值,效果名稱,稀有度,類型,合成素材
-1001,治癒藥水,PotionImage/HealingPotion,立刻回復15%血量。,50,5,IncreaseHealth=15,普通,藥水,2001
-1002,高級治癒藥水,PotionImage/AdvancedHealingPotion,立刻回復40%血量。,50,5,IncreaseHealth=40,普通,藥水,2002
-1003,金屬化藥水,PotionImage/MetallizationPotion,立刻回復40%血量。,50,5,IncreaseHealth=40,普通,藥水,2003
+1001,治癒藥水,PotionImage/HealingPotion,立刻回復15%血量。,50,5,IncreaseHealth=15,普通,藥水,1001
+1002,高級治癒藥水,PotionImage/AdvancedHealingPotion,立刻回復40%血量。,50,5,IncreaseHealth=40,普通,藥水,1002
+1003,金屬化藥水,PotionImage/MetallizationPotion,立刻回復40%血量。,50,5,IncreaseHealth=40,普通,藥水,1003

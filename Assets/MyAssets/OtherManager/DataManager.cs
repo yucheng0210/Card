@@ -524,9 +524,9 @@ public class DataManager : Singleton<DataManager>
         }
 
         // Add items to backpack and potion bag
-        BackpackManager.Instance.AddItem(2001, Backpack);
-        BackpackManager.Instance.AddItem(2002, Backpack);
-        BackpackManager.Instance.AddItem(2003, Backpack);
+        BackpackManager.Instance.AddItem(1001, Backpack);
+        BackpackManager.Instance.AddItem(1002, Backpack);
+        BackpackManager.Instance.AddItem(1003, Backpack);
         PotionBag.Add(PotionList[1001]);
 
         // Set current player data
