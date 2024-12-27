@@ -51,6 +51,10 @@ public class UIVictoryReward : UIBase
         List<int> rareCardList = new();
         for (int i = 0; i < DataManager.Instance.CardList.Count; i++)
         {
+            if (DataManager.Instance.CardList.ElementAt(i).Value.CardType == "詛咒")
+            {
+                continue;
+            }
             switch (DataManager.Instance.CardList.ElementAt(i).Value.CardRarity)
             {
                 case "普通":
@@ -68,6 +72,7 @@ public class UIVictoryReward : UIBase
             int rewardID;
             if (cardType >= 95)
             {
+                i--;
                 continue;
             }
             else if (cardType >= 80)
@@ -79,11 +84,13 @@ public class UIVictoryReward : UIBase
                 rewardID = normalCardList[Random.Range(0, normalCardList.Count)];
             }
             Dictionary<int, CardData> cardList = DataManager.Instance.CardList;
-            cardRewardMenu.SetActive(true);
             CardItem cardItem = Instantiate(cardPrefab, cardRewardGroupTrans);
-            Button cardButton = cardItem.gameObject.AddComponent<Button>();
+            Button cardButton = cardItem.CardImage.gameObject.AddComponent<Button>();
+            UIManager.Instance.ChangeOutline(cardItem, false);
+            cardRewardMenu.SetActive(true);
+            cardItem.CardImage.raycastTarget = true;
             cardItem.GetComponent<CanvasGroup>().alpha = 1;
-            cardItem.MyCardData.CardID = cardList[rewardID].CardID;
+            cardItem.MyCardData = cardList[rewardID];
             cardItem.CantMove = true;
             cardButton.onClick.AddListener(() => AddCard(rewardID));
             normalCardList.Remove(rewardID);

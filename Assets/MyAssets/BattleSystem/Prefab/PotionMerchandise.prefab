@@ -35,7 +35,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -174}
+  m_AnchoredPosition: {x: 12, y: -137}
   m_SizeDelta: {x: 160, y: 54}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4360899702768063546
@@ -68,7 +68,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: 17f24a70bf1f8fc42beaa4af3c03664e, type: 3}
-    m_FontSize: 30
+    m_FontSize: 40
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 3
@@ -92,6 +92,7 @@ GameObject:
   - component: {fileID: 2929177122497673817}
   - component: {fileID: 2137878829702890187}
   - component: {fileID: 7333642391348528245}
+  - component: {fileID: 1578127314585697504}
   m_Layer: 5
   m_Name: PotionMerchandise
   m_TagString: Untagged
@@ -202,3 +203,15 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!225 &1578127314585697504
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1610313435340901515}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0

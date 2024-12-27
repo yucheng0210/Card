@@ -514,13 +514,13 @@ public class DataManager : Singleton<DataManager>
 
     private void StartGame_FightingSpiritEffect()
     {
-        MoneyCount = 99;
+        MoneyCount = 180;
         PlayerID = 1001;
 
         // Add ten 1006 cards
         for (int i = 0; i < 10; i++)
         {
-            CardBag.Add(CardList[1006].DeepClone());
+            CardBag.Add(CardList[1005].DeepClone());
         }
 
         // Add items to backpack and potion bag

@@ -9,6 +9,8 @@ using UnityEngine.Events;
 using Unity.VisualScripting;
 using UnityEngine.TextCore.Text;
 using System;
+using UnityEngine.U2D;
+using Cinemachine;
 public class BattleManager : Singleton<BattleManager>
 {
     public enum BattleType
@@ -1069,5 +1071,9 @@ public class BattleManager : Singleton<BattleManager>
     public int GetPercentage(int maxCount, int percentage)
     {
         return Mathf.RoundToInt(maxCount * (percentage / 100f));
+    }
+    public void CameraImpulse(CinemachineImpulseSource cinemachineImpulseSource)
+    {
+        //cinemachineImpulseSource.GenerateImpulse();
     }
 }

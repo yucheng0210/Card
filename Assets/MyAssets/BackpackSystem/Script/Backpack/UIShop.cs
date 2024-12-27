@@ -52,6 +52,11 @@ public class UIShop : UIBase
             int randomIndex = Random.Range(0, cardList.Count);
             KeyValuePair<int, CardData> randomCard = cardList.ElementAt(randomIndex);
             CardData cardData = cardList[randomCard.Key];
+            if (cardData.CardType == "詛咒")
+            {
+                i--;
+                continue;
+            }
             CardItem cardItem = Instantiate(cardPrefab, cardGroupTrans);
             Text cardPriceText = cardItem.transform.GetChild(cardItem.transform.childCount - 1).GetComponent<Text>();
             cardItem.GetComponent<CanvasGroup>().alpha = 1;
@@ -59,8 +64,8 @@ public class UIShop : UIBase
             cardItem.MyCardData.CardID = randomCard.Key;
             cardItem.CantMove = true;
             cardPriceText.text = cardData.CardBuyPrice.ToString();
-            Button cardButton = cardItem.GetComponent<Button>();
-            cardButton.onClick.AddListener(() => AddCard(cardItem.MyCardData.CardID, cardButton.gameObject));
+            Button cardButton = cardItem.CardImage.GetComponent<Button>();
+            cardButton.onClick.AddListener(() => AddCard(cardItem.MyCardData.CardID, cardItem.CardImage));
         }
         for (int i = 0; i < potionGroupTrans.childCount; i++)
         {
@@ -74,7 +79,7 @@ public class UIShop : UIBase
             Button potion = Instantiate(potionPrefab, potionGroupTrans);
             Text potionPriceText = potion.transform.GetChild(potion.transform.childCount - 1).GetComponent<Text>();
             potionPriceText.text = potionItem.ItemBuyPrice.ToString();
-            potion.onClick.AddListener(() => AddPotion(potionItem.ItemID, potion.gameObject));
+            potion.onClick.AddListener(() => AddPotion(potionItem.ItemID, potion.GetComponent<Image>()));
         }
     }
     private void RefreshMerchandise_SkyIsland()
@@ -93,6 +98,11 @@ public class UIShop : UIBase
             int randomIndex = Random.Range(0, cardList.Count);
             KeyValuePair<int, CardData> randomCard = cardList.ElementAt(randomIndex);
             CardData cardData = cardList[randomCard.Key];
+            if (cardData.CardType == "詛咒")
+            {
+                i--;
+                continue;
+            }
             CardItem cardItem = Instantiate(cardPrefab, cardGroupTrans);
             Text cardPriceText = cardItem.transform.GetChild(cardItem.transform.childCount - 1).GetComponent<Text>();
             cardItem.GetComponent<CanvasGroup>().alpha = 1;
@@ -100,8 +110,8 @@ public class UIShop : UIBase
             cardItem.MyCardData.CardID = randomCard.Key;
             cardItem.CantMove = true;
             cardPriceText.text = cardData.CardBuyPrice.ToString();
-            Button cardButton = cardItem.GetComponent<Button>();
-            cardButton.onClick.AddListener(() => AddCard(cardItem.MyCardData.CardID, cardButton.gameObject));
+            Button cardButton = cardItem.CardImage.GetComponent<Button>();
+            cardButton.onClick.AddListener(() => AddCard(cardItem.MyCardData.CardID, cardItem.CardImage));
         }
         for (int i = 0; i < potionGroupTrans.childCount; i++)
         {
@@ -115,7 +125,7 @@ public class UIShop : UIBase
             Button potion = Instantiate(potionPrefab, potionGroupTrans);
             Text potionPriceText = potion.transform.GetChild(potion.transform.childCount - 1).GetComponent<Text>();
             potionPriceText.text = potionItem.ItemBuyPrice.ToString();
-            potion.onClick.AddListener(() => AddPotion(potionItem.ItemID, potion.gameObject));
+            potion.onClick.AddListener(() => AddPotion(potionItem.ItemID, potion.GetComponent<Image>()));
         }
         for (int i = 0; i < 2; i++)
         {
@@ -125,10 +135,10 @@ public class UIShop : UIBase
             Button potion = Instantiate(potionPrefab, potionGroupTrans);
             Text potionPriceText = potion.transform.GetChild(potion.transform.childCount - 1).GetComponent<Text>();
             potionPriceText.text = potionItem.ItemBuyPrice.ToString();
-            potion.onClick.AddListener(() => AddItem(potionItem.ItemID, potion.gameObject));
+            potion.onClick.AddListener(() => AddItem(potionItem.ItemID, potion.GetComponent<Image>()));
         }
     }
-    private void AddItem(int potionID, GameObject potion)
+    private void AddItem(int potionID, Image potion)
     {
         Item item = DataManager.Instance.ItemList[potionID];
         if (DataManager.Instance.MoneyCount < item.ItemBuyPrice)
@@ -137,10 +147,11 @@ public class UIShop : UIBase
         }
         DataManager.Instance.MoneyCount -= item.ItemBuyPrice;
         DataManager.Instance.Backpack.Add(potionID, item);
-        Destroy(potion);
+        potion.raycastTarget = false;
+        potion.GetComponent<CanvasGroup>().alpha = 0;
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
-    private void AddCard(int cardID, GameObject card)
+    private void AddCard(int cardID, Image card)
     {
         CardData cardData = DataManager.Instance.CardList[cardID];
         if (DataManager.Instance.MoneyCount < cardData.CardBuyPrice)
@@ -149,10 +160,11 @@ public class UIShop : UIBase
         }
         DataManager.Instance.MoneyCount -= cardData.CardBuyPrice;
         DataManager.Instance.CardBag.Add(cardData);
-        Destroy(card);
+        card.raycastTarget = false;
+        card.transform.parent.GetComponent<CanvasGroup>().alpha = 0;
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
-    private void AddPotion(int potionID, GameObject potion)
+    private void AddPotion(int potionID, Image potion)
     {
         Potion item = DataManager.Instance.PotionList[potionID];
         if (DataManager.Instance.MoneyCount < item.ItemBuyPrice)
@@ -161,7 +173,8 @@ public class UIShop : UIBase
         }
         DataManager.Instance.MoneyCount -= item.ItemBuyPrice;
         DataManager.Instance.PotionBag.Add(item);
-        Destroy(potion);
+        potion.raycastTarget = false;
+        potion.GetComponent<CanvasGroup>().alpha = 0;
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
 }

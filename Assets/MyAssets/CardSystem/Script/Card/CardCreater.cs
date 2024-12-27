@@ -142,6 +142,7 @@ public class CardCreater : MonoBehaviour
             cardItem.transform.SetParent(handCardTrans); // 將卡片設定為手牌的子物件
             cardItem.CardImage.raycastTarget = false;
             cardItem.gameObject.SetActive(true); // 啟用卡片物件
+            cardItem.RefreshCardOutline();
             EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
             yield return null;
             cardItem.CantMove = false;
@@ -248,6 +249,7 @@ public class CardCreater : MonoBehaviour
                 continue;
             }
             CardItem cardItem = handCard[i].MyCardItem;
+            UIManager.Instance.ChangeOutline(cardItem, false);
             cardItem.CantMove = true;
             cardItem.transform.SetParent(usedCardTrans);
             cardItem.GetComponent<RectTransform>().DOAnchorPos(usedCardTrans.GetComponent<RectTransform>().anchoredPosition, moveTime);

@@ -23,6 +23,8 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     [SerializeField]
     private Image cardImage;
+    [SerializeField]
+    private GameObject cardOutline;
 
     [SerializeField]
     private float pointerEnterUpY;
@@ -51,6 +53,11 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         get { return cardImage; }
         set { cardImage = value; }
     }
+    public GameObject CardOutline
+    {
+        get { return cardOutline; }
+        set { cardOutline = value; }
+    }
     public Text CardName
     {
         get { return cardName; }
@@ -74,9 +81,12 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     private void Start()
     {
         SetCardInfo();
-        EventManager.Instance.AddEventRegister(EventDefinition.eventRefreshUI, EventRefreshUI);
+        EventManager.Instance.AddEventRegister(EventDefinition.eventUseCard, RefreshCardOutline);
     }
-
+    private void OnDisable()
+    {
+        EventManager.Instance.RemoveEventRegister(EventDefinition.eventUseCard, RefreshCardOutline);
+    }
     private void SetCardInfo()
     {
         CardName.text = MyCardData.CardName;
@@ -310,16 +320,16 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
         gameObject.SetActive(false);
     }
-    private void EventRefreshUI(params object[] args)
+    public void RefreshCardOutline(params object[] args)
     {
-        /*int currentActionPoint = BattleManager.Instance.CurrentPlayerData.CurrentActionPoint;
+        int currentActionPoint = BattleManager.Instance.CurrentPlayerData.CurrentActionPoint;
         if (currentActionPoint >= MyCardData.CardCost && BattleManager.Instance.CurrentPlayerData.Mana >= MyCardData.CardManaCost)
         {
-            UIManager.Instance.ChangeOutline(outline, 10);
+            UIManager.Instance.ChangeOutline(this, true);
         }
         else
         {
-            UIManager.Instance.ChangeOutline(outline, 0);
-        }*/
+            UIManager.Instance.ChangeOutline(this, false);
+        }
     }
 }

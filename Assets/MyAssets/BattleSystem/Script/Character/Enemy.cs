@@ -9,6 +9,7 @@ using UnityEditor.Animations;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
 using DG.Tweening;
+using Cinemachine;
 
 public class Enemy : MonoBehaviour
 {
@@ -293,6 +294,7 @@ public class Enemy : MonoBehaviour
         if (InRange)
         {
             BattleManager.Instance.TakeDamage(MyEnemyData, playerData, MyEnemyData.CurrentAttack, BattleManager.Instance.CurrentLocationID, 0);
+            BattleManager.Instance.CameraImpulse(GetComponent<CinemachineImpulseSource>());
         }
         BattleManager.Instance.Replace(currentEnemyList, startLocation, endLocation);
         //Debug.Log(startLocation + "   " + endLocation);

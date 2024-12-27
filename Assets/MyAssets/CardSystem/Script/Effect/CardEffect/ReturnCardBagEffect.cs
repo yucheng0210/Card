@@ -11,16 +11,6 @@ public class ReturnCardBag : IEffect
         UIManager.Instance.SelectCard(unityAction, true);
         // BattleManager.Instance.CardBagApplyButton.onClick.AddListener(() => UIManager.Instance.SelectCard(unityAction, true));
     }
-    public string SetTitleText()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public string SetDescriptionText()
-    {
-        throw new System.NotImplementedException();
-    }
-
     private void Return()
     {
         BattleManager.Instance.CardBagApplyButton.gameObject.SetActive(false);
@@ -32,5 +22,13 @@ public class ReturnCardBag : IEffect
         UIManager.Instance.HideUI("UICardMenu");
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
+    public string SetTitleText()
+    {
+        throw new System.NotImplementedException();
+    }
 
+    public string SetDescriptionText()
+    {
+        throw new System.NotImplementedException();
+    }
 }

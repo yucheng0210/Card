@@ -25,9 +25,10 @@ public class UIExplore : UIBase
 
     [Header("寶藏")]
     [SerializeField] private GameObject treasure;
+    [SerializeField] private Button treasureButton;
     [SerializeField] private GameObject openedTreasureBackground;
     [SerializeField] private Transform treasureItemTrans;
-
+    [SerializeField] private Button treasureExitButton;
     protected override void Start()
     {
         base.Start();
@@ -132,15 +133,18 @@ public class UIExplore : UIBase
 
     private void OpenTreasure()
     {
+        UIManager.Instance.ShowUI("UIExplore");
         treasure.SetActive(true);
-        treasure.GetComponentInChildren<Button>().onClick.AddListener(OnTreasureButtonClicked);
+        treasureButton.onClick.AddListener(OnTreasureButtonClicked);
+        treasureExitButton.onClick.AddListener(() => ExitExplore("UIExplore"));
     }
 
     private void OnTreasureButtonClicked()
     {
-        EventManager.Instance.DispatchEvent(EventDefinition.eventBattleWin);
-        /* openedTreasureBackground.SetActive(true);*/
-        treasure.SetActive(false);
+        //EventManager.Instance.DispatchEvent(EventDefinition.eventBattleWin);
+        openedTreasureBackground.SetActive(true);
+        DataManager.Instance.PotionBag.Add(DataManager.Instance.PotionList[1001]);
+        treasureExitButton.gameObject.SetActive(true);
     }
 
     private void InitializeRecovery()
@@ -148,7 +152,7 @@ public class UIExplore : UIBase
         restButton.onClick.AddListener(OpenRestMenu);
         removeCardButton.onClick.AddListener(OpenCardSelection);
         restConfirmButton.onClick.AddListener(OnRestConfirmed);
-        recoverExitButton.onClick.AddListener(ExitExplore);
+        recoverExitButton.onClick.AddListener(() => ExitExplore("UICardMenu"));
     }
 
     private void OpenRestMenu()
@@ -178,13 +182,13 @@ public class UIExplore : UIBase
     {
         // 移除 DataManager 中的卡片
         DataManager.Instance.CardBag.RemoveAt(cardID);
-
+        BattleManager.Instance.CardBagApplyButton.gameObject.SetActive(false);
         // UI 處理，例如從界面中移除卡片物件
         Destroy(BattleManager.Instance.CardMenuTrans.GetChild(cardID).gameObject);
 
         // 隱藏回復菜單並退出探索
         recoverMenu.SetActive(false);
-        ExitExplore();
+        ExitExplore("UICardMenu");
 
         // 刷新界面，更新 UI 顯示
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
@@ -199,9 +203,9 @@ public class UIExplore : UIBase
         removeCardButton.gameObject.SetActive(true);
     }
 
-    private void ExitExplore()
+    private void ExitExplore(string hideMenu)
     {
-        BattleManager.Instance.NextLevel("UICardMenu");
+        BattleManager.Instance.NextLevel(hideMenu);
     }
 
     private void RefreshUI(params object[] args)
