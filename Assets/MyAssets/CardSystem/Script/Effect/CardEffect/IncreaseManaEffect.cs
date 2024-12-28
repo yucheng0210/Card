@@ -18,11 +18,11 @@ public class IncreaseManaEffect : IEffect
 
     public string SetDescriptionText()
     {
-        throw new System.NotImplementedException();
+       return "增魔";
     }
 
     public string SetTitleText()
     {
-        throw new System.NotImplementedException();
+       return "增加魔力。";
     }
 }

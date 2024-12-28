@@ -19,8 +19,8 @@ public class SacrificeEffect : IEffect
         typeName = GetType().Name;
         enemy = enemyData.EnemyTrans.GetComponent<Enemy>();
         masterEnemyData = BattleManager.Instance.CurrentEnemyList[enemy.MasterLocation];
-        EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
-        EventManager.Instance.AddEventRegister(EventDefinition.eventEnemyTurn, EventEnemyTurn);
+        EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, enemyData, EventTakeDamage);
+        EventManager.Instance.AddEventRegister(EventDefinition.eventEnemyTurn, enemyData, EventEnemyTurn);
     }
     private void EventTakeDamage(params object[] args)
     {
@@ -29,7 +29,12 @@ public class SacrificeEffect : IEffect
             return;
         }
         enemy.MyActionType = Enemy.ActionType.None;
-        enemy.EnemyEffectImage.GetComponent<Image>().sprite = ((IEffect)this).SetIcon();
+        Sprite effectSprite = ((IEffect)this).SetIcon();
+        if (effectSprite == null)
+        {
+            effectSprite = EffectFactory.Instance.CreateEffect("KnockBackEffect").SetIcon();
+        }
+        enemy.EnemyEffectImage.GetComponent<Image>().sprite = effectSprite;
         enemy.EnemyEffectImage.SetActive(true);
         enemy.InfoTitle.text = SetTitleText();
         enemy.InfoDescription.text = SetDescriptionText();

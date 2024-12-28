@@ -10,8 +10,8 @@ public class DivingEffect : IEffect
         enemyData = BattleManager.Instance.CurrentEnemyList[fromLocation];
         enemyData.DamageReduction = 100;
         enemyData.PassiveSkills.Remove(GetType().Name);
-        EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
-        EventManager.Instance.AddEventRegister(EventDefinition.eventEnemyTurn, EventEnemyTurn);
+        EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, enemyData, EventTakeDamage);
+        EventManager.Instance.AddEventRegister(EventDefinition.eventEnemyTurn, enemyData, EventEnemyTurn);
     }
     private void EventTakeDamage(params object[] args)
     {
@@ -31,7 +31,7 @@ public class DivingEffect : IEffect
     }
     public string SetDescriptionText()
     {
-        return "潛水。";
+        return "敵人潛水時免疫傷害，攻擊玩家後退出潛水並失去免疫，下回合自動恢復潛水狀態。";
     }
 
 }

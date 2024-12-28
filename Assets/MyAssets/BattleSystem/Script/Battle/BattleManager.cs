@@ -1059,7 +1059,12 @@ public class BattleManager : Singleton<BattleManager>
         enemy.EnemyAttackIntentText.text = "";
         enemy.ResetUIElements();
         enemy.EnemyEffectImage.SetActive(true);
-        enemy.EnemyEffectImage.GetComponent<Image>().sprite = EffectFactory.Instance.CreateEffect(effectNames[0]).SetIcon();
+        Sprite effectSprite = EffectFactory.Instance.CreateEffect(effectNames[0]).SetIcon();
+        if (effectSprite == null)
+        {
+            effectSprite = EffectFactory.Instance.CreateEffect("KnockBackEffect").SetIcon();
+        }
+        enemy.EnemyEffectImage.GetComponent<Image>().sprite = effectSprite;
         enemy.MyActionType = Enemy.ActionType.Effect;
         enemy.TemporaryEffect = effectName;
         enemy.NoNeedCheckInRange = true;

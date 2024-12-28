@@ -10,12 +10,10 @@ public class UIManager : Singleton<UIManager>
 {
     public Dictionary<string, UIBase> UIDict { get; set; }
     public int CurrentRemoveID { get; set; }
-    private Material cardOutlineMaterial;
     protected override void Awake()
     {
         base.Awake();
         UIDict = new Dictionary<string, UIBase>();
-        cardOutlineMaterial = Resources.Load<Material>("SpriteOutline");
     }
 
     public void ShowUI(string uiName)

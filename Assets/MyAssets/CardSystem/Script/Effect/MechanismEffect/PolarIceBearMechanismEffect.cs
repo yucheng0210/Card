@@ -42,11 +42,12 @@ public class PolarIceBearMechanismEffect : IEffect
     {
         if (args[5] == longDistanceEnemyData)
         {
-            if (isInExchangeRange)
-            {
-                BattleManager.Instance.ExchangePos(meleeEnemyData.EnemyTrans, currentEnemyList, meleeEnemyLocation, longDistanceEnemyData.EnemyTrans, longDistanceEnemyLocation, currentEnemyList);
-            }
+
             int healthCount = BattleManager.Instance.GetPercentage(longDistanceEnemyData.MaxHealth, 30);
+            if (!longDistanceEnemy.IsSuspendedAnimation)
+            {
+                return;
+            }
             if (longDistanceEnemyData.CurrentHealth <= 0 && meleeEnemyData.CurrentHealth > healthCount)
             {
                 string effectName = "HealthBalanceEffect=" + healthCount.ToString();
@@ -55,6 +56,11 @@ public class PolarIceBearMechanismEffect : IEffect
                 longDistanceEnemy.MyActionType = Enemy.ActionType.None;
                 longDistanceEnemy.InfoTitle.text = "?";
                 longDistanceEnemy.InfoDescription.text = "???";
+                longDistanceEnemy.IsSuspendedAnimation = false;
+            }
+            else if (isInExchangeRange)
+            {
+                BattleManager.Instance.ExchangePos(meleeEnemyData.EnemyTrans, currentEnemyList, meleeEnemyLocation, longDistanceEnemyData.EnemyTrans, longDistanceEnemyLocation, currentEnemyList);
             }
         }
         if (args[5] == meleeEnemyData)
@@ -67,7 +73,7 @@ public class PolarIceBearMechanismEffect : IEffect
     }
     public string SetTitleText()
     {
-        return "";
+        return "極冬領域";
     }
 
     public string SetDescriptionText()

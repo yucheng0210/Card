@@ -10,17 +10,18 @@ public class ExtinctionRayEffect : IEffect
         int mana = BattleManager.Instance.CurrentPlayerData.Mana;
         int upCount = mana / 10;
         int damage = (int)(mana * 2 + 2 * Mathf.Pow(2, upCount));
-        BattleManager.Instance.TakeDamage(BattleManager.Instance.CurrentPlayerData, BattleManager.Instance.CurrentEnemyList[toLocation], damage, toLocation, 0);
+        EnemyData enemyData = (EnemyData)BattleManager.Instance.IdentifyCharacter(toLocation);
+        BattleManager.Instance.TakeDamage(BattleManager.Instance.CurrentPlayerData, enemyData, damage, toLocation, 0);
         BattleManager.Instance.ConsumeMana(mana);
     }
 
     public string SetDescriptionText()
     {
-        throw new System.NotImplementedException();
+        return "毀滅射線";
     }
 
     public string SetTitleText()
     {
-        throw new System.NotImplementedException();
+        return "";
     }
 }

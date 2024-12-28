@@ -74,13 +74,13 @@ public class Enemy : MonoBehaviour
     }
     private void Start()
     {
-        EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
-        EventManager.Instance.AddEventRegister(EventDefinition.eventMove, EventMove);
-        EventManager.Instance.AddEventRegister(EventDefinition.eventRefreshUI, EventRefreshUI);
-        EventManager.Instance.AddEventRegister(EventDefinition.eventEnemyTurn, EventEnemyTurn);
         EnemyOnceBattlePositiveList = new Dictionary<string, int>();
         currentEnemyList = BattleManager.Instance.CurrentEnemyList;
         MyEnemyData.CurrentAttackOrderStrs = MyEnemyData.AttackOrderStrs;
+        EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, MyEnemyData, EventPlayerTurn);
+        EventManager.Instance.AddEventRegister(EventDefinition.eventMove, MyEnemyData, EventMove);
+        EventManager.Instance.AddEventRegister(EventDefinition.eventRefreshUI, MyEnemyData, EventRefreshUI);
+        EventManager.Instance.AddEventRegister(EventDefinition.eventEnemyTurn, MyEnemyData, EventEnemyTurn);
         RefreshAttackIntent();
     }
 
@@ -195,10 +195,15 @@ public class Enemy : MonoBehaviour
             CurrentActionRange = MyEnemyData.AttackRange;
         }
         Image enemyEffectImage = enemyEffect.GetComponent<Image>();
+        Sprite effectSprite = EffectFactory.Instance.CreateEffect(attackOrder).SetIcon();
+        if (effectSprite == null)
+        {
+            effectSprite = EffectFactory.Instance.CreateEffect("KnockBackEffect").SetIcon();
+        }
         infoTitle.text = "效果";
         infoDescription.text = "施展未知效果。";
         enemyAttackIntentText.enabled = false;
-        enemyEffectImage.sprite = EffectFactory.Instance.CreateEffect(attackOrder).SetIcon();
+        enemyEffectImage.sprite = effectSprite;
         enemyEffect.SetActive(true);
         TargetLocation = BattleManager.Instance.CurrentLocationID;
     }
@@ -291,11 +296,11 @@ public class Enemy : MonoBehaviour
         {
             EffectFactory.Instance.CreateEffect("KnockBackEffect").ApplyEffect(1, startLocation, endLocation);
         }
-        if (InRange)
-        {
+       /* if (InRange)
+        {*/
             BattleManager.Instance.TakeDamage(MyEnemyData, playerData, MyEnemyData.CurrentAttack, BattleManager.Instance.CurrentLocationID, 0);
             BattleManager.Instance.CameraImpulse(GetComponent<CinemachineImpulseSource>());
-        }
+       // }
         BattleManager.Instance.Replace(currentEnemyList, startLocation, endLocation);
         //Debug.Log(startLocation + "   " + endLocation);
     }
@@ -308,9 +313,10 @@ public class Enemy : MonoBehaviour
     }
     private void EventEnemyTurn(params object[] args)
     {
-        if (MyEnemyData.CurrentHealth <= MyEnemyData.SpecialAttackCondition)
+        if (MyEnemyData.CurrentHealth <= BattleManager.Instance.GetPercentage(MyEnemyData.MaxHealth, MyEnemyData.SpecialAttackCondition))
         {
             IsSpecialAction = true;
+            EventManager.Instance.RemoveEventRegister(EventDefinition.eventEnemyTurn, EventEnemyTurn);
         }
     }
     private void EventMove(params object[] args)

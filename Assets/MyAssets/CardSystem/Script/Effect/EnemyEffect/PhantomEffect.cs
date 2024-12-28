@@ -39,7 +39,8 @@ public class PhantomEffect : IEffect
         attackCount = 2;
         int randomIndex = Random.Range(0, currentMinionsList.Count);
         string minionLocation = currentMinionsList.ElementAt(randomIndex).Key;
-        BattleManager.Instance.ExchangePos(enemyData.EnemyTrans, BattleManager.Instance.CurrentEnemyList, enemyLocation, currentMinionsList[minionLocation].EnemyTrans, minionLocation, currentMinionsList);
+        BattleManager.Instance.ExchangePos(enemyData.EnemyTrans, BattleManager.Instance.CurrentEnemyList, enemyLocation,
+        currentMinionsList[minionLocation].EnemyTrans, minionLocation, currentMinionsList);
         enemyLocation = minionLocation;
     }
 
@@ -62,6 +63,7 @@ public class PhantomEffect : IEffect
                 if (attackCount <= 0)
                 {
                     BattleManager.Instance.TemporaryChangeEffect(enemy, "CreateMinionsEffect=5");
+                    BattleManager.Instance.ClearAllMinions();
                 }
             }
         }
@@ -72,7 +74,7 @@ public class PhantomEffect : IEffect
     }
     public string SetDescriptionText()
     {
-        return "召喚幻象。";
+        return "召喚數個幻象，幻象會與主敵人隨機交換位置。";
     }
 
 }

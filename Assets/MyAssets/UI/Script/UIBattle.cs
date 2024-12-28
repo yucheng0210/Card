@@ -190,7 +190,12 @@ public class UIBattle : UIBase
         {
             string key = enemyData.MaxPassiveSkillsList.ElementAt(i).Key;
             Image passive = Instantiate(negativeLPrefab, enemyPassiveGroupTrans).BattleStateImage;
-            Sprite image = EffectFactory.Instance.CreateEffect(key).SetIcon();
+            Sprite effectSprite = EffectFactory.Instance.CreateEffect(key).SetIcon();
+            if (effectSprite == null)
+            {
+                effectSprite = EffectFactory.Instance.CreateEffect("KnockBackEffect").SetIcon();
+            }
+            Sprite image = effectSprite;
             passive.sprite = image;
             UpdateStateUI(enemyPassiveGroupTrans, enemyData.MaxPassiveSkillsList, negativeLPrefab, true);
         }
@@ -198,7 +203,12 @@ public class UIBattle : UIBase
         {
             string key = enemy.EnemyOnceBattlePositiveList.ElementAt(i).Key;
             Image passive = Instantiate(negativeLPrefab, enemyPassiveGroupTrans).BattleStateImage;
-            Sprite image = EffectFactory.Instance.CreateEffect(key).SetIcon();
+            Sprite effectSprite = EffectFactory.Instance.CreateEffect(key).SetIcon();
+            if (effectSprite == null)
+            {
+                effectSprite = EffectFactory.Instance.CreateEffect("KnockBackEffect").SetIcon();
+            }
+            Sprite image = effectSprite;
             passive.sprite = image;
             UpdateStateUI(enemyPassiveGroupTrans, enemy.EnemyOnceBattlePositiveList, negativeLPrefab, true);
         }
@@ -299,7 +309,6 @@ public class UIBattle : UIBase
         BattleManager.Instance.Replace(enemyDict, location, minLocation);
         BattleManager.Instance.RefreshCheckerboardList();
     }
-
     // 处理敌人攻击
     private IEnumerator HandleEnemyAttack(EnemyData enemyData, Enemy enemy, PlayerData playerData, int attackCount)
     {
@@ -675,7 +684,12 @@ public class UIBattle : UIBase
             Text infoTitle = stateObject.InfoTitle;
             Text infoDescription = stateObject.InfoDescription;
             Transform infoGroupTrans = stateObject.InfoGroupTrans;
-            stateImage.sprite = EffectFactory.Instance.CreateEffect(key).SetIcon();
+            Sprite effectSprite = EffectFactory.Instance.CreateEffect(key).SetIcon();
+            if (effectSprite == null)
+            {
+                effectSprite = EffectFactory.Instance.CreateEffect("KnockBackEffect").SetIcon();
+            }
+            stateImage.sprite = effectSprite;
             stateText.text = value.ToString();
             EventTrigger eventTrigger = infoGroupTrans.GetComponent<EventTrigger>();
             UnityAction unityAction_1 = () => { infoGroupTrans.GetChild(0).gameObject.SetActive(true); };

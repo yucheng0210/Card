@@ -12,11 +12,11 @@ public class SetManaMultiplierEffect : IEffect
 
     public string SetDescriptionText()
     {
-        throw new System.NotImplementedException();
+        return "增幅";
     }
 
     public string SetTitleText()
     {
-        throw new System.NotImplementedException();
+        return "";
     }
 }

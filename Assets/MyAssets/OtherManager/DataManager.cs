@@ -524,9 +524,9 @@ public class DataManager : Singleton<DataManager>
         }
 
         // Add items to backpack and potion bag
-        BackpackManager.Instance.AddItem(1001, Backpack);
-        BackpackManager.Instance.AddItem(1002, Backpack);
-        BackpackManager.Instance.AddItem(1003, Backpack);
+        /* BackpackManager.Instance.AddItem(1001, Backpack);
+         BackpackManager.Instance.AddItem(1002, Backpack);
+         BackpackManager.Instance.AddItem(1003, Backpack);*/
         PotionBag.Add(PotionList[1001]);
 
         // Set current player data
@@ -539,13 +539,13 @@ public class DataManager : Singleton<DataManager>
         PlayerID = 1001;
 
         // Add specific cards
-        int[] cardIds = { 3001, 2002, 2003, 2004, 1011, 1010, 1009 };
+        int[] cardIds = { 3001, 2002, 2003, 2004, 1010, 1009, 1008 };
 
         for (int i = 0; i < cardIds.Length; i++)
         {
             CardBag.Add(CardList[cardIds[i]].DeepClone());
         }
-
+        PotionBag.Add(PotionList[1001]);
         // Set current player data
         BattleManager.Instance.CurrentPlayerData = PlayerList[PlayerID];
     }

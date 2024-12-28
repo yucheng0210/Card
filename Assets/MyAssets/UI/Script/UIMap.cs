@@ -18,9 +18,9 @@ public class UIMap : UIBase
         { "BATTLE", 5 },
         { "BOSS", 5 },
         { "RANDOM", 5 },
-        { "RECOVER",75 },
-        { "SHOP",5 },
-        {"TREASURE",5}
+        { "RECOVER",30 },
+        { "SHOP",30 },
+        {"TREASURE",25}
     };
     protected override void Start()
     {
@@ -170,8 +170,8 @@ public class UIMap : UIBase
         Level level = DataManager.Instance.LevelTypeList[currentIndex].Clone();
         level.LevelParentList = new List<int>();
         level.LevelID = i * 5 + j;
-        //MapManager.Instance.LevelCount = 8;
-        //level.LevelActive = true;
+        /*MapManager.Instance.LevelCount = 14;
+        level.LevelActive = true;*/
         if (MapManager.Instance.MapNodes[i][j].left != null)
         {
             level.LevelParentList.Add(MapManager.Instance.MapNodes[i][j].left.l.LevelID);

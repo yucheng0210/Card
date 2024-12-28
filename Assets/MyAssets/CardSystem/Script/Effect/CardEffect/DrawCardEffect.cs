@@ -12,11 +12,11 @@ public class DrawCardEffect : IEffect
 
     public string SetDescriptionText()
     {
-        throw new System.NotImplementedException();
+        return "抽卡";
     }
 
     public string SetTitleText()
     {
-        throw new System.NotImplementedException();
+        return "抽卡";
     }
 }

@@ -24,11 +24,11 @@ public class ReturnCardBag : IEffect
     }
     public string SetTitleText()
     {
-        throw new System.NotImplementedException();
+       return "彈回";
     }
 
     public string SetDescriptionText()
     {
-        throw new System.NotImplementedException();
+        return "將棄卡堆一張卡返回抽卡堆。";
     }
 }

@@ -17,8 +17,8 @@ public class BleedEffect : IEffect
         attacker = (EnemyData)BattleManager.Instance.IdentifyCharacter(fromLocation);
         bleedCount = value;
         typeName = GetType().Name;
-        EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
-        EventManager.Instance.AddEventRegister(EventDefinition.eventUseCard, EventUseCard);
+        EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, attacker, EventTakeDamage);
+        EventManager.Instance.AddEventRegister(EventDefinition.eventUseCard, attacker, EventUseCard);
     }
 
     private void EventTakeDamage(params object[] args)

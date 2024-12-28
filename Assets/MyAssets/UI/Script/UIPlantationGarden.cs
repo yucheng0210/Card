@@ -138,7 +138,7 @@ public class UIPlantationGarden : UIBase
             Button button = farmList.ElementAt(i).Key;
             button.onClick.RemoveAllListeners();
         }
-        int potionID = item.ItemID - 1000;
+        int potionID = item.ItemID;
         Potion potion = DataManager.Instance.PotionList[potionID];
         DataManager.Instance.PotionBag.Add(potion);
         farmList[plant] = null;

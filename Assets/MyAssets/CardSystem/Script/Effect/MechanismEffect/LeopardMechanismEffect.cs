@@ -14,9 +14,9 @@ public class LeopardMechanismEffect : IEffect
         enemyData = BattleManager.Instance.CurrentEnemyList[fromLocation];
         enemy = enemyData.EnemyTrans.GetComponent<Enemy>();
         enemy.EnemyOnceBattlePositiveList.Add(GetType().Name, 1);
-        EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
-        EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
-        EventManager.Instance.AddEventRegister(EventDefinition.eventEnemyTurn, EventEnemyTurn);
+        EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, enemyData, EventPlayerTurn);
+        EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, enemyData, EventTakeDamage);
+        EventManager.Instance.AddEventRegister(EventDefinition.eventEnemyTurn, enemyData, EventEnemyTurn);
         EventPlayerTurn();
     }
     private void EventPlayerTurn(params object[] args)
@@ -57,11 +57,11 @@ public class LeopardMechanismEffect : IEffect
     }
     public string SetTitleText()
     {
-        return "";
+        return "沙塵領域";
     }
 
     public string SetDescriptionText()
     {
-        return "";
+        return "玩家每回合重置敵人額外攻擊次數為2次，攻擊敵人可減少次數。若敵人無法有效攻擊，累積丟牌計數並在攻擊時觸發丟牌。";
     }
 }
