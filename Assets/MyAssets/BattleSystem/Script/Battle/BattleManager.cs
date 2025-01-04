@@ -39,7 +39,8 @@ public class BattleManager : Singleton<BattleManager>
         Jump,
         StraightCharge,
         ThrowExplosion,
-        ThrowScattering
+        ThrowScattering,
+        AllZone
     }
     public enum CheckEmptyType
     {
@@ -94,6 +95,7 @@ public class BattleManager : Singleton<BattleManager>
     public RectTransform PlayerTrans { get; set; }
     public RectTransform CheckerboardTrans { get; set; }
     public Texture2D DefaultCursor { get; set; }
+    public int RoundCount { get; set; }
     protected override void Awake()
     {
         base.Awake();
@@ -404,6 +406,23 @@ public class BattleManager : Singleton<BattleManager>
             case ActionRangeType.ThrowScattering:
                 emptyPlaceList = GetThrowScatteringList();
                 break;
+            case ActionRangeType.AllZone:
+                emptyPlaceList = GetAllZoneList();
+                break;
+        }
+        return emptyPlaceList;
+    }
+    private List<string> GetAllZoneList()
+    {
+        List<string> emptyPlaceList = new List<string>();
+        for (int i = 0; i < CheckerboardList.Count; i++)
+        {
+            string key = CheckerboardList.ElementAt(i).Key;
+            if (CheckerboardList[key] != "Empty")
+            {
+                continue;
+            }
+            emptyPlaceList.Add(key);
         }
         return emptyPlaceList;
     }
@@ -712,6 +731,7 @@ public class BattleManager : Singleton<BattleManager>
         int levelID = MapManager.Instance.LevelID;
         int skillID = CurrentPlayerData.StartSkill;
         int levelCount = MapManager.Instance.LevelCount;
+        RoundCount = 0;
         PlayerOnceMoveConsume = 1;
         CurrentLocationID = MapManager.Instance.MapNodes[levelCount][levelID].l.PlayerStartPos;
         CurrentPlayerData.CurrentActionPoint = CurrentPlayerData.MaxActionPoint;
@@ -767,6 +787,7 @@ public class BattleManager : Singleton<BattleManager>
 
     private void PlayerTurn()
     {
+        RoundCount++;
         CurrentPlayerData.CurrentActionPoint = CurrentPlayerData.MaxActionPoint;
         CurrentPlayerData.CurrentShield = 0;
         for (int i = 0; i < CurrentAbilityList.Count; i++)

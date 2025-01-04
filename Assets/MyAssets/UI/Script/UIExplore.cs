@@ -85,10 +85,10 @@ public class UIExplore : UIBase
         switch (randomIndex)
         {
             case 0:
-                OpenRecoverMenu();
+                 ShowCorpse();
                 break;
             case 1:
-                StartBattle();
+                 ShowCorpse();
                 break;
             case 2:
                 ShowCorpse();

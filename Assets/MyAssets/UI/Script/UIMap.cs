@@ -17,8 +17,8 @@ public class UIMap : UIBase
     {
         { "BATTLE", 5 },
         { "BOSS", 5 },
-        { "RANDOM", 5 },
-        { "RECOVER",30 },
+        { "RANDOM", 30 },
+        { "RECOVER",5 },
         { "SHOP",30 },
         {"TREASURE",25}
     };
