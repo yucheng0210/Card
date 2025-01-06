@@ -62,7 +62,7 @@ public class PhantomEffect : IEffect
                 attackCount--;
                 if (attackCount <= 0)
                 {
-                    BattleManager.Instance.TemporaryChangeEffect(enemy, "CreateMinionsEffect=5");
+                    BattleManager.Instance.TemporaryChangeEffect(enemy, "CreateMinionsEffect=5", BattleManager.Instance.CurrentLocationID);
                     BattleManager.Instance.ClearAllMinions();
                 }
             }

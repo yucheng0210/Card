@@ -407,18 +407,18 @@ public class BattleManager : Singleton<BattleManager>
                 emptyPlaceList = GetThrowScatteringList();
                 break;
             case ActionRangeType.AllZone:
-                emptyPlaceList = GetAllZoneList();
+                emptyPlaceList = GetAllZoneList(checkEmptyType);
                 break;
         }
         return emptyPlaceList;
     }
-    private List<string> GetAllZoneList()
+    private List<string> GetAllZoneList(CheckEmptyType checkEmptyType)
     {
         List<string> emptyPlaceList = new List<string>();
         for (int i = 0; i < CheckerboardList.Count; i++)
         {
             string key = CheckerboardList.ElementAt(i).Key;
-            if (CheckerboardList[key] != "Empty")
+            if (!CheckPlaceEmpty(key, checkEmptyType))
             {
                 continue;
             }
@@ -1072,7 +1072,7 @@ public class BattleManager : Singleton<BattleManager>
         enemyListB[locationA] = dataB;
         EventManager.Instance.DispatchEvent(EventDefinition.eventMove);
     }
-    public void TemporaryChangeEffect(Enemy enemy, string effectName)
+    public void TemporaryChangeEffect(Enemy enemy, string effectName, string targetLocation)
     {
         string[] effectNames = effectName.Split('=');
         enemy.InfoTitle.text = "效果";
@@ -1089,10 +1089,27 @@ public class BattleManager : Singleton<BattleManager>
         enemy.MyActionType = Enemy.ActionType.Effect;
         enemy.TemporaryEffect = effectName;
         enemy.NoNeedCheckInRange = true;
+        enemy.TargetLocation = targetLocation;
         int effectRange = EffectFactory.Instance.CreateEffect(effectNames[0]).SetEffectRange();
         ActionRangeType actionRangeType = EffectFactory.Instance.CreateEffect(effectNames[0]).SetEffectAttackType();
         GetActionRangeTypeList(GetEnemyKey(enemy.MyEnemyData), effectRange, CheckEmptyType.EnemyAttack, actionRangeType);
         enemy.CurrentActionRangeTypeList = GetActionRangeTypeList(GetEnemyKey(enemy.MyEnemyData), effectRange, CheckEmptyType.EnemyAttack, actionRangeType);
+        CheckPlayerLocationInRange(enemy);
+    }
+    public void TemporaryChangeAttack(Enemy enemy, string targetLocation, List<string> actionRangeTypeList, int attackCount)
+    {
+        enemy.InfoTitle.text = "攻擊";
+        enemy.InfoDescription.text = "發動攻擊。";
+        enemy.EnemyAttackIntentText.text = "";
+        enemy.ResetUIElements();
+        enemy.EnemyAttackImage.SetActive(true);
+        enemy.TargetLocation = targetLocation;
+        enemy.EnemyAttackIntentText.text = enemy.MyEnemyData.CurrentAttack.ToString();
+        enemy.MyActionType = Enemy.ActionType.Attack;
+        enemy.MyNextAttackActionRangeType = ActionRangeType.AllZone;
+        enemy.CurrentAttackCount = attackCount;
+        enemy.CurrentActionRangeTypeList = actionRangeTypeList;
+        CheckPlayerLocationInRange(enemy);
     }
     public int GetPercentage(int maxCount, int percentage)
     {

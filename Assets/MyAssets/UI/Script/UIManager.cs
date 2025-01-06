@@ -164,12 +164,11 @@ public class UIManager : Singleton<UIManager>
     public void ChangeCheckerboardColor(List<string> emptyPlaceList, bool isMove)
     {
         Color color = new(1, 1, 1, 1);
-        RectTransform checkerboardTrans = BattleManager.Instance.CheckerboardTrans;
         for (int i = 0; i < emptyPlaceList.Count; i++)
         {
-            int checkerboardPoint = BattleManager.Instance.GetCheckerboardPoint(emptyPlaceList[i]);
-            CheckerboardSlot emptySlot = checkerboardTrans.GetChild(checkerboardPoint).GetComponent<CheckerboardSlot>();
-            Image emptyImage = checkerboardTrans.GetChild(checkerboardPoint).GetComponent<Image>();
+            Transform checkerboardTrans = BattleManager.Instance.GetCheckerboardTrans(emptyPlaceList[i]);
+            CheckerboardSlot emptySlot = checkerboardTrans.GetComponent<CheckerboardSlot>();
+            Image emptyImage = checkerboardTrans.GetComponent<Image>();
             emptyImage.sprite = isMove ? emptySlot.BlueClueImage : emptySlot.RedClueImage;
             emptyImage.color = color;
         }

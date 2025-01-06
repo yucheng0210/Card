@@ -42,6 +42,7 @@ public class Enemy : MonoBehaviour
     public Transform StatusClueTrans { get { return statusClueTrans; } set { statusClueTrans = value; } }
     public Image EnemyImage { get { return enemyImage; } set { enemyImage = value; } }
     public GameObject EnemyEffectImage { get { return enemyEffect; } set { enemyEffect = value; } }
+    public GameObject EnemyAttackImage { get { return enemyAttack; } set { enemyAttack = value; } }
     public Animator MyAnimator { get { return myAnimator; } set { myAnimator = value; } }
     public List<string> CurrentActionRangeTypeList { get; set; }
     public int EnemyID { get; set; }
@@ -55,6 +56,7 @@ public class Enemy : MonoBehaviour
     public EnemyData MyEnemyData { get; set; }
     public string MasterLocation { get; set; }
     public int CurrentActionRange { get; set; }
+    public int CurrentAttackCount { get; set; }
     public int AdditionAttackCount { get; set; }
     public bool NoNeedCheckInRange { get; set; }
     public string TemporaryEffect { get; set; }
@@ -151,6 +153,7 @@ public class Enemy : MonoBehaviour
             IsSpecialAction = false;
         }
         attackOrder = MyEnemyData.CurrentAttackOrderStrs.ElementAt(MyEnemyData.CurrentAttackOrderIndex).Item1;
+        CurrentAttackCount = MyEnemyData.CurrentAttackOrderStrs[MyEnemyData.CurrentAttackOrderIndex].Item2;
         MyCheckEmptyType = BattleManager.CheckEmptyType.EnemyAttack;
         CurrentActionRange = MyEnemyData.AttackRange;
         if (Enum.TryParse(attackOrder, out BattleManager.ActionRangeType attackType))
@@ -296,11 +299,11 @@ public class Enemy : MonoBehaviour
         {
             EffectFactory.Instance.CreateEffect("KnockBackEffect").ApplyEffect(1, startLocation, endLocation);
         }
-       /* if (InRange)
-        {*/
-            BattleManager.Instance.TakeDamage(MyEnemyData, playerData, MyEnemyData.CurrentAttack, BattleManager.Instance.CurrentLocationID, 0);
-            BattleManager.Instance.CameraImpulse(GetComponent<CinemachineImpulseSource>());
-       // }
+        /* if (InRange)
+         {*/
+        BattleManager.Instance.TakeDamage(MyEnemyData, playerData, MyEnemyData.CurrentAttack, BattleManager.Instance.CurrentLocationID, 0);
+        BattleManager.Instance.CameraImpulse(GetComponent<CinemachineImpulseSource>());
+        // }
         BattleManager.Instance.Replace(currentEnemyList, startLocation, endLocation);
         //Debug.Log(startLocation + "   " + endLocation);
     }

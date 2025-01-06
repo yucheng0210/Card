@@ -10,7 +10,6 @@ public class DeadlineCurseEffect : IEffect
     public void ApplyEffect(int value, string fromLocation, string toLocation)
     {
         cardItem = BattleManager.Instance.AddCard(5001);
-        Debug.Log("add");
         EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
     }
     private void EventPlayerTurn(params object[] args)

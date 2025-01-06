@@ -51,8 +51,7 @@ public class PolarIceBearMechanismEffect : IEffect
             if (longDistanceEnemyData.CurrentHealth <= 0 && meleeEnemyData.CurrentHealth > healthCount)
             {
                 string effectName = "HealthBalanceEffect=" + healthCount.ToString();
-                BattleManager.Instance.TemporaryChangeEffect(meleeEnemy, effectName);
-                meleeEnemy.TargetLocation = longDistanceEnemyLocation;
+                BattleManager.Instance.TemporaryChangeEffect(meleeEnemy, effectName, longDistanceEnemyLocation);
                 longDistanceEnemy.MyActionType = Enemy.ActionType.None;
                 longDistanceEnemy.InfoTitle.text = "?";
                 longDistanceEnemy.InfoDescription.text = "???";
