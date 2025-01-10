@@ -255,8 +255,7 @@ public class UIBattle : UIBase
                     yield return HandleEnemyAttack(enemyData, enemy, playerData, attackCount); // 单独处理攻击逻辑
                     break;
                 case Enemy.ActionType.Shield:
-                    int shieldCount = enemyData.CurrentAttackOrderStrs[enemyData.CurrentAttackOrderIndex].Item2;
-                    BattleManager.Instance.GetShield(enemyData, shieldCount);  // 处理护盾
+                    BattleManager.Instance.GetShield(enemyData, enemy.CurrentShieldCount);  // 处理护盾
                     break;
                 case Enemy.ActionType.Effect:
                     ApplyEffect(enemy, enemyData, location);  // 处理效果

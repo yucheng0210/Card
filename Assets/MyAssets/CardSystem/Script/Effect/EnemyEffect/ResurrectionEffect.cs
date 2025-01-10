@@ -22,7 +22,6 @@ public class ResurrectionEffect : IEffect
         recoverCount = BattleManager.Instance.GetPercentage(enemyData.MaxHealth, value);
         enemy = enemyData.EnemyTrans.GetComponent<Enemy>();
         enemyEffectImage = enemy.EnemyEffectImage.GetComponent<Image>();
-        enemy.EnemyOnceBattlePositiveList.Add(typeName, 1);
         enemy.IsSuspendedAnimation = true;
         EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, enemyData, EventTakeDamage);
         EventManager.Instance.AddEventRegister(EventDefinition.eventEnemyTurn, enemyData, EventEnemyTurn);

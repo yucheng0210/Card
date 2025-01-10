@@ -14,7 +14,6 @@ public class SafeZoneEffect : IEffect
     {
         enemyData = BattleManager.Instance.CurrentEnemyList[fromLocation];
         enemy = enemyData.EnemyTrans.GetComponent<Enemy>();
-        enemyData.PassiveSkills.Remove(GetType().Name);
         RefreshSafeZone();
         reciprocalCount--;
         EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
@@ -38,8 +37,16 @@ public class SafeZoneEffect : IEffect
             attackList.RemoveAt(randomIndex);
         }
     }
+
     private void EventPlayerTurn(params object[] args)
     {
+        if (enemy.SpecialActionStage == 1)
+        {
+            EventManager.Instance.RemoveEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
+            safeZoneCount = 0;
+            RefreshSafeZone();
+            return;
+        }
         if (reciprocalCount == 3)
         {
             RefreshSafeZone();
@@ -58,7 +65,7 @@ public class SafeZoneEffect : IEffect
     }
     public string SetTitleText()
     {
-        return "";
+        return "火焰";
     }
     public string SetDescriptionText()
     {

@@ -10,6 +10,6 @@
 1009,雪羽妖鴞,90,15,15,EnemyImage/SnowOwl,2,1,TRUE,ThrowExplosion=1;ThrowExplosion=1,EnemyAnimation/SnowOwl,PhantomEffect=5,0,TRUE,-1,,,,FALSE
 1010,冰河君主,330,15,15,EnemyImage/PolarIceBear,2,1,TRUE,Jump=1;TauntEffect=1;Surrounding=1;IncreaseHealth=25,EnemyAnimation/PolarIceBear,PolarIceBearMechanismEffect=0,0,TRUE,-1,,,,FALSE
 1011,霜塔神使,150,15,15,EnemyImage/PolarIceBear,2,1,TRUE,RechargeEffect=50;ThrowExplosion=1,EnemyAnimation/PolarIceBear,ExplosiveMarkEffect=-1,0,TRUE,-1,ThrowExplosion=1,PowerBoostEffect=5,CantMoveEffect=3,FALSE
-1012,黑龍,330,15,15,EnemyImage/BlackDragon,2,1,TRUE,Shield=30,EnemyAnimation/BlackDragon,SafeZoneEffect=0;ResurrectionEffect=100,0,TRUE,-1,,,,FALSE
+1012,黑龍,330,15,15,EnemyImage/BlackDragon,2,4,TRUE,Shield=50;CantMoveEffect=1;Cone=1,EnemyAnimation/BlackDragon,SafeZoneEffect=0;ResurrectionEffect=100;PowerBoostEffect=5,0,TRUE,0,Shield=50;CantMoveEffect=1;Cone=1,BlackDragonMechanismEffect=0,AddCurseEffect=-1,FALSE
 2005,沙漠利爪,43,15,15,EnemyImage/Dog,2,1,TRUE,Surrounding=1;Surrounding=1;IncreaseHealth=24,EnemyAnimation/Dog,BleedEffect=3;SacrificeEffect=40,0,TRUE,-1,,,,TRUE
 2009,雪羽妖鴞,90,15,15,EnemyImage/SnowOwl,2,1,TRUE,ThrowExplosion=1;ThrowExplosion=1,EnemyAnimation/SnowOwl,PhantomEffect=-1,0,TRUE,-1,,,,TRUE

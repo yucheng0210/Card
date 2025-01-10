@@ -57,6 +57,7 @@ public class Enemy : MonoBehaviour
     public string MasterLocation { get; set; }
     public int CurrentActionRange { get; set; }
     public int CurrentAttackCount { get; set; }
+    public int CurrentShieldCount { get; set; }
     public int AdditionAttackCount { get; set; }
     public bool NoNeedCheckInRange { get; set; }
     public string TemporaryEffect { get; set; }
@@ -64,6 +65,7 @@ public class Enemy : MonoBehaviour
     public bool InRange { get; set; }
     private string location;
     public bool IsSpecialAction { get; set; }
+    public int SpecialActionStage { get; set; }
     public bool IsDizziness { get; set; }
     public bool IsSuspendedAnimation { get; set; }
     public enum ActionType
@@ -146,6 +148,7 @@ public class Enemy : MonoBehaviour
                 string clueStrs = EffectFactory.Instance.CreateEffect(key).SetTitleText();
                 float waitTime = 0.5f * i;
                 EffectFactory.Instance.CreateEffect(key).ApplyEffect(mechanismSkill[key], location, TargetLocation);
+                MyEnemyData.MaxPassiveSkillsList.Add(key, mechanismSkill[key]);
                 BattleManager.Instance.ShowCharacterStatusClue(StatusClueTrans, clueStrs, waitTime);
             }
             MyEnemyData.CurrentAttackOrderIndex = 0;
@@ -186,6 +189,7 @@ public class Enemy : MonoBehaviour
         MyNextAttackActionRangeType = BattleManager.ActionRangeType.None;
         enemyAttackIntentText.text = shieldCount.ToString();
         enemyShield.SetActive(true);
+        CurrentShieldCount = shieldCount;
     }
 
     private void ActivateEffect(string attackOrder)
@@ -319,6 +323,7 @@ public class Enemy : MonoBehaviour
         if (MyEnemyData.CurrentHealth <= BattleManager.Instance.GetPercentage(MyEnemyData.MaxHealth, MyEnemyData.SpecialAttackCondition))
         {
             IsSpecialAction = true;
+            SpecialActionStage++;
             EventManager.Instance.RemoveEventRegister(EventDefinition.eventEnemyTurn, EventEnemyTurn);
         }
     }

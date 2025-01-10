@@ -48,4 +48,5 @@ public abstract class CharacterData
     }
     public int StartSkill { get; set; }
     public int DamageReduction { get; set; }
+    public int DamageLimit { get; set; }
 }

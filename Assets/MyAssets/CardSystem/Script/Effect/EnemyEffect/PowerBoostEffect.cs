@@ -22,14 +22,6 @@ public class PowerBoostEffect : IEffect
 
     private void EventEnemyTurn(params object[] args)
     {
-        // 獲取攻擊者
-        CharacterData attacker = (CharacterData)args[4];
-
-        // 如果攻擊者是目標敵人，增加攻擊力
-        if (enemyData == attacker)
-        {
-            enemyData.CurrentAttack += attackIncreaseCount;
-        }
         enemyData.CurrentAttack += attackIncreaseCount;
     }
 

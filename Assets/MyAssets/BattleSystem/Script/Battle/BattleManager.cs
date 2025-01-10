@@ -118,7 +118,7 @@ public class BattleManager : Singleton<BattleManager>
             for (int i = 0; i < CurrentEnemyList.Count; i++)
             {
                 CharacterData value = CurrentEnemyList.ElementAt(i).Value;
-                TakeDamage(CurrentPlayerData, value, 5, CurrentEnemyList.ElementAt(i).Key, 0);
+                TakeDamage(CurrentPlayerData, value, 50, CurrentEnemyList.ElementAt(i).Key, 0);
             }
             /*  for (int i = 0; i < CurrentEnemyList.Count; i++)
               {
@@ -145,9 +145,12 @@ public class BattleManager : Singleton<BattleManager>
         {
             currentDamage = 0;
         }
+        if (defender.DamageLimit > 0 && currentDamage > defender.DamageLimit)
+        {
+            currentDamage = defender.DamageLimit;
+        }
         defender.CurrentShield -= damage;
         defender.CurrentHealth -= currentDamage;
-
         int point = GetCheckerboardPoint(location);
         Vector2 pos = new(CheckerboardTrans.GetChild(point).localPosition.x, CheckerboardTrans.GetChild(point).localPosition.y);
         Color color = Color.red;
@@ -1094,6 +1097,7 @@ public class BattleManager : Singleton<BattleManager>
         ActionRangeType actionRangeType = EffectFactory.Instance.CreateEffect(effectNames[0]).SetEffectAttackType();
         GetActionRangeTypeList(GetEnemyKey(enemy.MyEnemyData), effectRange, CheckEmptyType.EnemyAttack, actionRangeType);
         enemy.CurrentActionRangeTypeList = GetActionRangeTypeList(GetEnemyKey(enemy.MyEnemyData), effectRange, CheckEmptyType.EnemyAttack, actionRangeType);
+        enemy.MyEnemyData.CurrentAttackOrderIndex--;
         CheckPlayerLocationInRange(enemy);
     }
     public void TemporaryChangeAttack(Enemy enemy, string targetLocation, List<string> actionRangeTypeList, int attackCount)
@@ -1109,6 +1113,20 @@ public class BattleManager : Singleton<BattleManager>
         enemy.MyNextAttackActionRangeType = ActionRangeType.AllZone;
         enemy.CurrentAttackCount = attackCount;
         enemy.CurrentActionRangeTypeList = actionRangeTypeList;
+        enemy.MyEnemyData.CurrentAttackOrderIndex--;
+        CheckPlayerLocationInRange(enemy);
+    }
+    public void TemporaryChangeShield(Enemy enemy, int shieldCount)
+    {
+        enemy.InfoTitle.text = "護盾";
+        enemy.InfoDescription.text = "產生護盾。";
+        enemy.EnemyAttackIntentText.text = "";
+        enemy.ResetUIElements();
+        enemy.EnemyAttackImage.SetActive(true);
+        enemy.EnemyAttackIntentText.text = enemy.MyEnemyData.CurrentAttack.ToString();
+        enemy.MyActionType = Enemy.ActionType.Shield;
+        enemy.CurrentShieldCount = shieldCount;
+        enemy.MyEnemyData.CurrentAttackOrderIndex--;
         CheckPlayerLocationInRange(enemy);
     }
     public int GetPercentage(int maxCount, int percentage)
