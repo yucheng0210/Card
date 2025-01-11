@@ -22,7 +22,8 @@ public class PowerBoostEffect : IEffect
 
     private void EventEnemyTurn(params object[] args)
     {
-        enemyData.CurrentAttack += attackIncreaseCount;
+        Enemy enemy = enemyData.EnemyTrans.GetComponent<Enemy>();
+        enemy.AdditionPower += attackIncreaseCount;
     }
 
     public string SetTitleText()

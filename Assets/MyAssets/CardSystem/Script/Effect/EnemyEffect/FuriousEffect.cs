@@ -24,11 +24,11 @@ public class FuriousEffect : IEffect
     {
         // 獲取攻擊者
         CharacterData attacker = (CharacterData)args[4];
-
+        Enemy enemy = enemyData.EnemyTrans.GetComponent<Enemy>();
         // 如果攻擊者是目標敵人，增加攻擊力
         if (enemyData == attacker)
         {
-            enemyData.CurrentAttack += attackIncreaseCount;
+            enemy.AdditionPower += attackIncreaseCount;
         }
     }
 

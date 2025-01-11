@@ -21,7 +21,6 @@ public class GroupEffect : IEffect
         }
         EnemyData enemyData = BattleManager.Instance.CurrentEnemyList[leaderLocation];
         int minionsCount = BattleManager.Instance.GetMinionsIDCount(minionsID);
-        enemyData.CurrentAttack = enemyData.MinAttack * (1 + minionsCount);
         enemyData.DamageReduction = 15 * (1 + minionsCount);
     }
 
@@ -32,6 +31,6 @@ public class GroupEffect : IEffect
 
     public string SetDescriptionText()
     {
-        return "場上每多一隻爪牙減傷和攻擊上升。";
+        return "場上每多一隻爪牙減傷上升。";
     }
 }

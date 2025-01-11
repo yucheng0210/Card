@@ -5,17 +5,19 @@ using UnityEngine;
 public class RechargeEffect : IEffect
 {
     private EnemyData enemyData;
+    private Enemy enemy;
     public void ApplyEffect(int value, string fromLocation, string toLocation)
     {
         enemyData = BattleManager.Instance.CurrentEnemyList[fromLocation];
-        enemyData.CurrentAttack += Mathf.RoundToInt(enemyData.MinAttack * (value / 100f));
+        enemy = enemyData.EnemyTrans.GetComponent<Enemy>();
+        enemy.AdditionAttackMultiplier = value;
         EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
     }
     private void EventTakeDamage(params object[] args)
     {
         if (args[4] == enemyData)
         {
-            enemyData.CurrentAttack = enemyData.MinAttack;
+            enemy.AdditionAttackMultiplier = 1;
             EventManager.Instance.RemoveEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
         }
     }

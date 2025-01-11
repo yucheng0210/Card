@@ -55,7 +55,10 @@ public class Enemy : MonoBehaviour
     private Dictionary<string, EnemyData> currentEnemyList = new();
     public EnemyData MyEnemyData { get; set; }
     public string MasterLocation { get; set; }
+    public int AdditionPower { get; set; }
+    public int AdditionAttackMultiplier { get; set; }
     public int CurrentActionRange { get; set; }
+    public int CurrentAttackPower { get; set; }
     public int CurrentAttackCount { get; set; }
     public int CurrentShieldCount { get; set; }
     public int AdditionAttackCount { get; set; }
@@ -156,7 +159,6 @@ public class Enemy : MonoBehaviour
             IsSpecialAction = false;
         }
         attackOrder = MyEnemyData.CurrentAttackOrderStrs.ElementAt(MyEnemyData.CurrentAttackOrderIndex).Item1;
-        CurrentAttackCount = MyEnemyData.CurrentAttackOrderStrs[MyEnemyData.CurrentAttackOrderIndex].Item2;
         MyCheckEmptyType = BattleManager.CheckEmptyType.EnemyAttack;
         CurrentActionRange = MyEnemyData.AttackRange;
         if (Enum.TryParse(attackOrder, out BattleManager.ActionRangeType attackType))
@@ -240,7 +242,9 @@ public class Enemy : MonoBehaviour
     {
         infoTitle.text = "攻擊";
         infoDescription.text = "發動攻擊。";
-        enemyAttackIntentText.text = MyEnemyData.CurrentAttack.ToString();
+        CurrentAttackCount = MyEnemyData.CurrentAttackOrderStrs[MyEnemyData.CurrentAttackOrderIndex].Item2;
+        BattleManager.Instance.SetEnemyAttackPower(this, MyEnemyData);
+        BattleManager.Instance.SetEnemyAttackIntentText(this);
         enemyAttack.SetActive(true);
     }
     private void SetAttackActionRangeType()
@@ -305,7 +309,7 @@ public class Enemy : MonoBehaviour
         }
         /* if (InRange)
          {*/
-        BattleManager.Instance.TakeDamage(MyEnemyData, playerData, MyEnemyData.CurrentAttack, BattleManager.Instance.CurrentLocationID, 0);
+        BattleManager.Instance.TakeDamage(MyEnemyData, playerData, CurrentAttackPower, BattleManager.Instance.CurrentLocationID, 0);
         BattleManager.Instance.CameraImpulse(GetComponent<CinemachineImpulseSource>());
         // }
         BattleManager.Instance.Replace(currentEnemyList, startLocation, endLocation);
@@ -342,7 +346,7 @@ public class Enemy : MonoBehaviour
     {
         if (MyActionType == ActionType.Attack)
         {
-            enemyAttackIntentText.text = MyEnemyData.CurrentAttack.ToString();
+            BattleManager.Instance.SetEnemyAttackIntentText(this);
         }
     }
 }

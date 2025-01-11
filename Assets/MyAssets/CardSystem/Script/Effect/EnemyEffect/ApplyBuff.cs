@@ -11,7 +11,8 @@ public class ApplyBuff : IEffect
         for (int i = 0; i < minionsList.Count; i++)
         {
             string key = minionsList.ElementAt(i).Key;
-            minionsList[key].CurrentAttack += value;
+            Enemy enemy = minionsList[key].EnemyTrans.GetComponent<Enemy>();
+            enemy.AdditionPower += value;
         }
     }
 

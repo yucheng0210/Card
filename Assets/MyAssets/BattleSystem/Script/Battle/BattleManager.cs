@@ -871,7 +871,6 @@ public class BattleManager : Singleton<BattleManager>
             int randomIndex = UnityEngine.Random.Range(0, emptyPlaceList.Count);
             EnemyData enemyData = DataManager.Instance.EnemyList[enemyID].DeepClone();
             enemyData.CurrentHealth = enemyData.MaxHealth;
-            enemyData.CurrentAttack = enemyData.MinAttack;
             CurrentMinionsList.Add(emptyPlaceList[randomIndex], enemyData);
             emptyPlaceList.Remove(emptyPlaceList[randomIndex]);
         }
@@ -880,6 +879,7 @@ public class BattleManager : Singleton<BattleManager>
             string key = CurrentMinionsList.ElementAt(i).Key;
             int checkerboardPoint = GetCheckerboardPoint(key);
             Enemy enemy = Instantiate(EnemyPrefab, EnemyTrans);
+            SetEnemyAttackPower(enemy, enemy.MyEnemyData);
             enemy.GetComponent<RectTransform>().anchoredPosition = CheckerboardTrans.GetChild(checkerboardPoint).localPosition;
             enemy.EnemyID = CurrentMinionsList[key].CharacterID;
             enemy.EnemyImage.sprite = Resources.Load<Sprite>(CurrentMinionsList[key].EnemyImagePath);
@@ -1108,7 +1108,7 @@ public class BattleManager : Singleton<BattleManager>
         enemy.ResetUIElements();
         enemy.EnemyAttackImage.SetActive(true);
         enemy.TargetLocation = targetLocation;
-        enemy.EnemyAttackIntentText.text = enemy.MyEnemyData.CurrentAttack.ToString();
+        SetEnemyAttackIntentText(enemy);
         enemy.MyActionType = Enemy.ActionType.Attack;
         enemy.MyNextAttackActionRangeType = ActionRangeType.AllZone;
         enemy.CurrentAttackCount = attackCount;
@@ -1123,11 +1123,27 @@ public class BattleManager : Singleton<BattleManager>
         enemy.EnemyAttackIntentText.text = "";
         enemy.ResetUIElements();
         enemy.EnemyAttackImage.SetActive(true);
-        enemy.EnemyAttackIntentText.text = enemy.MyEnemyData.CurrentAttack.ToString();
+        enemy.EnemyAttackIntentText.text = enemy.MyEnemyData.CurrentShield.ToString();
         enemy.MyActionType = Enemy.ActionType.Shield;
         enemy.CurrentShieldCount = shieldCount;
         enemy.MyEnemyData.CurrentAttackOrderIndex--;
         CheckPlayerLocationInRange(enemy);
+    }
+    public void SetEnemyAttackPower(Enemy enemy, EnemyData enemyData)
+    {
+        if (enemy.CurrentAttackCount == 1)
+        {
+            enemy.CurrentAttackPower = enemyData.MaxAttack;
+        }
+        int attackPower = Mathf.RoundToInt(enemyData.MaxAttack / (enemy.CurrentAttackCount * 0.75f)) * enemy.AdditionAttackMultiplier;
+        enemy.CurrentAttackPower = Mathf.Clamp(attackPower, enemyData.MaxAttack, enemyData.MaxAttack) + enemy.AdditionPower;
+    }
+
+    public void SetEnemyAttackIntentText(Enemy enemy)
+    {
+        int totalAttackCount = enemy.CurrentAttackCount + enemy.AdditionAttackCount;
+        string attackCountStrs = totalAttackCount == 1 ? "" : "X" + totalAttackCount;
+        enemy.EnemyAttackIntentText.text = enemy.CurrentAttackPower.ToString() + attackCountStrs;
     }
     public int GetPercentage(int maxCount, int percentage)
     {

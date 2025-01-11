@@ -6,13 +6,13 @@ using UnityEngine.UI;
 public class SniperEffect : IEffect
 {
     private EnemyData enemyData;
-    private int attackMultiplier;
+    private Enemy enemy;
 
     public void ApplyEffect(int value, string fromLocation, string toLocation)
     {
         if (BattleManager.Instance.CurrentEnemyList.TryGetValue(fromLocation, out enemyData))
         {
-            attackMultiplier = value;
+            enemy = enemyData.EnemyTrans.GetComponent<Enemy>();
             EventManager.Instance.AddEventRegister(EventDefinition.eventMove, enemyData, EventMove);
             EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, enemyData, EventPlayerTurn);
         }
@@ -31,7 +31,7 @@ public class SniperEffect : IEffect
     {
         string defenderLocation = BattleManager.Instance.GetEnemyKey(enemyData);
         int distance = BattleManager.Instance.GetRoute(defenderLocation, BattleManager.Instance.CurrentLocationID, BattleManager.CheckEmptyType.EnemyAttack).Count;
-        enemyData.CurrentAttack = enemyData.MinAttack + Mathf.RoundToInt(enemyData.MinAttack * (distance - 1) * (attackMultiplier / 100f));
+        enemy.AdditionAttackMultiplier = distance;
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
 

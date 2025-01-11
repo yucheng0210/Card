@@ -317,7 +317,7 @@ public class UIBattle : UIBase
             {
                 if (enemy.InRange)
                 {
-                    BattleManager.Instance.TakeDamage(enemyData, playerData, enemyData.CurrentAttack, BattleManager.Instance.CurrentLocationID, 0.15f);
+                    BattleManager.Instance.TakeDamage(enemyData, playerData, enemy.CurrentAttackPower, BattleManager.Instance.CurrentLocationID, 0.15f);
                 }
                 enemy.MyAnimator.SetTrigger("isAttacking");
                 yield return new WaitForSecondsRealtime(0.5f);
@@ -510,7 +510,7 @@ public class UIBattle : UIBase
             enemy.EnemyID = enemyData.CharacterID;
             enemy.EnemyImage.sprite = Resources.Load<Sprite>(enemyData.EnemyImagePath);
             enemy.MyAnimator.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>(enemyData.EnemyAniPath);
-            enemyData.CurrentAttack = enemyData.MinAttack;
+            enemy.CurrentAttackPower = enemyData.MaxAttack;
             enemyData.EnemyTrans = enemyRect;
             enemyData.CurrentHealth = DataManager.Instance.EnemyList[enemy.EnemyID].MaxHealth;
             enemy.MyEnemyData = enemyData;
@@ -528,7 +528,7 @@ public class UIBattle : UIBase
             enemy.EnemyID = enemyData.CharacterID;
             enemy.EnemyImage.sprite = Resources.Load<Sprite>(enemyData.EnemyImagePath);
             enemy.MyAnimator.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>(enemyData.EnemyAniPath);
-            enemyData.CurrentAttack = enemyData.MinAttack;
+            enemy.CurrentAttackPower = enemyData.MaxAttack;
             enemyData.EnemyTrans = enemyRect;
             enemyData.CurrentHealth = DataManager.Instance.EnemyList[enemy.EnemyID].MaxHealth;
             enemy.MyEnemyData = enemyData;

@@ -6,7 +6,6 @@ public class EnemyData : CharacterData
 {
     public int MinAttack { get; set; }
     public int MaxAttack { get; set; }
-    public int CurrentAttack { get; set; }
     public int StepCount { get; set; }
     public string EnemyImagePath { get; set; }
     public string EnemyAniPath { get; set; }
