@@ -40,13 +40,13 @@ public class SafeZoneEffect : IEffect
 
     private void EventPlayerTurn(params object[] args)
     {
-        if (enemy.SpecialActionStage == 1)
+        /*if (enemy.SpecialActionStage == 1)
         {
             EventManager.Instance.RemoveEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
             safeZoneCount = 0;
             RefreshSafeZone();
             return;
-        }
+        }*/
         if (reciprocalCount == 3)
         {
             RefreshSafeZone();

@@ -43,6 +43,7 @@ public class Enemy : MonoBehaviour
     public Image EnemyImage { get { return enemyImage; } set { enemyImage = value; } }
     public GameObject EnemyEffectImage { get { return enemyEffect; } set { enemyEffect = value; } }
     public GameObject EnemyAttackImage { get { return enemyAttack; } set { enemyAttack = value; } }
+    public GameObject EnemyShieldImage { get { return enemyShield; } set { enemyShield = value; } }
     public Animator MyAnimator { get { return myAnimator; } set { myAnimator = value; } }
     public List<string> CurrentActionRangeTypeList { get; set; }
     public int EnemyID { get; set; }
@@ -56,19 +57,19 @@ public class Enemy : MonoBehaviour
     public EnemyData MyEnemyData { get; set; }
     public string MasterLocation { get; set; }
     public int AdditionPower { get; set; }
+    public int AdditionAttackCount { get; set; }
     public int AdditionAttackMultiplier { get; set; }
     public int CurrentActionRange { get; set; }
     public int CurrentAttackPower { get; set; }
     public int CurrentAttackCount { get; set; }
     public int CurrentShieldCount { get; set; }
-    public int AdditionAttackCount { get; set; }
     public bool NoNeedCheckInRange { get; set; }
     public string TemporaryEffect { get; set; }
     public string TargetLocation { get; set; }
     public bool InRange { get; set; }
     private string location;
     public bool IsSpecialAction { get; set; }
-    public int SpecialActionStage { get; set; }
+    //public int SpecialActionStage { get; set; }
     public bool IsDizziness { get; set; }
     public bool IsSuspendedAnimation { get; set; }
     public enum ActionType
@@ -327,7 +328,7 @@ public class Enemy : MonoBehaviour
         if (MyEnemyData.CurrentHealth <= BattleManager.Instance.GetPercentage(MyEnemyData.MaxHealth, MyEnemyData.SpecialAttackCondition))
         {
             IsSpecialAction = true;
-            SpecialActionStage++;
+            //SpecialActionStage++;
             EventManager.Instance.RemoveEventRegister(EventDefinition.eventEnemyTurn, EventEnemyTurn);
         }
     }

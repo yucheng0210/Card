@@ -7,6 +7,7 @@ public abstract class CharacterData
     private int maxHealth;
     private int currentHealth;
     private int currentShield;
+    private int damageLimit;
     public int CharacterID { get; set; }
     public string CharacterName { get; set; }
     public string CharacterPos { get; set; }
@@ -17,9 +18,13 @@ public abstract class CharacterData
         {
             maxHealth = value;
             if (maxHealth < 0)
+            {
                 maxHealth = 0;
+            }
             if (maxHealth > 999)
+            {
                 maxHealth = 999;
+            }
         }
     }
     public int CurrentHealth
@@ -29,9 +34,13 @@ public abstract class CharacterData
         {
             currentHealth = value;
             if (currentHealth < 0)
+            {
                 currentHealth = 0;
+            }
             if (currentHealth > MaxHealth)
+            {
                 currentHealth = maxHealth;
+            }
         }
     }
     public int CurrentShield
@@ -41,12 +50,27 @@ public abstract class CharacterData
         {
             currentShield = value;
             if (currentShield < 0)
+            {
                 currentShield = 0;
+            }
             if (currentShield > 999)
+            {
                 currentShield = 999;
+            }
         }
     }
     public int StartSkill { get; set; }
-    public int DamageReduction { get; set; }
+    public int DamageReduction
+    {
+        get { return damageLimit; }
+        set
+        {
+            damageLimit = value;
+            if (damageLimit < 0)
+            {
+                damageLimit = 0;
+            }
+        }
+    }
     public int DamageLimit { get; set; }
 }

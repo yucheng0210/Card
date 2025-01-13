@@ -118,7 +118,7 @@ public class BattleManager : Singleton<BattleManager>
             for (int i = 0; i < CurrentEnemyList.Count; i++)
             {
                 CharacterData value = CurrentEnemyList.ElementAt(i).Value;
-                TakeDamage(CurrentPlayerData, value, 50, CurrentEnemyList.ElementAt(i).Key, 0);
+                TakeDamage(CurrentPlayerData, value, 54, CurrentEnemyList.ElementAt(i).Key, 0);
             }
             /*  for (int i = 0; i < CurrentEnemyList.Count; i++)
               {
@@ -145,7 +145,7 @@ public class BattleManager : Singleton<BattleManager>
         {
             currentDamage = 0;
         }
-        if (defender.DamageLimit > 0 && currentDamage > defender.DamageLimit)
+        if (defender.DamageLimit >= 0 && currentDamage >= defender.DamageLimit)
         {
             currentDamage = defender.DamageLimit;
         }
@@ -1122,7 +1122,7 @@ public class BattleManager : Singleton<BattleManager>
         enemy.InfoDescription.text = "產生護盾。";
         enemy.EnemyAttackIntentText.text = "";
         enemy.ResetUIElements();
-        enemy.EnemyAttackImage.SetActive(true);
+        enemy.EnemyShieldImage.SetActive(true);
         enemy.EnemyAttackIntentText.text = enemy.MyEnemyData.CurrentShield.ToString();
         enemy.MyActionType = Enemy.ActionType.Shield;
         enemy.CurrentShieldCount = shieldCount;
