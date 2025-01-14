@@ -126,7 +126,6 @@ public class DataManager : Singleton<DataManager>
                 Mana = int.Parse(row[4]),
                 DefaultDrawCardCount = int.Parse(row[5]),
                 StartSkill = int.Parse(row[6]),
-                DamageLimit = -1
             };
             PlayerList.Add(playerData.CharacterID, playerData);
         }
@@ -159,7 +158,6 @@ public class DataManager : Singleton<DataManager>
                 SpecialTriggerSkill = new(),
                 CurrentAttackOrderStrs = new(),
                 IsMinion = bool.Parse(row[18]),
-                DamageLimit = -1
             };
             if (!string.IsNullOrEmpty(row[9]))
             {

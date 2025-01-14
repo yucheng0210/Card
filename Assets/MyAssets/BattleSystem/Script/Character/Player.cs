@@ -3,11 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Player : MonoBehaviour
+public class Player : Character
 {
-    [SerializeField]
-    private Transform statusClueTrans;
-    public Transform StatusClueTrans { get { return statusClueTrans; } set { statusClueTrans = value; } }
     private void Start()
     {
         BattleManager.Instance.CurrentPlayer = this;

@@ -57,7 +57,7 @@ public class SafeZoneEffect : IEffect
             return;
         }
         reciprocalCount = 3;
-        BattleManager.Instance.TemporaryChangeAttack(enemy, BattleManager.Instance.CurrentLocationID, attackList, 3);
+        BattleManager.Instance.TemporaryChangeAttack(enemy, BattleManager.Instance.CurrentLocationID, attackList, 10);
         if (safeZoneCount >= 0)
         {
             safeZoneCount--;

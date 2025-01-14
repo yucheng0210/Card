@@ -224,6 +224,8 @@ public class UIBattle : UIBase
         yield return ExecuteEnemyActions(currentMinionsList, moveHistoryList);
         yield return ExecuteEnemyActions(currentEnemyList, moveHistoryList);
         yield return new WaitForSecondsRealtime(1);
+        BattleManager.Instance.ChangeTurn(BattleManager.BattleType.AfterEnemyAttack);
+        yield return null;
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Player);
     }
 

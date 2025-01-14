@@ -24,6 +24,7 @@ public class BattleManager : Singleton<BattleManager>
         Attack,
         UsingEffect,
         Enemy,
+        AfterEnemyAttack,
         Win,
         Victory,
         Loss
@@ -137,9 +138,13 @@ public class BattleManager : Singleton<BattleManager>
     }
     private IEnumerator TakeDamageCoroutine(CharacterData attacker, CharacterData defender, int damage, string location, float delay)
     {
-        // 等待指定的秒數
         yield return new WaitForSeconds(delay);
-        // 執行原本的 TakeDamage 邏輯
+        int randomDogeIndex = UnityEngine.Random.Range(0, 100);
+        if (defender.DodgeChance > randomDogeIndex)
+        {
+            ShowCharacterStatusClue(((EnemyData)defender).EnemyTrans.GetComponent<Enemy>().StatusClueTrans, "閃避", 0);
+            yield break;
+        }
         int currentDamage = damage * (100 - defender.DamageReduction) / 100 - defender.CurrentShield;
         if (currentDamage < 0)
         {
@@ -722,6 +727,9 @@ public class BattleManager : Singleton<BattleManager>
             case BattleType.Enemy:
                 EnemyTurn();
                 break;
+            case BattleType.AfterEnemyAttack:
+                AfterEnemyAttack();
+                break;
             case BattleType.Win:
                 Win();
                 break;
@@ -814,6 +822,10 @@ public class BattleManager : Singleton<BattleManager>
         }
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
         EventManager.Instance.DispatchEvent(EventDefinition.eventEnemyTurn);
+    }
+    private void AfterEnemyAttack()
+    {
+        EventManager.Instance.DispatchEvent(EventDefinition.eventAfterEnemyAttack);
     }
     public void ReduceNegativeState(string negativeState)
     {
@@ -1108,6 +1120,7 @@ public class BattleManager : Singleton<BattleManager>
         enemy.ResetUIElements();
         enemy.EnemyAttackImage.SetActive(true);
         enemy.TargetLocation = targetLocation;
+        SetEnemyAttackPower(enemy, enemy.MyEnemyData);
         SetEnemyAttackIntentText(enemy);
         enemy.MyActionType = Enemy.ActionType.Attack;
         enemy.MyNextAttackActionRangeType = ActionRangeType.AllZone;
@@ -1123,8 +1136,10 @@ public class BattleManager : Singleton<BattleManager>
         enemy.EnemyAttackIntentText.text = "";
         enemy.ResetUIElements();
         enemy.EnemyShieldImage.SetActive(true);
-        enemy.EnemyAttackIntentText.text = enemy.MyEnemyData.CurrentShield.ToString();
+        enemy.EnemyAttackIntentText.text = shieldCount.ToString();
         enemy.MyActionType = Enemy.ActionType.Shield;
+        enemy.MyNextAttackActionRangeType = ActionRangeType.None;
+        enemy.CurrentActionRangeTypeList.Clear();
         enemy.CurrentShieldCount = shieldCount;
         enemy.MyEnemyData.CurrentAttackOrderIndex--;
         CheckPlayerLocationInRange(enemy);
@@ -1135,8 +1150,8 @@ public class BattleManager : Singleton<BattleManager>
         {
             enemy.CurrentAttackPower = enemyData.MaxAttack;
         }
-        int attackPower = Mathf.RoundToInt(enemyData.MaxAttack / (enemy.CurrentAttackCount * 0.75f)) * enemy.AdditionAttackMultiplier;
-        enemy.CurrentAttackPower = Mathf.Clamp(attackPower, enemyData.MaxAttack, enemyData.MaxAttack) + enemy.AdditionPower;
+        int attackPower = Mathf.RoundToInt(enemyData.MaxAttack / (enemy.CurrentAttackCount * 0.75f));
+        enemy.CurrentAttackPower = (Mathf.Clamp(attackPower, enemyData.MaxAttack, enemyData.MaxAttack) + enemy.AdditionPower) * enemy.AdditionAttackMultiplier;
     }
 
     public void SetEnemyAttackIntentText(Enemy enemy)

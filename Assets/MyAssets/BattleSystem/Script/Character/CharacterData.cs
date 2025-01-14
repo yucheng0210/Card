@@ -7,10 +7,9 @@ public abstract class CharacterData
     private int maxHealth;
     private int currentHealth;
     private int currentShield;
-    private int damageLimit;
+    private int damageLimit = -1;
     public int CharacterID { get; set; }
     public string CharacterName { get; set; }
-    public string CharacterPos { get; set; }
     public int MaxHealth
     {
         get { return maxHealth; }
@@ -60,7 +59,8 @@ public abstract class CharacterData
         }
     }
     public int StartSkill { get; set; }
-    public int DamageReduction
+    public int DamageReduction { get; set; }
+    public int DamageLimit
     {
         get { return damageLimit; }
         set
@@ -72,5 +72,5 @@ public abstract class CharacterData
             }
         }
     }
-    public int DamageLimit { get; set; }
+    public int DodgeChance { get; set; }
 }

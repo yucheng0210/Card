@@ -11,7 +11,7 @@ using UnityEngine.Events;
 using DG.Tweening;
 using Cinemachine;
 
-public class Enemy : MonoBehaviour
+public class Enemy : Character
 {
     [SerializeField]
     private Text enemyAttackIntentText;
@@ -19,8 +19,6 @@ public class Enemy : MonoBehaviour
     private Image enemyImage;
     [SerializeField]
     private Animator myAnimator;
-    [SerializeField]
-    private Transform statusClueTrans;
     [Header("攻擊意圖")]
     [SerializeField]
     private GameObject enemyEffect;
@@ -39,7 +37,6 @@ public class Enemy : MonoBehaviour
     public Text InfoTitle { get { return infoTitle; } set { infoTitle = value; } }
     public Text InfoDescription { get { return infoDescription; } set { infoDescription = value; } }
     public Text EnemyAttackIntentText { get { return enemyAttackIntentText; } set { enemyAttackIntentText = value; } }
-    public Transform StatusClueTrans { get { return statusClueTrans; } set { statusClueTrans = value; } }
     public Image EnemyImage { get { return enemyImage; } set { enemyImage = value; } }
     public GameObject EnemyEffectImage { get { return enemyEffect; } set { enemyEffect = value; } }
     public GameObject EnemyAttackImage { get { return enemyAttack; } set { enemyAttack = value; } }
