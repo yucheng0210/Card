@@ -60,6 +60,8 @@ public class UIBattle : UIBase
     private Text enemyHealth;
     [SerializeField]
     private Transform enemyPassiveGroupTrans;
+    [SerializeField]
+    private Transform enemyStateGroupTrans;
 
     [Header("傷害特效")]
     [SerializeField]
@@ -182,36 +184,8 @@ public class UIBattle : UIBase
         enemyImage.sprite = Resources.Load<Sprite>(enemyData.EnemyImagePath);
         enemyHealth.text = enemyData.CurrentHealth.ToString() + "/" + enemyData.MaxHealth.ToString();
         enemyShield.text = enemyData.CurrentShield.ToString();
-        for (int i = 0; i < enemyPassiveGroupTrans.childCount; i++)
-        {
-            Destroy(enemyPassiveGroupTrans.GetChild(i).gameObject);
-        }
-        for (int i = 0; i < enemyData.MaxPassiveSkillsList.Count; i++)
-        {
-            string key = enemyData.MaxPassiveSkillsList.ElementAt(i).Key;
-            Image passive = Instantiate(negativeLPrefab, enemyPassiveGroupTrans).BattleStateImage;
-            Sprite effectSprite = EffectFactory.Instance.CreateEffect(key).SetIcon();
-            if (effectSprite == null)
-            {
-                effectSprite = EffectFactory.Instance.CreateEffect("KnockBackEffect").SetIcon();
-            }
-            Sprite image = effectSprite;
-            passive.sprite = image;
-            UpdateStateUI(enemyPassiveGroupTrans, enemyData.MaxPassiveSkillsList, negativeLPrefab, true);
-        }
-        for (int i = 0; i < enemy.EnemyOnceBattlePositiveList.Count; i++)
-        {
-            string key = enemy.EnemyOnceBattlePositiveList.ElementAt(i).Key;
-            Image passive = Instantiate(negativeLPrefab, enemyPassiveGroupTrans).BattleStateImage;
-            Sprite effectSprite = EffectFactory.Instance.CreateEffect(key).SetIcon();
-            if (effectSprite == null)
-            {
-                effectSprite = EffectFactory.Instance.CreateEffect("KnockBackEffect").SetIcon();
-            }
-            Sprite image = effectSprite;
-            passive.sprite = image;
-            UpdateStateUI(enemyPassiveGroupTrans, enemy.EnemyOnceBattlePositiveList, negativeLPrefab, true);
-        }
+        UpdateStateUI(enemyPassiveGroupTrans, enemyData.MaxPassiveSkillsList, negativeLPrefab, true);
+        UpdateStateUI(enemyStateGroupTrans, enemy.EnemyOnceBattlePositiveList, negativeLPrefab, true);
     }
     private IEnumerator EnemyAttack()
     {

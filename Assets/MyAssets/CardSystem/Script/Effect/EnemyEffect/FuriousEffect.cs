@@ -7,14 +7,14 @@ public class FuriousEffect : IEffect
 {
     private int attackIncreaseCount;
     private EnemyData enemyData;
+    private string enemyLocation;
     private Dictionary<string, EnemyData> enemyList;
-
     public void ApplyEffect(int value, string fromLocation, string toLocation)
     {
         enemyList = BattleManager.Instance.CurrentEnemyList;
-
         if (enemyList.TryGetValue(fromLocation, out enemyData))
         {
+            enemyLocation = fromLocation;
             attackIncreaseCount = value;
             EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, enemyData, EventTakeDamage);
         }
@@ -28,7 +28,7 @@ public class FuriousEffect : IEffect
         // 如果攻擊者是目標敵人，增加攻擊力
         if (enemyData == attacker)
         {
-            enemy.AdditionPower += attackIncreaseCount;
+            EffectFactory.Instance.CreateEffect(nameof(PowerEffect)).ApplyEffect(attackIncreaseCount, enemyLocation, "");
         }
     }
 
@@ -39,6 +39,6 @@ public class FuriousEffect : IEffect
 
     public string SetDescriptionText()
     {
-        return "每次命中敵人提升攻擊力。";
+        return "每次攻擊命中敵人提升力量。";
     }
 }

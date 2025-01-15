@@ -875,6 +875,17 @@ public class BattleManager : Singleton<BattleManager>
         DataManager.Instance.CardBag.Insert(randomIndex, cardData);
         return cardItem;
     }
+    public void AddState(Dictionary<string, int> stateList, string stateName, int stateValue)
+    {
+        if (!stateList.ContainsKey(stateName))
+        {
+            stateList.Add(stateName, stateValue);
+        }
+        else
+        {
+            stateList[stateName] += stateValue;
+        }
+    }
     public void AddMinions(int enemyID, int count, string location)
     {
         List<string> emptyPlaceList = GetEmptyPlace(location, count, CheckEmptyType.Move, true, false);
@@ -1120,7 +1131,6 @@ public class BattleManager : Singleton<BattleManager>
         enemy.ResetUIElements();
         enemy.EnemyAttackImage.SetActive(true);
         enemy.TargetLocation = targetLocation;
-        SetEnemyAttackPower(enemy, enemy.MyEnemyData);
         SetEnemyAttackIntentText(enemy);
         enemy.MyActionType = Enemy.ActionType.Attack;
         enemy.MyNextAttackActionRangeType = ActionRangeType.AllZone;
@@ -1148,14 +1158,16 @@ public class BattleManager : Singleton<BattleManager>
     {
         if (enemy.CurrentAttackCount == 1)
         {
-            enemy.CurrentAttackPower = enemyData.MaxAttack;
+            enemy.CurrentAttackPower = enemyData.MaxAttack * (1 + enemy.AdditionAttackMultiplier) + enemy.AdditionPower;
+            Debug.Log(enemy.CurrentAttackPower);
+            return;
         }
         int attackPower = Mathf.RoundToInt(enemyData.MaxAttack / (enemy.CurrentAttackCount * 0.75f));
-        enemy.CurrentAttackPower = (Mathf.Clamp(attackPower, enemyData.MaxAttack, enemyData.MaxAttack) + enemy.AdditionPower) * enemy.AdditionAttackMultiplier;
+        enemy.CurrentAttackPower = Mathf.Clamp(attackPower, enemyData.MinAttack, enemyData.MaxAttack) * (1 + enemy.AdditionAttackMultiplier) + enemy.AdditionPower;
     }
-
     public void SetEnemyAttackIntentText(Enemy enemy)
     {
+        SetEnemyAttackPower(enemy, enemy.MyEnemyData);
         int totalAttackCount = enemy.CurrentAttackCount + enemy.AdditionAttackCount;
         string attackCountStrs = totalAttackCount == 1 ? "" : "X" + totalAttackCount;
         enemy.EnemyAttackIntentText.text = enemy.CurrentAttackPower.ToString() + attackCountStrs;

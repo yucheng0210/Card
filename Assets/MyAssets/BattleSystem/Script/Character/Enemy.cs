@@ -179,7 +179,6 @@ public class Enemy : Character
         CurrentActionRangeTypeList = BattleManager.Instance.GetActionRangeTypeList(location, CurrentActionRange, MyCheckEmptyType, MyNextAttackActionRangeType);
         SetAttackActionRangeType();
     }
-
     private void ActivateShield()
     {
         int shieldCount = MyEnemyData.CurrentAttackOrderStrs.ElementAt(MyEnemyData.CurrentAttackOrderIndex).Item2;
@@ -241,7 +240,6 @@ public class Enemy : Character
         infoTitle.text = "攻擊";
         infoDescription.text = "發動攻擊。";
         CurrentAttackCount = MyEnemyData.CurrentAttackOrderStrs[MyEnemyData.CurrentAttackOrderIndex].Item2;
-        BattleManager.Instance.SetEnemyAttackPower(this, MyEnemyData);
         BattleManager.Instance.SetEnemyAttackIntentText(this);
         enemyAttack.SetActive(true);
     }
