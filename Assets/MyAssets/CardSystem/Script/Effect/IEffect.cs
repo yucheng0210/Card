@@ -12,4 +12,5 @@ public interface IEffect
     int SetEffectRange() { return -1; }
     string SetTitleText();
     string SetDescriptionText();
+    bool IsShowEffectCount() { return true; }
 }

@@ -47,20 +47,16 @@ public class ResurrectionEffect : IEffect
         {
             return;
         }
-        enemy.EnemyOnceBattlePositiveList.Remove(typeName);
-        // 敌人复活
         enemy.IsDeath = false;
         enemy.IsSuspendedAnimation = false;
+        enemy.MyCollider.enabled = true;
         enemy.MyAnimator.SetTrigger("isResurrection");
+        enemyData.MaxPassiveSkillsList[typeName] = -1;
         BattleManager.Instance.Recover(enemyData, recoverCount, targetLocation);
-        // 触发其他必要的事件
-        //EventManager.Instance.DispatchEvent(EventDefinition.eventMove);
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
-
-        // 移除事件注册
         EventManager.Instance.RemoveEventRegister(EventDefinition.eventEnemyTurn, EventEnemyTurn);
     }
-
+    public bool IsShowEffectCount() { return false; }
     public string SetTitleText()
     {
         return "死者甦醒";
@@ -68,6 +64,6 @@ public class ResurrectionEffect : IEffect
 
     public string SetDescriptionText()
     {
-        return "生命歸零時進入復甦，回合開始時按比例復活並移除技能。";
+        return "死亡時復活，使用後移除技能。";
     }
 }

@@ -1159,7 +1159,6 @@ public class BattleManager : Singleton<BattleManager>
         if (enemy.CurrentAttackCount == 1)
         {
             enemy.CurrentAttackPower = enemyData.MaxAttack * (1 + enemy.AdditionAttackMultiplier) + enemy.AdditionPower;
-            Debug.Log(enemy.CurrentAttackPower);
             return;
         }
         int attackPower = Mathf.RoundToInt(enemyData.MaxAttack / (enemy.CurrentAttackCount * 0.75f));

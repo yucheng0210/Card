@@ -13,8 +13,8 @@ public class BattleState : MonoBehaviour
     private Text infoTitle;
     [SerializeField]
     private Text infoDescription;
-
-    // Public properties with get and set
+    [SerializeField]
+    private GameObject disableImage;
     public Image BattleStateImage
     {
         get { return battleStateImage; }
@@ -41,5 +41,10 @@ public class BattleState : MonoBehaviour
     {
         get { return infoDescription; }
         set { infoDescription = value; }
+    }
+    public GameObject DisableImage
+    {
+        get { return disableImage; }
+        set { disableImage = value; }
     }
 }

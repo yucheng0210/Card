@@ -42,6 +42,7 @@ public class Enemy : Character
     public GameObject EnemyAttackImage { get { return enemyAttack; } set { enemyAttack = value; } }
     public GameObject EnemyShieldImage { get { return enemyShield; } set { enemyShield = value; } }
     public Animator MyAnimator { get { return myAnimator; } set { myAnimator = value; } }
+    public BoxCollider MyCollider { get; set; }
     public List<string> CurrentActionRangeTypeList { get; set; }
     public int EnemyID { get; set; }
     public ActionType MyActionType { get; set; }
@@ -82,6 +83,7 @@ public class Enemy : Character
         EnemyOnceBattlePositiveList = new Dictionary<string, int>();
         currentEnemyList = BattleManager.Instance.CurrentEnemyList;
         MyEnemyData.CurrentAttackOrderStrs = MyEnemyData.AttackOrderStrs;
+        MyCollider = GetComponent<BoxCollider>();
         EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, MyEnemyData, EventPlayerTurn);
         EventManager.Instance.AddEventRegister(EventDefinition.eventMove, MyEnemyData, EventMove);
         EventManager.Instance.AddEventRegister(EventDefinition.eventRefreshUI, MyEnemyData, EventRefreshUI);

@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class ThornsEffect : IEffect
 {
-    private string counterattackerID;
+    private string counterattackerLocation;
     private CharacterData counterattacker;
     private Dictionary<string, EnemyData> currentEnemyList;
     private Dictionary<string, int> currentOnceBattlePositiveList;
@@ -32,27 +32,23 @@ public class ThornsEffect : IEffect
         }
         if (!currentOnceBattlePositiveList.ContainsKey(typeName))
         {
-            currentOnceBattlePositiveList.Add(typeName, value);
             EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, counterattacker, EventTakeDamage);
         }
-        else
-        {
-            currentOnceBattlePositiveList[typeName] += value;
-        }
-        counterattackerID = fromLocation;
+        BattleManager.Instance.AddState(currentOnceBattlePositiveList, typeName, value);
+        counterattackerLocation = fromLocation;
     }
 
     private void EventTakeDamage(params object[] args)
     {
-        if (counterattackerID != (string)args[2] || args.Length < 5)
+        if (counterattackerLocation != (string)args[2])
         {
             return;
         }
-        var damage = (int)args[1];
-        var counterattackDamage = BattleManager.Instance.GetPercentage(damage, currentOnceBattlePositiveList[typeName]);
-        var counterattackTarget = (CharacterData)args[4];
-        var targetLocationID = currentEnemyList.FirstOrDefault(x => x.Value == counterattackTarget).Key ?? BattleManager.Instance.CurrentLocationID;
-        BattleManager.Instance.TakeDamage(counterattacker, counterattackTarget, counterattackDamage, targetLocationID, 0.5f);
+        int damage = (int)args[1];
+        int counterattackDamage = currentOnceBattlePositiveList[typeName];
+        CharacterData counterattackTarget = (CharacterData)args[4];
+        string targetLocation = currentEnemyList.FirstOrDefault(x => x.Value == counterattackTarget).Key ?? BattleManager.Instance.CurrentLocationID;
+        BattleManager.Instance.TakeDamage(counterattacker, counterattackTarget, counterattackDamage, targetLocation, 0.5f);
     }
     public string SetTitleText()
     {
@@ -61,6 +57,6 @@ public class ThornsEffect : IEffect
 
     public string SetDescriptionText()
     {
-        return "受擊時反彈部分攻擊傷害。";
+        return "受到傷害時反射傷害。";
     }
 }

@@ -185,7 +185,7 @@ public class UIBattle : UIBase
         enemyHealth.text = enemyData.CurrentHealth.ToString() + "/" + enemyData.MaxHealth.ToString();
         enemyShield.text = enemyData.CurrentShield.ToString();
         UpdateStateUI(enemyPassiveGroupTrans, enemyData.MaxPassiveSkillsList, negativeLPrefab, true);
-        UpdateStateUI(enemyStateGroupTrans, enemy.EnemyOnceBattlePositiveList, negativeLPrefab, true);
+        UpdateStateUI(enemyStateGroupTrans, enemy.EnemyOnceBattlePositiveList, negativeLPrefab, false);
     }
     private IEnumerator EnemyAttack()
     {
@@ -392,6 +392,7 @@ public class UIBattle : UIBase
                 EventManager.Instance.ClearEvents(enemyData);
                 Destroy(enemyData.EnemyTrans.gameObject, 1);
             }
+            enemy.MyCollider.enabled = !enemy.IsSuspendedAnimation;
             enemy.IsDeath = true;
             CheckEnemyInfo();
         }
@@ -659,20 +660,24 @@ public class UIBattle : UIBase
             Text infoTitle = stateObject.InfoTitle;
             Text infoDescription = stateObject.InfoDescription;
             Transform infoGroupTrans = stateObject.InfoGroupTrans;
-            Sprite effectSprite = EffectFactory.Instance.CreateEffect(key).SetIcon();
+            IEffect effect = EffectFactory.Instance.CreateEffect(key);
+            Sprite effectSprite = effect.SetIcon();
             if (effectSprite == null)
             {
                 effectSprite = EffectFactory.Instance.CreateEffect("KnockBackEffect").SetIcon();
             }
-            stateImage.sprite = effectSprite;
-            stateText.text = value.ToString();
             EventTrigger eventTrigger = infoGroupTrans.GetComponent<EventTrigger>();
             UnityAction unityAction_1 = () => { infoGroupTrans.GetChild(0).gameObject.SetActive(true); };
             UnityAction unityAction_2 = () => { infoGroupTrans.GetChild(0).gameObject.SetActive(false); };
             BattleManager.Instance.SetEventTrigger(eventTrigger, unityAction_1, unityAction_2);
-            infoTitle.text = EffectFactory.Instance.CreateEffect(key).SetTitleText();
-            string descriptionStr = isPassiveEffect ? EffectFactory.Instance.CreateEffect(key).SetPassiveEffectDescriptionText()
-            : EffectFactory.Instance.CreateEffect(key).SetDescriptionText();
+            if (effect.IsShowEffectCount())
+            {
+                stateText.text = value.ToString();
+            }
+            stateObject.DisableImage.SetActive(value == -1);
+            stateImage.sprite = effectSprite;
+            infoTitle.text = effect.SetTitleText();
+            string descriptionStr = isPassiveEffect ? effect.SetPassiveEffectDescriptionText() : effect.SetDescriptionText();
             if (descriptionStr.Length > 30)
             {
                 infoGroupTrans.GetChild(0).GetChild(0).gameObject.SetActive(true);
