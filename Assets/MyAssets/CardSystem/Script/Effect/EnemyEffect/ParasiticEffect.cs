@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.TextCore.Text;
 using UnityEngine.UI;
@@ -26,15 +27,13 @@ public class ParasiticEffect : IEffect
 
     private void EventTakeDamage(params object[] args)
     {
-        if (args.Length >= 5 && (CharacterData)args[4] == parasite)
+        if ((CharacterData)args[4] == parasite)
         {
             if (!BattleManager.Instance.CurrentEnemyList.ContainsValue(parasite))
             {
                 EventManager.Instance.RemoveEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
                 return;
             }
-
-            // Trigger card addition
             BattleManager.Instance.AddCard(5002);
         }
     }
@@ -54,11 +53,10 @@ public class ParasiticEffect : IEffect
         int currentDamage = damage * sporeCount;
         string enemyLocation = BattleManager.Instance.GetEnemyKey(parasite);
         CharacterData parasiteRepresent = new EnemyData();
-        // Recover parasite and damage host
         BattleManager.Instance.Recover(parasite, currentDamage, enemyLocation);
         BattleManager.Instance.TakeDamage(parasiteRepresent, host, currentDamage, BattleManager.Instance.CurrentLocationID, 0.5f);
     }
-
+    public bool IsShowEffectCount() { return false; }
     public string SetTitleText()
     {
         return "孢子寄生";

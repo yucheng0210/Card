@@ -31,10 +31,10 @@ public class SniperEffect : IEffect
     {
         string defenderLocation = BattleManager.Instance.GetEnemyKey(enemyData);
         int distance = BattleManager.Instance.GetRoute(defenderLocation, BattleManager.Instance.CurrentLocationID, BattleManager.CheckEmptyType.EnemyAttack).Count;
-        enemy.AdditionAttackMultiplier = distance;
+        enemy.AdditionAttackMultiplier = distance - 1;
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
-
+    public bool IsShowEffectCount() { return false; }
     public string SetTitleText()
     {
         return "地圖砲";

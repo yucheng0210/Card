@@ -31,7 +31,7 @@ public class FuriousEffect : IEffect
             EffectFactory.Instance.CreateEffect(nameof(PowerEffect)).ApplyEffect(attackIncreaseCount, enemyLocation, "");
         }
     }
-
+    public bool IsShowEffectCount() { return false; }
     public string SetTitleText()
     {
         return "狂怒";

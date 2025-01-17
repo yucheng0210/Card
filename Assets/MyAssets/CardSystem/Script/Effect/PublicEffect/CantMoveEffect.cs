@@ -5,12 +5,11 @@ using UnityEngine.UI;
 
 public class CantMoveEffect : IEffect
 {
+    private Dictionary<string, int> negativeState = BattleManager.Instance.CurrentNegativeState;
     public void ApplyEffect(int value, string fromLocation, string toLocation)
     {
-        var negativeState = BattleManager.Instance.CurrentNegativeState;
         string effectName = GetType().Name;
-        negativeState[effectName] = negativeState.ContainsKey(effectName) ? negativeState[effectName] + value : value;
-        // 發送 UI 更新事件
+        BattleManager.Instance.AddState(negativeState, effectName, value);
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
 
