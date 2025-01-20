@@ -612,11 +612,11 @@ public class BattleManager : Singleton<BattleManager>
         int bestInRangeDistance = enemyData.MeleeAttackMode ? int.MaxValue : int.MinValue;
         List<string> emptyPlaceList = GetActionRangeTypeList(fromLocation, attackDistance, checkEmptyType, findType);
         string minLocation = emptyPlaceList[0];
-        int minDistance = GetRoute(minLocation, toLocation, CheckEmptyType.EnemyAttack).Count;
+        int minDistance = GetRoute(minLocation, toLocation, CheckEmptyType.ALLCharacter).Count;
         for (int j = 1; j < emptyPlaceList.Count; j++)
         {
             string targetLocation = emptyPlaceList[j];
-            int targetDistance = GetRoute(targetLocation, toLocation, CheckEmptyType.EnemyAttack).Count;
+            int targetDistance = GetRoute(targetLocation, toLocation, CheckEmptyType.ALLCharacter).Count;
             if (IsOtherLocationInRange(enemy, targetLocation))
             {
                 bool bestInRangeCondition = enemyData.MeleeAttackMode == (targetDistance < bestInRangeDistance);
@@ -632,7 +632,6 @@ public class BattleManager : Singleton<BattleManager>
                 minDistance = targetDistance;
             }
         }
-
         return bestInRangeLocation ?? minLocation;
     }
     public void CheckPlayerLocationInRange(Enemy enemy)

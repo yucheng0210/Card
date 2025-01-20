@@ -28,7 +28,7 @@ public class MoveEffect : IEffect
         }
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.UsingEffect);
     }
-    private void Move(string locationID, int moveCount)
+    private void Move(string location, int moveCount)
     {
         for (int i = 0; i < emptyPlaceList.Count; i++)
         {
@@ -37,8 +37,8 @@ public class MoveEffect : IEffect
             emptyPlace.GetComponent<Button>().onClick.RemoveListener(removeList[i]);
         }
         BattleManager.Instance.PlayerMoveCount -= moveCount;
-        PlayerMoveAction(BattleManager.Instance.CurrentLocationID, locationID);
-        BattleManager.Instance.CurrentLocationID = locationID;
+        PlayerMoveAction(BattleManager.Instance.CurrentLocationID, location);
+        BattleManager.Instance.CurrentLocationID = location;
         UIManager.Instance.ClearMoveClue(true);
     }
     private void PlayerMoveAction(string fromLocation, string toLocation)

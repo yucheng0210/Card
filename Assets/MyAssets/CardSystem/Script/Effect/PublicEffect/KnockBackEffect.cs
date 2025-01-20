@@ -22,8 +22,7 @@ public class KnockBackEffect : IEffect
         int limitedY = Mathf.Clamp(Mathf.RoundToInt(direction.y), -1, 1);
         // 獲取有效目標位置
         Vector2Int initialDestinationPos = new(defenderPos[0] + limitedX, defenderPos[1] + limitedY);
-        string destinationLocation = GetValidDestination(initialDestinationPos)
-        ?? throw new System.Exception("No valid destination found in CheckerboardList.");
+        string destinationLocation = GetValidDestination(initialDestinationPos) ?? throw new System.Exception("No valid destination found in CheckerboardList.");
         // 獲取目標 UI 座標
         int checkerboardPoint = BattleManager.Instance.GetCheckerboardPoint(destinationLocation);
         Vector3 destinationPos = BattleManager.Instance.CheckerboardTrans.GetChild(checkerboardPoint).GetComponent<RectTransform>().localPosition;

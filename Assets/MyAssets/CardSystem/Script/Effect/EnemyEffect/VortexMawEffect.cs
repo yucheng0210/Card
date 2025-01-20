@@ -14,16 +14,27 @@ public class VortexMawEffect : IEffect
         {
             RectTransform enemyRect = currentEnemyList[fromLocation].EnemyTrans.GetComponent<RectTransform>();
             Sequence sequence = DOTween.Sequence();
-            sequence.Append(BattleManager.Instance.PlayerTrans.DOAnchorPos(enemyRect.localPosition, 0.25f));
+            sequence.Append(BattleManager.Instance.PlayerTrans.DOAnchorPos(enemyRect.localPosition, 0.15f));
             sequence.AppendCallback(() =>
             {
-                BattleManager.CheckEmptyType checkEmptyType = BattleManager.CheckEmptyType.Move;
-                BattleManager.ActionRangeType actionRangeType = BattleManager.ActionRangeType.Surrounding;
-                List<string> emptyPlaceList = BattleManager.Instance.GetActionRangeTypeList(fromLocation, 1, checkEmptyType, actionRangeType);
-                Vector2 destinationPos = BattleManager.Instance.GetCheckerboardTrans(emptyPlaceList[0]).localPosition;
-                BattleManager.Instance.PlayerTrans.DOAnchorPos(destinationPos, 0.25f);
-                EffectFactory.Instance.CreateEffect("CantMoveEffect").ApplyEffect(1, fromLocation, toLocation);
-                BattleManager.Instance.CurrentLocationID = emptyPlaceList[0];
+                BattleManager.CheckEmptyType checkEmptyType = BattleManager.CheckEmptyType.ALLCharacter;
+                BattleManager.ActionRangeType actionRangeType = BattleManager.ActionRangeType.Default;
+                float distance = BattleManager.Instance.CalculateDistance(fromLocation, playerLocation);
+                string destination;
+                Vector2 destinationPos;
+                if (distance < 2)
+                {
+                    destination = BattleManager.Instance.CurrentLocationID;
+                    destinationPos = BattleManager.Instance.GetCheckerboardTrans(destination).localPosition;
+                }
+                else
+                {
+                    destination = BattleManager.Instance.GetCloseLocation(fromLocation, playerLocation, 1, checkEmptyType, actionRangeType);
+                    destinationPos = BattleManager.Instance.GetCheckerboardTrans(destination).localPosition;
+                }
+                BattleManager.Instance.PlayerTrans.DOAnchorPos(destinationPos, 0.15f);
+                EffectFactory.Instance.CreateEffect("CantMoveEffect").ApplyEffect(1, fromLocation, playerLocation);
+                BattleManager.Instance.CurrentLocationID = destination;
             });
         }
     }
