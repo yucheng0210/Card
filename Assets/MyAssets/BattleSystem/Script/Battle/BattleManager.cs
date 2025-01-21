@@ -991,6 +991,7 @@ public class BattleManager : Singleton<BattleManager>
         TValue value = dictionary[oldKey];
         dictionary.Remove(oldKey);
         dictionary.Add(newKey, value);
+        RefreshCheckerboardList();
     }
     public void ShowCharacterStatusClue(Transform trans, string des, float waitTime)
     {

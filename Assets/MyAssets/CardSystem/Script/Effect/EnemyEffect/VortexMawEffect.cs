@@ -33,7 +33,7 @@ public class VortexMawEffect : IEffect
                     destinationPos = BattleManager.Instance.GetCheckerboardTrans(destination).localPosition;
                 }
                 BattleManager.Instance.PlayerTrans.DOAnchorPos(destinationPos, 0.15f);
-                EffectFactory.Instance.CreateEffect("CantMoveEffect").ApplyEffect(1, fromLocation, playerLocation);
+                EffectFactory.Instance.CreateEffect(nameof(CantMoveEffect)).ApplyEffect(1, fromLocation, playerLocation);
                 BattleManager.Instance.CurrentLocationID = destination;
             });
         }

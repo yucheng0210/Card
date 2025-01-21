@@ -2,7 +2,7 @@
 1001,哥布林,35,5,20,EnemyImage/Goblin,3,2,FALSE,CantMoveEffect=2;Cone=1;Cone=2,EnemyAnimation/Goblin,FuriousEffect=3,0,FALSE,-1,,,,FALSE
 1002,骷髏人,50,2,10,EnemyImage/Skeleton,2,1,TRUE,Shield=15;ThornsEffect=3;Surrounding=1,EnemyAnimation/Skeleton,ResurrectionEffect=35,0,FALSE,-1,,,,FALSE
 1003,大眼怪,25,1,8,EnemyImage/FlyingEye,2,5,FALSE,Linear=1;Linear=3;SlowDownEffect=1;TeleportEffect=2,EnemyAnimation/FlyingEye,SniperEffect=0,0,FALSE,-1,,,,FALSE
-1004,菇,75,5,15,EnemyImage/Mushroom,2,1,TRUE,Jump=1;VortexMawEffect=2;Surrounding=2;IncreaseHealth=20,EnemyAnimation/Mushroom,ParasiticEffect=2,0,FALSE,-1,,,,FALSE
+1004,菇,75,5,15,EnemyImage/Mushroom,2,1,TRUE,Jump=1;VortexMawEffect=2;Surrounding=2;IncreaseHealth=35,EnemyAnimation/Mushroom,ParasiticEffect=2,0,FALSE,-1,,,,FALSE
 1005,沙漠狂獸,140,13,13,EnemyImage/Dog,3,4,TRUE,CreateMinionsEffect=2;ApplyBuff=5;StraightCharge=1;StraightCharge=1;Shield=50,EnemyAnimation/Dog,GroupEffect=2005,0,TRUE,-1,,,,FALSE
 1006,毒刃劍蠍,45,10,15,EnemyImage/Scorpion,2,1,FALSE,ThrowScattering=1;ThrowTraps=1001;AddCurseEffect=5003,EnemyAnimation/Scorpion,PoisonedEffect=2,0,TRUE,-1,,,,FALSE
 1007,風沙追獵者,230,10,15,EnemyImage/Leopard,4,3,FALSE,Shield=30;Cone=1;Cone=1,EnemyAnimation/Leopard,FuriousEffect=5,0,TRUE,60,Cone=1;Cone=1;ThrowTraps=1002,LeopardMechanismEffect=0,ThrowTraps=1002,FALSE

@@ -266,8 +266,7 @@ public class Enemy : Character
         string destinationLocation = BattleManager.Instance.CurrentLocationID;
         string enemyLocation = BattleManager.Instance.GetEnemyKey(MyEnemyData);
         float distance = BattleManager.Instance.CalculateDistance(enemyLocation, destinationLocation);
-        int checkerboardPoint = BattleManager.Instance.GetCheckerboardPoint(destinationLocation);
-        RectTransform destinationPlace = BattleManager.Instance.CheckerboardTrans.GetChild(checkerboardPoint).GetComponent<RectTransform>();
+        RectTransform destinationPlace = BattleManager.Instance.PlayerTrans;
         RectTransform enemyRect = GetComponent<RectTransform>();
         int curveHeight = 350;
         Vector2 startPoint = enemyRect.localPosition;
@@ -303,15 +302,19 @@ public class Enemy : Character
         PlayerData playerData = BattleManager.Instance.CurrentPlayerData;
         if (isKnockBack)
         {
-            EffectFactory.Instance.CreateEffect("KnockBackEffect").ApplyEffect(1, startLocation, endLocation);
+            string attackLocation = endLocation;
+            if (endLocation == BattleManager.Instance.CurrentLocationID)
+            {
+                attackLocation = startLocation;
+            }
+            EffectFactory.Instance.CreateEffect(nameof(KnockBackEffect)).ApplyEffect(0, attackLocation, BattleManager.Instance.CurrentLocationID);
         }
-        /* if (InRange)
-         {*/
-        BattleManager.Instance.TakeDamage(MyEnemyData, playerData, CurrentAttackPower, BattleManager.Instance.CurrentLocationID, 0);
-        BattleManager.Instance.CameraImpulse(GetComponent<CinemachineImpulseSource>());
-        // }
+        if (InRange)
+        {
+            BattleManager.Instance.TakeDamage(MyEnemyData, playerData, CurrentAttackPower, BattleManager.Instance.CurrentLocationID, 0);
+            //BattleManager.Instance.CameraImpulse(GetComponent<CinemachineImpulseSource>());
+        }
         BattleManager.Instance.Replace(currentEnemyList, startLocation, endLocation);
-        //Debug.Log(startLocation + "   " + endLocation);
     }
     private void EventPlayerTurn(params object[] args)
     {

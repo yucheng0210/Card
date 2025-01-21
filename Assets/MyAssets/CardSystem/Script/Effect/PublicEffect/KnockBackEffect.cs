@@ -12,22 +12,15 @@ public class KnockBackEffect : IEffect
         {
             return;
         }
-
         int[] attackerPos = BattleManager.Instance.ConvertNormalPos(fromLocation);
         int[] defenderPos = BattleManager.Instance.ConvertNormalPos(toLocation);
-
-        // 計算擊退方向
         Vector2 direction = new(defenderPos[0] - attackerPos[0], defenderPos[1] - attackerPos[1]);
         int limitedX = Mathf.Clamp(Mathf.RoundToInt(direction.x), -1, 1);
         int limitedY = Mathf.Clamp(Mathf.RoundToInt(direction.y), -1, 1);
-        // 獲取有效目標位置
-        Vector2Int initialDestinationPos = new(defenderPos[0] + limitedX, defenderPos[1] + limitedY);
-        string destinationLocation = GetValidDestination(initialDestinationPos) ?? throw new System.Exception("No valid destination found in CheckerboardList.");
-        // 獲取目標 UI 座標
-        int checkerboardPoint = BattleManager.Instance.GetCheckerboardPoint(destinationLocation);
-        Vector3 destinationPos = BattleManager.Instance.CheckerboardTrans.GetChild(checkerboardPoint).GetComponent<RectTransform>().localPosition;
-
-        // 處理角色位置與顯示提示
+        Vector2Int initialPos = new(defenderPos[0], defenderPos[1]);
+        Vector2Int limitedDirection = new(limitedX, limitedY);
+        string destinationLocation = GetValidDestination(initialPos, limitedDirection) ?? throw new System.Exception("No valid destination found in CheckerboardList.");
+        Vector3 destinationPos = BattleManager.Instance.GetCheckerboardTrans(destinationLocation).localPosition;
         if (toLocation == BattleManager.Instance.CurrentLocationID)
         {
             BattleManager.Instance.PlayerTrans.DOAnchorPos(destinationPos, 0.2f);
@@ -48,18 +41,27 @@ public class KnockBackEffect : IEffect
     }
 
     // 獲取有效目標位置
-    private string GetValidDestination(Vector2Int destinationPoint)
+    private string GetValidDestination(Vector2Int initialPos, Vector2Int direction)
     {
         Vector2Int[] offsets = new Vector2Int[]
         {
-            new(0, destinationPoint[1]), new(destinationPoint[0], 0), new(-destinationPoint[0], destinationPoint[1]),
-            new(destinationPoint[0], -destinationPoint[1]), new(0, -destinationPoint[1]), new(-destinationPoint[0], 0),
-            new(-destinationPoint[0], -destinationPoint[1])
+            new(direction.x, direction.y),  // 原始方向
+            new(direction.x, 0),           // 水平
+            new(direction.x, -direction.y),// 右下
+            new(0, -direction.y),          // 垂直下
+            new(-direction.x, -direction.y),// 左下
+            new(-direction.x, 0),          // 水平左
+            new(-direction.x, direction.y),// 左上
+            new(0, direction.y)            // 垂直上
         };
-
+        Vector2Int[] newLocationList = new Vector2Int[offsets.Length];
         for (int i = 0; i < offsets.Length; i++)
         {
-            string newLocation = BattleManager.Instance.ConvertCheckerboardPos(offsets[i].x, offsets[i].y);
+            newLocationList[i] = initialPos + offsets[i];
+        }
+        for (int i = 0; i < newLocationList.Length; i++)
+        {
+            string newLocation = BattleManager.Instance.ConvertCheckerboardPos(newLocationList[i].x, newLocationList[i].y);
             if (BattleManager.Instance.CheckerboardList.ContainsKey(newLocation) && BattleManager.Instance.CheckPlaceEmpty(newLocation, BattleManager.CheckEmptyType.Move))
             {
                 return newLocation;
