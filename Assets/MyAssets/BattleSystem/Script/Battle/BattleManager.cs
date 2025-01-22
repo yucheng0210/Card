@@ -901,15 +901,15 @@ public class BattleManager : Singleton<BattleManager>
             string key = CurrentMinionsList.ElementAt(i).Key;
             int checkerboardPoint = GetCheckerboardPoint(key);
             Enemy enemy = Instantiate(EnemyPrefab, EnemyTrans);
-            SetEnemyAttackPower(enemy, enemy.MyEnemyData);
             enemy.GetComponent<RectTransform>().anchoredPosition = CheckerboardTrans.GetChild(checkerboardPoint).localPosition;
             enemy.EnemyID = CurrentMinionsList[key].CharacterID;
             enemy.EnemyImage.sprite = Resources.Load<Sprite>(CurrentMinionsList[key].EnemyImagePath);
             enemy.MyAnimator.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>(CurrentMinionsList[key].EnemyAniPath);
-            enemy.MasterLocation = location;
+            enemy.MasterEnemyData = CurrentEnemyList[location];
             CurrentMinionsList[key].EnemyTrans = enemy.GetComponent<RectTransform>();
             enemy.MyEnemyData = CurrentMinionsList[key];
             enemy.MyNextAttackActionRangeType = ActionRangeType.None;
+            SetEnemyAttackPower(enemy, enemy.MyEnemyData);
         }
         EventManager.Instance.DispatchEvent(EventDefinition.eventMove);
     }

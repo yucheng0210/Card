@@ -196,8 +196,9 @@ public class UIBattle : UIBase
 
         // 將敵人的攻擊邏輯提取到單獨的方法中
         yield return ExecuteEnemyActions(currentMinionsList, moveHistoryList);
+        yield return new WaitForSecondsRealtime(2);
         yield return ExecuteEnemyActions(currentEnemyList, moveHistoryList);
-        yield return new WaitForSecondsRealtime(1);
+        yield return new WaitForSecondsRealtime(2);
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.AfterEnemyAttack);
         yield return null;
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Player);
@@ -205,8 +206,7 @@ public class UIBattle : UIBase
 
     private IEnumerator ExecuteEnemyActions(Dictionary<string, EnemyData> enemyList, List<EnemyData> moveHistoryList)
     {
-        int count = enemyList.Count;
-        for (int i = 0; i < count; i++)
+        for (int i = 0; i < enemyList.Count; i++)
         {
             var kvp = enemyList.ElementAt(i);
             string location = kvp.Key;
@@ -585,6 +585,11 @@ public class UIBattle : UIBase
     }
     private void EventRecover(params object[] args)
     {
+        Debug.Log((int)args[1]);
+        if ((int)args[1] < 0)
+        {
+            return;
+        }
         GameObject damageNum = Instantiate(damageNumPrefab, UI.transform);
         RectTransform damageRect = damageNum.GetComponent<RectTransform>();
         Text damageText = damageNum.GetComponentInChildren<Text>();

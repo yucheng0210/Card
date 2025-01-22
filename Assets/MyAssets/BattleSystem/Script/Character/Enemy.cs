@@ -53,7 +53,7 @@ public class Enemy : Character
     public Sequence MySequence { get; set; }
     private Dictionary<string, EnemyData> currentEnemyList = new();
     public EnemyData MyEnemyData { get; set; }
-    public string MasterLocation { get; set; }
+    public EnemyData MasterEnemyData { get; set; }
     public int AdditionPower { get; set; }
     public int AdditionAttackCount { get; set; }
     public int AdditionAttackMultiplier { get; set; }
@@ -288,8 +288,7 @@ public class Enemy : Character
         List<string> emptyPlaceList = BattleManager.Instance.GetActionRangeTypeList(enemyLocation, attackDistance, MyCheckEmptyType, actionRangeType);
         string destinationLocation = emptyPlaceList.Count > 0 ? emptyPlaceList[^1] : enemyLocation;
         RectTransform enemyRect = GetComponent<RectTransform>();
-        int checkerboardPoint = BattleManager.Instance.GetCheckerboardPoint(destinationLocation);
-        Vector2 destinationPos = BattleManager.Instance.CheckerboardTrans.GetChild(checkerboardPoint).GetComponent<RectTransform>().localPosition;
+        Vector2 destinationPos = BattleManager.Instance.GetCheckerboardTrans(destinationLocation).localPosition;
         Tween moveTween = enemyRect.DOAnchorPos(destinationPos, 0.25f);
         MySequence.Append(moveTween).AppendCallback(() => OnAttackComplete(true, enemyLocation, destinationLocation));
     }

@@ -23,10 +23,10 @@ public class GroupEffect : IEffect
         int minionsCount = BattleManager.Instance.GetMinionsIDCount(minionsID);
         enemyData.DamageReduction = 15 * (1 + minionsCount);
     }
-
+    public bool IsShowEffectCount() { return false; }
     public string SetTitleText()
     {
-        return "族群增益";
+        return "族群韌性";
     }
 
     public string SetDescriptionText()

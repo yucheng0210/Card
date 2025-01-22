@@ -11,14 +11,13 @@ public class ApplyBuff : IEffect
         for (int i = 0; i < minionsList.Count; i++)
         {
             string key = minionsList.ElementAt(i).Key;
-            Enemy enemy = minionsList[key].EnemyTrans.GetComponent<Enemy>();
-            enemy.AdditionPower += value;
+            EffectFactory.Instance.CreateEffect(nameof(PowerEffect)).ApplyEffect(value, key, "");
         }
     }
 
     public string SetTitleText()
     {
-        return "爪牙增益";
+        return "賜福";
     }
     public string SetDescriptionText()
     {
