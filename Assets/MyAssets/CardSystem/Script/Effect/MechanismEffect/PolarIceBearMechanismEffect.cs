@@ -36,7 +36,7 @@ public class PolarIceBearMechanismEffect : IEffect
     {
         List<string> surroundingsLocationList = BattleManager.Instance.GetActionRangeTypeList(longDistanceEnemyLocation, 1,
         BattleManager.CheckEmptyType.EnemyAttack, BattleManager.ActionRangeType.Surrounding);
-        isInExchangeRange = surroundingsLocationList.Contains(BattleManager.Instance.CurrentLocationID);
+        isInExchangeRange = surroundingsLocationList.Contains(BattleManager.Instance.CurrentPlayerLocation);
     }
     private void EventTakeDamage(params object[] args)
     {
@@ -66,7 +66,7 @@ public class PolarIceBearMechanismEffect : IEffect
         {
             if (BattleManager.Instance.CurrentOnceBattlePositiveList.ContainsKey(nameof(ExplosiveMarkEffect)))
             {
-                BattleManager.Instance.TakeDamage(meleeEnemyData, BattleManager.Instance.CurrentPlayerData, BattleManager.Instance.CurrentOnceBattlePositiveList[nameof(ExplosiveMarkEffect)], BattleManager.Instance.CurrentLocationID, 0);
+                BattleManager.Instance.TakeDamage(meleeEnemyData, BattleManager.Instance.CurrentPlayerData, BattleManager.Instance.CurrentOnceBattlePositiveList[nameof(ExplosiveMarkEffect)], BattleManager.Instance.CurrentPlayerLocation, 0);
             }
         }
     }

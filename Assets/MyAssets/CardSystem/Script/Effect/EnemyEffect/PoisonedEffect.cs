@@ -61,7 +61,7 @@ public class PoisonedEffect : IEffect
             EventManager.Instance.RemoveEventRegister(EventDefinition.eventMove, EventMove);
             return;
         }
-        BattleManager.Instance.TakeDamage(attacker, BattleManager.Instance.CurrentPlayerData, currentNegativeState[typeName], BattleManager.Instance.CurrentLocationID, 0);
+        BattleManager.Instance.TakeDamage(attacker, BattleManager.Instance.CurrentPlayerData, currentNegativeState[typeName], BattleManager.Instance.CurrentPlayerLocation, 0);
     }
     public string SetTitleText()
     {

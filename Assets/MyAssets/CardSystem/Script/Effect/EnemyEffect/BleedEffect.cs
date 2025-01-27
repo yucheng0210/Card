@@ -56,7 +56,7 @@ public class BleedEffect : IEffect
         }
         // Apply damage to the player
         int bleedDamage = currentNegativeState[typeName];
-        BattleManager.Instance.TakeDamage(attacker, BattleManager.Instance.CurrentPlayerData, bleedDamage, BattleManager.Instance.CurrentLocationID, 0.25f);
+        BattleManager.Instance.TakeDamage(attacker, BattleManager.Instance.CurrentPlayerData, bleedDamage, BattleManager.Instance.CurrentPlayerLocation, 0.25f);
     }
 
     public string SetTitleText()

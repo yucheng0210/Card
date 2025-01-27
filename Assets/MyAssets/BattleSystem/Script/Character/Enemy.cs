@@ -95,7 +95,7 @@ public class Enemy : Character
     {
         MySequence = null;
         location = BattleManager.Instance.GetEnemyKey(MyEnemyData);
-        float distance = BattleManager.Instance.GetRoute(location, BattleManager.Instance.CurrentLocationID, BattleManager.CheckEmptyType.EnemyAttack).Count;
+        float distance = BattleManager.Instance.GetRoute(location, BattleManager.Instance.CurrentPlayerLocation, BattleManager.CheckEmptyType.EnemyAttack).Count;
         HandleAttack(true);
         ResetUIElements();
         BattleManager.Instance.CheckPlayerLocationInRange(this);
@@ -131,7 +131,7 @@ public class Enemy : Character
 
     private void HandleAttack(bool isCheck)
     {
-        TargetLocation = BattleManager.Instance.CurrentLocationID;
+        TargetLocation = BattleManager.Instance.CurrentPlayerLocation;
         string attackOrder;
         if (IsSpecialAction)
         {
@@ -213,7 +213,7 @@ public class Enemy : Character
         enemyAttackIntentText.enabled = false;
         enemyEffectImage.sprite = effectSprite;
         enemyEffect.SetActive(true);
-        TargetLocation = BattleManager.Instance.CurrentLocationID;
+        TargetLocation = BattleManager.Instance.CurrentPlayerLocation;
     }
 
     private void HandleMove()
@@ -247,6 +247,7 @@ public class Enemy : Character
     }
     private void SetAttackActionRangeType()
     {
+        MySequence = null;
         switch (MyNextAttackActionRangeType)
         {
             case BattleManager.ActionRangeType.Jump:
@@ -263,7 +264,7 @@ public class Enemy : Character
     private void JumpAttackSequence()
     {
         MySequence = DOTween.Sequence().Pause();
-        string destinationLocation = BattleManager.Instance.CurrentLocationID;
+        string destinationLocation = BattleManager.Instance.CurrentPlayerLocation;
         string enemyLocation = BattleManager.Instance.GetEnemyKey(MyEnemyData);
         float distance = BattleManager.Instance.CalculateDistance(enemyLocation, destinationLocation);
         RectTransform destinationPlace = BattleManager.Instance.PlayerTrans;
@@ -286,10 +287,23 @@ public class Enemy : Character
         int attackDistance = MyEnemyData.AttackRange;
         BattleManager.ActionRangeType actionRangeType = BattleManager.ActionRangeType.Linear;
         List<string> emptyPlaceList = BattleManager.Instance.GetActionRangeTypeList(enemyLocation, attackDistance, MyCheckEmptyType, actionRangeType);
-        string destinationLocation = emptyPlaceList.Count > 0 ? emptyPlaceList[^1] : enemyLocation;
+        string playerLocation = BattleManager.Instance.CurrentPlayerLocation;
+        string destinationLocation;
+        if (emptyPlaceList.Count == 0)
+        {
+            destinationLocation = enemyLocation;
+        }
+        else if (emptyPlaceList.Contains(playerLocation))
+        {
+            destinationLocation = playerLocation;
+        }
+        else
+        {
+            destinationLocation = emptyPlaceList[^1];
+        }
         RectTransform enemyRect = GetComponent<RectTransform>();
         Vector2 destinationPos = BattleManager.Instance.GetCheckerboardTrans(destinationLocation).localPosition;
-        Tween moveTween = enemyRect.DOAnchorPos(destinationPos, 0.25f);
+        Tween moveTween = enemyRect.DOAnchorPos(destinationPos, 0.15f);
         MySequence.Append(moveTween).AppendCallback(() => OnAttackComplete(true, enemyLocation, destinationLocation));
     }
     private void ThrowScatteringAttack()
@@ -298,19 +312,15 @@ public class Enemy : Character
     }
     private void OnAttackComplete(bool isKnockBack, string startLocation, string endLocation)
     {
-        PlayerData playerData = BattleManager.Instance.CurrentPlayerData;
-        if (isKnockBack)
-        {
-            string attackLocation = endLocation;
-            if (endLocation == BattleManager.Instance.CurrentLocationID)
-            {
-                attackLocation = startLocation;
-            }
-            EffectFactory.Instance.CreateEffect(nameof(KnockBackEffect)).ApplyEffect(0, attackLocation, BattleManager.Instance.CurrentLocationID);
-        }
         if (InRange)
         {
-            BattleManager.Instance.TakeDamage(MyEnemyData, playerData, CurrentAttackPower, BattleManager.Instance.CurrentLocationID, 0);
+            PlayerData playerData = BattleManager.Instance.CurrentPlayerData;
+            if (isKnockBack)
+            {
+                string attackLocation = endLocation == BattleManager.Instance.CurrentPlayerLocation ? startLocation : endLocation;
+                EffectFactory.Instance.CreateEffect(nameof(KnockBackEffect)).ApplyEffect(0, attackLocation, BattleManager.Instance.CurrentPlayerLocation);
+            }
+            BattleManager.Instance.TakeDamage(MyEnemyData, playerData, CurrentAttackPower, BattleManager.Instance.CurrentPlayerLocation, 0);
             //BattleManager.Instance.CameraImpulse(GetComponent<CinemachineImpulseSource>());
         }
         BattleManager.Instance.Replace(currentEnemyList, startLocation, endLocation);
@@ -335,12 +345,10 @@ public class Enemy : Character
     {
         BattleManager.Instance.CheckPlayerLocationInRange(this);
         BattleManager.Instance.CheckPlayerLocationInTrapRange();
-        /*if (MyActionType == ActionType.Attack && MyNextAttackActionRangeType == BattleManager.ActionRangeType.StraightCharge)
+        if (MyActionType == ActionType.Attack)
         {
             SetAttackActionRangeType();
-            string location = BattleManager.Instance.GetEnemyKey(MyEnemyData);
-            CurrentActionRangeTypeList = BattleManager.Instance.GetActionRangeTypeList(location, CurrentActionRange, MyCheckEmptyType, MyNextAttackActionRangeType);
-        }*/
+        }
     }
     private void EventRefreshUI(params object[] args)
     {

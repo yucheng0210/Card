@@ -89,7 +89,7 @@ public class BattleManager : Singleton<BattleManager>
     public Transform EnemyTrans { get; set; }
     public bool IsDrag { get; set; }
     //棋盤
-    public string CurrentLocationID { get; set; }
+    public string CurrentPlayerLocation { get; set; }
     public Dictionary<string, Terrain> CurrentTerrainList { get; set; }
     public Dictionary<string, TrapData> CurrentTrapList { get; set; }
     public Dictionary<string, string> CheckerboardList { get; set; }
@@ -176,7 +176,7 @@ public class BattleManager : Singleton<BattleManager>
         defender.CurrentHealth += damage;
         Vector2 screenCenter = new Vector2(Screen.width / 2, Screen.height / 2);
         Color color = Color.green;
-        EventManager.Instance.DispatchEvent(EventDefinition.eventRecover, screenCenter, damage, CurrentLocationID, color);
+        EventManager.Instance.DispatchEvent(EventDefinition.eventRecover, screenCenter, damage, CurrentPlayerLocation, color);
     }
     public void TriggerEnemyPassiveSkill(string location)
     {
@@ -191,7 +191,7 @@ public class BattleManager : Singleton<BattleManager>
             string key = enemyData.PassiveSkills.ElementAt(i).Key;
             string clueStrs = EffectFactory.Instance.CreateEffect(key).SetTitleText();
             float waitTime = 0.5f * i;
-            EffectFactory.Instance.CreateEffect(key).ApplyEffect(enemyData.PassiveSkills[key], location, CurrentLocationID);
+            EffectFactory.Instance.CreateEffect(key).ApplyEffect(enemyData.PassiveSkills[key], location, CurrentPlayerLocation);
             ShowCharacterStatusClue(enemy.StatusClueTrans, clueStrs, waitTime);
         }
         enemyData.PassiveSkills.Clear();
@@ -299,21 +299,21 @@ public class BattleManager : Singleton<BattleManager>
     }
     public void CheckPlayerLocationInTrapRange()
     {
-        if (CurrentTrapList.ContainsKey(CurrentLocationID))
+        if (CurrentTrapList.ContainsKey(CurrentPlayerLocation))
         {
-            TrapData trapData = CurrentTrapList[CurrentLocationID];
+            TrapData trapData = CurrentTrapList[CurrentPlayerLocation];
             for (int i = 0; i < trapData.TriggerSkillList.Count; i++)
             {
                 string key = trapData.TriggerSkillList.ElementAt(i).Key;
                 string clueStrs = EffectFactory.Instance.CreateEffect(key).SetTitleText();
                 float waitTime = 0.5f * i;
-                EffectFactory.Instance.CreateEffect(key).ApplyEffect(trapData.TriggerSkillList[key], CurrentLocationID, CurrentLocationID);
+                EffectFactory.Instance.CreateEffect(key).ApplyEffect(trapData.TriggerSkillList[key], CurrentPlayerLocation, CurrentPlayerLocation);
                 ShowCharacterStatusClue(CurrentPlayer.StatusClueTrans, clueStrs, waitTime);
             }
             Animator ani = trapData.TrapTrans.GetComponent<Animator>();
             ani.SetTrigger("isAttacking");
-            TakeDamage(CurrentPlayerData, CurrentPlayerData, trapData.CurrentAttack, CurrentLocationID, 0.12f);
-            CurrentTrapList.Remove(CurrentLocationID);
+            TakeDamage(CurrentPlayerData, CurrentPlayerData, trapData.CurrentAttack, CurrentPlayerLocation, 0.12f);
+            CurrentTrapList.Remove(CurrentPlayerLocation);
             Destroy(trapData.TrapTrans.gameObject, 1);
         }
     }
@@ -390,7 +390,7 @@ public class BattleManager : Singleton<BattleManager>
         switch (actionRangeType)
         {
             case ActionRangeType.Linear:
-                emptyPlaceList = GetLinearAttackList(location, CurrentLocationID, stepCount); // 特定條件
+                emptyPlaceList = GetLinearAttackList(location, CurrentPlayerLocation, stepCount); // 特定條件
                 break;
             case ActionRangeType.Surrounding:
                 emptyPlaceList = GetEmptyPlace(location, stepCount, checkEmptyType, false, false); // 特定條件
@@ -399,13 +399,13 @@ public class BattleManager : Singleton<BattleManager>
                 emptyPlaceList = GetEmptyPlace(location, stepCount, checkEmptyType, false, true); // 特定條件
                 break;
             case ActionRangeType.Cone:
-                emptyPlaceList = GetConeAttackList(location, CurrentLocationID, stepCount); // 特定條件
+                emptyPlaceList = GetConeAttackList(location, CurrentPlayerLocation, stepCount); // 特定條件
                 break;
             case ActionRangeType.Default:
                 emptyPlaceList = GetEmptyPlace(location, stepCount, checkEmptyType, true, false);
                 break;
             case ActionRangeType.StraightCharge:
-                emptyPlaceList = GetStraightChargeList(location, CurrentLocationID, stepCount);
+                emptyPlaceList = GetStraightChargeList(location, CurrentPlayerLocation, stepCount);
                 break;
             case ActionRangeType.Jump:
             case ActionRangeType.ThrowExplosion:
@@ -588,14 +588,14 @@ public class BattleManager : Singleton<BattleManager>
     }
     private List<string> GetThrowExplosionList(int attackDistance)
     {
-        return GetActionRangeTypeList(CurrentLocationID, attackDistance, CheckEmptyType.EnemyAttack, ActionRangeType.SurroundingExplosion);
+        return GetActionRangeTypeList(CurrentPlayerLocation, attackDistance, CheckEmptyType.EnemyAttack, ActionRangeType.SurroundingExplosion);
     }
     private List<string> GetThrowScatteringList()
     {
-        List<string> emptyPlaceList = GetActionRangeTypeList(CurrentLocationID, 5, CheckEmptyType.EnemyAttack, ActionRangeType.SurroundingExplosion);
+        List<string> emptyPlaceList = GetActionRangeTypeList(CurrentPlayerLocation, 5, CheckEmptyType.EnemyAttack, ActionRangeType.SurroundingExplosion);
         List<string> throwLocationList = new();
         int throwCount = emptyPlaceList.Count > 5 ? 5 : emptyPlaceList.Count;
-        throwLocationList.Add(CurrentLocationID);
+        throwLocationList.Add(CurrentPlayerLocation);
         for (int i = 0; i < throwCount; i++)
         {
             int randomIndex = UnityEngine.Random.Range(0, emptyPlaceList.Count);
@@ -636,12 +636,12 @@ public class BattleManager : Singleton<BattleManager>
     }
     public void CheckPlayerLocationInRange(Enemy enemy)
     {
-        string playerLocation = CurrentLocationID;
+        string playerLocation = CurrentPlayerLocation;
         enemy.InRange = enemy.CurrentActionRangeTypeList.Contains(playerLocation) || enemy.MyNextAttackActionRangeType == ActionRangeType.None;
     }
     private bool IsOtherLocationInRange(Enemy enemy, string location)
     {
-        string playerLocation = CurrentLocationID;
+        string playerLocation = CurrentPlayerLocation;
         CheckEmptyType checkEmptyType = CheckEmptyType.EnemyAttack;
         int attackDistance = enemy.MyEnemyData.AttackRange;
         List<string> nextAttackRangeList = GetActionRangeTypeList(location, attackDistance, checkEmptyType, enemy.MyNextAttackActionRangeType);
@@ -655,7 +655,7 @@ public class BattleManager : Singleton<BattleManager>
             for (int j = 0; j < 5; j++)
             {
                 string location = ConvertCheckerboardPos(i, j);
-                if (CurrentLocationID == location)
+                if (CurrentPlayerLocation == location)
                 {
                     CheckerboardList.Add(location, "Player");
                     //Debug.Log("玩家：" + location);
@@ -743,10 +743,10 @@ public class BattleManager : Singleton<BattleManager>
         int levelCount = MapManager.Instance.LevelCount;
         RoundCount = 0;
         PlayerOnceMoveConsume = 1;
-        CurrentLocationID = MapManager.Instance.MapNodes[levelCount][levelID].l.PlayerStartPos;
+        CurrentPlayerLocation = MapManager.Instance.MapNodes[levelCount][levelID].l.PlayerStartPos;
         CurrentPlayerData.CurrentActionPoint = CurrentPlayerData.MaxActionPoint;
         CurrentPlayerData.Mana = 10;
-        PlayerTrans.localPosition = CheckerboardTrans.GetChild(GetCheckerboardPoint(CurrentLocationID)).localPosition;
+        PlayerTrans.localPosition = CheckerboardTrans.GetChild(GetCheckerboardPoint(CurrentPlayerLocation)).localPosition;
         CurrentDrawCardCount = CurrentPlayerData.DefaultDrawCardCount;
         for (int i = 0; i < DataManager.Instance.SkillList[skillID].SkillContent.Count; i++)
         {
@@ -806,7 +806,7 @@ public class BattleManager : Singleton<BattleManager>
             int effectCount;
             effectID = CurrentAbilityList.ElementAt(i).Key;
             effectCount = CurrentAbilityList.ElementAt(i).Value;
-            EffectFactory.Instance.CreateEffect(effectID).ApplyEffect(effectCount, CurrentLocationID, CurrentLocationID);
+            EffectFactory.Instance.CreateEffect(effectID).ApplyEffect(effectCount, CurrentPlayerLocation, CurrentPlayerLocation);
         }
         EventManager.Instance.DispatchEvent(EventDefinition.eventPlayerTurn);
     }
@@ -978,7 +978,7 @@ public class BattleManager : Singleton<BattleManager>
         {
             return minion;
         }
-        return location == CurrentLocationID ? CurrentPlayerData : null;
+        return location == CurrentPlayerLocation ? CurrentPlayerData : null;
     }
     public string GetEnemyKey(EnemyData enemyData)
     {

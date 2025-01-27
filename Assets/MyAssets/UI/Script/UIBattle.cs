@@ -246,7 +246,7 @@ public class UIBattle : UIBase
     private void SetEnemyAttackRotation(EnemyData enemyData, Image enemyImage, string location)
     {
         int locationX = BattleManager.Instance.ConvertNormalPos(location)[0];
-        int playerLocationX = BattleManager.Instance.ConvertNormalPos(BattleManager.Instance.CurrentLocationID)[0];
+        int playerLocationX = BattleManager.Instance.ConvertNormalPos(BattleManager.Instance.CurrentPlayerLocation)[0];
         bool shouldFlip = (playerLocationX > locationX) ? enemyData.ImageFlip : !enemyData.ImageFlip;
         enemyImage.transform.localRotation = Quaternion.Euler(0, shouldFlip ? 180 : 0, 0);
     }
@@ -260,7 +260,7 @@ public class UIBattle : UIBase
     // 处理敌人移动
     private IEnumerator HandleEnemyMove(string location, EnemyData enemyData, Enemy enemy, Image enemyImage, Dictionary<string, EnemyData> enemyDict)
     {
-        string playerLocation = BattleManager.Instance.CurrentLocationID;
+        string playerLocation = BattleManager.Instance.CurrentPlayerLocation;
         if (enemy.InRange)
         {
             SetEnemyAttackRotation(enemyData, enemyImage, playerLocation);
@@ -293,7 +293,7 @@ public class UIBattle : UIBase
             {
                 if (enemy.InRange)
                 {
-                    BattleManager.Instance.TakeDamage(enemyData, playerData, enemy.CurrentAttackPower, BattleManager.Instance.CurrentLocationID, 0.15f);
+                    BattleManager.Instance.TakeDamage(enemyData, playerData, enemy.CurrentAttackPower, BattleManager.Instance.CurrentPlayerLocation, 0.15f);
                 }
                 enemy.MyAnimator.SetTrigger("isAttacking");
                 yield return new WaitForSecondsRealtime(0.5f);
@@ -369,7 +369,7 @@ public class UIBattle : UIBase
             }
             return;
         }
-        string playerLocation = BattleManager.Instance.CurrentLocationID;
+        string playerLocation = BattleManager.Instance.CurrentPlayerLocation;
         EffectFactory.Instance.CreateEffect(nameof(MoveEffect)).ApplyEffect(BattleManager.Instance.PlayerMoveCount, playerLocation, playerLocation);
     }
     private void RemoveEnemy(string key)
@@ -455,7 +455,7 @@ public class UIBattle : UIBase
     }
     private void UsePotionEffect(string effectName, int value, int bagID)
     {
-        string playerLocation = BattleManager.Instance.CurrentLocationID;
+        string playerLocation = BattleManager.Instance.CurrentPlayerLocation;
         Transform statusClueTrans = BattleManager.Instance.CurrentPlayer.StatusClueTrans;
         EffectFactory.Instance.CreateEffect(effectName).ApplyEffect(value, playerLocation, playerLocation);
         BattleManager.Instance.ShowCharacterStatusClue(statusClueTrans, EffectFactory.Instance.CreateEffect(effectName).SetTitleText(), 0);
@@ -585,7 +585,6 @@ public class UIBattle : UIBase
     }
     private void EventRecover(params object[] args)
     {
-        Debug.Log((int)args[1]);
         if ((int)args[1] < 0)
         {
             return;

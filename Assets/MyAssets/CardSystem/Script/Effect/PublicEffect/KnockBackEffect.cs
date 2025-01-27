@@ -19,12 +19,13 @@ public class KnockBackEffect : IEffect
         int limitedY = Mathf.Clamp(Mathf.RoundToInt(direction.y), -1, 1);
         Vector2Int initialPos = new(defenderPos[0], defenderPos[1]);
         Vector2Int limitedDirection = new(limitedX, limitedY);
-        string destinationLocation = GetValidDestination(initialPos, limitedDirection) ?? throw new System.Exception("No valid destination found in CheckerboardList.");
+        string defaultDestinationLocation = BattleManager.Instance.ConvertCheckerboardPos((initialPos + limitedDirection).x, (initialPos + limitedDirection).y);
+        string destinationLocation = GetValidDestination(toLocation, defaultDestinationLocation);
         Vector3 destinationPos = BattleManager.Instance.GetCheckerboardTrans(destinationLocation).localPosition;
-        if (toLocation == BattleManager.Instance.CurrentLocationID)
+        if (toLocation == BattleManager.Instance.CurrentPlayerLocation)
         {
             BattleManager.Instance.PlayerTrans.DOAnchorPos(destinationPos, 0.2f);
-            BattleManager.Instance.CurrentLocationID = destinationLocation;
+            BattleManager.Instance.CurrentPlayerLocation = destinationLocation;
             ShowStatusClue(BattleManager.Instance.CurrentPlayer.StatusClueTrans);
         }
         else
@@ -39,10 +40,21 @@ public class KnockBackEffect : IEffect
         EventManager.Instance.DispatchEvent(EventDefinition.eventMove);
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
-
+    private string GetValidDestination(string initialLocation, string defaultLocation)
+    {
+        if (BattleManager.Instance.CheckPlaceEmpty(defaultLocation, BattleManager.CheckEmptyType.Move))
+        {
+            return defaultLocation;
+        }
+        BattleManager.CheckEmptyType checkEmptyType = BattleManager.CheckEmptyType.Move;
+        BattleManager.ActionRangeType actionRangeType = BattleManager.ActionRangeType.Surrounding;
+        List<string> emptyPlaceList = BattleManager.Instance.GetActionRangeTypeList(initialLocation, 1, checkEmptyType, actionRangeType);
+        return emptyPlaceList[0];
+    }
     // 獲取有效目標位置
     private string GetValidDestination(Vector2Int initialPos, Vector2Int direction)
     {
+
         Vector2Int[] offsets = new Vector2Int[]
         {
             new(direction.x, direction.y),  // 原始方向
@@ -58,6 +70,7 @@ public class KnockBackEffect : IEffect
         for (int i = 0; i < offsets.Length; i++)
         {
             newLocationList[i] = initialPos + offsets[i];
+            Debug.Log(newLocationList[i]);
         }
         for (int i = 0; i < newLocationList.Length; i++)
         {

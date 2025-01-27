@@ -131,7 +131,7 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             }
         }
         transform.SetAsLastSibling();
-        string location = BattleManager.Instance.CurrentLocationID;
+        string location = BattleManager.Instance.CurrentPlayerLocation;
         int cardAttackDistance = MyCardData.CardAttackDistance;
         BattleManager.CheckEmptyType checkEmptyType = BattleManager.CheckEmptyType.PlayerAttack;
         BattleManager.ActionRangeType actionRangeType = BattleManager.ActionRangeType.Default;
@@ -235,7 +235,7 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     }
     private bool CheckEnemyInAttackRange(string enemyLocation)
     {
-        string id = BattleManager.Instance.CurrentLocationID;
+        string id = BattleManager.Instance.CurrentPlayerLocation;
         int attackDistance = MyCardData.CardAttackDistance;
         BattleManager.CheckEmptyType checkEmptyType = BattleManager.CheckEmptyType.PlayerAttack;
         BattleManager.ActionRangeType actionRangeType = BattleManager.ActionRangeType.Default;
@@ -305,7 +305,7 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             }
             /*if (cardData.CardType == "陷阱")
             {
-                BattleManager.Instance.CurrentTrapList.Add(BattleManager.Instance.CurrentLocationID, effectID);
+                BattleManager.Instance.CurrentTrapList.Add(BattleManager.Instance.CurrentPlayerLocation, effectID);
             }*/
             if (BattleManager.Instance.CurrentNegativeState.ContainsKey(nameof(CantIncreaseManaEffect)) && effectID == nameof(IncreaseManaEffect))
             {
@@ -314,7 +314,7 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             Transform statusClueTrans = BattleManager.Instance.CurrentPlayer.StatusClueTrans;
             string clueStrs = EffectFactory.Instance.CreateEffect(effectID).SetTitleText();
             float waitTime = 0.5f * i;
-            EffectFactory.Instance.CreateEffect(effectID).ApplyEffect(effectCount, BattleManager.Instance.CurrentLocationID, target);
+            EffectFactory.Instance.CreateEffect(effectID).ApplyEffect(effectCount, BattleManager.Instance.CurrentPlayerLocation, target);
             BattleManager.Instance.ShowCharacterStatusClue(statusClueTrans, clueStrs, waitTime);
         }
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);

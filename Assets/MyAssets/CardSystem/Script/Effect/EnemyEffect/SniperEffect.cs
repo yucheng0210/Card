@@ -30,7 +30,7 @@ public class SniperEffect : IEffect
     private void RefreshAttack()
     {
         string defenderLocation = BattleManager.Instance.GetEnemyKey(enemyData);
-        int distance = BattleManager.Instance.GetRoute(defenderLocation, BattleManager.Instance.CurrentLocationID, BattleManager.CheckEmptyType.EnemyAttack).Count;
+        int distance = BattleManager.Instance.GetRoute(defenderLocation, BattleManager.Instance.CurrentPlayerLocation, BattleManager.CheckEmptyType.EnemyAttack).Count;
         enemy.AdditionAttackMultiplier = distance - 1;
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }

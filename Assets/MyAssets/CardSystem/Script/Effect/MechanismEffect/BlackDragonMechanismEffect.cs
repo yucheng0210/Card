@@ -53,9 +53,9 @@ public class BlackDragonMechanismEffect : IEffect
             BattleManager.CheckEmptyType checkEmptyType = BattleManager.CheckEmptyType.EnemyAttack;
             BattleManager.ActionRangeType actionRangeType = BattleManager.ActionRangeType.AllZone;
             List<string> emptyPlaceList = BattleManager.Instance.GetActionRangeTypeList("", 0, checkEmptyType, actionRangeType);
-            EffectFactory.Instance.CreateEffect("RechargeEffect").ApplyEffect(2, enemyLocation, BattleManager.Instance.CurrentLocationID);
+            EffectFactory.Instance.CreateEffect("RechargeEffect").ApplyEffect(2, enemyLocation, BattleManager.Instance.CurrentPlayerLocation);
             BattleManager.Instance.ShowCharacterStatusClue(enemy.StatusClueTrans, "蓄能", 0);
-            BattleManager.Instance.TemporaryChangeAttack(enemy, BattleManager.Instance.CurrentLocationID, emptyPlaceList, 10);
+            BattleManager.Instance.TemporaryChangeAttack(enemy, BattleManager.Instance.CurrentPlayerLocation, emptyPlaceList, 10);
         }
     }
     private void FinishThirdStage(params object[] args)
@@ -79,7 +79,7 @@ public class BlackDragonMechanismEffect : IEffect
                     if (stageCount == 1)
                     {
                         stageCount++;
-                        BattleManager.Instance.TemporaryChangeEffect(enemy, "FlyingEffect=50", BattleManager.Instance.CurrentLocationID);
+                        BattleManager.Instance.TemporaryChangeEffect(enemy, "FlyingEffect=50", BattleManager.Instance.CurrentPlayerLocation);
                         EffectFactory.Instance.CreateEffect("DizzinessEffect").ApplyEffect(0, "", "");
                         BattleManager.Instance.ShowCharacterStatusClue(enemy.StatusClueTrans, "怒吼", 0);
                         enemyData.DamageLimit = maxDamageCount;

@@ -21,13 +21,13 @@ public class TeleportEffect : IEffect
     }
     private void Teleport()
     {
-        float minDistance = BattleManager.Instance.CalculateDistance(initialLocation, BattleManager.Instance.CurrentLocationID);
+        float minDistance = BattleManager.Instance.CalculateDistance(initialLocation, BattleManager.Instance.CurrentPlayerLocation);
 
         List<string> teleportList = new();
         for (int i = 0; i < BattleManager.Instance.CheckerboardList.Count; i++)
         {
             string key = BattleManager.Instance.CheckerboardList.ElementAt(i).Key;
-            float currentDistance = BattleManager.Instance.CalculateDistance(key, BattleManager.Instance.CurrentLocationID);
+            float currentDistance = BattleManager.Instance.CalculateDistance(key, BattleManager.Instance.CurrentPlayerLocation);
             if (BattleManager.Instance.CheckPlaceEmpty(key, BattleManager.CheckEmptyType.Move) && currentDistance >= minDistance)
             {
                 teleportList.Add(key);

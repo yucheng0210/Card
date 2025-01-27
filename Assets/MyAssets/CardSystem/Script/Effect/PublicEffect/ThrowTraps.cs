@@ -8,7 +8,7 @@ public class ThrowTraps : IEffect
     {
         Enemy enemy = BattleManager.Instance.CurrentEnemyList[fromLocation].EnemyTrans.GetComponent<Enemy>();
         List<string> trapList = enemy.CurrentActionRangeTypeList;
-        trapList.Remove(BattleManager.Instance.CurrentLocationID);
+        trapList.Remove(BattleManager.Instance.CurrentPlayerLocation);
         BattleManager.Instance.AddTrap(trapList, value);
         BattleManager.Instance.CheckPlayerLocationInTrapRange();
         BattleManager.Instance.RefreshCheckerboardList();

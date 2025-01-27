@@ -12,6 +12,7 @@ public class PowerEffect : IEffect
         enemy = enemyData.EnemyTrans.GetComponent<Enemy>();
         enemy.AdditionPower += value;
         BattleManager.Instance.AddState(enemy.EnemyOnceBattlePositiveList, GetType().Name, value);
+        BattleManager.Instance.ShowCharacterStatusClue(enemy.StatusClueTrans, "提升力量", 0);
     }
 
     public string SetTitleText()

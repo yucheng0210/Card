@@ -15,7 +15,7 @@ public class ThornsEffect : IEffect
     {
         currentEnemyList = BattleManager.Instance.CurrentEnemyList;
         typeName = GetType().Name;
-        if (fromLocation == BattleManager.Instance.CurrentLocationID)
+        if (fromLocation == BattleManager.Instance.CurrentPlayerLocation)
         {
             counterattacker = BattleManager.Instance.CurrentPlayerData;
             currentOnceBattlePositiveList = BattleManager.Instance.CurrentOnceBattlePositiveList;
@@ -47,7 +47,7 @@ public class ThornsEffect : IEffect
         int damage = (int)args[1];
         int counterattackDamage = currentOnceBattlePositiveList[typeName];
         CharacterData counterattackTarget = (CharacterData)args[4];
-        string targetLocation = currentEnemyList.FirstOrDefault(x => x.Value == counterattackTarget).Key ?? BattleManager.Instance.CurrentLocationID;
+        string targetLocation = currentEnemyList.FirstOrDefault(x => x.Value == counterattackTarget).Key ?? BattleManager.Instance.CurrentPlayerLocation;
         BattleManager.Instance.TakeDamage(counterattacker, counterattackTarget, counterattackDamage, targetLocation, 0.5f);
     }
     public string SetTitleText()

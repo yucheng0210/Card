@@ -37,8 +37,8 @@ public class MoveEffect : IEffect
             emptyPlace.GetComponent<Button>().onClick.RemoveListener(removeList[i]);
         }
         BattleManager.Instance.PlayerMoveCount -= moveCount;
-        PlayerMoveAction(BattleManager.Instance.CurrentLocationID, location);
-        BattleManager.Instance.CurrentLocationID = location;
+        PlayerMoveAction(BattleManager.Instance.CurrentPlayerLocation, location);
+        BattleManager.Instance.CurrentPlayerLocation = location;
         UIManager.Instance.ClearMoveClue(true);
     }
     private void PlayerMoveAction(string fromLocation, string toLocation)

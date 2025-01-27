@@ -8,7 +8,7 @@ public class VortexMawEffect : IEffect
     public void ApplyEffect(int value, string fromLocation, string toLocation)
     {
         Dictionary<string, EnemyData> currentEnemyList = BattleManager.Instance.CurrentEnemyList;
-        string playerLocation = BattleManager.Instance.CurrentLocationID;
+        string playerLocation = BattleManager.Instance.CurrentPlayerLocation;
         Enemy enemy = currentEnemyList[fromLocation].EnemyTrans.GetComponent<Enemy>();
         if (enemy.CurrentActionRangeTypeList.Contains(playerLocation))
         {
@@ -24,7 +24,7 @@ public class VortexMawEffect : IEffect
                 Vector2 destinationPos;
                 if (distance < 2)
                 {
-                    destination = BattleManager.Instance.CurrentLocationID;
+                    destination = BattleManager.Instance.CurrentPlayerLocation;
                     destinationPos = BattleManager.Instance.GetCheckerboardTrans(destination).localPosition;
                 }
                 else
@@ -34,7 +34,7 @@ public class VortexMawEffect : IEffect
                 }
                 BattleManager.Instance.PlayerTrans.DOAnchorPos(destinationPos, 0.15f);
                 EffectFactory.Instance.CreateEffect(nameof(CantMoveEffect)).ApplyEffect(1, fromLocation, playerLocation);
-                BattleManager.Instance.CurrentLocationID = destination;
+                BattleManager.Instance.CurrentPlayerLocation = destination;
             });
         }
     }
