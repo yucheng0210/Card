@@ -8,18 +8,17 @@ public class ThrowTraps : IEffect
     {
         Enemy enemy = BattleManager.Instance.CurrentEnemyList[fromLocation].EnemyTrans.GetComponent<Enemy>();
         List<string> trapList = enemy.CurrentActionRangeTypeList;
-        trapList.Remove(BattleManager.Instance.CurrentPlayerLocation);
         BattleManager.Instance.AddTrap(trapList, value);
         BattleManager.Instance.CheckPlayerLocationInTrapRange();
         BattleManager.Instance.RefreshCheckerboardList();
     }
     public string SetTitleText()
     {
-        return "陷阱投擲。";
+        return "陷阱投擲";
     }
     public string SetDescriptionText()
     {
-        return "投擲數個陷阱在地圖上。";
+        return "投擲數個陷阱。";
     }
     public BattleManager.ActionRangeType SetEffectAttackType() { return BattleManager.ActionRangeType.ThrowScattering; }
 }

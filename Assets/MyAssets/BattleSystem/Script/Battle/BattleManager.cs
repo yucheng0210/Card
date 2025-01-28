@@ -295,7 +295,8 @@ public class BattleManager : Singleton<BattleManager>
         bool playerAttackCondition = checkEmptyType == CheckEmptyType.PlayerAttack && placeStatus == "Enemy";
         bool enemyAttackCondition = checkEmptyType == CheckEmptyType.EnemyAttack && placeStatus == "Player";
         bool allCharacterCondition = checkEmptyType == CheckEmptyType.ALLCharacter && (placeStatus == "Player" || placeStatus == "Enemy");
-        return playerAttackCondition || enemyAttackCondition || allCharacterCondition || placeStatus == "Empty" || placeStatus == "Trap";
+        bool moveCondition = checkEmptyType == CheckEmptyType.Move && placeStatus == "Trap";
+        return playerAttackCondition || enemyAttackCondition || allCharacterCondition || moveCondition || placeStatus == "Empty";
     }
     public void CheckPlayerLocationInTrapRange()
     {
@@ -409,10 +410,10 @@ public class BattleManager : Singleton<BattleManager>
                 break;
             case ActionRangeType.Jump:
             case ActionRangeType.ThrowExplosion:
-                emptyPlaceList = GetThrowExplosionList(stepCount);
+                emptyPlaceList = GetThrowExplosionList();
                 break;
             case ActionRangeType.ThrowScattering:
-                emptyPlaceList = GetThrowScatteringList();
+                emptyPlaceList = GetThrowScatteringList(location);
                 break;
             case ActionRangeType.AllZone:
                 emptyPlaceList = GetAllZoneList(checkEmptyType);
@@ -586,16 +587,31 @@ public class BattleManager : Singleton<BattleManager>
 
         return straightChargeList;
     }
-    private List<string> GetThrowExplosionList(int attackDistance)
+    private List<string> GetThrowExplosionList()
     {
-        return GetActionRangeTypeList(CurrentPlayerLocation, attackDistance, CheckEmptyType.EnemyAttack, ActionRangeType.SurroundingExplosion);
+        return GetActionRangeTypeList(CurrentPlayerLocation, 1, CheckEmptyType.EnemyAttack, ActionRangeType.SurroundingExplosion);
     }
-    private List<string> GetThrowScatteringList()
+    private List<string> GetThrowScatteringList(string fromLocation)
     {
-        List<string> emptyPlaceList = GetActionRangeTypeList(CurrentPlayerLocation, 5, CheckEmptyType.EnemyAttack, ActionRangeType.SurroundingExplosion);
+        List<string> emptyPlaceList = GetActionRangeTypeList(CurrentPlayerLocation, 0, CheckEmptyType.EnemyAttack, ActionRangeType.AllZone);
         List<string> throwLocationList = new();
-        int throwCount = emptyPlaceList.Count > 5 ? 5 : emptyPlaceList.Count;
-        throwLocationList.Add(CurrentPlayerLocation);
+        Enemy enemy = CurrentEnemyList[fromLocation].EnemyTrans.GetComponent<Enemy>();
+        int throwCount;
+        if (enemy.MyActionType == Enemy.ActionType.Attack)
+        {
+            throwLocationList.Add(CurrentPlayerLocation);
+            emptyPlaceList.Remove(CurrentPlayerLocation);
+            throwCount = 20;
+        }
+        else
+        {
+            if (emptyPlaceList.Contains(CurrentPlayerLocation))
+            {
+                emptyPlaceList.Remove(CurrentPlayerLocation);
+            }
+            throwCount = 4;
+        }
+        //throwLocationList.Add(CurrentPlayerLocation);
         for (int i = 0; i < throwCount; i++)
         {
             int randomIndex = UnityEngine.Random.Range(0, emptyPlaceList.Count);

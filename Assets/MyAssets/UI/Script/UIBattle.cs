@@ -675,7 +675,7 @@ public class UIBattle : UIBase
             UnityAction unityAction_1 = () => { infoGroupTrans.GetChild(0).gameObject.SetActive(true); };
             UnityAction unityAction_2 = () => { infoGroupTrans.GetChild(0).gameObject.SetActive(false); };
             BattleManager.Instance.SetEventTrigger(eventTrigger, unityAction_1, unityAction_2);
-            if (effect.IsShowEffectCount())
+            if (!isPassiveEffect)
             {
                 stateText.text = value.ToString();
             }

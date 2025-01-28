@@ -94,6 +94,7 @@ public class DataManager : Singleton<DataManager>
                 CardRemove = bool.Parse(row[14]),
                 CardBuyPrice = int.Parse(row[15]),
                 CardFreeze = bool.Parse(row[16]),
+                AutoCardRemove=bool.Parse(row[17]),
                 CardEffectList = new List<(string, int)>()
             };
             if (row[10] != "")

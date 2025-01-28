@@ -61,9 +61,9 @@ public class Enemy : Character
     public int CurrentAttackPower { get; set; }
     public int CurrentAttackCount { get; set; }
     public int CurrentShieldCount { get; set; }
-    public bool NoNeedCheckInRange { get; set; }
     public string TemporaryEffect { get; set; }
     public string TargetLocation { get; set; }
+    public bool NoNeedCheckInRange { get; set; }
     public bool InRange { get; set; }
     private string location;
     public bool IsSpecialAction { get; set; }
@@ -103,7 +103,7 @@ public class Enemy : Character
         {
             HandleNoAttack();
         }
-        else if (InRange)
+        else if (InRange || NoNeedCheckInRange)
         {
             HandleAttack(false);
         }
@@ -111,6 +111,7 @@ public class Enemy : Character
         {
             HandleMove();
         }
+        BattleManager.Instance.CheckPlayerLocationInRange(this);
         SetInfoGroupEventTrigger();
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
@@ -178,8 +179,8 @@ public class Enemy : Character
         {
             ActivateEffect(attackOrder);
         }
-        CurrentActionRangeTypeList = BattleManager.Instance.GetActionRangeTypeList(location, CurrentActionRange, MyCheckEmptyType, MyNextAttackActionRangeType);
         SetAttackActionRangeType();
+        CurrentActionRangeTypeList = BattleManager.Instance.GetActionRangeTypeList(location, CurrentActionRange, MyCheckEmptyType, MyNextAttackActionRangeType);
     }
     private void ActivateShield()
     {
@@ -192,7 +193,6 @@ public class Enemy : Character
         enemyShield.SetActive(true);
         CurrentShieldCount = shieldCount;
     }
-
     private void ActivateEffect(string attackOrder)
     {
         MyActionType = ActionType.Effect;
@@ -345,10 +345,7 @@ public class Enemy : Character
     {
         BattleManager.Instance.CheckPlayerLocationInRange(this);
         BattleManager.Instance.CheckPlayerLocationInTrapRange();
-        if (MyActionType == ActionType.Attack)
-        {
-            SetAttackActionRangeType();
-        }
+        SetAttackActionRangeType();
     }
     private void EventRefreshUI(params object[] args)
     {

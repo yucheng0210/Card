@@ -34,23 +34,10 @@ public class PoisonedEffect : IEffect
             EventManager.Instance.RemoveEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
             return;
         }
-
-        // Apply poison effect if the attacker matches
-        if (args.Length < 5)
-        {
-            return;
-        }
         CharacterData damageSource = (CharacterData)args[4];
         if (attacker == damageSource)
         {
-            if (currentNegativeState.ContainsKey(typeName))
-            {
-                currentNegativeState[typeName] += poisonCount;
-            }
-            else
-            {
-                currentNegativeState.Add(typeName, poisonCount);
-            }
+            BattleManager.Instance.AddState(currentNegativeState, typeName, poisonCount);
         }
     }
 
@@ -65,11 +52,11 @@ public class PoisonedEffect : IEffect
     }
     public string SetTitleText()
     {
-        return "中毒";
+        return "致命毒液";
     }
-
+    public string SetPassiveEffectDescriptionText() { return "攻擊命中敵人附帶致命毒液。"; }
     public string SetDescriptionText()
     {
-        return "攻擊疊加毒素。";
+        return "移動時造成層數相等的傷害。";
     }
 }

@@ -36,7 +36,7 @@ public class AddCurseEffect : IEffect
     }
     public string SetDescriptionText()
     {
-        return "將詛咒卡塞入卡組裡。";
+        return "添加詛咒卡至牌組。";
     }
 
 }

@@ -249,6 +249,12 @@ public class CardCreater : MonoBehaviour
                 continue;
             }
             CardItem cardItem = handCard[i].MyCardItem;
+            if (handCard[i].AutoCardRemove)
+            {
+                DataManager.Instance.RemoveCardBag.Add(handCard[i]);
+                Destroy(cardItem.gameObject);
+                continue;
+            }
             UIManager.Instance.ChangeOutline(cardItem, false);
             cardItem.CantMove = true;
             cardItem.transform.SetParent(usedCardTrans);
@@ -290,10 +296,10 @@ public class CardCreater : MonoBehaviour
             }
             cardBag.Add(removeCardBag[j]);
         }
-       /* for (int j = 0; j < cardBag.Count; j++)
-        {
-            Destroy(cardBag[j].MyCardItem.gameObject);
-        }*/
+        /* for (int j = 0; j < cardBag.Count; j++)
+         {
+             Destroy(cardBag[j].MyCardItem.gameObject);
+         }*/
         removeCardBag.Clear();
         useCardBag.Clear();
         handCard.Clear();

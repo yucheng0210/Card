@@ -91,7 +91,7 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         CardName.text = MyCardData.CardName;
         CardDescription.text = MyCardData.CardDescription;
-        CardCost.text = MyCardData.CardCost.ToString();
+        CardCost.text = MyCardData.CardCost >= 0 ? MyCardData.CardCost.ToString() : "";
         CardManaCost.text = MyCardData.CardManaCost.ToString();
         CardRectTransform = transform.GetComponent<RectTransform>();
         CardImage.sprite = Resources.Load<Sprite>(MyCardData.CardImagePath);

@@ -12,18 +12,7 @@ public class CardData
     public string CardName { get; set; }
     public string CardType { get; set; }
     public string CardImagePath { get; set; }
-    public int CardCost
-    {
-        get { return cardCost; }
-        set
-        {
-            cardCost = value;
-            if (cardCost < 0)
-                cardCost = 0;
-            if (CardCost > 9)
-                cardCost = 9;
-        }
-    }
+    public int CardCost { get; set; }
     public string CardAttribute { get; set; }
     public string CardSpecialEffect { get; set; }
     public string CardDescription { get; set; }
@@ -55,6 +44,7 @@ public class CardData
     public bool CardRemove { get; set; }
     public int CardBuyPrice { get; set; }
     public bool CardFreeze { get; set; }
+    public bool AutoCardRemove { get; set; }
     public CardItem MyCardItem { get; set; }
     public CardData DeepClone()
     {
