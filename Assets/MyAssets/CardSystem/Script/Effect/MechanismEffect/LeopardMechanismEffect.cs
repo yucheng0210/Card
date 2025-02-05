@@ -13,7 +13,6 @@ public class LeopardMechanismEffect : IEffect
     {
         enemyData = BattleManager.Instance.CurrentEnemyList[fromLocation];
         enemy = enemyData.EnemyTrans.GetComponent<Enemy>();
-        enemy.EnemyOnceBattlePositiveList.Add(GetType().Name, 1);
         EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, enemyData, EventPlayerTurn);
         EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, enemyData, EventTakeDamage);
         EventManager.Instance.AddEventRegister(EventDefinition.eventEnemyTurn, enemyData, EventEnemyTurn);
@@ -62,6 +61,6 @@ public class LeopardMechanismEffect : IEffect
 
     public string SetDescriptionText()
     {
-        return "玩家每回合重置敵人額外攻擊次數為2次，攻擊敵人可減少次數。若敵人無法有效攻擊，累積丟牌計數並在攻擊時觸發丟牌。";
+        return "每回合獲得兩次額外攻擊，受到攻擊時減少，如果攻擊未命中敵人，則強制丟棄玩家手牌。";
     }
 }

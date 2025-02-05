@@ -1059,10 +1059,10 @@ public class BattleManager : Singleton<BattleManager>
         CardData cardData = cardItem.MyCardData;
         RectTransform cardItemRect = cardItem.GetComponent<RectTransform>();
         RectTransform useCardBagRect = UseCardBagTrans.GetComponent<RectTransform>();
+        DataManager.Instance.UsedCardBag.Add(handCard[childCardIndex]);
         handCard.Remove(cardData);
         cardItem.CantMove = true;
         cardItemRect.DOAnchorPos(useCardBagRect.anchoredPosition, moveTime);
-        DataManager.Instance.UsedCardBag.Add(handCard[childCardIndex]);
         EventManager.Instance.DispatchEvent(EventDefinition.eventUseCard, cardItem);
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
@@ -1073,6 +1073,7 @@ public class BattleManager : Singleton<BattleManager>
             EnemyData value = CurrentMinionsList.ElementAt(i).Value;
             Enemy enemy = value.EnemyTrans.GetComponent<Enemy>();
             enemy.MyAnimator.SetTrigger("isDeath");
+            EventManager.Instance.ClearEvents(value);
             Destroy(enemy.gameObject, 1);
             EventManager.Instance.DispatchEvent(EventDefinition.eventMove);
         }
@@ -1084,6 +1085,7 @@ public class BattleManager : Singleton<BattleManager>
         Enemy enemy = value.EnemyTrans.GetComponent<Enemy>();
         enemy.MyAnimator.SetTrigger("isDeath");
         CurrentMinionsList.Remove(location);
+        EventManager.Instance.ClearEvents(value);
         Destroy(enemy.gameObject, 1);
         EventManager.Instance.DispatchEvent(EventDefinition.eventMove);
 

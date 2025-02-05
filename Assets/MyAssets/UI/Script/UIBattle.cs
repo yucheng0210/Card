@@ -596,7 +596,14 @@ public class UIBattle : UIBase
         Color color = (Color)args[3];
         if (damageStr == "0" && args.Length > 6)
         {
-            damageStr = "格擋";
+            if (((CharacterData)args[5]).DamageReduction == 100)
+            { 
+                damageStr = "免疫";
+            }
+            else
+            {
+                damageStr = "格擋";
+            }
             color = Color.white;
         }
         damageText.text = damageStr;

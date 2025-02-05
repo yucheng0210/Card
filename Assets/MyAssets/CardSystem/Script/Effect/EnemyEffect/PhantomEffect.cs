@@ -17,7 +17,6 @@ public class PhantomEffect : IEffect
         enemyData = (EnemyData)BattleManager.Instance.IdentifyCharacter(fromLocation);
         enemy = enemyData.EnemyTrans.GetComponent<Enemy>();
         enemyLocation = fromLocation;
-        enemyData.PassiveSkills.Remove(GetType().Name);
         EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, enemyData, EventTakeDamage);
         if (enemyData.IsMinion)
         {

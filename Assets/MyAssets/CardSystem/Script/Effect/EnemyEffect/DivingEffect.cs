@@ -31,7 +31,7 @@ public class DivingEffect : IEffect
     }
     public string SetDescriptionText()
     {
-        return "敵人潛水時免疫傷害，攻擊玩家後退出潛水並失去免疫，下回合自動恢復潛水狀態。";
+        return "回合開始進入潛水狀態，免疫所有傷害，發動攻擊則會退出狀態，並在下回合恢復。";
     }
 
 }

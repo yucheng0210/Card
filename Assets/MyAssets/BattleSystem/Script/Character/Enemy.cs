@@ -144,6 +144,11 @@ public class Enemy : Character
             }
             else
             {
+                MyActionType = ActionType.Effect;
+                BattleManager.CheckEmptyType checkEmptyType = BattleManager.CheckEmptyType.Move;
+                BattleManager.ActionRangeType actionRangeType = EffectFactory.Instance.CreateEffect(triggerSkill.Item1).SetEffectAttackType();
+                List<string> actionRangeList = BattleManager.Instance.GetActionRangeTypeList(location, 0, checkEmptyType, actionRangeType);
+                CurrentActionRangeTypeList = actionRangeList;
                 EffectFactory.Instance.CreateEffect(triggerSkill.Item1).ApplyEffect(triggerSkill.Item2, location, TargetLocation);
             }
             for (int i = 0; i < mechanismSkill.Count; i++)
