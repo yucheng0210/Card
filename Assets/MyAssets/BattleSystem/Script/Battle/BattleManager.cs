@@ -119,7 +119,7 @@ public class BattleManager : Singleton<BattleManager>
             for (int i = 0; i < CurrentEnemyList.Count; i++)
             {
                 CharacterData value = CurrentEnemyList.ElementAt(i).Value;
-                TakeDamage(CurrentPlayerData, value, 54, CurrentEnemyList.ElementAt(i).Key, 0);
+                TakeDamage(CurrentPlayerData, value, 5, CurrentEnemyList.ElementAt(i).Key, 0);
             }
             /*  for (int i = 0; i < CurrentEnemyList.Count; i++)
               {
@@ -547,7 +547,6 @@ public class BattleManager : Singleton<BattleManager>
     {
         List<string> emptyPlaceList = GetLinearAttackList(fromLocation, toLocation, attackDistance);
         List<string> straightChargeList = new List<string>();
-
         for (int i = 0; i < emptyPlaceList.Count; i++)
         {
             // 轉換座標字串為數值
@@ -1079,13 +1078,13 @@ public class BattleManager : Singleton<BattleManager>
         }
         CurrentMinionsList.Clear();
     }
-    public void RemoveMinion(string location)
+    public void RemoveMinion(EnemyData enemyData)
     {
-        EnemyData value = CurrentMinionsList[location];
-        Enemy enemy = value.EnemyTrans.GetComponent<Enemy>();
+        string location = GetEnemyKey(enemyData);
+        Enemy enemy = enemyData.EnemyTrans.GetComponent<Enemy>();
         enemy.MyAnimator.SetTrigger("isDeath");
         CurrentMinionsList.Remove(location);
-        EventManager.Instance.ClearEvents(value);
+        EventManager.Instance.ClearEvents(enemyData);
         Destroy(enemy.gameObject, 1);
         EventManager.Instance.DispatchEvent(EventDefinition.eventMove);
 

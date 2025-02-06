@@ -8,7 +8,6 @@ public class PhantomEffect : IEffect
 {
     private EnemyData enemyData;
     private int attackCount = 2;
-    private string enemyLocation;
     private Dictionary<string, EnemyData> currentMinionsList;
     private Enemy enemy;
     public void ApplyEffect(int value, string fromLocation, string toLocation)
@@ -16,7 +15,6 @@ public class PhantomEffect : IEffect
         currentMinionsList = BattleManager.Instance.CurrentMinionsList;
         enemyData = (EnemyData)BattleManager.Instance.IdentifyCharacter(fromLocation);
         enemy = enemyData.EnemyTrans.GetComponent<Enemy>();
-        enemyLocation = fromLocation;
         EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, enemyData, EventTakeDamage);
         if (enemyData.IsMinion)
         {
@@ -38,9 +36,10 @@ public class PhantomEffect : IEffect
         attackCount = 2;
         int randomIndex = Random.Range(0, currentMinionsList.Count);
         string minionLocation = currentMinionsList.ElementAt(randomIndex).Key;
-        BattleManager.Instance.ExchangePos(enemyData.EnemyTrans, BattleManager.Instance.CurrentEnemyList, enemyLocation,
-        currentMinionsList[minionLocation].EnemyTrans, minionLocation, currentMinionsList);
-        enemyLocation = minionLocation;
+        Dictionary<string, EnemyData> currentEnemyList = BattleManager.Instance.CurrentEnemyList;
+        string enemyLocation = BattleManager.Instance.GetEnemyKey(enemyData);
+        Transform minionTrans = currentMinionsList[minionLocation].EnemyTrans;
+        BattleManager.Instance.ExchangePos(enemyData.EnemyTrans, currentEnemyList, enemyLocation, minionTrans, minionLocation, currentMinionsList);
     }
 
     private void EventTakeDamage(params object[] args)
@@ -49,7 +48,7 @@ public class PhantomEffect : IEffect
         {
             if (enemyData.IsMinion)
             {
-                BattleManager.Instance.RemoveMinion(enemyLocation);
+                BattleManager.Instance.RemoveMinion(enemyData);
             }
             else
             {
@@ -59,7 +58,7 @@ public class PhantomEffect : IEffect
                     currentMinionsList[key].CurrentHealth = enemyData.CurrentHealth;
                 }
                 attackCount--;
-                if (attackCount <= 0)
+                if (attackCount == 0)
                 {
                     BattleManager.Instance.TemporaryChangeEffect(enemy, "CreateMinionsEffect=5", BattleManager.Instance.CurrentPlayerLocation);
                     BattleManager.Instance.ClearAllMinions();
@@ -73,7 +72,7 @@ public class PhantomEffect : IEffect
     }
     public string SetDescriptionText()
     {
-        return "召喚數個幻象，幻象會與主敵人隨機交換位置。";
+        return "召喚數個幻象，回合開始幻象會與本體隨機互換位置。";
     }
 
 }

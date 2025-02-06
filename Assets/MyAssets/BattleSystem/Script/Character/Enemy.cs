@@ -298,10 +298,6 @@ public class Enemy : Character
         {
             destinationLocation = enemyLocation;
         }
-        else if (emptyPlaceList.Contains(playerLocation))
-        {
-            destinationLocation = playerLocation;
-        }
         else
         {
             destinationLocation = emptyPlaceList[^1];
@@ -350,7 +346,7 @@ public class Enemy : Character
     {
         BattleManager.Instance.CheckPlayerLocationInRange(this);
         BattleManager.Instance.CheckPlayerLocationInTrapRange();
-        SetAttackActionRangeType();
+        //SetAttackActionRangeType();
     }
     private void EventRefreshUI(params object[] args)
     {

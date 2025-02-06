@@ -21,10 +21,14 @@ public class KnockBackEffect : IEffect
         Vector2Int limitedDirection = new(limitedX, limitedY);
         string defaultDestinationLocation = BattleManager.Instance.ConvertCheckerboardPos((initialPos + limitedDirection).x, (initialPos + limitedDirection).y);
         string destinationLocation = GetValidDestination(toLocation, defaultDestinationLocation);
+        if (fromLocation == destinationLocation)
+        {
+            destinationLocation = toLocation;
+        }
         Vector3 destinationPos = BattleManager.Instance.GetCheckerboardTrans(destinationLocation).localPosition;
         if (toLocation == BattleManager.Instance.CurrentPlayerLocation)
         {
-            BattleManager.Instance.PlayerTrans.DOAnchorPos(destinationPos, 0.2f);
+            BattleManager.Instance.PlayerTrans.DOAnchorPos(destinationPos, 0.15f);
             BattleManager.Instance.CurrentPlayerLocation = destinationLocation;
             ShowStatusClue(BattleManager.Instance.CurrentPlayer.StatusClueTrans);
         }
@@ -32,7 +36,7 @@ public class KnockBackEffect : IEffect
         {
             EnemyData enemyData = (EnemyData)targetData;
             BattleManager.Instance.Replace(BattleManager.Instance.CurrentEnemyList, toLocation, destinationLocation);
-            enemyData.EnemyTrans.DOAnchorPos(destinationPos, 0.2f);
+            enemyData.EnemyTrans.DOAnchorPos(destinationPos, 0.15f);
             ShowStatusClue(enemyData.EnemyTrans);
         }
 
@@ -50,37 +54,6 @@ public class KnockBackEffect : IEffect
         BattleManager.ActionRangeType actionRangeType = BattleManager.ActionRangeType.Surrounding;
         List<string> emptyPlaceList = BattleManager.Instance.GetActionRangeTypeList(initialLocation, 1, checkEmptyType, actionRangeType);
         return emptyPlaceList[0];
-    }
-    // 獲取有效目標位置
-    private string GetValidDestination(Vector2Int initialPos, Vector2Int direction)
-    {
-
-        Vector2Int[] offsets = new Vector2Int[]
-        {
-            new(direction.x, direction.y),  // 原始方向
-            new(direction.x, 0),           // 水平
-            new(direction.x, -direction.y),// 右下
-            new(0, -direction.y),          // 垂直下
-            new(-direction.x, -direction.y),// 左下
-            new(-direction.x, 0),          // 水平左
-            new(-direction.x, direction.y),// 左上
-            new(0, direction.y)            // 垂直上
-        };
-        Vector2Int[] newLocationList = new Vector2Int[offsets.Length];
-        for (int i = 0; i < offsets.Length; i++)
-        {
-            newLocationList[i] = initialPos + offsets[i];
-            Debug.Log(newLocationList[i]);
-        }
-        for (int i = 0; i < newLocationList.Length; i++)
-        {
-            string newLocation = BattleManager.Instance.ConvertCheckerboardPos(newLocationList[i].x, newLocationList[i].y);
-            if (BattleManager.Instance.CheckerboardList.ContainsKey(newLocation) && BattleManager.Instance.CheckPlaceEmpty(newLocation, BattleManager.CheckEmptyType.Move))
-            {
-                return newLocation;
-            }
-        }
-        return null; // 無效位置
     }
 
     // 顯示角色狀態提示
