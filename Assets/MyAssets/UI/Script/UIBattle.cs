@@ -391,7 +391,7 @@ public class UIBattle : UIBase
                     BattleManager.Instance.CurrentMinionsList.Remove(key);
                 }
                 EventManager.Instance.ClearEvents(enemyData);
-                Destroy(enemyData.EnemyTrans.gameObject, 1);
+                Destroy(enemyData.EnemyTrans.gameObject, 1.5f);
             }
             enemy.MyCollider.enabled = !enemy.IsSuspendedAnimation;
             enemy.IsDeath = true;
@@ -597,7 +597,7 @@ public class UIBattle : UIBase
         if (damageStr == "0" && args.Length > 6)
         {
             if (((CharacterData)args[5]).DamageReduction == 100)
-            { 
+            {
                 damageStr = "免疫";
             }
             else

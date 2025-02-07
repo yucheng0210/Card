@@ -30,8 +30,8 @@ public class PolarIceBearMechanismEffect : IEffect
     }
     private void EventPlayerTurn(params object[] args)
     {
-        meleeEnemyLocation = currentEnemyList.ElementAt(0).Key;
-        longDistanceEnemyLocation = currentEnemyList.ElementAt(1).Key;
+        meleeEnemyLocation = BattleManager.Instance.GetEnemyKey(meleeEnemyData);
+        longDistanceEnemyLocation = BattleManager.Instance.GetEnemyKey(longDistanceEnemyData);
         exchangeCount = 1;
     }
     private void EventMove(params object[] args)
@@ -42,14 +42,18 @@ public class PolarIceBearMechanismEffect : IEffect
     }
     private void EventTakeDamage(params object[] args)
     {
+        if (meleeEnemyData.CurrentHealth <= 0)
+        {
+            longDistanceEnemy.IsSuspendedAnimation = false;
+        }
         if (args[5] == longDistanceEnemyData)
         {
-            int healthCount = BattleManager.Instance.GetPercentage(longDistanceEnemyData.MaxHealth, 30);
+            int healthCount = Mathf.Min(BattleManager.Instance.GetPercentage(longDistanceEnemyData.MaxHealth, 30), meleeEnemyData.CurrentHealth - 1);
             if (!longDistanceEnemy.IsSuspendedAnimation)
             {
                 return;
             }
-            if (longDistanceEnemyData.CurrentHealth <= 0 && meleeEnemyData.CurrentHealth > healthCount)
+            if (longDistanceEnemyData.CurrentHealth <= 0)
             {
                 string effectName = "HealthBalanceEffect=" + healthCount.ToString();
                 BattleManager.Instance.TemporaryChangeEffect(meleeEnemy, effectName, longDistanceEnemyLocation);
@@ -63,15 +67,9 @@ public class PolarIceBearMechanismEffect : IEffect
                 Transform meleeEnemyTrans = meleeEnemyData.EnemyTrans;
                 Transform longEnemyTrans = longDistanceEnemyData.EnemyTrans;
                 BattleManager.Instance.ExchangePos(meleeEnemyTrans, currentEnemyList, meleeEnemyLocation, longEnemyTrans, longDistanceEnemyLocation, currentEnemyList);
+                meleeEnemy.RefreshAttackIntent();
+                longDistanceEnemy.RefreshAttackIntent();
                 exchangeCount--;
-            }
-        }
-        if (args[5] == meleeEnemyData)
-        {
-            if (BattleManager.Instance.CurrentOnceBattlePositiveList.ContainsKey(nameof(ExplosiveMarkEffect)))
-            {
-                PlayerData playerData = BattleManager.Instance.CurrentPlayerData;
-                BattleManager.Instance.TakeDamage(meleeEnemyData, playerData, BattleManager.Instance.CurrentOnceBattlePositiveList[nameof(ExplosiveMarkEffect)], BattleManager.Instance.CurrentPlayerLocation, 0);
             }
         }
     }

@@ -90,8 +90,11 @@ public class Enemy : Character
         EventManager.Instance.AddEventRegister(EventDefinition.eventEnemyTurn, MyEnemyData, EventEnemyTurn);
         RefreshAttackIntent();
     }
-
-    private void RefreshAttackIntent()
+    private void Update()
+    {
+//        Debug.Log(MyEnemyData.MaxHealth);
+    }
+    public void RefreshAttackIntent()
     {
         MySequence = null;
         location = BattleManager.Instance.GetEnemyKey(MyEnemyData);

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -106,14 +107,31 @@ public class EventManager : Singleton<EventManager>
         {
             return;
         }
-        for (int i = 0; i < CharacterListenerList[characterData].Count; i++)
+
+        Dictionary<string, EventHandler> characterEvents = CharacterListenerList[characterData];
+        List<string> keys = characterEvents.Keys.ToList(); // 避免修改字典時發生錯誤
+
+        for (int i = 0; i < keys.Count; i++)
         {
-            string key = CharacterListenerList[characterData].ElementAt(i).Key;
-            RemoveEventRegister(key, CharacterListenerList[characterData][key]);
+            string eventName = keys[i];
+
+            if (eventListenters.ContainsKey(eventName))
+            {
+                Delegate[] handlers = characterEvents[eventName].GetInvocationList();
+
+                for (int j = 0; j < handlers.Length; j++)
+                {
+                    eventListenters[eventName] -= (EventHandler)handlers[j];
+                }
+
+                if (eventListenters[eventName] == null)
+                {
+                    eventListenters.Remove(eventName);
+                }
+            }
         }
-        if (CharacterListenerList.ContainsKey(characterData))
-        {
-            CharacterListenerList.Remove(characterData);
-        }
+
+        CharacterListenerList.Remove(characterData);
     }
+
 }

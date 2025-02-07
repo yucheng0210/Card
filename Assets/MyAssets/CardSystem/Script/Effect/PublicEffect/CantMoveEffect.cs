@@ -24,6 +24,6 @@ public class CantMoveEffect : IEffect
 
     public BattleManager.ActionRangeType SetEffectAttackType()
     {
-        return BattleManager.ActionRangeType.Cone;
+        return BattleManager.ActionRangeType.Surrounding;
     }
 }

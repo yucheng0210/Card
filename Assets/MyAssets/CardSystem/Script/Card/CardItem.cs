@@ -261,8 +261,7 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     private void UseCard(string target)
     {
         CardData cardData = MyCardData;
-        if ((BattleManager.Instance.CurrentNegativeState.ContainsKey(nameof(CantMoveEffect)) && cardData.CardType == "移動")
-        || BattleManager.Instance.CurrentNegativeState.ContainsKey(nameof(TauntEffect)))
+        if (BattleManager.Instance.CurrentNegativeState.ContainsKey(nameof(CantMoveEffect)) && cardData.CardType == "移動")
         {
             return;
         }

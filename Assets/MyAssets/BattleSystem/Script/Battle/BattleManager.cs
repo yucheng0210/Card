@@ -116,20 +116,24 @@ public class BattleManager : Singleton<BattleManager>
     {
         if (Input.GetKeyDown(KeyCode.KeypadEnter))
         {
-            for (int i = 0; i < CurrentEnemyList.Count; i++)
-            {
-                CharacterData value = CurrentEnemyList.ElementAt(i).Value;
-                TakeDamage(CurrentPlayerData, value, 5, CurrentEnemyList.ElementAt(i).Key, 0);
-            }
-            /*  for (int i = 0; i < CurrentEnemyList.Count; i++)
-              {
-                  EnemyData enemyData = CurrentEnemyList.ElementAt(i).Value;
-                  Enemy enemy = enemyData.EnemyTrans.GetComponent<Enemy>();
-                  for (int j = 0; j < enemy.CurrentActionRangeTypeList.Count; j++)
-                  {
-                      Debug.Log(enemy.CurrentActionRangeTypeList[j]);
-                  }
-              }*/
+            CharacterData value = CurrentEnemyList.ElementAt(0).Value;
+            TakeDamage(CurrentPlayerData, value, 51, CurrentEnemyList.ElementAt(0).Key, 0);
+            // PlayerMoveCount++;
+            /* for (int i = 0; i < CurrentEnemyList.Count; i++)
+             {
+                 CharacterData value = CurrentEnemyList.ElementAt(i).Value;
+                 TakeDamage(CurrentPlayerData, value, 5, CurrentEnemyList.ElementAt(i).Key, 0);
+             }/*
+
+             /*  for (int i = 0; i < CurrentEnemyList.Count; i++)
+               {
+                   EnemyData enemyData = CurrentEnemyList.ElementAt(i).Value;
+                   Enemy enemy = enemyData.EnemyTrans.GetComponent<Enemy>();
+                   for (int j = 0; j < enemy.CurrentActionRangeTypeList.Count; j++)
+                   {
+                       Debug.Log(enemy.CurrentActionRangeTypeList[j]);
+                   }
+               }*/
         }
     }
     public void TakeDamage(CharacterData attacker, CharacterData defender, int damage, string location, float delay)
@@ -1102,17 +1106,16 @@ public class BattleManager : Singleton<BattleManager>
         Vector3 tempPosition = transA.localPosition;
         transA.localPosition = transB.localPosition;
         transB.localPosition = tempPosition;
-        // 獲取要交換的值，避免直接修改字典
         EnemyData dataA = enemyListA[locationA];
         EnemyData dataB = enemyListB[locationB];
-
-        // 執行交換，先移除舊的鍵
+        Enemy dataAEnemy = dataA.EnemyTrans.GetComponent<Enemy>();
+        Enemy dataBEnemy = dataB.EnemyTrans.GetComponent<Enemy>();
         enemyListA.Remove(locationA);
         enemyListB.Remove(locationB);
-
-        // 添加新的鍵值對
         enemyListA[locationB] = dataA;
         enemyListB[locationA] = dataB;
+        ShowCharacterStatusClue(dataAEnemy.StatusClueTrans, "轉移", 0);
+        ShowCharacterStatusClue(dataBEnemy.StatusClueTrans, "轉移", 0);
         EventManager.Instance.DispatchEvent(EventDefinition.eventMove);
     }
     public void TemporaryChangeEffect(Enemy enemy, string effectName, string targetLocation)

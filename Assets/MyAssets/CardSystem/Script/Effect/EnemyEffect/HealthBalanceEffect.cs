@@ -10,7 +10,6 @@ public class HealthBalanceEffect : IEffect
         EnemyData toEnemyData = (EnemyData)BattleManager.Instance.IdentifyCharacter(toLocation);
         Enemy fromEnemy = fromEnemyData.EnemyTrans.GetComponent<Enemy>();
         Enemy toEnemy = toEnemyData.EnemyTrans.GetComponent<Enemy>();
-        Debug.Log(toEnemyData.CurrentHealth);
         if (toEnemyData.CurrentHealth <= 0)
         {
             toEnemy.MyAnimator.SetTrigger("isResurrection");
