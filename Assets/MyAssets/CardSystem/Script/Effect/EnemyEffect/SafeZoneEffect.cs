@@ -65,10 +65,10 @@ public class SafeZoneEffect : IEffect
     }
     public string SetTitleText()
     {
-        return "火焰";
+        return "終焉噬焰";
     }
     public string SetDescriptionText()
     {
-        return "";
+        return "每三回合發動全範圍強力攻擊，僅安全區可躲避，且安全區每次攻擊後縮小。";
     }
 }

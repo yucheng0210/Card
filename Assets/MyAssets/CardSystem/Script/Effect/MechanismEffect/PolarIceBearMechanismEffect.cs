@@ -27,6 +27,7 @@ public class PolarIceBearMechanismEffect : IEffect
         EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, meleeEnemyData, EventPlayerTurn);
         EventManager.Instance.AddEventRegister(EventDefinition.eventMove, meleeEnemyData, EventMove);
         EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, meleeEnemyData, EventTakeDamage);
+        meleeEnemyData.MaxPassiveSkillsList.Remove(GetType().Name);
     }
     private void EventPlayerTurn(params object[] args)
     {
@@ -80,6 +81,6 @@ public class PolarIceBearMechanismEffect : IEffect
 
     public string SetDescriptionText()
     {
-        return "";
+        return "霜塔神使受擊時且玩家在附近，冰河君主會與其交換位置；霜塔神使陣亡時，冰河君主可發動生命平衡。";
     }
 }

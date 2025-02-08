@@ -26,7 +26,7 @@ public class HealthBalanceEffect : IEffect
     }
     public string SetDescriptionText()
     {
-        return "生命平衡。";
+        return "犧牲部分生命將目標復活。";
     }
 
 }

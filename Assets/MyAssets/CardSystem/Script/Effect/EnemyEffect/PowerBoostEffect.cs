@@ -33,6 +33,6 @@ public class PowerBoostEffect : IEffect
 
     public string SetDescriptionText()
     {
-        return "每回合提升自身的攻擊力。";
+        return "每回合提升力量。";
     }
 }

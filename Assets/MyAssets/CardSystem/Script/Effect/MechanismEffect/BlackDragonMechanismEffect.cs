@@ -18,6 +18,7 @@ public class BlackDragonMechanismEffect : IEffect
         enemyLocation = fromLocation;
         enemyData.DamageLimit = maxDamageCount;
         EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, enemyData, EventTakeDamage);
+        enemyData.MaxPassiveSkillsList.Remove(GetType().Name);
     }
     private void ThirdStageEnemyTurn(params object[] args)
     {
@@ -53,8 +54,8 @@ public class BlackDragonMechanismEffect : IEffect
             BattleManager.CheckEmptyType checkEmptyType = BattleManager.CheckEmptyType.EnemyAttack;
             BattleManager.ActionRangeType actionRangeType = BattleManager.ActionRangeType.AllZone;
             List<string> emptyPlaceList = BattleManager.Instance.GetActionRangeTypeList("", 0, checkEmptyType, actionRangeType);
-            EffectFactory.Instance.CreateEffect("RechargeEffect").ApplyEffect(2, enemyLocation, BattleManager.Instance.CurrentPlayerLocation);
-            BattleManager.Instance.ShowCharacterStatusClue(enemy.StatusClueTrans, "蓄能", 0);
+            EffectFactory.Instance.CreateEffect("RechargeEffect").ApplyEffect(1, enemyLocation, BattleManager.Instance.CurrentPlayerLocation);
+            BattleManager.Instance.ShowCharacterStatusClue(enemy.StatusClueTrans, "充能", 0);
             BattleManager.Instance.TemporaryChangeAttack(enemy, BattleManager.Instance.CurrentPlayerLocation, emptyPlaceList, 10);
         }
     }
@@ -106,11 +107,11 @@ public class BlackDragonMechanismEffect : IEffect
     }
     public string SetTitleText()
     {
-        return "";
+        return "熔岩領域";
     }
     public string SetDescriptionText()
     {
-        return "";
+        return "黑龍有三階段，第二階段會發動飛行，第三階段要破除三次護盾減少全範圍攻擊的傷害，攻擊完會發動終焉噬焰。";
     }
 
 }

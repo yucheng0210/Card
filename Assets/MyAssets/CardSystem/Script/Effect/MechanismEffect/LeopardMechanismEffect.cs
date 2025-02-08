@@ -17,6 +17,7 @@ public class LeopardMechanismEffect : IEffect
         EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, enemyData, EventTakeDamage);
         EventManager.Instance.AddEventRegister(EventDefinition.eventEnemyTurn, enemyData, EventEnemyTurn);
         EventPlayerTurn();
+        enemyData.MaxPassiveSkillsList.Remove(GetType().Name);
     }
     private void EventPlayerTurn(params object[] args)
     {
