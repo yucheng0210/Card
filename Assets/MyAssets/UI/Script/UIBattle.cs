@@ -404,9 +404,10 @@ public class UIBattle : UIBase
         BattleManager.Instance.RefreshCheckerboardList();
         if (currentEnemyList.Count == 0)
         {
+            enemyInfo.SetActive(false);
+            currentEnemyList.Clear();
             BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Win);
             BattleManager.Instance.CurrentNegativeState.Clear();
-            currentEnemyList.Clear();
             BattleManager.Instance.CurrentAbilityList.Clear();
             BattleManager.Instance.CurrentTerrainList.Clear();
             BattleManager.Instance.CurrentTrapList.Clear();
@@ -530,7 +531,6 @@ public class UIBattle : UIBase
         CheckBattleInfo();
         // 初始化玩家回合
         roundTip.GetComponent<Image>().sprite = playerRound;
-        BattleManager.Instance.PlayerMoveCount = 2;
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Player);
     }
     private void EventBattleInitial(params object[] args)
@@ -540,9 +540,6 @@ public class UIBattle : UIBase
 
     private void EventPlayerTurn(params object[] args)
     {
-        BattleManager.Instance.ManaMultiplier = 1;
-        BattleManager.Instance.CurrentConsumeMana = 0;
-        BattleManager.Instance.PlayerMoveCount++;
         changeTurnButton.onClick.RemoveAllListeners();
         playerMoveButton.onClick.RemoveAllListeners();
         speedupButton.onClick.RemoveAllListeners();

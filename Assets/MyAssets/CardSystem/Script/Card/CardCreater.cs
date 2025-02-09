@@ -296,10 +296,10 @@ public class CardCreater : MonoBehaviour
             }
             cardBag.Add(removeCardBag[j]);
         }
-        /* for (int j = 0; j < cardBag.Count; j++)
-         {
-             Destroy(cardBag[j].MyCardItem.gameObject);
-         }*/
+        for (int j = 0; j < cardBag.Count; j++)
+        {
+            Destroy(cardBag[j].MyCardItem.gameObject);
+        }
         removeCardBag.Clear();
         useCardBag.Clear();
         handCard.Clear();

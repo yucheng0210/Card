@@ -178,7 +178,7 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             return;
         }
         BattleManager.Instance.IsDrag = true;
-        Cursor.visible = false;
+        //Cursor.visible = false;
         Vector2 dragPosition;
         RectTransform parentRect = transform.parent.GetComponent<RectTransform>();
         if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(parentRect, eventData.position, eventData.pressEventCamera, out dragPosition))
@@ -223,12 +223,13 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, 10000, LayerMask.GetMask("Enemy")))
+        if (Physics.Raycast(ray, out hit, 100, LayerMask.GetMask("Enemy")))
         {
             enemy = hit.transform.GetComponent<Enemy>();
             string location = BattleManager.Instance.GetEnemyKey(enemy.MyEnemyData);
             if (onEnd && GetUseCardCondition() && CheckEnemyInAttackRange(location))
             {
+                Debug.DrawRay(ray.origin, ray.direction * 10000, Color.red, 10f);
                 UseCard(location);
             }
         }
@@ -261,10 +262,6 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     private void UseCard(string target)
     {
         CardData cardData = MyCardData;
-        if (BattleManager.Instance.CurrentNegativeState.ContainsKey(nameof(CantMoveEffect)) && cardData.CardType == "移動")
-        {
-            return;
-        }
         CardRectTransform.DOScale(1f, 0);
         DataManager.Instance.HandCard.Remove(MyCardData);
         BattleManager.Instance.ConsumeActionPoint(cardData.CardCost);

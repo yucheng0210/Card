@@ -4,7 +4,14 @@ using UnityEngine;
 
 public class UIAttackLine : UIBase
 {
-    [SerializeField] private float minDistance = 20f; // 設置最小距離
+    [SerializeField]
+    private float minDistance = 20f; // 設置最小距離
+    [SerializeField]
+    private RectTransform headHotSpotRect;
+    public Vector3 HeadHotSpot
+    {
+        get { return headHotSpotRect.localPosition; }
+    }
     private int endChildCount = 0;
     protected override void Start()
     {
@@ -21,6 +28,7 @@ public class UIAttackLine : UIBase
     {
         Vector2 startPos = GetChildPosition(0);
         Vector2 midPos = new Vector2(startPos.x, (startPos.y + endPos.y) * 0.5f);
+        endPos += BattleManager.Instance.DefaultCursorHotSpot;
         UpdateChildTransforms(startPos, midPos, endPos);
         SetPosition(UI.transform.childCount - 1, endPos); // 設置終點位置
         SetChildRotation(UI.transform.childCount - 1, GetChildPosition(endChildCount), endPos);

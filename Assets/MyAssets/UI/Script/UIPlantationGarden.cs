@@ -127,7 +127,7 @@ public class UIPlantationGarden : UIBase
         }
         item.ItemImagePath = plantPath;
         farmList[plant] = item;
-        Cursor.SetCursor(BattleManager.Instance.DefaultCursor, Vector2.zero, CursorMode.Auto);
+        Cursor.SetCursor(BattleManager.Instance.DefaultCursor, BattleManager.Instance.DefaultCursorHotSpot, CursorMode.Auto);
     }
     private void HarvestListener(Button plant, Item item)
     {
@@ -142,6 +142,6 @@ public class UIPlantationGarden : UIBase
         Potion potion = DataManager.Instance.PotionList[potionID];
         DataManager.Instance.PotionBag.Add(potion);
         farmList[plant] = null;
-        Cursor.SetCursor(BattleManager.Instance.DefaultCursor, Vector2.zero, CursorMode.Auto);
+        Cursor.SetCursor(BattleManager.Instance.DefaultCursor, BattleManager.Instance.DefaultCursorHotSpot, CursorMode.Auto);
     }
 }

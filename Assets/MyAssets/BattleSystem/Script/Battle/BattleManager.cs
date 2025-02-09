@@ -96,7 +96,9 @@ public class BattleManager : Singleton<BattleManager>
     public RectTransform PlayerTrans { get; set; }
     public RectTransform CheckerboardTrans { get; set; }
     public Texture2D DefaultCursor { get; set; }
+    public Vector2 DefaultCursorHotSpot { get; set; }
     public int RoundCount { get; set; }
+    bool i = false;
     protected override void Awake()
     {
         base.Awake();
@@ -109,15 +111,26 @@ public class BattleManager : Singleton<BattleManager>
         CurrentNegativeState = new Dictionary<string, int>();
         CurrentTrapList = new();
         CurrentOnceBattlePositiveList = new Dictionary<string, int>();
-        DefaultCursor = Resources.Load<Texture2D>("DefaultCursor");
-        Cursor.SetCursor(DefaultCursor, Vector2.zero, CursorMode.Auto);
+        DefaultCursor = Resources.Load<Texture2D>("DefaultCursor_2");
+        DefaultCursorHotSpot = new(20, 5);
+        Cursor.SetCursor(DefaultCursor, DefaultCursorHotSpot, CursorMode.Auto);
     }
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.KeypadEnter))
         {
-            CharacterData value = CurrentEnemyList.ElementAt(0).Value;
-            TakeDamage(CurrentPlayerData, value, 51, CurrentEnemyList.ElementAt(0).Key, 0);
+            if (!i)
+            {
+                Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+                i = !i;
+            }
+            else
+            {
+                Cursor.SetCursor(DefaultCursor, DefaultCursorHotSpot, CursorMode.Auto);
+                i = !i;
+            }
+            /* CharacterData value = CurrentEnemyList.ElementAt(0).Value;
+             TakeDamage(CurrentPlayerData, value, 51, CurrentEnemyList.ElementAt(0).Key, 0);*/
             // PlayerMoveCount++;
             /* for (int i = 0; i < CurrentEnemyList.Count; i++)
              {
@@ -765,11 +778,14 @@ public class BattleManager : Singleton<BattleManager>
         CurrentPlayerLocation = MapManager.Instance.MapNodes[levelCount][levelID].l.PlayerStartPos;
         CurrentPlayerData.CurrentActionPoint = CurrentPlayerData.MaxActionPoint;
         CurrentPlayerData.Mana = 10;
+        CurrentPlayerData.CurrentActionPoint = CurrentPlayerData.MaxActionPoint;
+        PlayerMoveCount = 2;
         PlayerTrans.localPosition = CheckerboardTrans.GetChild(GetCheckerboardPoint(CurrentPlayerLocation)).localPosition;
         CurrentDrawCardCount = CurrentPlayerData.DefaultDrawCardCount;
-        for (int i = 0; i < DataManager.Instance.SkillList[skillID].SkillContent.Count; i++)
+        Skill skill = DataManager.Instance.SkillList[skillID];
+        for (int i = 0; i < skill.SkillContent.Count; i++)
         {
-            CurrentAbilityList.Add(DataManager.Instance.SkillList[skillID].SkillContent[i].Item1, DataManager.Instance.SkillList[skillID].SkillContent[i].Item2);
+            CurrentAbilityList.Add(skill.SkillContent[i].Item1, skill.SkillContent[i].Item2);
         }
         for (int i = 0; i < MapManager.Instance.MapNodes[levelCount][levelID].l.EnemyIDList.Count; i++)
         {
@@ -816,6 +832,9 @@ public class BattleManager : Singleton<BattleManager>
 
     private void PlayerTurn()
     {
+        ManaMultiplier = 1;
+        CurrentConsumeMana = 0;
+        PlayerMoveCount++;
         RoundCount++;
         CurrentPlayerData.CurrentActionPoint = CurrentPlayerData.MaxActionPoint;
         CurrentPlayerData.CurrentShield = 0;

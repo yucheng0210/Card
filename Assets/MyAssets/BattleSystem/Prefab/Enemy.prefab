@@ -744,10 +744,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 546e5a6297b920c40adf911498d7bdf2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  statusClueTrans: {fileID: 2978815105930974279}
   enemyAttackIntentText: {fileID: 5132171066686309542}
   enemyImage: {fileID: 6147010633260204934}
   myAnimator: {fileID: 217710691620767549}
-  statusClueTrans: {fileID: 2978815105930974279}
   enemyEffect: {fileID: 4846238322687868417}
   enemyAttack: {fileID: 895056891530489566}
   enemyShield: {fileID: 991881751513925703}
@@ -766,7 +766,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 200, y: 100, z: 100}
+  m_Size: {x: 150, y: 75, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &5512748687634272379
 MonoBehaviour:
