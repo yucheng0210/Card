@@ -178,7 +178,7 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             return;
         }
         BattleManager.Instance.IsDrag = true;
-        //Cursor.visible = false;
+        Cursor.visible = false;
         Vector2 dragPosition;
         RectTransform parentRect = transform.parent.GetComponent<RectTransform>();
         if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(parentRect, eventData.position, eventData.pressEventCamera, out dragPosition))
@@ -188,7 +188,7 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         if (isAttackCard)
         {
             EventManager.Instance.DispatchEvent(EventDefinition.eventAttackLine, true, CardRectTransform.anchoredPosition, dragPosition);
-            CheckRayToEnemy(false);
+           //CheckRayToEnemy();
             return;
         }
         CardRectTransform.anchoredPosition = dragPosition;
@@ -205,7 +205,7 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         if (isAttackCard)
         {
             EventManager.Instance.DispatchEvent(EventDefinition.eventAttackLine, false, CardRectTransform.anchoredPosition, CardRectTransform.anchoredPosition);
-            CheckRayToEnemy(true);
+            CheckRayToEnemy();
             return;
         }
         if (CardRectTransform.anchoredPosition.y >= 540 && GetUseCardCondition())
@@ -219,17 +219,20 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         }
     }
 
-    private void CheckRayToEnemy(bool onEnd)
+    private void CheckRayToEnemy()
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RectTransform attackLineHeadRect = ((UIAttackLine)UIManager.Instance.UIDict[nameof(UIAttackLine)]).HeadHotSpot;
+        Vector2 screenPos = RectTransformUtility.WorldToScreenPoint(Camera.main, attackLineHeadRect.position);
+        //Debug.Log(screenPos);
+        Ray ray = Camera.main.ScreenPointToRay(screenPos);
         RaycastHit hit;
+        Debug.DrawRay(ray.origin, ray.direction * 10000, Color.red, 10f);
         if (Physics.Raycast(ray, out hit, 100, LayerMask.GetMask("Enemy")))
         {
             enemy = hit.transform.GetComponent<Enemy>();
             string location = BattleManager.Instance.GetEnemyKey(enemy.MyEnemyData);
-            if (onEnd && GetUseCardCondition() && CheckEnemyInAttackRange(location))
+            if (GetUseCardCondition() && CheckEnemyInAttackRange(location))
             {
-                Debug.DrawRay(ray.origin, ray.direction * 10000, Color.red, 10f);
                 UseCard(location);
             }
         }
