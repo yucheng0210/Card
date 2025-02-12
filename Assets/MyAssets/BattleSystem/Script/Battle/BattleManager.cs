@@ -119,18 +119,18 @@ public class BattleManager : Singleton<BattleManager>
     {
         if (Input.GetKeyDown(KeyCode.KeypadEnter))
         {
-            if (!i)
-            {
-                Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
-                i = !i;
-            }
-            else
-            {
-                Cursor.SetCursor(DefaultCursor, DefaultCursorHotSpot, CursorMode.Auto);
-                i = !i;
-            }
-            /* CharacterData value = CurrentEnemyList.ElementAt(0).Value;
-             TakeDamage(CurrentPlayerData, value, 51, CurrentEnemyList.ElementAt(0).Key, 0);*/
+            /* if (!i)
+             {
+                 Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+                 i = !i;
+             }
+             else
+             {
+                 Cursor.SetCursor(DefaultCursor, DefaultCursorHotSpot, CursorMode.Auto);
+                 i = !i;
+             }*/
+            CharacterData value = CurrentEnemyList.ElementAt(0).Value;
+            TakeDamage(CurrentPlayerData, value, 51, CurrentEnemyList.ElementAt(0).Key, 0);
             // PlayerMoveCount++;
             /* for (int i = 0; i < CurrentEnemyList.Count; i++)
              {

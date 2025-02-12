@@ -74,6 +74,7 @@ public class UIMap : UIBase
 
         // 進入效果
         CanEnterEffect();
+        UI.SetActive(true);
     }
     #region NextChapter
     private void InitializeLists()
@@ -170,8 +171,8 @@ public class UIMap : UIBase
         Level level = DataManager.Instance.LevelTypeList[currentIndex].Clone();
         level.LevelParentList = new List<int>();
         level.LevelID = i * 5 + j;
-        /*MapManager.Instance.LevelCount = 14;
-        level.LevelActive = true;*/
+        MapManager.Instance.LevelCount = 14;
+        level.LevelActive = true;
         if (MapManager.Instance.MapNodes[i][j].left != null)
         {
             level.LevelParentList.Add(MapManager.Instance.MapNodes[i][j].left.l.LevelID);
@@ -212,7 +213,7 @@ public class UIMap : UIBase
 
     private void CleanupNode(int i, int j)
     {
-        Destroy(mapList[i][j].transform.GetChild(0).gameObject);
+        //Destroy(mapList[i][j].transform.GetChild(0).gameObject);
     }
 
     private void SetMapTypeImage(Image mapImage, string mapType)

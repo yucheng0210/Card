@@ -14511,7 +14511,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 907d38a4926f8bb4292e601f2d3fab45, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 1a1410870f9e04845af117972111d8bd, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -23894,7 +23894,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 194137554}
   m_Direction: 2
   m_Value: 0.000000035924344
-  m_Size: 0.24117748
+  m_Size: 0.24118002
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -49334,6 +49334,11 @@ MonoBehaviour:
   enemyRound: {fileID: 21300000, guid: 470a2e6c928f1214aa0ad598c5f2a385, type: 3}
   speedupButton: {fileID: 1982013981}
   characterStatusClue: {fileID: 6362274374341043322, guid: 4f396c35bce7fca4d8187eaea73d3539, type: 3}
+  battleBackground: {fileID: 558077165}
+  battleBackgroundSpriteList:
+  - {fileID: 21300000, guid: 1a1410870f9e04845af117972111d8bd, type: 3}
+  - {fileID: 21300000, guid: 907d38a4926f8bb4292e601f2d3fab45, type: 3}
+  - {fileID: 21300000, guid: e8ca846a570c66247868a6e4cd2383ef, type: 3}
   trapPrefab: {fileID: 3279483545118963417, guid: 59b7783ede668854dade310d14e23d01, type: 3}
   trapGroupTrans: {fileID: 627588289}
   potionGroupTrans: {fileID: 1415866742}

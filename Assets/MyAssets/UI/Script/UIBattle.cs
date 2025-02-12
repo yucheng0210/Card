@@ -91,6 +91,10 @@ public class UIBattle : UIBase
     private Button speedupButton;
     [SerializeField]
     private CanvasGroup characterStatusClue;
+    [SerializeField]
+    private Image battleBackground;
+    [SerializeField]
+    private List<Sprite> battleBackgroundSpriteList;
     [Header("陷阱")]
     [SerializeField]
     private GameObject trapPrefab;
@@ -114,6 +118,7 @@ public class UIBattle : UIBase
         EventManager.Instance.AddEventRegister(EventDefinition.eventEnemyTurn, EventEnemyTurn);
         EventManager.Instance.AddEventRegister(EventDefinition.eventMove, EventMove);
         EventManager.Instance.AddEventRegister(EventDefinition.eventDrawCard, EventDrawCard);
+        EventManager.Instance.AddEventRegister(EventDefinition.eventExplore, EventNextChapter);
         //Hide();
         StartGame();
     }
@@ -695,5 +700,9 @@ public class UIBattle : UIBase
             infoDescription.text = descriptionStr;
         }
     }
-
+    private void EventNextChapter(params object[] args)
+    {
+        battleBackground.sprite = battleBackgroundSpriteList[MapManager.Instance.ChapterCount - 1];
+        UI.SetActive(true);
+    }
 }
