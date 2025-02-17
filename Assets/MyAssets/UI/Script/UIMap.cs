@@ -39,6 +39,14 @@ public class UIMap : UIBase
         // 初始化列表
         InitializeLists();
         // 遍歷每一行節點
+        if (MapManager.Instance.ChapterCount == 1)
+        {
+            MapManager.Instance.LevelCount = 14;
+        }
+        else
+        {
+            MapManager.Instance.LevelCount = 0;
+        }
         for (int i = MapManager.Instance.MapNodes.Length - 1; i >= 0; i--)
         {
             // 初始化每一行的節點數組
@@ -57,7 +65,6 @@ public class UIMap : UIBase
 
                 // 配置按鈕
                 ConfigureButton(i, j);
-
                 // 為按鈕設置動畫
                 AnimateButton(i, j);
 
@@ -79,6 +86,16 @@ public class UIMap : UIBase
     #region NextChapter
     private void InitializeLists()
     {
+        if (MapManager.Instance.ChapterCount > 1)
+        {
+            for (int i = MapManager.Instance.MapNodes.Length - 1; i >= 0; i--)
+            {
+                for (int j = 0; j < MapManager.Instance.MapNodes[i].Length; j++)
+                {
+                    effectList[i][j].Pause();
+                }
+            }
+        }
         mapList = new Button[MapManager.Instance.MapNodes.Length][];
         effectList = new DG.Tweening.Sequence[MapManager.Instance.MapNodes.Length][];
     }
@@ -95,7 +112,6 @@ public class UIMap : UIBase
         int normalRandomIndex = Random.Range(1334, 1667);
         int hardRandomIndex = Random.Range(1667, 2000);
         int currentIndex = GetCurrentIndex(i, simpleRandomIndex, normalRandomIndex, hardRandomIndex);
-
         if (DataManager.Instance.LevelTypeList[currentIndex].LevelType != "BATTLE" && i == 0)
         {
             return false;
@@ -171,7 +187,6 @@ public class UIMap : UIBase
         Level level = DataManager.Instance.LevelTypeList[currentIndex].Clone();
         level.LevelParentList = new List<int>();
         level.LevelID = i * 5 + j;
-        MapManager.Instance.LevelCount = 14;
         level.LevelActive = true;
         if (MapManager.Instance.MapNodes[i][j].left != null)
         {
@@ -251,6 +266,7 @@ public class UIMap : UIBase
     private bool CantEnter(int count, int id)
     {
         int levelCount = MapManager.Instance.LevelCount;
+        //Debug.Log(count + ":" + (MapManager.Instance.MapNodes[count][id].l.LevelActive && levelCount == count));
         return !((levelCount == 0 && count == 0) || (MapManager.Instance.MapNodes[count][id].l.LevelActive && levelCount == count));
     }
     private void CanEnterEffect()
@@ -259,8 +275,10 @@ public class UIMap : UIBase
         {
             for (int j = 0; j < MapManager.Instance.MapNodes[i].Length; j++)
             {
-                /*  if (i == 1)
-                      Debug.Log(i.ToString() + j.ToString() + ":" + !CantEnter(i, j));*/
+                /*if (i == 1)
+                {
+                    Debug.Log(i.ToString() + j.ToString() + ":" + !CantEnter(i, j));
+                }*/
                 if (!CantEnter(i, j))
                 {
                     effectList[i][j].Play();
