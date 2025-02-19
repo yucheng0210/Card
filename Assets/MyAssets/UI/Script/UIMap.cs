@@ -25,7 +25,6 @@ public class UIMap : UIBase
     protected override void Start()
     {
         base.Start();
-        MapManager.Instance.ChapterCount = 1;
         NextChapter();
         EventManager.Instance.AddEventRegister(EventDefinition.eventNextChapter, NextChapter);
     }
@@ -40,14 +39,14 @@ public class UIMap : UIBase
         // 初始化列表
         InitializeLists();
         // 遍歷每一行節點
-        if (MapManager.Instance.ChapterCount == 2)
-        {
-            MapManager.Instance.LevelCount = 14;
-        }
-        else
-        {
-            MapManager.Instance.LevelCount = 0;
-        }
+        /* if (MapManager.Instance.ChapterCount == 2)
+         {
+             MapManager.Instance.LevelCount = 14;
+         }
+         else
+         {
+             MapManager.Instance.LevelCount = 0;
+         }*/
         if (MapManager.Instance.ChapterCount == 3)
         {
             Level level = CreateLevel(0, 0, 7003);
@@ -96,16 +95,16 @@ public class UIMap : UIBase
     #region NextChapter
     private void InitializeLists()
     {
-        /* if (MapManager.Instance.ChapterCount == 1)
-         {
-             for (int i = MapManager.Instance.MapNodes.Length - 1; i >= 0; i--)
-             {
-                 for (int j = 0; j < MapManager.Instance.MapNodes[i].Length; j++)
-                 {
-                     effectList[i][j].Pause();
-                 }
-             }
-         }*/
+        if (MapManager.Instance.ChapterCount == 2)
+        {
+            for (int i = MapManager.Instance.MapNodes.Length - 1; i >= 0; i--)
+            {
+                for (int j = 0; j < MapManager.Instance.MapNodes[i].Length; j++)
+                {
+                    effectList[i][j].Pause();
+                }
+            }
+        }
         mapList = new Button[MapManager.Instance.MapNodes.Length][];
         effectList = new DG.Tweening.Sequence[MapManager.Instance.MapNodes.Length][];
     }
@@ -152,7 +151,7 @@ public class UIMap : UIBase
                 switch (key)
                 {
                     case "BATTLE":
-                        /*if (count > 10)
+                        if (count > 10)
                         {
                             currentIndex = hardRandomIndex;
                         }
@@ -162,10 +161,9 @@ public class UIMap : UIBase
                         }
                         else
                         {
-                        currentIndex = simpleRandomIndex;
+                            currentIndex = simpleRandomIndex;
                         }
-                            */
-                        currentIndex = 8001;
+                        //currentIndex = 8001;
                         break;
                     case "BOSS":
                         currentIndex = Random.Range(2001, 2003);

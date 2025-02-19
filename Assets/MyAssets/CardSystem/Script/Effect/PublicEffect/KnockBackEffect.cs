@@ -35,9 +35,10 @@ public class KnockBackEffect : IEffect
         else
         {
             EnemyData enemyData = (EnemyData)targetData;
+            Enemy enemy = enemyData.EnemyTrans.GetComponent<Enemy>();
             BattleManager.Instance.Replace(BattleManager.Instance.CurrentEnemyList, toLocation, destinationLocation);
             enemyData.EnemyTrans.DOAnchorPos(destinationPos, 0.15f);
-            ShowStatusClue(enemyData.EnemyTrans);
+            ShowStatusClue(enemy.StatusClueTrans);
         }
 
         // 派發事件

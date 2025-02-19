@@ -64,8 +64,8 @@ public class DataManager : Singleton<DataManager>
 
     private void Start()
     {
-        //StartGame_Default();
-        StartGame_FightingSpiritEffect();
+        StartGame_Default();
+        //StartGame_FightingSpiritEffect();
         //StartGame_ExtinctionRayEffect();
     }
 
@@ -506,7 +506,7 @@ public class DataManager : Singleton<DataManager>
         CardBag.Add(CardList[1003].DeepClone());
 
         // Add items to backpack and potion bag
-        BackpackManager.Instance.AddItem(3001, Backpack);
+        //BackpackManager.Instance.AddItem(3001, Backpack);
         PotionBag.Add(PotionList[1001]);
 
         // Set current player data
