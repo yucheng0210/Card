@@ -92,7 +92,7 @@ public class Enemy : Character
     }
     private void Update()
     {
-//        Debug.Log(MyEnemyData.MaxHealth);
+        //        Debug.Log(MyEnemyData.MaxHealth);
     }
     public void RefreshAttackIntent()
     {
@@ -349,6 +349,15 @@ public class Enemy : Character
     {
         BattleManager.Instance.CheckPlayerLocationInRange(this);
         BattleManager.Instance.CheckPlayerLocationInTrapRange();
+        /*if (MyActionType == ActionType.Move)
+        {
+            location = BattleManager.Instance.GetEnemyKey(MyEnemyData);
+            CurrentActionRangeTypeList = BattleManager.Instance.GetActionRangeTypeList(location, CurrentActionRange, MyCheckEmptyType, MyNextAttackActionRangeType);
+        }*/
+        /*if (args.Length > 0 && (bool)args[0])
+        {
+            RefreshAttackIntent();
+        }*/
         //SetAttackActionRangeType();
     }
     private void EventRefreshUI(params object[] args)

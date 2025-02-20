@@ -117,6 +117,7 @@ public class UIBattle : UIBase
         EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, EventPlayerTurn);
         EventManager.Instance.AddEventRegister(EventDefinition.eventEnemyTurn, EventEnemyTurn);
         EventManager.Instance.AddEventRegister(EventDefinition.eventMove, EventMove);
+        EventManager.Instance.AddEventRegister(EventDefinition.eventAfterEnemyAttack, EventAfterMove);
         EventManager.Instance.AddEventRegister(EventDefinition.eventDrawCard, EventDrawCard);
         EventManager.Instance.AddEventRegister(EventDefinition.eventExplore, EventNextChapter);
         //Hide();
@@ -571,8 +572,13 @@ public class UIBattle : UIBase
     {
         BattleManager.Instance.RefreshCheckerboardList();
         UIManager.Instance.ClearMoveClue(true);
-        CheckEnemyInfo();
+        EventManager.Instance.DispatchEvent(EventDefinition.eventAfterMove);
         // CheckBattleInfo();
+    }
+    private void EventAfterMove(params object[] args)
+    {
+        CheckEnemyInfo();
+        Debug.Log("aftermove");
     }
     private void EventTakeDamage(params object[] args)
     {

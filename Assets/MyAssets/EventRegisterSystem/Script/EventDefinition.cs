@@ -19,6 +19,8 @@ public class EventDefinition
     public const string eventRecover = "EVENT_RECOVER";
     public const string eventDrawCard = "EVENT_DRAW_CARD";
     public const string eventMove = "EVENT_MOVE";
+    public const string eventAfterMove = "EVENT_AFTER_MOVE";
+
     //探索相關
     public const string eventExplore = "EVENT_EXPLORE";
 
