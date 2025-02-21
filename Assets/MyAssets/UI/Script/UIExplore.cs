@@ -98,9 +98,9 @@ public class UIExplore : UIBase
 
     private void ShowCorpse()
     {
-        UI.SetActive(true);
+        /*UI.SetActive(true);
         corpse.SetActive(true);
-        corpseButton.onClick.AddListener(OnCorpseButtonClicked);
+        corpseButton.onClick.AddListener(OnCorpseButtonClicked);*/
     }
 
     private void OnCorpseButtonClicked()

@@ -92,7 +92,7 @@ public class Enemy : Character
     }
     private void Update()
     {
-        //        Debug.Log(MyEnemyData.MaxHealth);
+        //Debug.Log(MyEnemyData.MaxHealth);
     }
     public void RefreshAttackIntent()
     {
@@ -338,8 +338,13 @@ public class Enemy : Character
     }
     private void EventEnemyTurn(params object[] args)
     {
+        if (MyEnemyData.SpecialAttackCondition == -1)
+        {
+            return;
+        }
         if (MyEnemyData.CurrentHealth <= BattleManager.Instance.GetPercentage(MyEnemyData.MaxHealth, MyEnemyData.SpecialAttackCondition))
         {
+            Debug.Log(MyEnemyData.CurrentHealth + "   " + BattleManager.Instance.GetPercentage(MyEnemyData.MaxHealth, MyEnemyData.SpecialAttackCondition));
             IsSpecialAction = true;
             //SpecialActionStage++;
             EventManager.Instance.RemoveEventRegister(EventDefinition.eventEnemyTurn, EventEnemyTurn);
@@ -349,15 +354,18 @@ public class Enemy : Character
     {
         BattleManager.Instance.CheckPlayerLocationInRange(this);
         BattleManager.Instance.CheckPlayerLocationInTrapRange();
-        /*if (MyActionType == ActionType.Move)
+        UIManager.Instance.ClearMoveClue(true);
+        BattleManager.Instance.RefreshCheckerboardList();
+
+        if (MyActionType == ActionType.Move)
         {
-            location = BattleManager.Instance.GetEnemyKey(MyEnemyData);
-            CurrentActionRangeTypeList = BattleManager.Instance.GetActionRangeTypeList(location, CurrentActionRange, MyCheckEmptyType, MyNextAttackActionRangeType);
-        }*/
-        /*if (args.Length > 0 && (bool)args[0])
+            HandleMove();
+        }
+        if (args.Length > 0 && (EnemyData)args[0] == MyEnemyData)
         {
             RefreshAttackIntent();
-        }*/
+        }
+        //EventManager.Instance.DispatchEvent(EventDefinition.eventAfterMove);
         //SetAttackActionRangeType();
     }
     private void EventRefreshUI(params object[] args)

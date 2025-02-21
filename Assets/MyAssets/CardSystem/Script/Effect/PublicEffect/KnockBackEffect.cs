@@ -30,6 +30,7 @@ public class KnockBackEffect : IEffect
         {
             BattleManager.Instance.PlayerTrans.DOAnchorPos(destinationPos, 0.15f);
             BattleManager.Instance.CurrentPlayerLocation = destinationLocation;
+            EventManager.Instance.DispatchEvent(EventDefinition.eventMove);
             //ShowStatusClue(BattleManager.Instance.CurrentPlayer.StatusClueTrans);
         }
         else
@@ -38,6 +39,7 @@ public class KnockBackEffect : IEffect
             Enemy enemy = enemyData.EnemyTrans.GetComponent<Enemy>();
             BattleManager.Instance.Replace(BattleManager.Instance.CurrentEnemyList, toLocation, destinationLocation);
             enemyData.EnemyTrans.DOAnchorPos(destinationPos, 0.15f);
+            EventManager.Instance.DispatchEvent(EventDefinition.eventMove, enemyData);
             //enemy.RefreshAttackIntent();
             // ShowStatusClue(enemy.StatusClueTrans);
         }

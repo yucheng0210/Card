@@ -98,7 +98,7 @@ public class BattleManager : Singleton<BattleManager>
     public Texture2D DefaultCursor { get; set; }
     public Vector2 DefaultCursorHotSpot { get; set; }
     public int RoundCount { get; set; }
-    bool i = false;
+    //bool i = false;
     protected override void Awake()
     {
         base.Awake();
@@ -129,24 +129,25 @@ public class BattleManager : Singleton<BattleManager>
                  Cursor.SetCursor(DefaultCursor, DefaultCursorHotSpot, CursorMode.Auto);
                  i = !i;
              }*/
-            CharacterData value = CurrentEnemyList.ElementAt(0).Value;
-            TakeDamage(CurrentPlayerData, value, 51, CurrentEnemyList.ElementAt(0).Key, 0);
+            /* CharacterData value = CurrentEnemyList.ElementAt(0).Value;
+             TakeDamage(CurrentPlayerData, value, 51, CurrentEnemyList.ElementAt(0).Key, 0);*/
+            //EventManager.Instance.DispatchEvent(EventDefinition.eventAfterMove);
             // PlayerMoveCount++;
-            /* for (int i = 0; i < CurrentEnemyList.Count; i++)
-             {
-                 CharacterData value = CurrentEnemyList.ElementAt(i).Value;
-                 TakeDamage(CurrentPlayerData, value, 5, CurrentEnemyList.ElementAt(i).Key, 0);
-             }/*
+            for (int i = 0; i < CurrentEnemyList.Count; i++)
+            {
+                CharacterData value = CurrentEnemyList.ElementAt(i).Value;
+                TakeDamage(CurrentPlayerData, value, 5, CurrentEnemyList.ElementAt(i).Key, 0);
+            }
 
-             /*  for (int i = 0; i < CurrentEnemyList.Count; i++)
-               {
-                   EnemyData enemyData = CurrentEnemyList.ElementAt(i).Value;
-                   Enemy enemy = enemyData.EnemyTrans.GetComponent<Enemy>();
-                   for (int j = 0; j < enemy.CurrentActionRangeTypeList.Count; j++)
-                   {
-                       Debug.Log(enemy.CurrentActionRangeTypeList[j]);
-                   }
-               }*/
+            /*  for (int i = 0; i < CurrentEnemyList.Count; i++)
+              {
+                  EnemyData enemyData = CurrentEnemyList.ElementAt(i).Value;
+                  Enemy enemy = enemyData.EnemyTrans.GetComponent<Enemy>();
+                  for (int j = 0; j < enemy.CurrentActionRangeTypeList.Count; j++)
+                  {
+                      Debug.Log(enemy.CurrentActionRangeTypeList[j]);
+                  }
+              }*/
         }
     }
     public void TakeDamage(CharacterData attacker, CharacterData defender, int damage, string location, float delay)

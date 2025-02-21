@@ -94,7 +94,7 @@ public class DataManager : Singleton<DataManager>
                 CardRemove = bool.Parse(row[14]),
                 CardBuyPrice = int.Parse(row[15]),
                 CardFreeze = bool.Parse(row[16]),
-                AutoCardRemove=bool.Parse(row[17]),
+                AutoCardRemove = bool.Parse(row[17]),
                 CardEffectList = new List<(string, int)>()
             };
             if (row[10] != "")
@@ -491,19 +491,22 @@ public class DataManager : Singleton<DataManager>
         PlayerID = 1001;
 
         // Add six 1001 cards
-        for (int i = 0; i < 6; i++)
+        for (int i = 0; i < 5; i++)
         {
             CardBag.Add(CardList[1001].DeepClone());
         }
 
         // Add four 1002 cards
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < 3; i++)
         {
             CardBag.Add(CardList[1002].DeepClone());
         }
-
+        for (int i = 0; i < 2; i++)
+        {
+            CardBag.Add(CardList[1002].DeepClone());
+        }
         // Add one 1003 card
-        CardBag.Add(CardList[1003].DeepClone());
+        CardBag.Add(CardList[1004].DeepClone());
 
         // Add items to backpack and potion bag
         //BackpackManager.Instance.AddItem(3001, Backpack);

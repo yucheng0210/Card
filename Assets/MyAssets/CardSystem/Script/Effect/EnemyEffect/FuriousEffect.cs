@@ -14,7 +14,6 @@ public class FuriousEffect : IEffect
         enemyList = BattleManager.Instance.CurrentEnemyList;
         if (enemyList.TryGetValue(fromLocation, out enemyData))
         {
-            enemyLocation = fromLocation;
             attackIncreaseCount = value;
             EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, enemyData, EventTakeDamage);
         }
@@ -28,6 +27,7 @@ public class FuriousEffect : IEffect
         // 如果攻擊者是目標敵人，增加攻擊力
         if (enemyData == attacker)
         {
+            enemyLocation = BattleManager.Instance.GetEnemyKey(enemyData);
             EffectFactory.Instance.CreateEffect(nameof(PowerEffect)).ApplyEffect(attackIncreaseCount, enemyLocation, "");
         }
     }

@@ -188,7 +188,7 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         if (isAttackCard)
         {
             EventManager.Instance.DispatchEvent(EventDefinition.eventAttackLine, true, CardRectTransform.anchoredPosition, dragPosition);
-           //CheckRayToEnemy();
+            //CheckRayToEnemy();
             return;
         }
         CardRectTransform.anchoredPosition = dragPosition;

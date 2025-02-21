@@ -53,6 +53,7 @@ public class ResurrectionEffect : IEffect
         enemy.MyAnimator.SetTrigger("isResurrection");
         enemyData.MaxPassiveSkillsList[typeName] = -1;
         BattleManager.Instance.Recover(enemyData, recoverCount, targetLocation);
+        BattleManager.Instance.ShowCharacterStatusClue(enemy.StatusClueTrans, "復活", 0);
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
         EventManager.Instance.RemoveEventRegister(EventDefinition.eventEnemyTurn, EventEnemyTurn);
     }

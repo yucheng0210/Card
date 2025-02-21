@@ -16,11 +16,11 @@ public class UIMap : UIBase
     private Dictionary<string, int> levelProbabilities = new Dictionary<string, int>
     {
         { "BATTLE", 30 },
-        { "BOSS", 5 },
-        { "RANDOM", 5 },
-        { "RECOVER",5 },
-        { "SHOP",30 },
-        {"TREASURE",25}
+        { "BOSS", 10 },
+        { "RANDOM", 20 },
+        { "RECOVER",15 },
+        { "SHOP",15 },
+        {"TREASURE",10}
     };
     protected override void Start()
     {
@@ -192,7 +192,7 @@ public class UIMap : UIBase
         Level level = DataManager.Instance.LevelTypeList[currentIndex].Clone();
         level.LevelParentList = new List<int>();
         level.LevelID = i * 5 + j;
-        level.LevelActive = true;
+        level.LevelActive = false;
         if (MapManager.Instance.MapNodes[i][j].left != null)
         {
             level.LevelParentList.Add(MapManager.Instance.MapNodes[i][j].left.l.LevelID);
