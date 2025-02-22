@@ -34,4 +34,13 @@ public class UICardMenu : UIBase
         BattleManager.Instance.CardBagApplyButton = applyButton;
         BattleManager.Instance.CardPrefab = cardPrefab;
     }
+    public override void Hide()
+    {
+        base.Hide();
+        Transform cardMenuTrans = BattleManager.Instance.CardMenuTrans;
+        for (int i = 0; i < cardMenuTrans.childCount; i++)
+        {
+            Destroy(cardMenuTrans.GetChild(i).gameObject);
+        }
+    }
 }

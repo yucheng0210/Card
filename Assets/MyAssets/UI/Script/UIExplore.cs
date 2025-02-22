@@ -164,8 +164,7 @@ public class UIExplore : UIBase
 
     private void OpenCardSelection()
     {
-        int currentRemoveID = UIManager.Instance.CurrentRemoveID;
-        UnityEngine.Events.UnityAction unityAction = () => RemoveCardSuccess(currentRemoveID);
+        UnityEngine.Events.UnityAction unityAction = () => RemoveCardSuccess();
         UIManager.Instance.SelectCard(unityAction, false);
     }
 
@@ -178,19 +177,13 @@ public class UIExplore : UIBase
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
 
-    private void RemoveCardSuccess(int cardID)
+    private void RemoveCardSuccess()
     {
-        // 移除 DataManager 中的卡片
-        DataManager.Instance.CardBag.RemoveAt(cardID);
+        int cardIndex = UIManager.Instance.CurrentRemoveID;
+        DataManager.Instance.CardBag.RemoveAt(cardIndex);
         BattleManager.Instance.CardBagApplyButton.gameObject.SetActive(false);
-        // UI 處理，例如從界面中移除卡片物件
-        Destroy(BattleManager.Instance.CardMenuTrans.GetChild(cardID).gameObject);
-
-        // 隱藏回復菜單並退出探索
         recoverMenu.SetActive(false);
         ExitExplore("UICardMenu");
-
-        // 刷新界面，更新 UI 顯示
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
 
@@ -201,6 +194,7 @@ public class UIExplore : UIBase
         recoverMenu.SetActive(true);
         restButton.gameObject.SetActive(true);
         removeCardButton.gameObject.SetActive(true);
+        recoverExitButton.gameObject.SetActive(false);
     }
 
     private void ExitExplore(string hideMenu)

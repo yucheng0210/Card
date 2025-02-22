@@ -138,7 +138,7 @@ public class BattleManager : Singleton<BattleManager>
                 CharacterData value = CurrentEnemyList.ElementAt(i).Value;
                 TakeDamage(CurrentPlayerData, value, 5, CurrentEnemyList.ElementAt(i).Key, 0);
             }
-
+            TakeDamage(CurrentPlayerData, CurrentPlayerData, 5, CurrentPlayerLocation, 0);
             /*  for (int i = 0; i < CurrentEnemyList.Count; i++)
               {
                   EnemyData enemyData = CurrentEnemyList.ElementAt(i).Value;

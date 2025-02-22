@@ -129,9 +129,9 @@ public class UIManager : Singleton<UIManager>
     }
     public void RefreshCardBag(List<CardData> cardBag)
     {
+        BattleManager.Instance.CardBagApplyButton.gameObject.SetActive(false);
         ShowUI("UICardMenu");
         Transform cardMenuTrans = BattleManager.Instance.CardMenuTrans;
-        cardMenuTrans.position = Vector3.zero;
         for (int i = 0; i < cardMenuTrans.childCount; i++)
         {
             Destroy(cardMenuTrans.GetChild(i).gameObject);
@@ -186,25 +186,29 @@ public class UIManager : Singleton<UIManager>
         for (int i = 0; i < BattleManager.Instance.CardMenuTrans.childCount; i++)
         {
             int avoidClosure = i;
-            Button cardButton = BattleManager.Instance.CardMenuTrans.GetChild(i).gameObject.AddComponent<Button>();
+            Transform child = BattleManager.Instance.CardMenuTrans.GetChild(i);
+            // 檢查是否已有 Button，沒有才新增
+            Button cardButton = child.GetComponent<Button>() ?? child.gameObject.AddComponent<Button>();
             cardButton.onClick.RemoveAllListeners();
             cardButton.onClick.AddListener(() => RefreshCardSelect(avoidClosure, unityAction));
         }
     }
     private void RefreshCardSelect(int removeID, UnityEngine.Events.UnityAction unityAction)
     {
-        BattleManager.Instance.CardBagApplyButton.gameObject.SetActive(true);
-        BattleManager.Instance.CardBagApplyButton.onClick.RemoveAllListeners();
+        Button cardBagApplyButton = BattleManager.Instance.CardBagApplyButton;
+        Transform cardMenuTrans = BattleManager.Instance.CardMenuTrans;
+        cardBagApplyButton.gameObject.SetActive(true);
+        cardBagApplyButton.onClick.RemoveAllListeners();
         CurrentRemoveID = removeID;
-        for (int i = 0; i < BattleManager.Instance.CardMenuTrans.childCount; i++)
+        for (int i = 0; i < cardMenuTrans.childCount; i++)
         {
-            CardItem cardItem = BattleManager.Instance.CardMenuTrans.GetChild(i).GetComponent<CardItem>();
+            CardItem cardItem = cardMenuTrans.GetChild(i).GetComponent<CardItem>();
             ChangeOutline(cardItem, false);
         }
-        if (CurrentRemoveID < BattleManager.Instance.CardMenuTrans.childCount && CurrentRemoveID != -1)
+        if (CurrentRemoveID < cardMenuTrans.childCount && CurrentRemoveID != -1)
         {
             ChangeOutline(true);
-            BattleManager.Instance.CardBagApplyButton.onClick.AddListener(unityAction);
+            cardBagApplyButton.onClick.AddListener(unityAction);
         }
     }
 

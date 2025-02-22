@@ -47,7 +47,6 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public bool CantMove { get; set; }
     public Vector2 CurrentPos { get; set; }
     public float CurrentAngle { get; set; }
-    private Outline outline;
     public Image CardImage
     {
         get { return cardImage; }
@@ -95,7 +94,6 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         CardManaCost.text = MyCardData.CardManaCost.ToString();
         CardRectTransform = transform.GetComponent<RectTransform>();
         CardImage.sprite = Resources.Load<Sprite>(MyCardData.CardImagePath);
-        outline = GetComponentInChildren<Outline>();
     }
     public void OnPointerEnter(PointerEventData eventData)
     {

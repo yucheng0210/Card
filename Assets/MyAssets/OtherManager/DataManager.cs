@@ -503,10 +503,10 @@ public class DataManager : Singleton<DataManager>
         }
         for (int i = 0; i < 2; i++)
         {
-            CardBag.Add(CardList[1002].DeepClone());
+            CardBag.Add(CardList[1004].DeepClone());
         }
         // Add one 1003 card
-        CardBag.Add(CardList[1004].DeepClone());
+        CardBag.Add(CardList[1003].DeepClone());
 
         // Add items to backpack and potion bag
         //BackpackManager.Instance.AddItem(3001, Backpack);
