@@ -21134,7 +21134,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 194137554}
   m_Direction: 2
   m_Value: 0.000000035924344
-  m_Size: 0.24117814
+  m_Size: 0.24117887
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -43013,14 +43013,14 @@ GameObject:
   - component: {fileID: 2128855926}
   - component: {fileID: 2128855925}
   - component: {fileID: 2128855924}
-  - component: {fileID: 2128855923}
   - component: {fileID: 2128855922}
   - component: {fileID: 2128855921}
-  - component: {fileID: 2128855930}
-  - component: {fileID: 2128855932}
   - component: {fileID: 2128855933}
   - component: {fileID: 2128855934}
   - component: {fileID: 2128855935}
+  - component: {fileID: 2128855923}
+  - component: {fileID: 2128855930}
+  - component: {fileID: 2128855932}
   m_Layer: 5
   m_Name: MainCanvas
   m_TagString: Untagged
@@ -43267,10 +43267,12 @@ MonoBehaviour:
   ui: {fileID: 941450815}
   rewardGroupTrans: {fileID: 1764554846}
   rewardPrefab: {fileID: 1345386215471289017, guid: 366c543d4cd540b4e876bd466b93d823, type: 3}
+  moneyRewardPrefab: {fileID: 1345386215471289017, guid: 7d6f10dbaa1545e419cfafcc036e0719, type: 3}
   skipButton: {fileID: 144148504}
   cardPrefab: {fileID: 524259916357414313, guid: 0b5874506f49ccf47b373a2dd736234d, type: 3}
   cardRewardMenu: {fileID: 771160224}
   cardRewardGroupTrans: {fileID: 758109998}
+  moneySprite: {fileID: 21300000, guid: efd926ec40205a84eb03f7a73a74144d, type: 3}
 --- !u!114 &2128855928
 MonoBehaviour:
   m_ObjectHideFlags: 0

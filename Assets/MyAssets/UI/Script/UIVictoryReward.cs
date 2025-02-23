@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Video;
 
 public class UIVictoryReward : UIBase
 {
@@ -12,6 +13,8 @@ public class UIVictoryReward : UIBase
 
     [SerializeField]
     private GameObject rewardPrefab;
+    [SerializeField]
+    private GameObject moneyRewardPrefab;
 
     [SerializeField]
     private Button skipButton;
@@ -97,7 +100,13 @@ public class UIVictoryReward : UIBase
         }
         Destroy(reward);
     }
-
+    private void GetDropMoney(GameObject moneyReward, int totalMoneyCount)
+    {
+        DataManager.Instance.MoneyCount += totalMoneyCount;
+        EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
+        Destroy(moneyReward);
+        ReduceCount();
+    }
     private void AddCard(int rewardID)
     {
         BattleManager.Instance.AddCard(rewardID);
@@ -125,7 +134,7 @@ public class UIVictoryReward : UIBase
         cardRewardMenu.SetActive(false);
         int id = MapManager.Instance.LevelID;
         int count = MapManager.Instance.LevelCount;
-        totalCount = MapManager.Instance.MapNodes[count][id].l.RewardIDList.Count + 1;
+        totalCount = MapManager.Instance.MapNodes[count][id].l.RewardIDList.Count + 2;
         for (int i = 0; i < rewardGroupTrans.childCount; i++)
         {
             Destroy(rewardGroupTrans.GetChild(i).gameObject);
@@ -135,16 +144,21 @@ public class UIVictoryReward : UIBase
             int rewardID = MapManager.Instance.MapNodes[count][id].l.RewardIDList[i].Item1;
             GameObject reward = Instantiate(rewardPrefab, rewardGroupTrans);
             reward.GetComponent<Image>().sprite = Resources.Load<Sprite>(DataManager.Instance.ItemList[rewardID].ItemImagePath);
-            /* rewardName = reward.transform.GetChild(0).GetComponent<Text>();
-             rewardCount = reward.transform.GetChild(1).GetComponent<Text>();
-             rewardName.text = DataManager.Instance.ItemList[rewardID].ItemName;
-             rewardCount.text =
-                 "X" +MapManager.Instance.MapNodes[count][id].l.RewardIDList[i].Item2.ToString();*/
             reward.GetComponent<Button>().onClick.AddListener(() => GetReward(rewardID, reward));
         }
         GameObject cardReward = Instantiate(rewardPrefab, rewardGroupTrans);
-        /*rewardName = cardReward.transform.GetChild(0).GetComponent<Text>();
-        rewardName.text = "卡包";*/
         cardReward.GetComponent<Button>().onClick.AddListener(() => GetCardReward(cardReward));
+        GameObject moneyReward = Instantiate(moneyRewardPrefab, rewardGroupTrans);
+        int totalMoneyCount = 0;
+        for (int i = 0; i < MapManager.Instance.MapNodes[count][id].l.EnemyIDList.Count; i++)
+        {
+            int enemyID = MapManager.Instance.MapNodes[count][id].l.EnemyIDList.ElementAt(i).Value;
+            int minMoneyCount = Mathf.RoundToInt(DataManager.Instance.EnemyList[enemyID].DropMoney / 5f * 4f);
+            int maxMoneyCount = Mathf.RoundToInt(DataManager.Instance.EnemyList[enemyID].DropMoney / 5f * 6f);
+            int randomMoney = Random.Range(minMoneyCount, maxMoneyCount);
+            totalMoneyCount += randomMoney;
+        }
+        moneyReward.GetComponentInChildren<Text>().text = "X" + totalMoneyCount.ToString();
+        moneyReward.GetComponent<Button>().onClick.AddListener(() => GetDropMoney(moneyReward, totalMoneyCount));
     }
 }

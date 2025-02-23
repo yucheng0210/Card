@@ -159,6 +159,7 @@ public class DataManager : Singleton<DataManager>
                 SpecialTriggerSkill = new(),
                 CurrentAttackOrderStrs = new(),
                 IsMinion = bool.Parse(row[18]),
+                DropMoney = int.Parse(row[19]),
             };
             if (!string.IsNullOrEmpty(row[9]))
             {

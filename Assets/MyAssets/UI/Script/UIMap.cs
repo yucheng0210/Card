@@ -15,11 +15,11 @@ public class UIMap : UIBase
     private Button[][] mapList;
     private Dictionary<string, int> levelProbabilities = new Dictionary<string, int>
     {
-        { "BATTLE", 30 },
+        { "BATTLE", 15 },
         { "BOSS", 10 },
         { "RANDOM", 20 },
         { "RECOVER",15 },
-        { "SHOP",15 },
+        { "SHOP",30 },
         {"TREASURE",10}
     };
     protected override void Start()
