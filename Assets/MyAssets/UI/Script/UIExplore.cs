@@ -170,7 +170,7 @@ public class UIExplore : UIBase
 
     private void OnRestConfirmed()
     {
-        int recoverAmount = (int)(BattleManager.Instance.CurrentPlayerData.MaxHealth * 0.35f);
+        int recoverAmount = BattleManager.Instance.GetPercentage(BattleManager.Instance.CurrentPlayerData.MaxHealth, 35);
         BattleManager.Instance.Recover(BattleManager.Instance.CurrentPlayerData, recoverAmount);
         recoverExitButton.gameObject.SetActive(true);
         restMenu.SetActive(false);

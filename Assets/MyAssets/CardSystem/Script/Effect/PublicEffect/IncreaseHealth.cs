@@ -8,7 +8,7 @@ public class IncreaseHealth : IEffect
     public void ApplyEffect(int value, string fromLocation, string toLocation)
     {
         CharacterData recoverData = BattleManager.Instance.IdentifyCharacter(fromLocation);
-        int recoveryAmount = BattleManager.Instance.GetPercentage(recoverData.MaxHealth, value);
+        int recoveryAmount = value < 0 ? -value : BattleManager.Instance.GetPercentage(recoverData.MaxHealth, value);
         BattleManager.Instance.Recover(recoverData, recoveryAmount, fromLocation);
     }
 
@@ -19,6 +19,6 @@ public class IncreaseHealth : IEffect
 
     public string SetDescriptionText()
     {
-        return "立刻回復血量。";
+        return "立刻恢復血量。";
     }
 }

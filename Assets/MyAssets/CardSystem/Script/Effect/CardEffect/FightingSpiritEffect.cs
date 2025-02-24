@@ -9,14 +9,7 @@ public class FightingSpiritEffect : IEffect
     {
         string typeName = GetType().Name;
         Dictionary<string, int> currentOnceBattlePositiveList = BattleManager.Instance.CurrentOnceBattlePositiveList;
-        if (currentOnceBattlePositiveList.ContainsKey(typeName))
-        {
-            currentOnceBattlePositiveList[typeName] += 8;
-        }
-        else
-        {
-            currentOnceBattlePositiveList.Add(typeName, 8);
-        }
+        BattleManager.Instance.AddState(currentOnceBattlePositiveList, typeName, 8);
         int damage = currentOnceBattlePositiveList[typeName];
         EnemyData enemyData = (EnemyData)BattleManager.Instance.IdentifyCharacter(toLocation);
         BattleManager.Instance.TakeDamage(BattleManager.Instance.CurrentPlayerData, enemyData, damage, toLocation, 0);

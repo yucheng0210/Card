@@ -190,8 +190,8 @@ public class UIBattle : UIBase
         enemyImage.sprite = Resources.Load<Sprite>(enemyData.EnemyImagePath);
         enemyHealth.text = enemyData.CurrentHealth.ToString() + "/" + enemyData.MaxHealth.ToString();
         enemyShield.text = enemyData.CurrentShield.ToString();
-        UpdateStateUI(enemyPassiveGroupTrans, enemyData.MaxPassiveSkillsList, negativeLPrefab, true);
-        UpdateStateUI(enemyStateGroupTrans, enemy.EnemyOnceBattlePositiveList, negativeLPrefab, false);
+        UpdateStateUI(enemyPassiveGroupTrans, enemyData.MaxPassiveSkillsList, negativeLPrefab, true, true);
+        UpdateStateUI(enemyStateGroupTrans, enemy.EnemyOnceBattlePositiveList, negativeLPrefab, false, true);
     }
     private IEnumerator EnemyAttack()
     {
@@ -414,6 +414,7 @@ public class UIBattle : UIBase
             currentEnemyList.Clear();
             BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Win);
             BattleManager.Instance.CurrentNegativeState.Clear();
+            BattleManager.Instance.CurrentPositiveState.Clear();
             BattleManager.Instance.CurrentAbilityList.Clear();
             BattleManager.Instance.CurrentTerrainList.Clear();
             BattleManager.Instance.CurrentTrapList.Clear();
@@ -440,6 +441,7 @@ public class UIBattle : UIBase
         {
             int avoidClosure = i;
             Button potion = Instantiate(potionPrefab, potionGroupTrans);
+            potion.GetComponent<Image>().sprite = Resources.Load<Sprite>(DataManager.Instance.PotionBag[avoidClosure].ItemImagePath);
             potion.onClick.AddListener(() => UsePotion(DataManager.Instance.PotionBag[avoidClosure].ItemID, avoidClosure));
         }
     }
@@ -450,7 +452,7 @@ public class UIBattle : UIBase
             return;
         }
         potionClueMenu.gameObject.SetActive(true);
-        string[] effect = DataManager.Instance.ItemList[itemID].ItemEffectName.Split('=');
+        string[] effect = DataManager.Instance.PotionList[itemID].ItemEffectName.Split('=');
         string effectName = effect[0];
         int value = int.Parse(effect[1]);
         Button yesButton = potionClueMenu.GetChild(0).GetComponent<Button>();
@@ -634,8 +636,8 @@ public class UIBattle : UIBase
         var usedCardBag = DataManager.Instance.UsedCardBag;
         var removeCardBag = DataManager.Instance.RemoveCardBag;
         var negativeState = BattleManager.Instance.CurrentNegativeState;
-        var positiveList = BattleManager.Instance.CurrentOnceBattlePositiveList;
-
+        var positiveList = BattleManager.Instance.CurrentPositiveState;
+        var oncePositiveList = BattleManager.Instance.CurrentOnceBattlePositiveList;
         // 更新UI文本
         actionPointText.text = $"{playerData.CurrentActionPoint}/{playerData.MaxActionPoint}";
         manaPointText.text = playerData.Mana.ToString();
@@ -653,18 +655,22 @@ public class UIBattle : UIBase
         }
 
         // 更新负面状态
-        UpdateStateUI(negativeGroupTrans, negativeState, negativeRPrefab, false);
+        UpdateStateUI(negativeGroupTrans, negativeState, negativeRPrefab, false, true);
 
         // 更新正面状态
-        UpdateStateUI(positiveGroupTrans, positiveList, negativeRPrefab, false);
+        UpdateStateUI(positiveGroupTrans, positiveList, negativeRPrefab, false, true);
+        UpdateStateUI(positiveGroupTrans, oncePositiveList, negativeRPrefab, false, false);
     }
 
-    private void UpdateStateUI(Transform groupTrans, Dictionary<string, int> stateList, BattleState prefab, bool isPassiveEffect)
+    private void UpdateStateUI(Transform groupTrans, Dictionary<string, int> stateList, BattleState prefab, bool isPassiveEffect, bool canDestroy)
     {
         // 清空当前状态
-        for (int i = groupTrans.childCount - 1; i >= 0; i--)
+        if (canDestroy)
         {
-            Destroy(groupTrans.GetChild(i).gameObject);
+            for (int i = groupTrans.childCount - 1; i >= 0; i--)
+            {
+                Destroy(groupTrans.GetChild(i).gameObject);
+            }
         }
 
         // 重新生成状态图标

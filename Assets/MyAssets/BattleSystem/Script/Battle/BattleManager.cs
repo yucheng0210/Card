@@ -76,6 +76,7 @@ public class BattleManager : Singleton<BattleManager>
     public Transform TrapGroupTrans { get; set; }
     public CanvasGroup CharacterStatusClue { get; set; }
     public Dictionary<string, int> CurrentNegativeState { get; set; }
+    public Dictionary<string, int> CurrentPositiveState { get; set; }
     public Dictionary<string, int> CurrentAbilityList { get; set; }
     public Dictionary<string, int> CurrentOnceBattlePositiveList { get; set; }
     public int ManaMultiplier { get; set; }
@@ -109,6 +110,7 @@ public class BattleManager : Singleton<BattleManager>
         CheckerboardList = new Dictionary<string, string>();
         CurrentTerrainList = new Dictionary<string, Terrain>();
         CurrentNegativeState = new Dictionary<string, int>();
+        CurrentPositiveState = new Dictionary<string, int>();
         CurrentTrapList = new();
         CurrentOnceBattlePositiveList = new Dictionary<string, int>();
         DefaultCursor = Resources.Load<Texture2D>("DefaultCursor_2");
@@ -847,6 +849,11 @@ public class BattleManager : Singleton<BattleManager>
             effectCount = CurrentAbilityList.ElementAt(i).Value;
             EffectFactory.Instance.CreateEffect(effectID).ApplyEffect(effectCount, CurrentPlayerLocation, CurrentPlayerLocation);
         }
+        for (int i = 0; i < CurrentPositiveState.Count; i++)
+        {
+            string positiveState = CurrentPositiveState.ElementAt(i).Key;
+            ReducePositiveState(positiveState);
+        }
         EventManager.Instance.DispatchEvent(EventDefinition.eventPlayerTurn);
     }
 
@@ -871,6 +878,14 @@ public class BattleManager : Singleton<BattleManager>
         if (CurrentNegativeState[negativeState] <= 0)
         {
             CurrentNegativeState.Remove(negativeState);
+        }
+    }
+    public void ReducePositiveState(string positiveState)
+    {
+        CurrentPositiveState[positiveState]--;
+        if (CurrentPositiveState[positiveState] <= 0)
+        {
+            CurrentPositiveState.Remove(positiveState);
         }
     }
     private void Win()

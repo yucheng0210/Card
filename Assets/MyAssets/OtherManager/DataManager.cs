@@ -511,7 +511,7 @@ public class DataManager : Singleton<DataManager>
 
         // Add items to backpack and potion bag
         //BackpackManager.Instance.AddItem(3001, Backpack);
-        PotionBag.Add(PotionList[1001]);
+        PotionBag.Add(PotionList[1002]);
 
         // Set current player data
         BattleManager.Instance.CurrentPlayerData = PlayerList[PlayerID];
