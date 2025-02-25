@@ -24,6 +24,10 @@ public abstract class CharacterData
             {
                 maxHealth = 999;
             }
+            if (CurrentHealth > maxHealth)
+            {
+                CurrentHealth = maxHealth;
+            }
         }
     }
     public int CurrentHealth
@@ -38,7 +42,7 @@ public abstract class CharacterData
             }
             if (currentHealth > MaxHealth)
             {
-                currentHealth = maxHealth;
+                currentHealth = MaxHealth;
             }
         }
     }

@@ -344,7 +344,7 @@ public class Enemy : Character
         }
         if (MyEnemyData.CurrentHealth <= BattleManager.Instance.GetPercentage(MyEnemyData.MaxHealth, MyEnemyData.SpecialAttackCondition))
         {
-            Debug.Log(MyEnemyData.CurrentHealth + "   " + BattleManager.Instance.GetPercentage(MyEnemyData.MaxHealth, MyEnemyData.SpecialAttackCondition));
+            //Debug.Log(MyEnemyData.CurrentHealth + "   " + BattleManager.Instance.GetPercentage(MyEnemyData.MaxHealth, MyEnemyData.SpecialAttackCondition));
             IsSpecialAction = true;
             //SpecialActionStage++;
             EventManager.Instance.RemoveEventRegister(EventDefinition.eventEnemyTurn, EventEnemyTurn);

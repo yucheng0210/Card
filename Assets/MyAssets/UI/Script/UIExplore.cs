@@ -2,15 +2,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using System.Linq;
 
 public class UIExplore : UIBase
 {
     [Header("隨機事件")]
     [SerializeField] private GameObject corpse;
-    [SerializeField] private Button corpseButton;
-    [SerializeField] private GameObject recoverMenu;
+    [SerializeField] private Button corpseYesButton;
+    [SerializeField] private Button corpseNoButton;
 
     [Header("休息")]
+    [SerializeField] private GameObject recoverMenu;
     [SerializeField] private Button restButton;
     [SerializeField] private Button removeCardButton;
     [SerializeField] private GameObject restMenu;
@@ -34,9 +36,17 @@ public class UIExplore : UIBase
         base.Start();
         RegisterEvents();
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.None);
-        InitializeRecovery();
+        Initialize();
     }
-
+    private void Initialize()
+    {
+        restButton.onClick.AddListener(OpenRestMenu);
+        removeCardButton.onClick.AddListener(OpenCardSelection);
+        restConfirmButton.onClick.AddListener(OnRestConfirmed);
+        recoverExitButton.onClick.AddListener(() => ExitExplore("UICardMenu"));
+        corpseYesButton.onClick.AddListener(() => OnCorpseButtonClicked());
+        corpseNoButton.onClick.AddListener(() => ExitExplore(GetType().Name));
+    }
     private void RegisterEvents()
     {
         EventManager.Instance.AddEventRegister(EventDefinition.eventExplore, OnExploreEvent);
@@ -98,16 +108,36 @@ public class UIExplore : UIBase
 
     private void ShowCorpse()
     {
-        /*UI.SetActive(true);
+        UI.SetActive(true);
         corpse.SetActive(true);
-        corpseButton.onClick.AddListener(OnCorpseButtonClicked);*/
     }
 
     private void OnCorpseButtonClicked()
     {
-        EventManager.Instance.DispatchEvent(EventDefinition.eventBattleWin);
+        int randomIndex = Random.Range(0, 3);
+        PlayerData playerData = BattleManager.Instance.CurrentPlayerData;
+        Dictionary<int, Potion> potionList = DataManager.Instance.PotionList;
+        switch (randomIndex)
+        {
+            case 0:
+                randomIndex = Random.Range(30, 70);
+                DataManager.Instance.MoneyCount += randomIndex;
+                break;
+            case 1:
+                randomIndex = Random.Range(5, 10);
+                playerData.MaxHealth -= randomIndex;
+                break;
+            case 2:
+                randomIndex = Random.Range(10, 20);
+                playerData.CurrentHealth -= randomIndex;
+                break;
+            case 3:
+                randomIndex = Random.Range(0, potionList.Count);
+                DataManager.Instance.PotionBag.Add(potionList.ElementAt(randomIndex).Value);
+                break;
+        }
         corpse.SetActive(false);
-        corpseButton.onClick.RemoveAllListeners();
+        EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
 
     private void StartBattle()
@@ -145,14 +175,6 @@ public class UIExplore : UIBase
         openedTreasureBackground.SetActive(true);
         DataManager.Instance.PotionBag.Add(DataManager.Instance.PotionList[1001]);
         treasureExitButton.gameObject.SetActive(true);
-    }
-
-    private void InitializeRecovery()
-    {
-        restButton.onClick.AddListener(OpenRestMenu);
-        removeCardButton.onClick.AddListener(OpenCardSelection);
-        restConfirmButton.onClick.AddListener(OnRestConfirmed);
-        recoverExitButton.onClick.AddListener(() => ExitExplore("UICardMenu"));
     }
 
     private void OpenRestMenu()
