@@ -126,7 +126,7 @@ public class DataManager : Singleton<DataManager>
                 MaxActionPoint = int.Parse(row[3]),
                 Mana = int.Parse(row[4]),
                 DefaultDrawCardCount = int.Parse(row[5]),
-                StartSkill = int.Parse(row[6]),
+                StartSkillList = row[6].Split(";").Select(int.Parse).ToList(),
             };
             PlayerList.Add(playerData.CharacterID, playerData);
         }

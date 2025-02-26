@@ -62,7 +62,7 @@ public abstract class CharacterData
             }
         }
     }
-    public int StartSkill { get; set; }
+    public List<int> StartSkillList { get; set; }
     public int DamageReduction { get; set; }
     public int DamageLimit
     {

@@ -114,30 +114,39 @@ public class UIExplore : UIBase
 
     private void OnCorpseButtonClicked()
     {
-        int randomIndex = Random.Range(0, 3);
+        int randomEvent = Random.Range(0, 6); // 修正範圍，確保 case 3, 4, 5 可執行
         PlayerData playerData = BattleManager.Instance.CurrentPlayerData;
         Dictionary<int, Potion> potionList = DataManager.Instance.PotionList;
-        switch (randomIndex)
+        int effectValue = 0; // 避免影響 switch 判斷
+        switch (randomEvent)
         {
-            case 0:
-                randomIndex = Random.Range(30, 70);
-                DataManager.Instance.MoneyCount += randomIndex;
+            case 0: // 獲得金幣
+                effectValue = Random.Range(30, 70);
+                DataManager.Instance.MoneyCount += effectValue;
                 break;
-            case 1:
-                randomIndex = Random.Range(5, 10);
-                playerData.MaxHealth -= randomIndex;
+
+            case 1: // 減少生命值
+                effectValue = Random.Range(10, 20);
+                playerData.CurrentHealth = Mathf.Max(1, playerData.CurrentHealth - effectValue); // 確保不變成負數
                 break;
-            case 2:
-                randomIndex = Random.Range(10, 20);
-                playerData.CurrentHealth -= randomIndex;
+
+            case 2: // 獲得詛咒卡片
+                BattleManager.Instance.AddCard(5004);
                 break;
-            case 3:
-                randomIndex = Random.Range(0, potionList.Count);
-                DataManager.Instance.PotionBag.Add(potionList.ElementAt(randomIndex).Value);
+
+            case 3: // 獲得隨機藥水
+                effectValue = Random.Range(0, potionList.Count);
+                DataManager.Instance.PotionBag.Add(potionList.ElementAt(effectValue).Value);
+                break;
+
+            case 4: // 獲得祝福
+                BattleManager.Instance.CurrentPlayerData.StartSkillList.Add(1002);
                 break;
         }
+
         corpse.SetActive(false);
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
+
     }
 
     private void StartBattle()

@@ -11,6 +11,7 @@ using UnityEngine.TextCore.Text;
 using System;
 using UnityEngine.U2D;
 using Cinemachine;
+using Newtonsoft.Json.Linq;
 public class BattleManager : Singleton<BattleManager>
 {
     public enum BattleType
@@ -774,7 +775,7 @@ public class BattleManager : Singleton<BattleManager>
     private void BattleInitial()
     {
         int levelID = MapManager.Instance.LevelID;
-        int skillID = CurrentPlayerData.StartSkill;
+        List<int> skillList = CurrentPlayerData.StartSkillList;
         int levelCount = MapManager.Instance.LevelCount;
         RoundCount = 0;
         PlayerOnceMoveConsume = 1;
@@ -785,10 +786,25 @@ public class BattleManager : Singleton<BattleManager>
         PlayerMoveCount = 2;
         PlayerTrans.localPosition = CheckerboardTrans.GetChild(GetCheckerboardPoint(CurrentPlayerLocation)).localPosition;
         CurrentDrawCardCount = CurrentPlayerData.DefaultDrawCardCount;
-        Skill skill = DataManager.Instance.SkillList[skillID];
-        for (int i = 0; i < skill.SkillContent.Count; i++)
+        for (int j = 0; j < skillList.Count; j++)
         {
-            CurrentAbilityList.Add(skill.SkillContent[i].Item1, skill.SkillContent[i].Item2);
+            Skill skill = DataManager.Instance.SkillList[skillList[j]];
+            if (skill.SkillType == "戰鬥")
+            {
+                for (int i = 0; i < skill.SkillContent.Count; i++)
+                {
+                    string effectID;
+                    int effectCount;
+                    effectID = skill.SkillContent[i].Item1;
+                    effectCount = skill.SkillContent[i].Item2;
+                    EffectFactory.Instance.CreateEffect(effectID).ApplyEffect(effectCount, CurrentPlayerLocation, CurrentPlayerLocation);
+                }
+                continue;
+            }
+            for (int i = 0; i < skill.SkillContent.Count; i++)
+            {
+                CurrentAbilityList.Add(skill.SkillContent[i].Item1, skill.SkillContent[i].Item2);
+            }
         }
         for (int i = 0; i < MapManager.Instance.MapNodes[levelCount][levelID].l.EnemyIDList.Count; i++)
         {

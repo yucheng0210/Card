@@ -17,3 +17,4 @@
 5001,死亡倒數,詛咒,CardImage/FireBall,2,無,null,造成20點傷害。,20,0,DeadlineCurseEffect=0,普通,0,0,TRUE,0,TRUE,FALSE
 5002,寄生孢子,詛咒,CardImage/Foreknowledge,1,無,null,每回合造成最大生命2%的傷害，並回復宿主相等傷害。,0,0,,普通,0,0,TRUE,0,FALSE,FALSE
 5003,乏力,詛咒,CardImage/FireBall,-1,無,null,抽到此卡扣除所有移動點數。,0,0,WeaknessCurseEffect=1,普通,0,0,TRUE,0,FALSE,TRUE
+5004,亡者低語,詛咒,CardImage/FireBall,3,無,null,每回合抽到此卡扣除一點最大生命。,0,0,DeceasedCurseEffect=0,普通,0,0,TRUE,0,FALSE,FALSE
