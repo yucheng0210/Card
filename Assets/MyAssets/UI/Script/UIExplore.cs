@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using System.Linq;
+using UnityEngine.Events;
 
 public class UIExplore : UIBase
 {
@@ -10,6 +11,9 @@ public class UIExplore : UIBase
     [SerializeField] private GameObject corpse;
     [SerializeField] private Button corpseYesButton;
     [SerializeField] private Button corpseNoButton;
+    [SerializeField] private GameObject corpseResult;
+    [SerializeField] private Text corpseDescription;
+    [SerializeField] private Button corpseConfirmButton;
 
     [Header("休息")]
     [SerializeField] private GameObject recoverMenu;
@@ -29,7 +33,7 @@ public class UIExplore : UIBase
     [SerializeField] private GameObject treasure;
     [SerializeField] private Button treasureButton;
     [SerializeField] private GameObject openedTreasureBackground;
-    [SerializeField] private Transform treasureItemTrans;
+    [SerializeField] private Image treasureItemImage;
     [SerializeField] private Button treasureExitButton;
     protected override void Start()
     {
@@ -46,6 +50,14 @@ public class UIExplore : UIBase
         recoverExitButton.onClick.AddListener(() => ExitExplore("UICardMenu"));
         corpseYesButton.onClick.AddListener(() => OnCorpseButtonClicked());
         corpseNoButton.onClick.AddListener(() => ExitExplore(GetType().Name));
+        treasureButton.onClick.AddListener(OnTreasureButtonClicked);
+        treasureExitButton.onClick.AddListener(() =>
+        {
+            ExitExplore("UIExplore");
+            openedTreasureBackground.SetActive(false);
+            treasureExitButton.gameObject.SetActive(false);
+        }
+        );
     }
     private void RegisterEvents()
     {
@@ -98,10 +110,10 @@ public class UIExplore : UIBase
                 ShowCorpse();
                 break;
             case 1:
-                ShowCorpse();
+                StartBattle();
                 break;
             case 2:
-                ShowCorpse();
+                OpenShop();
                 break;
         }
     }
@@ -114,39 +126,67 @@ public class UIExplore : UIBase
 
     private void OnCorpseButtonClicked()
     {
-        int randomEvent = Random.Range(0, 6); // 修正範圍，確保 case 3, 4, 5 可執行
+        int randomEvent = Random.Range(0, 5); // 修正範圍，確保 case 3, 4, 5 可執行
         PlayerData playerData = BattleManager.Instance.CurrentPlayerData;
         Dictionary<int, Potion> potionList = DataManager.Instance.PotionList;
         int effectValue = 0; // 避免影響 switch 判斷
+        string description = "";
+        corpseConfirmButton.onClick.RemoveAllListeners();
+        UnityAction unityAction = () =>
+        {
+            corpseResult.SetActive(false);
+            ExitExplore(GetType().Name);
+        };
         switch (randomEvent)
         {
             case 0: // 獲得金幣
-                effectValue = Random.Range(30, 70);
-                DataManager.Instance.MoneyCount += effectValue;
+                unityAction += () =>
+                {
+                    effectValue = Random.Range(30, 70);
+                    DataManager.Instance.MoneyCount += effectValue;
+                };
+                description = "找到少量金幣";
                 break;
 
             case 1: // 減少生命值
-                effectValue = Random.Range(10, 20);
-                playerData.CurrentHealth = Mathf.Max(1, playerData.CurrentHealth - effectValue); // 確保不變成負數
+                unityAction += () =>
+                {
+                    effectValue = Random.Range(10, 20);
+                    playerData.CurrentHealth = Mathf.Max(1, playerData.CurrentHealth - effectValue); // 確保不變成負數
+                };
+                description = "被附近野狗咬了一口";
                 break;
 
             case 2: // 獲得詛咒卡片
-                BattleManager.Instance.AddCard(5004);
+                unityAction += () =>
+                {
+                    BattleManager.Instance.AddCard(5004);
+                };
+                description = "遭受亡者的詛咒";
                 break;
 
             case 3: // 獲得隨機藥水
                 effectValue = Random.Range(0, potionList.Count);
-                DataManager.Instance.PotionBag.Add(potionList.ElementAt(effectValue).Value);
+                Potion potion = potionList.ElementAt(effectValue).Value;
+                unityAction += () =>
+                {
+                    DataManager.Instance.PotionBag.Add(potion);
+                };
+                description = $"找到遺留的{potion.ItemName}";
                 break;
 
             case 4: // 獲得祝福
-                BattleManager.Instance.CurrentPlayerData.StartSkillList.Add(1002);
+                unityAction += () =>
+                {
+                    BattleManager.Instance.CurrentPlayerData.StartSkillList.Add(1002);
+                };
+                description = "獲得亡者庇蔭";
                 break;
         }
-
-        corpse.SetActive(false);
-        EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
-
+        corpseResult.SetActive(true);
+        corpseDescription.text = description;
+        unityAction += () => EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
+        corpseConfirmButton.onClick.AddListener(unityAction);
     }
 
     private void StartBattle()
@@ -174,15 +214,16 @@ public class UIExplore : UIBase
     {
         UIManager.Instance.ShowUI("UIExplore");
         treasure.SetActive(true);
-        treasureButton.onClick.AddListener(OnTreasureButtonClicked);
-        treasureExitButton.onClick.AddListener(() => ExitExplore("UIExplore"));
     }
 
     private void OnTreasureButtonClicked()
     {
-        //EventManager.Instance.DispatchEvent(EventDefinition.eventBattleWin);
+        Dictionary<int, Potion> potionList = DataManager.Instance.PotionList;
+        int randomIndex = Random.Range(0, potionList.Count);
+        Potion potion = potionList.ElementAt(randomIndex).Value;
         openedTreasureBackground.SetActive(true);
-        DataManager.Instance.PotionBag.Add(DataManager.Instance.PotionList[1001]);
+        treasureItemImage.sprite = Resources.Load<Sprite>(potion.ItemImagePath);
+        DataManager.Instance.PotionBag.Add(potion);
         treasureExitButton.gameObject.SetActive(true);
     }
 
@@ -195,7 +236,7 @@ public class UIExplore : UIBase
 
     private void OpenCardSelection()
     {
-        UnityEngine.Events.UnityAction unityAction = () => RemoveCardSuccess();
+        UnityAction unityAction = () => RemoveCardSuccess();
         UIManager.Instance.SelectCard(unityAction, false);
     }
 
