@@ -81,6 +81,7 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         SetCardInfo();
         EventManager.Instance.AddEventRegister(EventDefinition.eventUseCard, RefreshCardOutline);
+        EventManager.Instance.AddEventRegister(EventDefinition.eventGameOver, EventGameOver);
     }
     private void OnDisable()
     {
@@ -328,5 +329,9 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         {
             UIManager.Instance.ChangeOutline(this, false);
         }
+    }
+    private void EventGameOver(params object[] args)
+    {
+        Destroy(gameObject);
     }
 }

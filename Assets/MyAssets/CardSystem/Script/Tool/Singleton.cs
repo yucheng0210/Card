@@ -13,9 +13,13 @@ public class Singleton<T> : MonoBehaviour where T : Singleton<T>
     protected virtual void Awake()
     {
         if (instance != null)
+        {
             Destroy(gameObject);
+        }
         else
+        {
             instance = (T)this;
+        }
     }
 
     public static bool IsInitialized
@@ -26,6 +30,8 @@ public class Singleton<T> : MonoBehaviour where T : Singleton<T>
     protected virtual void OnDestroy()
     {
         if (instance == this)
+        {
             instance = null;
+        }
     }
 }

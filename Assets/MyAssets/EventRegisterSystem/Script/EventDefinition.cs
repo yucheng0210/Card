@@ -10,6 +10,7 @@ public class EventDefinition
     public const string eventEnemyTurn = "EVENT_ENEMY_TURN";
     public const string eventAfterEnemyAttack = "EVENT_AFTER_ENEMY_ATTACK";
     public const string eventBattleWin = "EVENT_BATTLE_WIN";
+    public const string eventGameOver = "EVENT_GAME_OVER";
     public const string eventAttack = "EVENT_ATTACK";
     public const string eventNextChapter = "EVENT_NEXT_CHAPTER";
 

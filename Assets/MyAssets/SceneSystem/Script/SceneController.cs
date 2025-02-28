@@ -22,7 +22,6 @@ public class SceneController : Singleton<SceneController>
 
     [SerializeField]
     private CanvasGroup sceneFaderPrefab;
-    private Dictionary<int, string> sceneNameDic = new Dictionary<int, string>();
 
     protected override void Awake()
     {

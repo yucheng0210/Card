@@ -133,5 +133,9 @@ public class EventManager : Singleton<EventManager>
 
         CharacterListenerList.Remove(characterData);
     }
-
+    public void ClearAllEvents()
+    {
+        eventListenters.Clear();
+        CharacterListenerList.Clear();
+    }
 }

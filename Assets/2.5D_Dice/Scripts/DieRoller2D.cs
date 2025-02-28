@@ -92,8 +92,6 @@ public class DieRoller2D : MonoBehaviour
 
     Vector2 GetRollForce()
     {
-        return new Vector2(
-            UnityEngine.Random.Range(_rollForceMin.x, _rollForceMax.x),
-            UnityEngine.Random.Range(_rollForceMin.y, _rollForceMax.y));
+        return new Vector2(UnityEngine.Random.Range(_rollForceMin.x, _rollForceMax.x), UnityEngine.Random.Range(_rollForceMin.y, _rollForceMax.y));
     }
 }

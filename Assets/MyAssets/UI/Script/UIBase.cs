@@ -13,7 +13,12 @@ public abstract class UIBase : MonoBehaviour
 
     protected virtual void Start()
     {
-        UIManager.Instance.UIDict.Add(this.GetType().Name, this);
+        string typeName = GetType().Name;
+        Dictionary<string, UIBase> uiDict = UIManager.Instance.UIDict;
+        if (!uiDict.ContainsKey(typeName))
+        {
+            uiDict.Add(typeName, this);
+        }
     }
 
     public virtual void Show()

@@ -95,11 +95,17 @@ public class DiceRollerUI : UIBase
                 break;
         }
         if (_diceRoller.IsWinner)
+        {
             DataManager.Instance.MoneyCount += (int)(betMoneyCount * currentOdds);
+        }
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
         exitButton.gameObject.SetActive(true);
-        exitButton.onClick.AddListener(() => BattleManager.Instance.NextLevel("DiceRollerUI"));
-        exitButton.onClick.AddListener(() => exitButton.gameObject.SetActive(false));
+        exitButton.onClick.AddListener(() =>
+        {
+            BattleManager.Instance.NextLevel("DiceRollerUI");
+            UIManager.Instance.HideUI("UIShop");
+            exitButton.gameObject.SetActive(false);
+        });
     }
 
     private void RollDice(string gamble, float odds)
@@ -113,7 +119,9 @@ public class DiceRollerUI : UIBase
     private void BetMoney(int amount)
     {
         if (DataManager.Instance.MoneyCount < amount)
+        {
             return;
+        }
 
         gambleTypeTrans.gameObject.SetActive(true);
         betMoneyTrans.gameObject.SetActive(false);

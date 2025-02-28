@@ -17,6 +17,7 @@ public class Player : Character
     {
         if (BattleManager.Instance.CurrentPlayerData.CurrentHealth <= 0)
         {
+            EventManager.Instance.DispatchEvent(EventDefinition.eventGameOver);
             Destroy(gameObject);
         }
     }
