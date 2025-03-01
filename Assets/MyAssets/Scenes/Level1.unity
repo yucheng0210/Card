@@ -21595,7 +21595,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 194137554}
   m_Direction: 2
   m_Value: -0.0000000718487
-  m_Size: 0.2411764
+  m_Size: 0.2411789
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -41428,6 +41428,10 @@ PrefabInstance:
       value: 146
       objectReference: {fileID: 0}
     - target: {fileID: 3061714186503063931, guid: f6ffbd442fafe6b4b8abee493a46ed2e, type: 3}
+      propertyPath: m_LocalScale.x
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3061714186503063931, guid: f6ffbd442fafe6b4b8abee493a46ed2e, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -41457,11 +41461,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3061714186503063931, guid: f6ffbd442fafe6b4b8abee493a46ed2e, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -771
+      value: 685
       objectReference: {fileID: 0}
     - target: {fileID: 3061714186503063931, guid: f6ffbd442fafe6b4b8abee493a46ed2e, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 410
+      value: 417
       objectReference: {fileID: 0}
     - target: {fileID: 3061714186503063931, guid: f6ffbd442fafe6b4b8abee493a46ed2e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
