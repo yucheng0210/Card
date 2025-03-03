@@ -23,7 +23,12 @@ public class UIShop : UIBase
     protected override void Start()
     {
         base.Start();
-        exitButton.onClick.AddListener(() => BattleManager.Instance.NextLevel("UIShop"));
+        exitButton.onClick.AddListener(() =>
+        {
+            UIManager.Instance.HideUI("UIShop");
+            ClearChildren(cardGroupTrans);
+            ClearChildren(potionGroupTrans);
+        });
     }
     public override void Show()
     {
@@ -44,26 +49,24 @@ public class UIShop : UIBase
         skyIslandBackground.SetActive(!isBattleMode);
 
         // 清空現有物品
-        ClearChildren(cardGroupTrans);
-        ClearChildren(potionGroupTrans);
 
         // 產生卡牌
         GenerateCards(6);
 
         // 產生藥水與道具
         int potionCount = isBattleMode ? 4 : 2;
-        GeneratePotions(potionCount);
+        GenerateItems(potionCount, true);
 
         // 只有 SkyIsland 模式才會產生額外的道具
         if (!isBattleMode)
         {
-            GenerateItems(2);
+            GenerateItems(potionCount, false);
         }
     }
 
     private void ClearChildren(Transform parent)
     {
-        for (int i = 0; i < parent.childCount; i++)
+        for (int i = parent.childCount - 1; i >= 0; i--)
         {
             Destroy(parent.GetChild(i).gameObject);
         }
@@ -100,21 +103,21 @@ public class UIShop : UIBase
         }
     }
 
-    private void GeneratePotions(int count)
+    private void GenerateItems(int count, bool isPotion)
     {
-        Dictionary<int, Potion> potionList = DataManager.Instance.PotionList;
+        Dictionary<int, Item> itemList = isPotion ? DataManager.Instance.PotionList.ToDictionary(kv => kv.Key, kv => (Item)kv.Value) : DataManager.Instance.ItemList;
         for (int i = 0; i < count; i++)
         {
-            int randomIndex = Random.Range(0, potionList.Count);
-            KeyValuePair<int, Potion> randomPotion = potionList.ElementAt(randomIndex);
-            Potion potionData = potionList[randomPotion.Key];
+            int randomIndex = Random.Range(0, itemList.Count);
+            KeyValuePair<int, Item> randomItem = itemList.ElementAt(randomIndex);
+            Item itemData = itemList[randomItem.Key];
             PotionItem potionItem = Instantiate(potionPrefab, potionGroupTrans).GetComponent<PotionItem>();
             Text potionPriceText = potionItem.PriceText;
-            potionItem.PotionImage.sprite = Resources.Load<Sprite>(potionData.ItemImagePath);
-            potionItem.InfoTitleText.text = potionData.ItemName;
-            potionItem.InfoDescriptionText.text = potionData.ItemInfo;
-            potionPriceText.text = potionData.ItemBuyPrice.ToString();
-            potionItem.PotionButton.onClick.AddListener(() => AddPotion(potionData.ItemID, potionItem.PotionImage, potionItem.StatusClueTrans));
+            potionItem.PotionImage.sprite = Resources.Load<Sprite>(itemData.ItemImagePath);
+            potionItem.InfoTitleText.text = itemData.ItemName;
+            potionItem.InfoDescriptionText.text = itemData.ItemInfo;
+            potionPriceText.text = itemData.ItemBuyPrice.ToString();
+            potionItem.PotionButton.onClick.AddListener(() => AddItem(itemData.ItemID, potionItem.PotionImage, potionItem.StatusClueTrans, itemList, isPotion));
             UnityAction unityAction_1 = () =>
             {
                 potionItem.InfoGameObject.SetActive(true);
@@ -129,39 +132,6 @@ public class UIShop : UIBase
         }
     }
 
-    private void GenerateItems(int count)
-    {
-        Dictionary<int, Item> itemList = DataManager.Instance.ItemList;
-        for (int i = 0; i < count; i++)
-        {
-            int randomIndex = Random.Range(0, itemList.Count);
-            KeyValuePair<int, Item> randomItem = itemList.ElementAt(randomIndex);
-            Item itemData = itemList[randomItem.Key];
-
-            Button itemButton = Instantiate(potionPrefab, potionGroupTrans); // 使用相同的 prefab
-            itemButton.GetComponent<Image>().sprite = Resources.Load<Sprite>(itemData.ItemImagePath);
-
-            // 設定物品價格
-            Text itemPriceText = itemButton.transform.GetChild(itemButton.transform.childCount - 1).GetComponent<Text>();
-            itemPriceText.text = itemData.ItemBuyPrice.ToString();
-
-            // 綁定點擊事件
-            itemButton.onClick.AddListener(() => AddItem(itemData.ItemID, itemButton.GetComponent<Image>()));
-        }
-    }
-    private void AddItem(int potionID, Image potion)
-    {
-        Item item = DataManager.Instance.ItemList[potionID];
-        if (DataManager.Instance.MoneyCount < item.ItemBuyPrice)
-        {
-            return;
-        }
-        DataManager.Instance.MoneyCount -= item.ItemBuyPrice;
-        BackpackManager.Instance.AddItem(potionID, DataManager.Instance.Backpack);
-        potion.raycastTarget = false;
-        potion.GetComponent<CanvasGroup>().alpha = 0;
-        EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
-    }
     private void AddCard(int cardID, Image card)
     {
         CardData cardData = DataManager.Instance.CardList[cardID];
@@ -175,18 +145,25 @@ public class UIShop : UIBase
         card.transform.parent.GetComponent<CanvasGroup>().alpha = 0;
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
-    private void AddPotion(int potionID, Image potion, Transform statusClueTrans)
+    private void AddItem(int itemID, Image item, Transform statusClueTrans, Dictionary<int, Item> itemList, bool isPotion)
     {
-        Potion item = DataManager.Instance.PotionList[potionID];
-        if (DataManager.Instance.MoneyCount < item.ItemBuyPrice)
+        Item itemData = itemList[itemID];
+        if (DataManager.Instance.MoneyCount < itemData.ItemBuyPrice)
         {
             BattleManager.Instance.ShowCharacterStatusClue(statusClueTrans, "金錢不足", 0);
             return;
         }
-        DataManager.Instance.MoneyCount -= item.ItemBuyPrice;
-        DataManager.Instance.PotionBag.Add(item);
-        potion.raycastTarget = false;
-        potion.GetComponent<CanvasGroup>().alpha = 0;
+        DataManager.Instance.MoneyCount -= itemData.ItemBuyPrice;
+        if (isPotion)
+        {
+            DataManager.Instance.PotionBag.Add((Potion)itemData);
+        }
+        else
+        {
+            BackpackManager.Instance.AddItem(itemID, DataManager.Instance.Backpack);
+        }
+        item.raycastTarget = false;
+        item.GetComponent<CanvasGroup>().alpha = 0;
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
 }

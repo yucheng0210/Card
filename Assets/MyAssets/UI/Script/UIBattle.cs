@@ -425,7 +425,11 @@ public class UIBattle : UIBase
     }
     private void RemoveAllTerrian()
     {
-        for (int i = 0; i < terrainTrans.childCount; i++)
+        for (int i = trapGroupTrans.childCount - 1; i >= 0; i--)
+        {
+            Destroy(trapGroupTrans.GetChild(i).gameObject);
+        }
+        for (int i = terrainTrans.childCount - 1; i >= 0; i--)
         {
             Destroy(terrainTrans.GetChild(i).gameObject);
         }
@@ -713,6 +717,6 @@ public class UIBattle : UIBase
     private void EventNextChapter(params object[] args)
     {
         battleBackground.sprite = battleBackgroundSpriteList[MapManager.Instance.ChapterCount - 1];
-        UI.SetActive(true);
+        // UI.SetActive(true);
     }
 }

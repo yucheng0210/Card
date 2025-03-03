@@ -8,6 +8,10 @@ public class UIGameOver : UIBase
 {
     [SerializeField]
     private Button startMenuButton;
+    [SerializeField]
+    private Image titleImage;
+    [SerializeField]
+    private List<Sprite> titleSpriteList = new List<Sprite>();
     private void Awake()
     {
         EventManager.Instance.AddEventRegister(EventDefinition.eventGameOver, EventGameOver);
@@ -16,5 +20,13 @@ public class UIGameOver : UIBase
     private void EventGameOver(params object[] args)
     {
         Show();
+        if ((bool)args[0])
+        {
+            titleImage.sprite = titleSpriteList[0];
+        }
+        else
+        {
+            titleImage.sprite = titleSpriteList[1];
+        }
     }
 }

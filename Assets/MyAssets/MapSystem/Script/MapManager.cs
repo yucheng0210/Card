@@ -178,11 +178,22 @@ public class MapManager : Singleton<MapManager>
     }
     void CreateTheFirstLevel()
     {
-        // int thisLevelCount = random.Next(maxCount);
-        int thisLevelCount = 5;
-        for (int i = 0; i < thisLevelCount; i++)
+        int repeatCount = 1;
+        int firstIndex = random.Next(maxCount);
+        mapNodes[0][firstIndex].isUsed = true;
+        for (int i = 1; i < maxCount; i++)
         {
-            mapNodes[0][random.Next(maxCount)].isUsed = true;
+            int index = random.Next(maxCount);
+            if (index == firstIndex)
+            {
+                repeatCount++;
+                if (repeatCount >= maxCount)
+                {
+                    i--;
+                    continue;
+                }
+            }
+            mapNodes[0][index].isUsed = true;
         }
     }
     protected override void OnDestroy()

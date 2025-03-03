@@ -86,6 +86,7 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     private void OnDisable()
     {
         EventManager.Instance.RemoveEventRegister(EventDefinition.eventUseCard, RefreshCardOutline);
+        EventManager.Instance.RemoveEventRegister(EventDefinition.eventGameOver, EventGameOver);
     }
     private void SetCardInfo()
     {

@@ -15,12 +15,11 @@ public class UIMap : UIBase
     private Button[][] mapList;
     private Dictionary<string, int> levelProbabilities = new Dictionary<string, int>
     {
-        { "SHOP",30 },
-        { "BATTLE", 10 },
+        { "SHOP",10 },
+        { "BATTLE", 30 },
         { "BOSS", 15 },
         { "RANDOM", 20 },
         { "RECOVER",15 },
-        
         {"TREASURE",10},
     };
     protected override void Start()
@@ -48,6 +47,7 @@ public class UIMap : UIBase
          {
              MapManager.Instance.LevelCount = 0;
          }*/
+        MapManager.Instance.LevelCount = 0;
         if (MapManager.Instance.ChapterCount == 3)
         {
             Level level = CreateLevel(0, 0, 7003);

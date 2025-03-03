@@ -100,7 +100,7 @@ public class BattleManager : Singleton<BattleManager>
     public Texture2D DefaultCursor { get; set; }
     public Vector2 DefaultCursorHotSpot { get; set; }
     public int RoundCount { get; set; }
-    //bool i = false;
+    bool i = false;
     protected override void Awake()
     {
         base.Awake();
@@ -122,16 +122,16 @@ public class BattleManager : Singleton<BattleManager>
     {
         if (Input.GetKeyDown(KeyCode.KeypadEnter))
         {
-            /* if (!i)
-             {
-                 Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
-                 i = !i;
-             }
-             else
-             {
-                 Cursor.SetCursor(DefaultCursor, DefaultCursorHotSpot, CursorMode.Auto);
-                 i = !i;
-             }*/
+            if (!i)
+            {
+                Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+                i = !i;
+            }
+            else
+            {
+                Cursor.SetCursor(DefaultCursor, DefaultCursorHotSpot, CursorMode.Auto);
+                i = !i;
+            }
             /* CharacterData value = CurrentEnemyList.ElementAt(0).Value;
              TakeDamage(CurrentPlayerData, value, 51, CurrentEnemyList.ElementAt(0).Key, 0);*/
             //EventManager.Instance.DispatchEvent(EventDefinition.eventAfterMove);
@@ -139,7 +139,7 @@ public class BattleManager : Singleton<BattleManager>
             for (int i = 0; i < CurrentEnemyList.Count; i++)
             {
                 CharacterData value = CurrentEnemyList.ElementAt(i).Value;
-                TakeDamage(CurrentPlayerData, value, 5, CurrentEnemyList.ElementAt(i).Key, 0);
+                TakeDamage(CurrentPlayerData, value, 55, CurrentEnemyList.ElementAt(i).Key, 0);
             }
             TakeDamage(CurrentPlayerData, CurrentPlayerData, 5, CurrentPlayerLocation, 0);
             // StartCoroutine(SceneController.Instance.Transition("StartMenu"));
@@ -924,6 +924,11 @@ public class BattleManager : Singleton<BattleManager>
     {
         // BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Dialog);
         string showMenuStr = MapManager.Instance.LevelCount == 14 ? "UISkyIsland" : "UIMap";
+        if (MapManager.Instance.ChapterCount == 3)
+        {
+            showMenuStr = "UIGameOver";
+            EventManager.Instance.DispatchEvent(EventDefinition.eventGameOver, true);
+        }
         MapManager.Instance.LevelCount++;
         UIManager.Instance.ShowUI(showMenuStr);
         UIManager.Instance.HideUI(hideMenu);
@@ -1244,7 +1249,8 @@ public class BattleManager : Singleton<BattleManager>
     }
     public int GetPercentage(int maxCount, int percentage)
     {
-        return Mathf.RoundToInt(maxCount * (percentage / 100f));
+        int count = percentage >= 0 ? Mathf.RoundToInt(maxCount * (percentage / 100f)) : -1;
+        return count;
     }
     public void CameraImpulse(CinemachineImpulseSource cinemachineImpulseSource)
     {

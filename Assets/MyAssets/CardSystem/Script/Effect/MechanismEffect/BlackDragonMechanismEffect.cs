@@ -61,13 +61,14 @@ public class BlackDragonMechanismEffect : IEffect
     }
     private void FinishThirdStage(params object[] args)
     {
-        enemyData.DamageLimit = maxDamageCount;
+        enemyData.DamageLimit = enemyData.CurrentHealth;
         enemy.AdditionPower--;
         enemy.AdditionAttackCount = 0;
         enemy.IsSpecialAction = true;
         enemyData.CurrentAttackOrderIndex = 0;
         EventManager.Instance.RemoveEventRegister(EventDefinition.eventEnemyTurn, ThirdStageEnemyTurn);
         EventManager.Instance.RemoveEventRegister(EventDefinition.eventPlayerTurn, ThirdStageStagePlayerTurn);
+        EventManager.Instance.RemoveEventRegister(EventDefinition.eventAfterEnemyAttack, FinishThirdStage);
     }
     private void EventTakeDamage(params object[] args)
     {
