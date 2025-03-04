@@ -197,7 +197,8 @@ public class Enemy : Character
         infoDescription.text = "產生護盾。";
         MyActionType = ActionType.Shield;
         MyNextAttackActionRangeType = BattleManager.ActionRangeType.None;
-        enemyAttackIntentText.text = shieldCount.ToString();
+        enemyAttackIntentText.enabled = false;
+        //enemyAttackIntentText.text = shieldCount.ToString();
         enemyShield.SetActive(true);
         CurrentShieldCount = shieldCount;
     }

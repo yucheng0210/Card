@@ -1226,6 +1226,7 @@ public class BattleManager : Singleton<BattleManager>
         enemy.MyActionType = Enemy.ActionType.Shield;
         enemy.MyNextAttackActionRangeType = ActionRangeType.None;
         enemy.CurrentActionRangeTypeList.Clear();
+        enemy.EnemyAttackIntentText.enabled = false;
         enemy.CurrentShieldCount = shieldCount;
         enemy.MyEnemyData.CurrentAttackOrderIndex--;
         CheckPlayerLocationInRange(enemy);

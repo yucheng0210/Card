@@ -7,7 +7,7 @@ using UnityEngine.UI;
 using DG.Tweening;
 using Unity.VisualScripting;
 
-public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IDragHandler, IEndDragHandler, IPointerDownHandler
+public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IDragHandler, IEndDragHandler, IPointerDownHandler, IPointerClickHandler
 {
     private int index;
 
@@ -47,6 +47,7 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public bool CantMove { get; set; }
     public Vector2 CurrentPos { get; set; }
     public float CurrentAngle { get; set; }
+    private bool isDrag;
     public Image CardImage
     {
         get { return cardImage; }
@@ -99,7 +100,7 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     }
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (BattleManager.Instance.IsDrag || CantMove || BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack)
+        if (isDrag || CantMove || BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack)
         {
             return;
         }
@@ -141,7 +142,7 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        if (BattleManager.Instance.IsDrag && !isAttackCard || CantMove || BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack)
+        if (isDrag && !isAttackCard || CantMove || BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack)
         {
             return;
         }
@@ -171,52 +172,125 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         isAttackCard = MyCardData.CardType == "攻擊";
     }
 
-    public void OnDrag(PointerEventData eventData)
+
+    private void Update()
+    {
+        if (isDrag)
+        {
+            OnCardPickup();
+            if (Input.GetMouseButtonDown(0))
+            {
+                OnEndCardPickup();
+            }
+            else if (Input.GetMouseButtonDown(1))
+            {
+                OnCancelCardPickup();
+            }
+        }
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
     {
         if (CantMove || BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack)
         {
             return;
         }
-        BattleManager.Instance.IsDrag = true;
+        if (!isDrag && eventData.button == PointerEventData.InputButton.Left)
+        {
+            isDrag = true;
+        }
+    }
+
+    private void OnCardPickup()
+    {
         Cursor.visible = false;
         Vector2 dragPosition;
         RectTransform parentRect = transform.parent.GetComponent<RectTransform>();
-        if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(parentRect, eventData.position, eventData.pressEventCamera, out dragPosition))
+        if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(parentRect, Input.mousePosition, Camera.main, out dragPosition))
         {
             return;
         }
+
         if (isAttackCard)
         {
             EventManager.Instance.DispatchEvent(EventDefinition.eventAttackLine, true, CardRectTransform.anchoredPosition, dragPosition);
-            //CheckRayToEnemy();
+            // CheckRayToEnemy(); // 可選的額外邏輯
+        }
+        else
+        {
+            CardRectTransform.anchoredPosition = dragPosition;
+        }
+    }
+    private void OnCancelCardPickup()
+    {
+        isDrag = false;
+        Cursor.visible = true;
+        EventManager.Instance.DispatchEvent(EventDefinition.eventAttackLine, false, CardRectTransform.anchoredPosition, CardRectTransform.anchoredPosition);
+        CardRectTransform.anchoredPosition = CurrentPos;
+        CardRectTransform.SetSiblingIndex(index);
+    }
+    private void OnEndCardPickup()
+    {
+        Cursor.visible = true;
+
+        if (isAttackCard)
+        {
+            CheckRayToEnemy();
             return;
         }
-        CardRectTransform.anchoredPosition = dragPosition;
+        if (CardRectTransform.anchoredPosition.y >= 400 && GetUseCardCondition())
+        {
+            UseCard("Player");
+            OnCancelCardPickup();
+        }
+    }
+
+    public void OnDrag(PointerEventData eventData)
+    {
+        /* if (CantMove || BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack)
+         {
+             return;
+         }
+         isDrag = true;
+         Cursor.visible = false;
+         Vector2 dragPosition;
+         RectTransform parentRect = transform.parent.GetComponent<RectTransform>();
+         if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(parentRect, eventData.position, eventData.pressEventCamera, out dragPosition))
+         {
+             return;
+         }
+         if (isAttackCard)
+         {
+             EventManager.Instance.DispatchEvent(EventDefinition.eventAttackLine, true, CardRectTransform.anchoredPosition, dragPosition);
+             //CheckRayToEnemy();
+             return;
+         }
+         CardRectTransform.anchoredPosition = dragPosition;*/
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        if (CantMove || BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack)
-        {
-            return;
-        }
-        BattleManager.Instance.IsDrag = false;
-        Cursor.visible = true;
-        if (isAttackCard)
-        {
-            EventManager.Instance.DispatchEvent(EventDefinition.eventAttackLine, false, CardRectTransform.anchoredPosition, CardRectTransform.anchoredPosition);
-            CheckRayToEnemy();
-            return;
-        }
-        if (CardRectTransform.anchoredPosition.y >= 540 && GetUseCardCondition())
-        {
-            UseCard("Player");
-        }
-        else
-        {
-            CardRectTransform.anchoredPosition = CurrentPos;
-            CardRectTransform.SetSiblingIndex(index);
-        }
+        /* if (CantMove || BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack)
+         {
+             return;
+         }
+         isDrag = false;
+         Cursor.visible = true;
+         if (isAttackCard)
+         {
+             EventManager.Instance.DispatchEvent(EventDefinition.eventAttackLine, false, CardRectTransform.anchoredPosition, CardRectTransform.anchoredPosition);
+             CheckRayToEnemy();
+             return;
+         }
+         if (CardRectTransform.anchoredPosition.y >= 400 && GetUseCardCondition())
+         {
+             UseCard("Player");
+         }
+         else
+         {
+             CardRectTransform.anchoredPosition = CurrentPos;
+             CardRectTransform.SetSiblingIndex(index);
+         }*/
     }
 
     private void CheckRayToEnemy()
@@ -233,6 +307,7 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             string location = BattleManager.Instance.GetEnemyKey(enemy.MyEnemyData);
             if (GetUseCardCondition() && CheckEnemyInAttackRange(location))
             {
+                OnCancelCardPickup();
                 UseCard(location);
             }
         }
@@ -335,4 +410,5 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         Destroy(gameObject);
     }
+
 }

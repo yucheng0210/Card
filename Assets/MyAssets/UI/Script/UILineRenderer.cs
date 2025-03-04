@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 namespace Radishmouse
 {
@@ -10,31 +11,47 @@ namespace Radishmouse
         public float thickness = 10f;
         public bool center = true;
 
+        public float dashLength = 5f;  // 虛線的線段長度
+        public float gapLength = 10f;   // 虛線的間隔長度
+
         protected override void OnPopulateMesh(VertexHelper vh)
         {
             vh.Clear();
-
             if (points.Length < 2)
                 return;
 
-            for (int i = 0; i < points.Length-1; i++)
+            for (int i = 0; i < points.Length - 1; i++)
             {
-                // Create a line segment between the next two points
-                CreateLineSegment(points[i], points[i+1], vh);
+                Vector2 start = points[i];
+                Vector2 end = points[i + 1];
 
-                int index = i * 5;
+                float segmentLength = Vector2.Distance(start, end);
+                Vector2 direction = (end - start).normalized;
 
-                // Add the line segment to the triangles array
-                vh.AddTriangle(index, index+1, index+3);
-                vh.AddTriangle(index+3, index+2, index);
+                float currentLength = 0f;
+                bool draw = true;
+                List<Vector2> dashedPoints = new List<Vector2>();
 
-                // These two triangles create the beveled edges
-                // between line segments using the end point of
-                // the last line segment and the start points of this one
-                if (i != 0)
+                while (currentLength < segmentLength)
                 {
-                    vh.AddTriangle(index, index-1, index-3);
-                    vh.AddTriangle(index+1, index-1, index-2);
+                    float segment = draw ? dashLength : gapLength;
+
+                    if (currentLength + segment > segmentLength)
+                        segment = segmentLength - currentLength;
+
+                    if (draw)
+                    {
+                        dashedPoints.Add(start + direction * currentLength);
+                        dashedPoints.Add(start + direction * (currentLength + segment));
+                    }
+
+                    currentLength += segment;
+                    draw = !draw;
+                }
+
+                for (int j = 0; j < dashedPoints.Count - 1; j += 2)
+                {
+                    CreateLineSegment(dashedPoints[j], dashedPoints[j + 1], vh);
                 }
             }
         }
@@ -42,49 +59,35 @@ namespace Radishmouse
         /// <summary>
         /// Creates a rect from two points that acts as a line segment
         /// </summary>
-        /// <param name="point1">The starting point of the segment</param>
-        /// <param name="point2">The endint point of the segment</param>
-        /// <param name="vh">The vertex helper that the segment is added to</param>
         private void CreateLineSegment(Vector3 point1, Vector3 point2, VertexHelper vh)
         {
             Vector3 offset = center ? (rectTransform.sizeDelta / 2) : Vector2.zero;
 
-            // Create vertex template
             UIVertex vertex = UIVertex.simpleVert;
             vertex.color = color;
 
-            // Create the start of the segment
-            Quaternion point1Rotation = Quaternion.Euler(0, 0, RotatePointTowards(point1, point2) + 90);
-            vertex.position = point1Rotation * new Vector3(-thickness / 2, 0);
-            vertex.position += point1 - offset;
+            Quaternion rotation = Quaternion.Euler(0, 0, RotatePointTowards(point1, point2) + 90);
+            vertex.position = rotation * new Vector3(-thickness / 2, 0) + point1 - offset;
             vh.AddVert(vertex);
-            vertex.position = point1Rotation * new Vector3(thickness / 2, 0);
-            vertex.position += point1 - offset;
+            vertex.position = rotation * new Vector3(thickness / 2, 0) + point1 - offset;
             vh.AddVert(vertex);
 
-            // Create the end of the segment
-            Quaternion point2Rotation = Quaternion.Euler(0, 0, RotatePointTowards(point2, point1) - 90);
-            vertex.position = point2Rotation * new Vector3(-thickness / 2, 0);
-            vertex.position += point2 - offset;
+            vertex.position = rotation * new Vector3(-thickness / 2, 0) + point2 - offset;
             vh.AddVert(vertex);
-            vertex.position = point2Rotation * new Vector3(thickness / 2, 0);
-            vertex.position += point2 - offset;
+            vertex.position = rotation * new Vector3(thickness / 2, 0) + point2 - offset;
             vh.AddVert(vertex);
 
-            // Also add the end point
-            vertex.position = point2 - offset;
-            vh.AddVert(vertex);
+            int index = vh.currentVertCount - 4;
+            vh.AddTriangle(index, index + 1, index + 2);
+            vh.AddTriangle(index + 2, index + 1, index + 3);
         }
 
         /// <summary>
         /// Gets the angle that a vertex needs to rotate to face target vertex
         /// </summary>
-        /// <param name="vertex">The vertex being rotated</param>
-        /// <param name="target">The vertex to rotate towards</param>
-        /// <returns>The angle required to rotate vertex towards target</returns>
         private float RotatePointTowards(Vector2 vertex, Vector2 target)
         {
-            return (float)(Mathf.Atan2(target.y - vertex.y, target.x - vertex.x) * (180 / Mathf.PI));
+            return Mathf.Atan2(target.y - vertex.y, target.x - vertex.x) * Mathf.Rad2Deg;
         }
-}
+    }
 }

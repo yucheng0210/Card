@@ -15,9 +15,9 @@ public class UIMap : UIBase
     private Button[][] mapList;
     private Dictionary<string, int> levelProbabilities = new Dictionary<string, int>
     {
-        { "SHOP",10 },
+        { "SHOP",15 },
         { "BATTLE", 30 },
-        { "BOSS", 15 },
+        { "BOSS", 10 },
         { "RANDOM", 20 },
         { "RECOVER",15 },
         {"TREASURE",10},
@@ -152,7 +152,7 @@ public class UIMap : UIBase
                 switch (key)
                 {
                     case "BATTLE":
-                        if (count > 10)
+                        /*if (count > 10)
                         {
                             currentIndex = hardRandomIndex;
                         }
@@ -163,8 +163,8 @@ public class UIMap : UIBase
                         else
                         {
                             currentIndex = simpleRandomIndex;
-                        }
-                        //currentIndex = 8001;
+                        }*/
+                        currentIndex = 8001;
                         break;
                     case "BOSS":
                         currentIndex = Random.Range(2001, 2003);

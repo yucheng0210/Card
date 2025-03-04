@@ -32,7 +32,7 @@ public class BlackDragonMechanismEffect : IEffect
                     break;
                 case 2:
                     enemy.AdditionAttackCount = 5;
-                    BattleManager.Instance.ShowCharacterStatusClue(enemy.StatusClueTrans, "攻擊次數提升", 0);
+                    BattleManager.Instance.ShowCharacterStatusClue(enemy.StatusClueTrans, "攻擊數提升", 0);
                     break;
             }
         }
@@ -54,7 +54,7 @@ public class BlackDragonMechanismEffect : IEffect
             BattleManager.CheckEmptyType checkEmptyType = BattleManager.CheckEmptyType.EnemyAttack;
             BattleManager.ActionRangeType actionRangeType = BattleManager.ActionRangeType.AllZone;
             List<string> emptyPlaceList = BattleManager.Instance.GetActionRangeTypeList("", 0, checkEmptyType, actionRangeType);
-            EffectFactory.Instance.CreateEffect("RechargeEffect").ApplyEffect(1, enemyLocation, BattleManager.Instance.CurrentPlayerLocation);
+            EffectFactory.Instance.CreateEffect("RechargeEffect").ApplyEffect(2, enemyLocation, BattleManager.Instance.CurrentPlayerLocation);
             BattleManager.Instance.ShowCharacterStatusClue(enemy.StatusClueTrans, "充能", 0);
             BattleManager.Instance.TemporaryChangeAttack(enemy, BattleManager.Instance.CurrentPlayerLocation, emptyPlaceList, 10);
         }

@@ -7,6 +7,8 @@ public class UICardMenu : UIBase
 {
     [SerializeField]
     private Button cardMenuButton;
+    [SerializeField]
+    private Button mapCardMenuButton;
 
     [SerializeField]
     private Button usedCardMenuButton;
@@ -27,6 +29,7 @@ public class UICardMenu : UIBase
     {
         base.Start();
         cardMenuButton.onClick.AddListener(() => UIManager.Instance.RefreshCardBag(DataManager.Instance.CardBag));
+        mapCardMenuButton.onClick.AddListener(() => UIManager.Instance.RefreshCardBag(DataManager.Instance.CardBag));
         usedCardMenuButton.onClick.AddListener(() => UIManager.Instance.RefreshCardBag(DataManager.Instance.UsedCardBag));
         removeCardMenuButton.onClick.AddListener(() => UIManager.Instance.RefreshCardBag(DataManager.Instance.RemoveCardBag));
         hideButton.onClick.AddListener(Hide);
