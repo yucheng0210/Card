@@ -5,10 +5,12 @@ using UnityEngine.UI;
 public class DiceRollerUI : UIBase
 {
     [SerializeField]
+    private Text title;
+    [SerializeField]
     Button _rollButton, sumBetButton, doublesBetButton, showButton, tenButton, fiftyButton, hundredButton, allinButton, bigButton
      , smallButton, yesButton, noButton, exitButton;
     [SerializeField]
-    Text _resultsText, _doublesText, gambleResultsText;
+    Text gambleResultsText;
     [SerializeField]
     DiceRoller2D _diceRoller;
     [SerializeField]
@@ -39,8 +41,6 @@ public class DiceRollerUI : UIBase
     private void RegisterButtonListeners()
     {
         betMoneyCount = 0;
-        _resultsText.text = "";
-        _doublesText.text = "";
         gambleResultsText.text = "";
         currentOdds = 1;
         tenButton.onClick.AddListener(() => BetMoney(10));
@@ -76,13 +76,13 @@ public class DiceRollerUI : UIBase
     public override void Show()
     {
         base.Show();
+        title.text = "請選擇賭金";
         //EventManager.Instance.DispatchEvent(EventDefinition.eventDialog, currentDialogID);
     }
 
     private void HandleRoll(int rollResult)
     {
-        _resultsText.text = $"點數為 {rollResult}";
-        _doublesText.text = _diceRoller.Doubles ? "Doubles!" : "";
+        title.text = $"點數為 {rollResult}";
         switch (currentType)
         {
             case GambleType.SumBet:
@@ -91,7 +91,7 @@ public class DiceRollerUI : UIBase
                 break;
             case GambleType.DoublesBet:
                 _diceRoller.IsWinner = _diceRoller.Doubles.ToString() == guest ? true : false;
-                gambleResultsText.text = $"{(_diceRoller.Doubles ? "Doubles!" : "Not Doubles!")}，{(_diceRoller.IsWinner ? "你贏了!!!" : "你輸了...")}";
+                gambleResultsText.text = $"{(_diceRoller.Doubles ? "是雙骰!" : "不是雙骰!")}，{(_diceRoller.IsWinner ? "你贏了!!!" : "你輸了...")}";
                 break;
         }
         if (_diceRoller.IsWinner)
@@ -125,20 +125,22 @@ public class DiceRollerUI : UIBase
 
         gambleTypeTrans.gameObject.SetActive(true);
         betMoneyTrans.gameObject.SetActive(false);
-
         DataManager.Instance.MoneyCount -= amount;
         betMoneyCount = amount;
+        title.text = "請選擇賭法";
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
 
     private void SumBet()
     {
         ShowBetType(sumBetTrans, GambleType.SumBet);
+        title.text = "大或小";
     }
 
     private void DoublesBet()
     {
         ShowBetType(doublesBetTrans, GambleType.DoublesBet);
+        title.text = "是否為雙骰";
     }
 
     private void ShowBetType(Transform betType, GambleType gambleType)

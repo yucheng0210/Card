@@ -12,8 +12,9 @@ public class UIGameOver : UIBase
     private Image titleImage;
     [SerializeField]
     private List<Sprite> titleSpriteList = new List<Sprite>();
-    private void Awake()
+    protected override void Start()
     {
+        base.Start();
         EventManager.Instance.AddEventRegister(EventDefinition.eventGameOver, EventGameOver);
         startMenuButton.onClick.AddListener(() => StartCoroutine(SceneController.Instance.Transition("StartMenu")));
     }

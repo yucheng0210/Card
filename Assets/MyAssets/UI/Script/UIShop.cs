@@ -20,29 +20,29 @@ public class UIShop : UIBase
     private CardItem cardPrefab;
     [SerializeField]
     private Button potionPrefab;
-    protected override void Start()
-    {
-        base.Start();
-        exitButton.onClick.AddListener(() =>
-        {
-            UIManager.Instance.HideUI("UIShop");
-            ClearChildren(cardGroupTrans);
-            ClearChildren(potionGroupTrans);
-        });
-    }
+    private bool isBattleMode = false;
     public override void Show()
     {
         base.Show();
-        if (UIManager.Instance.UIDict["UISkyIsland"].UI.activeSelf)
+        isBattleMode = !UIManager.Instance.UIDict["UISkyIsland"].UI.activeSelf;
+        exitButton.onClick.RemoveAllListeners();
+        exitButton.onClick.AddListener(() =>
         {
-            RefreshMerchandise(false);
-        }
-        else
-        {
-            RefreshMerchandise(true);
-        }
+            if (isBattleMode)
+            {
+                BattleManager.Instance.NextLevel(GetType().Name);
+
+            }
+            else
+            {
+                UIManager.Instance.HideUI(GetType().Name);
+            }
+            ClearChildren(cardGroupTrans);
+            ClearChildren(potionGroupTrans);
+        });
+        RefreshMerchandise();
     }
-    private void RefreshMerchandise(bool isBattleMode)
+    private void RefreshMerchandise()
     {
         // 切換背景
         battleBackground.SetActive(isBattleMode);
@@ -66,9 +66,16 @@ public class UIShop : UIBase
 
     private void ClearChildren(Transform parent)
     {
-        for (int i = parent.childCount - 1; i >= 0; i--)
+        List<GameObject> children = new List<GameObject>();
+
+        for (int i = 0; i < parent.childCount; i++)
         {
-            Destroy(parent.GetChild(i).gameObject);
+            children.Add(parent.GetChild(i).gameObject);
+        }
+
+        for (int i = 0; i < children.Count; i++)
+        {
+            Destroy(children[i]);
         }
     }
 

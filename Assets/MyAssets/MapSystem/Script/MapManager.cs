@@ -257,39 +257,30 @@ public class MapManager : Singleton<MapManager>
         {
             for (int j = 0; j < mapNodes[0].Length; j++)
             {
-                if (mapNodes[i][j].isUsed)
+                if (!mapNodes[i][j].isUsed)
                 {
-                    if (mapNodes[i][j].left != null)
-                    {
-                        GameObject line = new GameObject();
-                        line.transform.SetParent(lineGroupTrans);
-                        line.AddComponent<CanvasRenderer>();
-                        //LineRenderer ren = line.AddComponent<LineRenderer>();
-                        UILineRenderer ren = line.AddComponent<UILineRenderer>();
-                        ren.center = false;
-                        ren.thickness = 1;
-                        ren.material = lineMaterial;
-                        //ren.useWorldSpace = false;
-                        Vector2[] current = { mapNodes[i][j].transform.position, mapNodes[i][j].left.transform.position };
-                        ren.points = current;
-                    }
-                    if (mapNodes[i][j].right != null)
-                    {
-                        GameObject line = new GameObject();
-                        line.transform.SetParent(lineGroupTrans);
-                        line.AddComponent<CanvasRenderer>();
-                        //LineRenderer ren = line.AddComponent<LineRenderer>();
-                        UILineRenderer ren = line.AddComponent<UILineRenderer>();
-                        ren.center = false;
-                        ren.thickness = 1;
-                        ren.material = lineMaterial;
-                        //ren.useWorldSpace = false;
-                        Vector2[] current = { mapNodes[i][j].transform.position, mapNodes[i][j].right.transform.position };
-                        ren.points = current;
-                    }
+                    continue;
                 }
+                DrawLine(mapNodes[i][j], mapNodes[i][j].left);
+                DrawLine(mapNodes[i][j], mapNodes[i][j].right);
             }
         }
+    }
+
+    private void DrawLine(MapNode fromNode, MapNode toNode)
+    {
+        if (toNode == null)
+        {
+            return;
+        }
+        GameObject line = new GameObject("UILine");
+        line.transform.SetParent(lineGroupTrans);
+        line.AddComponent<CanvasRenderer>();
+        UILineRenderer ren = line.AddComponent<UILineRenderer>();
+        ren.center = false;
+        ren.thickness = 1;
+        ren.material = lineMaterial;
+        ren.points = new Vector2[] { fromNode.transform.position, toNode.transform.position };
     }
 }
 

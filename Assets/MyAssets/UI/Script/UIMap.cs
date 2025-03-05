@@ -11,6 +11,8 @@ public class UIMap : UIBase
     private Transform mapButtonsTrans;
     [SerializeField]
     private List<Sprite> mapTypeList = new List<Sprite>();
+    [SerializeField]
+    private List<Sprite> usedMapTypeList = new List<Sprite>();
     private DG.Tweening.Sequence[][] effectList;
     private Button[][] mapList;
     private Dictionary<string, int> levelProbabilities = new Dictionary<string, int>
@@ -152,7 +154,7 @@ public class UIMap : UIBase
                 switch (key)
                 {
                     case "BATTLE":
-                        /*if (count > 10)
+                        if (count > 10)
                         {
                             currentIndex = hardRandomIndex;
                         }
@@ -163,11 +165,11 @@ public class UIMap : UIBase
                         else
                         {
                             currentIndex = simpleRandomIndex;
-                        }*/
-                        currentIndex = 8001;
+                        }
+                        // currentIndex = 8001;
                         break;
                     case "BOSS":
-                        currentIndex = Random.Range(2001, 2003);
+                        currentIndex = Random.Range(2000 + MapManager.Instance.ChapterCount, 2002 + MapManager.Instance.ChapterCount);
                         break;
                     case "RANDOM":
                         currentIndex = 3001;
@@ -230,7 +232,7 @@ public class UIMap : UIBase
     {
         Image mapImage = MapManager.Instance.MapNodes[i][j].GetComponent<Image>();
         string mapType = MapManager.Instance.MapNodes[i][j].l.LevelType;
-        SetMapTypeImage(mapImage, mapType);
+        SetMapTypeImage(mapImage, mapType, mapTypeList);
     }
 
     private void CleanupNode(int i, int j)
@@ -238,30 +240,30 @@ public class UIMap : UIBase
         //Destroy(mapList[i][j].transform.GetChild(0).gameObject);
     }
 
-    private void SetMapTypeImage(Image mapImage, string mapType)
+    private void SetMapTypeImage(Image mapImage, string mapType, List<Sprite> typeList)
     {
         switch (mapType)
         {
             case "BATTLE":
-                mapImage.sprite = mapTypeList[0];
+                mapImage.sprite = typeList[0];
                 break;
             case "BOSS":
-                mapImage.sprite = mapTypeList[1];
+                mapImage.sprite = typeList[1];
                 break;
             case "RANDOM":
-                mapImage.sprite = mapTypeList[2];
+                mapImage.sprite = typeList[2];
                 break;
             case "RECOVER":
-                mapImage.sprite = mapTypeList[3];
+                mapImage.sprite = typeList[3];
                 break;
             case "SHOP":
-                mapImage.sprite = mapTypeList[4];
+                mapImage.sprite = typeList[4];
                 break;
             case "TREASURE":
-                mapImage.sprite = mapTypeList[5];
+                mapImage.sprite = typeList[5];
                 break;
             case "FINALBOSS":
-                mapImage.sprite = mapTypeList[6];
+                mapImage.sprite = typeList[6];
                 break;
                 /*case "REMOVECARD":
                     mapImage.sprite = mapTypeList[4];
@@ -294,6 +296,12 @@ public class UIMap : UIBase
                 else
                 {
                     effectList[i][j].Pause();
+                }
+                if (i < MapManager.Instance.LevelCount)
+                {
+                    Image mapImage = MapManager.Instance.MapNodes[i][j].GetComponent<Image>();
+                    string mapType = MapManager.Instance.MapNodes[i][j].l.LevelType;
+                    SetMapTypeImage(mapImage, mapType, usedMapTypeList);
                 }
             }
         }

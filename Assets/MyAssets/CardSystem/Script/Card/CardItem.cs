@@ -106,7 +106,7 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         }
         index = transform.GetSiblingIndex();
         Quaternion zeroRotation = Quaternion.Euler(0, 0, 0);
-        transform.DOScale(2f, moveTime);
+        transform.DOScale(1.5f, moveTime);
         transform.DORotateQuaternion(zeroRotation, moveTime);
         CardRectTransform.DOAnchorPosY(pointerEnterUpY, moveTime);
         float space = pointerEnterSpacing;
@@ -142,10 +142,14 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        if (isDrag && !isAttackCard || CantMove || BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack)
+        if (isDrag || CantMove || BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack)
         {
             return;
         }
+        ResetCardPos();
+    }
+    private void ResetCardPos()
+    {
         transform.DOScale(1f, moveTime);
         transform.DORotateQuaternion(Quaternion.Euler(0, 0, CurrentAngle), moveTime);
         CardRectTransform.DOAnchorPos(CurrentPos, moveTime);
@@ -162,7 +166,6 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         }
         UIManager.Instance.ClearMoveClue(false);
     }
-
     public void OnPointerDown(PointerEventData eventData)
     {
         if (CantMove || BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack)
@@ -171,7 +174,6 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         }
         isAttackCard = MyCardData.CardType == "攻擊";
     }
-
 
     private void Update()
     {
@@ -185,6 +187,7 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             else if (Input.GetMouseButtonDown(1))
             {
                 OnCancelCardPickup();
+                ResetCardPos();
             }
         }
     }
@@ -198,12 +201,17 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         if (!isDrag && eventData.button == PointerEventData.InputButton.Left)
         {
             isDrag = true;
+            Cursor.visible = false;
+            if (isAttackCard)
+            {
+                transform.DOScale(1.5f, moveTime);
+                CardRectTransform.DOAnchorPosX(0, moveTime);
+            }
         }
     }
 
     private void OnCardPickup()
     {
-        Cursor.visible = false;
         Vector2 dragPosition;
         RectTransform parentRect = transform.parent.GetComponent<RectTransform>();
         if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(parentRect, Input.mousePosition, Camera.main, out dragPosition))
@@ -214,7 +222,6 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         if (isAttackCard)
         {
             EventManager.Instance.DispatchEvent(EventDefinition.eventAttackLine, true, CardRectTransform.anchoredPosition, dragPosition);
-            // CheckRayToEnemy(); // 可選的額外邏輯
         }
         else
         {
@@ -226,13 +233,11 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         isDrag = false;
         Cursor.visible = true;
         EventManager.Instance.DispatchEvent(EventDefinition.eventAttackLine, false, CardRectTransform.anchoredPosition, CardRectTransform.anchoredPosition);
-        CardRectTransform.anchoredPosition = CurrentPos;
+        //CardRectTransform.anchoredPosition = CurrentPos;
         CardRectTransform.SetSiblingIndex(index);
     }
     private void OnEndCardPickup()
     {
-        Cursor.visible = true;
-
         if (isAttackCard)
         {
             CheckRayToEnemy();
@@ -241,7 +246,6 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         if (CardRectTransform.anchoredPosition.y >= 400 && GetUseCardCondition())
         {
             UseCard("Player");
-            OnCancelCardPickup();
         }
     }
 
@@ -307,7 +311,6 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             string location = BattleManager.Instance.GetEnemyKey(enemy.MyEnemyData);
             if (GetUseCardCondition() && CheckEnemyInAttackRange(location))
             {
-                OnCancelCardPickup();
                 UseCard(location);
             }
         }
@@ -391,8 +394,9 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             EffectFactory.Instance.CreateEffect(effectID).ApplyEffect(effectCount, BattleManager.Instance.CurrentPlayerLocation, target);
             BattleManager.Instance.ShowCharacterStatusClue(statusClueTrans, clueStrs, waitTime);
         }
-        EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
         gameObject.SetActive(false);
+        OnCancelCardPickup();
+        EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
     public void RefreshCardOutline(params object[] args)
     {

@@ -100,7 +100,7 @@ public class BattleManager : Singleton<BattleManager>
     public Texture2D DefaultCursor { get; set; }
     public Vector2 DefaultCursorHotSpot { get; set; }
     public int RoundCount { get; set; }
-    bool i = false;
+    //bool i = false;
     protected override void Awake()
     {
         base.Awake();
@@ -122,7 +122,7 @@ public class BattleManager : Singleton<BattleManager>
     {
         if (Input.GetKeyDown(KeyCode.KeypadEnter))
         {
-            if (!i)
+            /*if (!i)
             {
                 Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
                 i = !i;
@@ -131,7 +131,7 @@ public class BattleManager : Singleton<BattleManager>
             {
                 Cursor.SetCursor(DefaultCursor, DefaultCursorHotSpot, CursorMode.Auto);
                 i = !i;
-            }
+            }*/
             /* CharacterData value = CurrentEnemyList.ElementAt(0).Value;
              TakeDamage(CurrentPlayerData, value, 51, CurrentEnemyList.ElementAt(0).Key, 0);*/
             //EventManager.Instance.DispatchEvent(EventDefinition.eventAfterMove);
