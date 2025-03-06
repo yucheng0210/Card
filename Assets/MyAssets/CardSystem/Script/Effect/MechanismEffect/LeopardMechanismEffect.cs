@@ -49,10 +49,12 @@ public class LeopardMechanismEffect : IEffect
     private void EventAttack(params object[] args)
     {
         int limitCount = Mathf.Min(removeCardCount, DataManager.Instance.HandCard.Count);
+        List<CardItem> throwAwayList = new List<CardItem>();
         for (int i = 0; i < limitCount; i++)
         {
-            BattleManager.Instance.ThrowAwayHandCard(i, 0.5f);
+            throwAwayList.Add(DataManager.Instance.HandCard[i].MyCardItem);
         }
+        BattleManager.Instance.ThrowAwayHandCard(throwAwayList, 0.5f);
         EventManager.Instance.RemoveEventRegister(EventDefinition.eventAttack, EventAttack);
     }
     public string SetTitleText()

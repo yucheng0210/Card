@@ -836,7 +836,7 @@ public class BattleManager : Singleton<BattleManager>
     }
     private void UsingEffect()
     {
-        SwitchHandCardRaycast();
+        SwitchHandCardRaycast(false);
     }
     private void Explore()
     {
@@ -1111,18 +1111,25 @@ public class BattleManager : Singleton<BattleManager>
         // 動畫序列
         sequence.Append(clueRect.DOLocalMoveY(clueRect.anchoredPosition.y + 75, 0.5f)).AppendCallback(() => StartCoroutine(UIManager.Instance.FadeIn(clue, 1f, true)));
     }
-    public void ThrowAwayHandCard(int childCardIndex, float moveTime)
+    public void ThrowAwayHandCard(List<CardItem> throwAwayList, float moveTime)
     {
-        List<CardData> handCard = DataManager.Instance.HandCard;
-        CardItem cardItem = handCard[childCardIndex].MyCardItem;
-        CardData cardData = cardItem.MyCardData;
-        RectTransform cardItemRect = cardItem.GetComponent<RectTransform>();
-        RectTransform useCardBagRect = UseCardBagTrans.GetComponent<RectTransform>();
-        DataManager.Instance.UsedCardBag.Add(handCard[childCardIndex]);
-        handCard.Remove(cardData);
-        cardItem.CantMove = true;
-        cardItemRect.DOAnchorPos(useCardBagRect.anchoredPosition, moveTime);
-        EventManager.Instance.DispatchEvent(EventDefinition.eventUseCard, cardItem);
+        for (int i = 0; i < throwAwayList.Count; i++)
+        {
+            CardItem cardItem = throwAwayList[i];
+            CardData cardData = cardItem.MyCardData;
+            RectTransform cardItemRect = cardItem.GetComponent<RectTransform>();
+            RectTransform useCardBagRect = UseCardBagTrans.GetComponent<RectTransform>();
+            DataManager.Instance.UsedCardBag.Add(cardData);
+            cardItem.CantMove = true;
+            cardItemRect.DOAnchorPos(useCardBagRect.anchoredPosition, moveTime);
+            EventManager.Instance.DispatchEvent(EventDefinition.eventUseCard, cardItem);
+        }
+        for (int i = 0; i < throwAwayList.Count; i++)
+        {
+            CardItem cardItem = throwAwayList[i];
+            CardData cardData = cardItem.MyCardData;
+            DataManager.Instance.HandCard.Remove(cardData);
+        }
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
     public void ClearAllMinions()
@@ -1149,12 +1156,12 @@ public class BattleManager : Singleton<BattleManager>
         EventManager.Instance.DispatchEvent(EventDefinition.eventMove);
 
     }
-    public void SwitchHandCardRaycast()
+    public void SwitchHandCardRaycast(bool switchBool)
     {
         List<CardData> handCard = DataManager.Instance.HandCard;
         for (int i = 0; i < handCard.Count; i++)
         {
-            handCard[i].MyCardItem.CardImage.raycastTarget = !handCard[i].MyCardItem.CardImage.raycastTarget;
+            handCard[i].MyCardItem.CardImage.raycastTarget = switchBool;
         }
     }
     public void ExchangePos(Transform transA, Dictionary<string, EnemyData> enemyListA, string locationA, Transform transB, string locationB, Dictionary<string, EnemyData> enemyListB)

@@ -166,7 +166,7 @@ public class CardCreater : MonoBehaviour
             EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
         }
         yield return new WaitForSecondsRealtime(moveTime);
-        BattleManager.Instance.SwitchHandCardRaycast();
+        BattleManager.Instance.SwitchHandCardRaycast(true);
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Attack);
     }
 

@@ -1,19 +1,19 @@
 ﻿標示,名稱,類型,背景圖路徑,消耗費用,屬性,特效,描述,攻擊,護盾,效果,稀有度,攻擊距離,魔力消耗,是否消耗,購買價格,卡牌凍結,自動消耗
 1001,魔力彈,攻擊,CardImage/MagicBullet,1,無,null,造成12點傷害。,12,0,,基本,2,2,FALSE,50,FALSE,FALSE
 1002,魔力盾,防禦,CardImage/MagicShield,1,無,null,獲得5點護盾。,0,5,,基本,0,2,FALSE,50,FALSE,FALSE
-1003,火球,攻擊,CardImage/FireBall,2,無,null,造成20點傷害，並造成擊退。,20,0,KnockBackEffect=1,基本,1,3,FALSE,50,FALSE,FALSE
+1003,雷擊,攻擊,CardImage/Lightning ,2,無,null,造成20點傷害，並造成擊退。,20,0,KnockBackEffect=1,基本,1,3,FALSE,50,FALSE,FALSE
 1004,聚魔,增益,CardImage/GatherMagic,0,無,null,獲得3點魔力。,0,0,IncreaseManaEffect=3,普通,0,0,FALSE,50,FALSE,FALSE
 1005,至尊平A,攻擊,CardImage/NormalAttack,1,無,null,獲得一層戰意，並額外造成等同於戰意層數的傷害。,0,0,FightingSpiritEffect=0,普通,1,0,FALSE,50,FALSE,FALSE
 1006,湧泉,能力,CardImage/Spring,1,無,null,每回合生成兩點魔力。,0,0,IncreaseManaEffect=2,普通,0,0,FALSE,50,FALSE,FALSE
 1007,岩壁,防禦,CardImage/Spring,2,無,null,產生13點護盾，限制移動。,0,13,CantMoveEffect=0,普通,0,5,FALSE,50,FALSE,FALSE
 1008,以一換二,增益,CardImage/DrawCards,1,無,null,抽兩張牌。,0,0,DrawCardEffect=2,普通,0,0,FALSE,50,FALSE,FALSE
-1009,冥想,增益,CardImage/Spring,1,無,null,獲得8點魔力，限制移動。,0,0,IncreaseManaEffect=8;CantMoveEffect=1,普通,0,0,FALSE,50,FALSE,FALSE
-1010,魔力契約,技能,CardImage/Contract,0,無,null,一次性獲得15點魔力，但在下一回合無法獲得任何魔力。,0,0,IncreaseManaEffect=15;CantIncreaseManaEffect=1,普通,0,0,FALSE,50,FALSE,FALSE
+1009,冥想,增益,CardImage/Meditation,1,無,null,獲得8點魔力和禁錮。,0,0,IncreaseManaEffect=8;CantMoveEffect=1,普通,0,0,FALSE,50,FALSE,FALSE
+1010,廢棄轉化,技能,CardImage/DiscardConversion,0,無,null,丟棄所有手牌，每丟棄一張獲得3點魔力。,0,0,IncreaseManaEffect=-2;ThrowAwayHandCardEffect=0,普通,0,0,FALSE,50,FALSE,FALSE
 2001,瞬閃,移動,CardImage/Spring,1,無,null,移動兩格。,0,0,MoveEffect=2,稀有,0,0,FALSE,50,FALSE,FALSE
-2002,魔能增幅,技能,CardImage/Amplify,1,無,null,本回合獲得魔力翻倍。,0,0,SetManaMultiplierEffect=2,稀有,0,3,TRUE,50,FALSE,FALSE
+2002,魔能增幅,技能,CardImage/Amplify,1,無,null,本回合獲得魔力翻倍，並消耗掉此卡。,0,0,SetManaMultiplierEffect=2,稀有,0,3,TRUE,50,FALSE,FALSE
 2003,漩渦,技能,CardImage/Swirl,1,無,null,獲得本回合內消耗魔力的一半。,0,0,IncreaseManaEffect=-1,稀有,0,0,FALSE,50,FALSE,FALSE
 2004,彈回,技能,CardImage/Spring,1,無,null,產生5點護盾，並將一張卡牌返回抽卡堆。,0,5,ReturnCardBag=1,稀有,0,4,FALSE,50,FALSE,FALSE
-3001,毀滅射線,攻擊,CardImage/FireBall,1,無,null,消耗所有魔力，造成魔力乘以二加上總魔力除以五的平方傷害。,0,0,ExtinctionRayEffect=0,史詩,2,0,FALSE,50,FALSE,FALSE
+3001,火球,攻擊,CardImage/FireBall,1,無,null,消耗所有魔力，造成魔力乘以二加上總魔力除以五的平方傷害。,0,0,ExtinctionRayEffect=0,史詩,2,0,FALSE,50,FALSE,FALSE
 5001,死亡倒數,詛咒,CardImage/FireBall,2,無,null,造成20點傷害。,20,0,DeadlineCurseEffect=0,普通,0,0,TRUE,0,TRUE,FALSE
 5002,寄生孢子,詛咒,CardImage/Foreknowledge,1,無,null,每回合造成最大生命2%的傷害，並回復宿主相等傷害。,0,0,,普通,0,0,TRUE,0,FALSE,FALSE
 5003,乏力,詛咒,CardImage/FireBall,-1,無,null,抽到此卡扣除所有移動點數。,0,0,WeaknessCurseEffect=1,普通,0,0,TRUE,0,FALSE,TRUE

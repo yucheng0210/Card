@@ -12,17 +12,21 @@ public class IncreaseManaEffect : IEffect
         {
             currentMana = BattleManager.Instance.CurrentConsumeMana;
         }
+        else if (value == -2)
+        {
+            currentMana = DataManager.Instance.HandCard.Count * 3;
+        }
         currentMana *= BattleManager.Instance.ManaMultiplier;
         BattleManager.Instance.CurrentPlayerData.Mana += currentMana;
     }
 
     public string SetDescriptionText()
     {
-       return "增魔";
+        return "增魔";
     }
 
     public string SetTitleText()
     {
-       return "增加魔力。";
+        return "增加魔力。";
     }
 }

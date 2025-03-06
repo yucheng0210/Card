@@ -6,7 +6,7 @@ public class StormEffect : IEffect
 {
     public void ApplyEffect(int value, string fromLocation, string toLocation)
     {
-        BattleManager.Instance.ThrowAwayHandCard(value, 0.5f);
+        //BattleManager.Instance.ThrowAwayHandCard(value, 0.5f);
     }
 
     public string SetTitleText()
