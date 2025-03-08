@@ -410,6 +410,7 @@ public class UIBattle : UIBase
         BattleManager.Instance.RefreshCheckerboardList();
         if (currentEnemyList.Count == 0)
         {
+            AudioManager.Instance.BGMAudio(0);
             enemyInfo.SetActive(false);
             currentEnemyList.Clear();
             BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Win);
@@ -483,6 +484,18 @@ public class UIBattle : UIBase
     }
     private IEnumerator BattleInitial()
     {
+        if (MapManager.Instance.ChapterCount == 3)
+        {
+            AudioManager.Instance.BGMAudio(3);
+        }
+        else if (MapManager.Instance.LevelCount == 14)
+        {
+            AudioManager.Instance.BGMAudio(2);
+        }
+        else
+        {
+            AudioManager.Instance.BGMAudio(1);
+        }
         RefreshPotionBag();
 
         // 获取当前的敌人列表和地形列表

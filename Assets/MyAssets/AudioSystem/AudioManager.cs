@@ -10,12 +10,7 @@ public class AudioManager : Singleton<AudioManager>
     private AudioMixer audioMixer;
     [Header("BGM音效")]
     [SerializeField]
-    private AudioClip mainClip;
-
-    [SerializeField]
-    private AudioClip battleClip;
-    [SerializeField]
-    private AudioClip danceClip;
+    private List<AudioClip> bgmClipList = new List<AudioClip>();
 
     [Header("SE音效")]
     [SerializeField]
@@ -74,11 +69,17 @@ public class AudioManager : Singleton<AudioManager>
         BGMSource = transform.GetChild(3).GetComponent<AudioSource>();
         Instance.BGMSource.loop = true;
     }
-    public void DanceAudio()
+    public void BGMAudio(int index)
     {
-        Instance.BGMSource.clip = Instance.danceClip;
-        Instance.BGMSource.Play();
+        if (index < 0 || index >= bgmClipList.Count || BGMSource.clip == bgmClipList[index])
+        {
+            return;
+        }
+        BGMSource.Stop();
+        BGMSource.clip = bgmClipList[index];
+        BGMSource.Play();
     }
+
     public void ClearAllAudioClip()
     {
         MenuSource.clip = null;
@@ -133,21 +134,6 @@ public class AudioManager : Singleton<AudioManager>
         Instance.PlayerSource.Play();
     }
 
-    public void MainAudio()
-    {
-        if (Instance.BGMSource.clip == Instance.mainClip)
-            return;
-        Instance.BGMSource.clip = Instance.mainClip;
-        Instance.BGMSource.Play();
-    }
-
-    public void BattleAudio()
-    {
-        if (Instance.BGMSource.clip == Instance.battleClip)
-            return;
-        Instance.BGMSource.clip = Instance.battleClip;
-        Instance.BGMSource.Play();
-    }
 
     public void Impact()
     {

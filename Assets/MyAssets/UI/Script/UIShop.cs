@@ -37,13 +37,13 @@ public class UIShop : UIBase
             {
                 UIManager.Instance.HideUI(GetType().Name);
             }
-            ClearChildren(cardGroupTrans);
-            ClearChildren(potionGroupTrans);
         });
         RefreshMerchandise();
     }
     private void RefreshMerchandise()
     {
+        ClearChildren(cardGroupTrans);
+        ClearChildren(potionGroupTrans);
         // 切換背景
         battleBackground.SetActive(isBattleMode);
         skyIslandBackground.SetActive(!isBattleMode);
@@ -66,16 +66,10 @@ public class UIShop : UIBase
 
     private void ClearChildren(Transform parent)
     {
-        List<GameObject> children = new List<GameObject>();
-
-        for (int i = 0; i < parent.childCount; i++)
+        // 直接反向刪除，避免 childCount 變化影響
+        for (int i = parent.childCount - 1; i >= 0; i--)
         {
-            children.Add(parent.GetChild(i).gameObject);
-        }
-
-        for (int i = 0; i < children.Count; i++)
-        {
-            Destroy(children[i]);
+            Destroy(parent.GetChild(i).gameObject);
         }
     }
 
