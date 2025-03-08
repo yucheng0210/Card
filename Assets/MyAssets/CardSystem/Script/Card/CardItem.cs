@@ -10,6 +10,8 @@ using Unity.VisualScripting;
 public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IDragHandler, IEndDragHandler, IPointerDownHandler, IPointerClickHandler
 {
     private int index;
+    [SerializeField]
+    private Material dissolveMaterial;
 
     [SerializeField]
     private Text cardName;
@@ -207,6 +209,7 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                 transform.DOScale(1.5f, moveTime);
                 CardRectTransform.DOAnchorPosX(0, moveTime);
             }
+            BattleManager.Instance.SwitchHandCardRaycast(false);
         }
     }
 
@@ -235,6 +238,7 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         EventManager.Instance.DispatchEvent(EventDefinition.eventAttackLine, false, CardRectTransform.anchoredPosition, CardRectTransform.anchoredPosition);
         //CardRectTransform.anchoredPosition = CurrentPos;
         CardRectTransform.SetSiblingIndex(index);
+        BattleManager.Instance.SwitchHandCardRaycast(true);
     }
     private void OnEndCardPickup()
     {
@@ -394,8 +398,34 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             EffectFactory.Instance.CreateEffect(effectID).ApplyEffect(effectCount, BattleManager.Instance.CurrentPlayerLocation, target);
             BattleManager.Instance.ShowCharacterStatusClue(statusClueTrans, clueStrs, waitTime);
         }
-        gameObject.SetActive(false);
-        OnCancelCardPickup();
+        if (cardData.CardRemove)
+        {
+            float progress = 1.0f;
+            CardImage.material = dissolveMaterial;
+            CardDescription.material = dissolveMaterial;
+            CardName.material = dissolveMaterial;
+            CardCost.material = dissolveMaterial;
+            CardManaCost.material = dissolveMaterial;
+            CardOutline.SetActive(false);
+            dissolveMaterial.SetFloat("_Progress", progress);
+            isDrag = false;
+            DOTween.To(() => progress, x =>
+            {
+                progress = x;
+                dissolveMaterial.SetFloat("_Progress", progress);
+                if (Mathf.Approximately(progress, 0.0f))
+                {
+                    gameObject.SetActive(false);
+                    OnCancelCardPickup();
+                }
+            }, 0.0f, 1.0f) // 2.0f 秒內從 1.0 到 0.0
+            .SetEase(Ease.OutQuad);
+        }
+        else
+        {
+            gameObject.SetActive(false);
+            OnCancelCardPickup();
+        }
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
     public void RefreshCardOutline(params object[] args)
