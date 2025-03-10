@@ -297,18 +297,35 @@ public class UIBattle : UIBase
         {
             if (enemy.MySequence == null)
             {
+                enemy.MyAnimator.SetTrigger("isAttacking");
+                yield return null;
+                while (true)
+                {
+                    AnimatorStateInfo stateInfo = enemy.MyAnimator.GetCurrentAnimatorStateInfo(0);
+                    if (stateInfo.IsTag("Attack") && stateInfo.normalizedTime >= 0.7f)
+                    {
+                        break;
+                    }
+                    yield return null; // 每幀檢查一次
+                }
+
                 if (enemy.InRange)
                 {
-                    BattleManager.Instance.TakeDamage(enemyData, playerData, enemy.CurrentAttackPower, BattleManager.Instance.CurrentPlayerLocation, 0.15f);
+                    BattleManager.Instance.TakeDamage(enemyData, playerData, enemy.CurrentAttackPower, BattleManager.Instance.CurrentPlayerLocation, 0);
                 }
-                enemy.MyAnimator.SetTrigger("isAttacking");
-                yield return new WaitForSecondsRealtime(0.5f);
+
+                string particlePath = "ParticleEffect/HitLine";
+                GameObject particle = Resources.Load<GameObject>(particlePath);
+                Instantiate(particle, BattleManager.Instance.PlayerTrans.position, Quaternion.identity);
+
+                yield return new WaitForSecondsRealtime(0.25f);
             }
             else
             {
                 enemy.MySequence.Play().WaitForCompletion();
             }
         }
+
     }
 
     // 应用敌人的效果

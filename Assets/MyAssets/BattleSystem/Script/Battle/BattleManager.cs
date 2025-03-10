@@ -84,6 +84,7 @@ public class BattleManager : Singleton<BattleManager>
     public int CurrentConsumeMana { get; set; }
     public PlayerData CurrentPlayerData { get; set; }
     public Player CurrentPlayer { get; set; }
+    public Animator PlayerAni { get; set; }
     //敵人
     public Dictionary<string, EnemyData> CurrentEnemyList { get; set; }
     public Dictionary<string, EnemyData> CurrentMinionsList { get; set; }

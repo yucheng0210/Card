@@ -9,6 +9,7 @@ public class Player : Character
     {
         BattleManager.Instance.CurrentPlayer = this;
         BattleManager.Instance.PlayerTrans = GetComponent<RectTransform>();
+        BattleManager.Instance.PlayerAni=GetComponent<Animator>();
         BattleManager.Instance.CurrentPlayerData.CurrentHealth = BattleManager.Instance.CurrentPlayerData.MaxHealth;
         EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
     }

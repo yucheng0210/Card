@@ -17,12 +17,12 @@ public class UIMap : UIBase
     private Button[][] mapList;
     private Dictionary<string, int> levelProbabilities = new Dictionary<string, int>
     {
-        { "SHOP",15 },
-        { "BATTLE", 30 },
-        { "BOSS", 10 },
-        { "RANDOM", 20 },
         { "RECOVER",15 },
+        { "BATTLE", 30 },
+        { "RANDOM", 20 },
         {"TREASURE",10},
+        { "SHOP",15 },
+        { "BOSS", 10 },
     };
     protected override void Start()
     {
@@ -41,14 +41,14 @@ public class UIMap : UIBase
         // 初始化列表
         InitializeLists();
         // 遍歷每一行節點
-        /* if (MapManager.Instance.ChapterCount == 2)
-         {
-             MapManager.Instance.LevelCount = 14;
-         }
-         else
-         {
-             MapManager.Instance.LevelCount = 0;
-         }*/
+        /*if (MapManager.Instance.ChapterCount == 1)
+        {
+            MapManager.Instance.LevelCount = 14;
+        }
+        else
+        {
+            MapManager.Instance.LevelCount = 0;
+        }*/
         MapManager.Instance.LevelCount = 0;
         if (MapManager.Instance.ChapterCount == 3)
         {
@@ -154,7 +154,7 @@ public class UIMap : UIBase
                 switch (key)
                 {
                     case "BATTLE":
-                        if (count > 10)
+                        /*if (count > 10)
                         {
                             currentIndex = hardRandomIndex;
                         }
@@ -165,8 +165,8 @@ public class UIMap : UIBase
                         else
                         {
                             currentIndex = simpleRandomIndex;
-                        }
-                        // currentIndex = 8001;
+                        }*/
+                        currentIndex = 8001;
                         break;
                     case "BOSS":
                         currentIndex = Random.Range(2000 + MapManager.Instance.ChapterCount, 2002 + MapManager.Instance.ChapterCount);

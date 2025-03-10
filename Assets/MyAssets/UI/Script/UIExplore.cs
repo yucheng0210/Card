@@ -54,6 +54,7 @@ public class UIExplore : UIBase
         treasureExitButton.onClick.AddListener(() =>
         {
             ExitExplore("UIExplore");
+            treasure.SetActive(false);
             openedTreasureBackground.SetActive(false);
             treasureExitButton.gameObject.SetActive(false);
         }
@@ -110,10 +111,10 @@ public class UIExplore : UIBase
                 ShowCorpse();
                 break;
             case 1:
-                StartBattle();
+                ShowCorpse();
                 break;
             case 2:
-                OpenShop();
+                ShowCorpse();
                 break;
         }
     }

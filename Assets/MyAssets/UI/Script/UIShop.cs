@@ -66,10 +66,9 @@ public class UIShop : UIBase
 
     private void ClearChildren(Transform parent)
     {
-        // 直接反向刪除，避免 childCount 變化影響
         for (int i = parent.childCount - 1; i >= 0; i--)
         {
-            Destroy(parent.GetChild(i).gameObject);
+            parent.GetChild(i).gameObject.SetActive(false);
         }
     }
 

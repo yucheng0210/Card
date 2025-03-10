@@ -1,8 +1,8 @@
 ﻿標籤,名稱,總血量,最低攻擊力,最高攻擊力,圖片位置,移動步數,攻擊距離,近戰模式,行動順序,動畫位置,被動技能,減傷率,圖片翻轉,特殊行動條件,特殊行動順序,特殊機制,特殊觸發技能,是爪牙,掉落金錢
-1001,哥布林,35,5,20,EnemyImage/Goblin,3,2,TRUE,CantMoveEffect=1;Cone=1;Cone=2,EnemyAnimation/Goblin,FuriousEffect=3,0,FALSE,-1,,,,FALSE,8
-1002,骷髏人,50,2,10,EnemyImage/Skeleton,2,1,TRUE,Shield=15;ThornsEffect=3;Surrounding=1,EnemyAnimation/Skeleton,ResurrectionEffect=35,0,FALSE,-1,,,,FALSE,10
-1003,大眼怪,25,1,8,EnemyImage/FlyingEye,2,5,FALSE,Linear=1;Linear=3;SlowDownEffect=1;TeleportEffect=2,EnemyAnimation/FlyingEye,SniperEffect=0,0,FALSE,-1,,,,FALSE,12
-1004,菇,75,5,15,EnemyImage/Mushroom,2,1,TRUE,Jump=1;VortexMawEffect=2;Surrounding=2;IncreaseHealth=35,EnemyAnimation/Mushroom,ParasiticEffect=2,0,FALSE,-1,,,,FALSE,15
+1001,哥布林,35,5,20,EnemyImage/Goblin,3,2,TRUE,CantMoveEffect=1;Cone=1;Cone=3,EnemyAnimation/Goblin,FuriousEffect=3,0,TRUE,-1,,,,FALSE,8
+1002,骷髏人,50,2,10,EnemyImage/Skeleton,2,1,TRUE,Shield=15;ThornsEffect=3;Surrounding=3,EnemyAnimation/Skeleton,ResurrectionEffect=35,0,TRUE,-1,,,,FALSE,10
+1003,大眼怪,25,1,8,EnemyImage/FlyingEye,2,5,FALSE,Linear=1;Linear=3;SlowDownEffect=1;TeleportEffect=2,EnemyAnimation/FlyingEye,SniperEffect=0,0,TRUE,-1,,,,FALSE,12
+1004,菇,75,5,15,EnemyImage/Mushroom,2,1,TRUE,Jump=1;VortexMawEffect=2;Surrounding=2;IncreaseHealth=35,EnemyAnimation/Mushroom,ParasiticEffect=2,0,TRUE,-1,,,,FALSE,15
 1005,沙漠狂獸,140,10,20,EnemyImage/BossDog,3,4,FALSE,CreateMinionsEffect=2;ApplyBuff=3;StraightCharge=1;StraightCharge=1;Shield=30,EnemyAnimation/BossDog,GroupEffect=2005,0,TRUE,-1,,,,FALSE,50
 1006,毒刃劍蠍,115,10,25,EnemyImage/Scorpion,2,5,FALSE,ThrowExplosion=1;ThrowTraps=1001;WeaknessCurseEffect=0,EnemyAnimation/Scorpion,PoisonedEffect=2,0,TRUE,-1,,,,FALSE,50
 1007,風沙追獵者,230,10,20,EnemyImage/Leopard,4,3,FALSE,Shield=30;Cone=1;Cone=2,EnemyAnimation/Leopard,FuriousEffect=5,0,TRUE,70,Cone=1;Cone=1;ThrowTraps=1002,LeopardMechanismEffect=0,ThrowTraps=1002,FALSE,100

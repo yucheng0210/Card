@@ -6,6 +6,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using DG.Tweening;
 using Unity.VisualScripting;
+using PilotoStudio;
 
 public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IDragHandler, IEndDragHandler, IPointerDownHandler, IPointerClickHandler
 {
@@ -249,7 +250,7 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         }
         if (CardRectTransform.anchoredPosition.y >= 400 && GetUseCardCondition())
         {
-            UseCard("Player");
+            StartCoroutine(UseCard("Player"));
         }
     }
 
@@ -315,7 +316,7 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             string location = BattleManager.Instance.GetEnemyKey(enemy.MyEnemyData);
             if (GetUseCardCondition() && CheckEnemyInAttackRange(location))
             {
-                UseCard(location);
+                StartCoroutine(UseCard(location));
             }
         }
     }
@@ -344,13 +345,28 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         }
         return hasEnoughActionPoints && hasEnoughMana && !isNotInAttackPhase && !isCardCostNegative;
     }
-    private void UseCard(string target)
+    private IEnumerator UseCard(string target)
     {
         CardData cardData = MyCardData;
         CardRectTransform.DOScale(1f, 0);
         DataManager.Instance.HandCard.Remove(MyCardData);
         BattleManager.Instance.ConsumeActionPoint(cardData.CardCost);
         BattleManager.Instance.ConsumeMana(cardData.CardManaCost);
+        string particlePath = cardData.CardSpecialEffect;
+        float particleWaitTime = 0.0f;
+        if (particlePath != null)
+        {
+            GameObject particleEffect = Resources.Load<GameObject>(particlePath);
+            Vector3 playerPos = BattleManager.Instance.PlayerTrans.position;
+            Vector3 startPos = new Vector3(playerPos.x, playerPos.y, -1);
+            ProjectileController projectileController = Instantiate(particleEffect, startPos, Quaternion.identity).GetComponent<ProjectileController>();
+            Vector3 destination = new Vector3(enemy.transform.position.x - 10, enemy.transform.position.y, -1);
+            projectileController.Destination = destination;
+            BattleManager.Instance.PlayerAni.SetTrigger("isAttacking");
+            projectileController.Attack();
+            particleWaitTime = 0.2f;
+        }
+        yield return new WaitForSeconds(particleWaitTime);
         if (cardData.CardAttack != 0 && cardData.CardType != "詛咒")
         {
             BattleManager.Instance.TakeDamage(BattleManager.Instance.CurrentPlayerData, BattleManager.Instance.CurrentEnemyList[target], cardData.CardAttack, target, 0);
@@ -369,7 +385,7 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             EventManager.Instance.DispatchEvent(EventDefinition.eventUseCard, this);
             EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
             gameObject.SetActive(false);
-            return;
+            yield break;
         }
         BattleManager.Instance.GetShield(BattleManager.Instance.CurrentPlayerData, cardData.CardShield);
         EventManager.Instance.DispatchEvent(EventDefinition.eventUseCard, this);
@@ -398,6 +414,7 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             EffectFactory.Instance.CreateEffect(effectID).ApplyEffect(effectCount, BattleManager.Instance.CurrentPlayerLocation, target);
             BattleManager.Instance.ShowCharacterStatusClue(statusClueTrans, clueStrs, waitTime);
         }
+
         if (cardData.CardRemove)
         {
             float progress = 1.0f;
