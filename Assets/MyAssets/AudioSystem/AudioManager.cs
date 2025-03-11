@@ -14,22 +14,7 @@ public class AudioManager : Singleton<AudioManager>
 
     [Header("SE音效")]
     [SerializeField]
-    private AudioClip buttonTouchClip;
-
-    [SerializeField]
-    private AudioClip swordSlashClip_1;
-
-    [SerializeField]
-    private AudioClip swordSlashClip_2;
-
-    [SerializeField]
-    private AudioClip impact;
-    [SerializeField]
-    private AudioClip openDoorClip;
-    [SerializeField]
-    private AudioClip deathClueClip;
-    [SerializeField]
-    private List<AudioClip> heavyAttackClips;
+    private List<AudioClip> seClipList = new List<AudioClip>();
 
     [Header("Menu音效")]
     [SerializeField]
@@ -71,15 +56,23 @@ public class AudioManager : Singleton<AudioManager>
     }
     public void BGMAudio(int index)
     {
-        if (index < 0 || index >= bgmClipList.Count || BGMSource.clip == bgmClipList[index])
+        /*if (index < 0 || index >= bgmClipList.Count || BGMSource.clip == bgmClipList[index])
         {
             return;
         }
         BGMSource.Stop();
         BGMSource.clip = bgmClipList[index];
-        BGMSource.Play();
+        BGMSource.Play();*/
     }
-
+    public void SEAudio(int index)
+    {
+        if (index < 0 || index >= seClipList.Count || SESource.clip == seClipList[index])
+        {
+            return;
+        }
+        SESource.Stop();
+        SESource.PlayOneShot(seClipList[index]);
+    }
     public void ClearAllAudioClip()
     {
         MenuSource.clip = null;
@@ -108,17 +101,7 @@ public class AudioManager : Singleton<AudioManager>
         Instance.MenuSource.Play();
     }
 
-    public void ButtonTouchAudio()
-    {
-        Instance.SESource.clip = Instance.buttonTouchClip;
-        Instance.SESource.Play();
-    }
 
-    public void HeavyAttackAudio(int id)
-    {
-        Instance.SESource.clip = Instance.heavyAttackClips[id];
-        Instance.SESource.Play();
-    }
 
     public void PlayerHurted()
     {
@@ -135,35 +118,7 @@ public class AudioManager : Singleton<AudioManager>
     }
 
 
-    public void Impact()
-    {
-        Instance.SESource.clip = Instance.impact;
-        Instance.SESource.Play();
-    }
 
-    public void SlashAudio(int count)
-    {
-        switch (count)
-        {
-            case 1:
-                Instance.SESource.clip = Instance.swordSlashClip_1;
-                break;
-            case 2:
-                Instance.SESource.clip = Instance.swordSlashClip_2;
-                break;
-        }
-        Instance.SESource.Play();
-    }
-    public void OpenDoor()
-    {
-        Instance.SESource.clip = Instance.openDoorClip;
-        Instance.SESource.Play();
-    }
-    public void DeathClue()
-    {
-        Instance.SESource.clip = Instance.deathClueClip;
-        Instance.SESource.Play();
-    }
     public void ChanageAudioVolume(string sourceName, float value)
     {
         audioMixer.SetFloat(sourceName, Mathf.Log10(value) * 20);

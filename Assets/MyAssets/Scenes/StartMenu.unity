@@ -7841,13 +7841,9 @@ MonoBehaviour:
   - {fileID: 8300000, guid: ee74a99a46dd84620aa6d8972e0d7d75, type: 3}
   - {fileID: 8300000, guid: c1a582416d9ee4ae9a93693b1ac9530e, type: 3}
   - {fileID: 8300000, guid: a25e11e44be81446da71c5a5bfb91b33, type: 3}
-  buttonTouchClip: {fileID: 0}
-  swordSlashClip_1: {fileID: 0}
-  swordSlashClip_2: {fileID: 0}
-  impact: {fileID: 0}
-  openDoorClip: {fileID: 0}
-  deathClueClip: {fileID: 0}
-  heavyAttackClips: []
+  seClipList:
+  - {fileID: 8300000, guid: 5f81bdff582c2fc4488e1129bc037245, type: 3}
+  - {fileID: 8300000, guid: 66d751a346b52fe46832f46acd0a5145, type: 3}
   menuEnterClip: {fileID: 0}
   menuExitClip: {fileID: 0}
   hurt: {fileID: 0}
@@ -7862,7 +7858,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1196795978}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 85.25686, y: 5.7356367, z: 76.939575}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

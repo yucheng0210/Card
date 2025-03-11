@@ -28,7 +28,7 @@ public class UIStartMenu : UIBase
     }
     private void ExitGame()
     {
-        UnityEditor.EditorApplication.isPlaying = false;
-        //Application.Quit();
+        //UnityEditor.EditorApplication.isPlaying = false;
+        Application.Quit();
     }
 }

@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using DG.Tweening;
-using Unity.VisualScripting;
+
 using PilotoStudio;
 
 public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IDragHandler, IEndDragHandler, IPointerDownHandler, IPointerClickHandler
@@ -353,20 +353,34 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         BattleManager.Instance.ConsumeActionPoint(cardData.CardCost);
         BattleManager.Instance.ConsumeMana(cardData.CardManaCost);
         string particlePath = cardData.CardSpecialEffect;
-        float particleWaitTime = 0.0f;
         if (particlePath != null)
         {
+            // 先觸發攻擊動畫
+            BattleManager.Instance.PlayerAni.SetTrigger("isAttacking");
+
+            // 等待動畫 "Attack" 播放到 80%
+            while (true)
+            {
+                AnimatorStateInfo stateInfo = BattleManager.Instance.PlayerAni.GetCurrentAnimatorStateInfo(0);
+                if (stateInfo.IsTag("Attack") && stateInfo.normalizedTime >= 0.5f)
+                {
+                    break;
+                }
+                yield return null; // 每幀檢查
+            }
+
             GameObject particleEffect = Resources.Load<GameObject>(particlePath);
             Vector3 playerPos = BattleManager.Instance.PlayerTrans.position;
-            Vector3 startPos = new Vector3(playerPos.x, playerPos.y, -1);
+            Vector3 startPos = new Vector3(playerPos.x - 3f, playerPos.y, -1);
+
             ProjectileController projectileController = Instantiate(particleEffect, startPos, Quaternion.identity).GetComponent<ProjectileController>();
             Vector3 destination = new Vector3(enemy.transform.position.x - 10, enemy.transform.position.y, -1);
             projectileController.Destination = destination;
-            BattleManager.Instance.PlayerAni.SetTrigger("isAttacking");
-            projectileController.Attack();
-            particleWaitTime = 0.2f;
+            Sequence sequence = projectileController.AttackSequence();
+            AudioManager.Instance.SEAudio(1);
+            yield return sequence.WaitForCompletion();
         }
-        yield return new WaitForSeconds(particleWaitTime);
+
         if (cardData.CardAttack != 0 && cardData.CardType != "詛咒")
         {
             BattleManager.Instance.TakeDamage(BattleManager.Instance.CurrentPlayerData, BattleManager.Instance.CurrentEnemyList[target], cardData.CardAttack, target, 0);

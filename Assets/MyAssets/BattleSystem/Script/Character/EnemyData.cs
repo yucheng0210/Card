@@ -24,6 +24,7 @@ public class EnemyData : CharacterData
     public ValueTuple<string, int> SpecialTriggerSkill { get; set; }
     public bool IsMinion { get; set; }
     public int DropMoney { get; set; }
+    public string AttackParticleEffectPath { get; set; }
     public EnemyData DeepClone()
     {
         EnemyData clone = (EnemyData)this.MemberwiseClone();

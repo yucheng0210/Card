@@ -64,7 +64,7 @@ public class DataManager : Singleton<DataManager>
 
     private void Start()
     {
-         StartGame_Default();
+        StartGame_Default();
         //StartGame_FightingSpiritEffect();
         //StartGame_ExtinctionRayEffect();
     }
@@ -160,6 +160,7 @@ public class DataManager : Singleton<DataManager>
                 CurrentAttackOrderStrs = new(),
                 IsMinion = bool.Parse(row[18]),
                 DropMoney = int.Parse(row[19]),
+                AttackParticleEffectPath = row[20],
             };
             if (!string.IsNullOrEmpty(row[9]))
             {

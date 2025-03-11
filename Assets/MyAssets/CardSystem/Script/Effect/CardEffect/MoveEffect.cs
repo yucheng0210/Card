@@ -43,6 +43,7 @@ public class MoveEffect : IEffect
     }
     private void PlayerMoveAction(string fromLocation, string toLocation)
     {
+        BattleManager.Instance.PlayerAni.SetBool("isRunning", true);
         List<string> routeList = BattleManager.Instance.GetRoute(fromLocation, toLocation, BattleManager.CheckEmptyType.Move);
         Sequence sequence = DOTween.Sequence();
         for (int k = 0; k < routeList.Count; k++)
@@ -57,6 +58,7 @@ public class MoveEffect : IEffect
             EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
             EventManager.Instance.DispatchEvent(EventDefinition.eventMove);
             BattleManager.Instance.SwitchHandCardRaycast(true);
+            BattleManager.Instance.PlayerAni.SetBool("isRunning", false);
         }
         );
         sequence.Play();

@@ -16,12 +16,13 @@ namespace PilotoStudio
         private GameObject projectileCore;
         public Vector3 Destination { get; set; }
 
-        public void Attack()
+        public Sequence AttackSequence()
         {
             Sequence sequence = DOTween.Sequence();
             sequence.Append(transform.DOMove(Destination, duration)).Pause();
             sequence.AppendCallback(AttackArrive).Pause(); ;
             sequence.Play();
+            return sequence;
         }
         private void AttackArrive()
         {

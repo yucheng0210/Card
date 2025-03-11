@@ -16,7 +16,7 @@ public class UIOption : UIBase
     }
     private void Initialize()
     {
-        exitButton.onClick.AddListener(() => UnityEditor.EditorApplication.isPlaying = false);
+        exitButton.onClick.AddListener(() => Application.Quit());
         returnButton.onClick.AddListener(Hide);
         showButton.onClick.AddListener(Show);
     }

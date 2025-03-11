@@ -293,39 +293,38 @@ public class UIBattle : UIBase
     // 处理敌人攻击
     private IEnumerator HandleEnemyAttack(EnemyData enemyData, Enemy enemy, PlayerData playerData, int attackCount)
     {
-        for (int i = 0; i < attackCount; i++)
-        {
-            if (enemy.MySequence == null)
-            {
-                enemy.MyAnimator.SetTrigger("isAttacking");
-                yield return null;
-                while (true)
-                {
-                    AnimatorStateInfo stateInfo = enemy.MyAnimator.GetCurrentAnimatorStateInfo(0);
-                    if (stateInfo.IsTag("Attack") && stateInfo.normalizedTime >= 0.7f)
-                    {
-                        break;
-                    }
-                    yield return null; // 每幀檢查一次
-                }
 
+        if (enemy.MySequence == null)
+        {
+            enemy.MyAnimator.SetTrigger("isAttacking");
+            while (true)
+            {
+                AnimatorStateInfo stateInfo = enemy.MyAnimator.GetCurrentAnimatorStateInfo(0);
+                if (stateInfo.IsTag("Attack") && stateInfo.normalizedTime >= 0.5f)
+                {
+                    break;
+                }
+                yield return null; // 每幀檢查一次
+            }
+            for (int i = 0; i < attackCount; i++)
+            {
                 if (enemy.InRange)
                 {
                     BattleManager.Instance.TakeDamage(enemyData, playerData, enemy.CurrentAttackPower, BattleManager.Instance.CurrentPlayerLocation, 0);
                 }
-
-                string particlePath = "ParticleEffect/HitLine";
+                string particlePath = enemyData.AttackParticleEffectPath;
                 GameObject particle = Resources.Load<GameObject>(particlePath);
-                Instantiate(particle, BattleManager.Instance.PlayerTrans.position, Quaternion.identity);
-
-                yield return new WaitForSecondsRealtime(0.25f);
-            }
-            else
-            {
-                enemy.MySequence.Play().WaitForCompletion();
+                Vector3 playerPos = BattleManager.Instance.PlayerTrans.position;
+                Vector3 destination = new Vector3(playerPos.x - 5, playerPos.y, -1);
+                Instantiate(particle, destination, Quaternion.identity);
+                AudioManager.Instance.SEAudio(0);
+                yield return new WaitForSecondsRealtime(0.2f);
             }
         }
-
+        else
+        {
+            enemy.MySequence.Play().WaitForCompletion();
+        }
     }
 
     // 应用敌人的效果
