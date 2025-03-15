@@ -52,5 +52,6 @@
         "temp/":true,
         "Temp/":true
     },
-    "dotnet.defaultSolution": "Card.sln"
+    "dotnet.defaultSolution": "Card.sln",
+    "git.ignoreLimitWarning": true
 }

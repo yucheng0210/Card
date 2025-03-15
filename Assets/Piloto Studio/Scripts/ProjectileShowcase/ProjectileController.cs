@@ -18,6 +18,7 @@ namespace PilotoStudio
 
         public Sequence AttackSequence()
         {
+            SpawnSubFX(muzzle, transform);
             Sequence sequence = DOTween.Sequence();
             sequence.Append(transform.DOMove(Destination, duration)).Pause();
             sequence.AppendCallback(AttackArrive).Pause(); ;

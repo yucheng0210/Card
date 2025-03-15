@@ -13,6 +13,8 @@ using Cinemachine;
 public class Enemy : Character
 {
     [SerializeField]
+    private Material dissolveMaterial;
+    [SerializeField]
     private Text enemyAttackIntentText;
     [SerializeField]
     private Image enemyImage;
@@ -33,6 +35,12 @@ public class Enemy : Character
     private Text infoTitle;
     [SerializeField]
     private Text infoDescription;
+    private CinemachineImpulseSource cinemachineImpulseSource;
+    public Material DissolveMaterial
+    {
+        get { return dissolveMaterial; }
+        set { dissolveMaterial = value; }
+    }
     public Text InfoTitle { get { return infoTitle; } set { infoTitle = value; } }
     public Text InfoDescription { get { return infoDescription; } set { infoDescription = value; } }
     public Text EnemyAttackIntentText { get { return enemyAttackIntentText; } set { enemyAttackIntentText = value; } }
@@ -83,6 +91,7 @@ public class Enemy : Character
         currentEnemyList = BattleManager.Instance.CurrentEnemyList;
         MyEnemyData.CurrentAttackOrderStrs = MyEnemyData.AttackOrderStrs;
         MyCollider = GetComponent<BoxCollider>();
+        cinemachineImpulseSource = GetComponent<CinemachineImpulseSource>();
         EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, MyEnemyData, EventPlayerTurn);
         EventManager.Instance.AddEventRegister(EventDefinition.eventMove, MyEnemyData, EventMove);
         EventManager.Instance.AddEventRegister(EventDefinition.eventRefreshUI, MyEnemyData, EventRefreshUI);
@@ -285,8 +294,16 @@ public class Enemy : Character
         {
             Vector2 position = UIManager.Instance.GetBezierCurve(startPoint, midPoint, endPoint, t);
             enemyRect.anchoredPosition = position;
+            if (t >= 0.6)
+            {
+                cinemachineImpulseSource.GenerateImpulse();
+            }
         }, 0, 1, 1).SetEase(Ease.InQuad);
-        MySequence.Append(moveTween).AppendCallback(() => OnAttackComplete(true, enemyLocation, destinationLocation));
+        MySequence.Append(moveTween).AppendCallback(() =>
+        {
+            OnAttackComplete(true, enemyLocation, destinationLocation);
+        }
+    );
     }
     private void StraightChargeAttackSequence()
     {
@@ -307,8 +324,18 @@ public class Enemy : Character
         }
         RectTransform enemyRect = GetComponent<RectTransform>();
         Vector2 destinationPos = BattleManager.Instance.GetCheckerboardTrans(destinationLocation).localPosition;
-        Tween moveTween = enemyRect.DOAnchorPos(destinationPos, 0.15f);
-        MySequence.Append(moveTween).AppendCallback(() => OnAttackComplete(true, enemyLocation, destinationLocation));
+        Tween moveTween = enemyRect.DOAnchorPos(destinationPos, 0.1f);
+        MySequence.Append(moveTween).AppendCallback(() =>
+        {
+            Time.timeScale = 0.1f;
+            StartCoroutine(ResetTimeScale());
+            OnAttackComplete(true, enemyLocation, destinationLocation);
+        });
+    }
+    private IEnumerator ResetTimeScale()
+    {
+        yield return new WaitForSecondsRealtime(0.15f);
+        Time.timeScale = 1f;
     }
     private void ThrowScatteringAttack()
     {
@@ -318,6 +345,9 @@ public class Enemy : Character
     {
         if (InRange)
         {
+            string particlePath = MyEnemyData.AttackParticleEffectPath;
+            Vector3 destinationPos = new Vector3(transform.position.x, transform.position.y, -1);
+            StartCoroutine(BattleManager.Instance.SetParticleEffect(MyAnimator, destinationPos, destinationPos, particlePath, false));
             PlayerData playerData = BattleManager.Instance.CurrentPlayerData;
             if (isKnockBack)
             {

@@ -22,7 +22,7 @@ public class TeleportEffect : IEffect
     private void Teleport()
     {
         float minDistance = BattleManager.Instance.CalculateDistance(initialLocation, BattleManager.Instance.CurrentPlayerLocation);
-
+        Enemy enemy = BattleManager.Instance.CurrentEnemyList[initialLocation].EnemyTrans.GetComponent<Enemy>();
         List<string> teleportList = new();
         for (int i = 0; i < BattleManager.Instance.CheckerboardList.Count; i++)
         {
@@ -37,7 +37,16 @@ public class TeleportEffect : IEffect
         BattleManager.Instance.Replace(BattleManager.Instance.CurrentEnemyList, initialLocation, teleportList[randomIndex]);
         int childCount = BattleManager.Instance.GetCheckerboardPoint(teleportList[randomIndex]);
         RectTransform emptyPlace = BattleManager.Instance.CheckerboardTrans.GetChild(childCount).GetComponent<RectTransform>();
-        BattleManager.Instance.CurrentEnemyList[teleportList[randomIndex]].EnemyTrans.DOAnchorPos(emptyPlace.localPosition, 0);
+        enemy.EnemyImage.material = enemy.DissolveMaterial;
+        TweenCallback tweenCallback = () =>
+        {
+            TweenCallback endTweenCallback = () => { };
+            BattleManager.Instance.CurrentEnemyList[teleportList[randomIndex]].EnemyTrans.DOAnchorPos(emptyPlace.localPosition, 0);
+            BattleManager.Instance.SetDissolveMaterial(enemy.DissolveMaterial, 0.0f, 1, endTweenCallback);
+            AudioManager.Instance.SEAudio(5);
+        };
+        BattleManager.Instance.SetDissolveMaterial(enemy.DissolveMaterial, 1.0f, 0, tweenCallback);
+        AudioManager.Instance.SEAudio(5);
     }
     private void EventTakeDamage(params object[] args)
     {

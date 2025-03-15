@@ -353,34 +353,13 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         BattleManager.Instance.ConsumeActionPoint(cardData.CardCost);
         BattleManager.Instance.ConsumeMana(cardData.CardManaCost);
         string particlePath = cardData.CardSpecialEffect;
-        if (particlePath != null)
+        if (particlePath != "")
         {
-            // 先觸發攻擊動畫
-            BattleManager.Instance.PlayerAni.SetTrigger("isAttacking");
-
-            // 等待動畫 "Attack" 播放到 80%
-            while (true)
-            {
-                AnimatorStateInfo stateInfo = BattleManager.Instance.PlayerAni.GetCurrentAnimatorStateInfo(0);
-                if (stateInfo.IsTag("Attack") && stateInfo.normalizedTime >= 0.5f)
-                {
-                    break;
-                }
-                yield return null; // 每幀檢查
-            }
-
-            GameObject particleEffect = Resources.Load<GameObject>(particlePath);
             Vector3 playerPos = BattleManager.Instance.PlayerTrans.position;
-            Vector3 startPos = new Vector3(playerPos.x - 3f, playerPos.y, -1);
-
-            ProjectileController projectileController = Instantiate(particleEffect, startPos, Quaternion.identity).GetComponent<ProjectileController>();
-            Vector3 destination = new Vector3(enemy.transform.position.x - 10, enemy.transform.position.y, -1);
-            projectileController.Destination = destination;
-            Sequence sequence = projectileController.AttackSequence();
-            AudioManager.Instance.SEAudio(1);
-            yield return sequence.WaitForCompletion();
+            Vector3 startPos = BattleManager.Instance.CurrentPlayer.AttackStartTrans.position;
+            Vector3 destination = new Vector3(enemy.transform.position.x, enemy.transform.position.y, -1);
+            yield return BattleManager.Instance.SetParticleEffect(BattleManager.Instance.PlayerAni, startPos, destination, particlePath, true);
         }
-
         if (cardData.CardAttack != 0 && cardData.CardType != "詛咒")
         {
             BattleManager.Instance.TakeDamage(BattleManager.Instance.CurrentPlayerData, BattleManager.Instance.CurrentEnemyList[target], cardData.CardAttack, target, 0);
@@ -403,6 +382,7 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         }
         BattleManager.Instance.GetShield(BattleManager.Instance.CurrentPlayerData, cardData.CardShield);
         EventManager.Instance.DispatchEvent(EventDefinition.eventUseCard, this);
+        yield return null;
         for (int i = 0; i < cardData.CardEffectList.Count; i++)
         {
             string effectID;
@@ -411,7 +391,7 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             effectCount = cardData.CardEffectList[i].Item2;
             if (cardData.CardType == "能力")
             {
-                BattleManager.Instance.CurrentAbilityList.Add(effectID, effectCount);
+                BattleManager.Instance.AddState(BattleManager.Instance.CurrentAbilityList, effectID, effectCount);
                 continue;
             }
             /*if (cardData.CardType == "陷阱")
@@ -431,26 +411,19 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
         if (cardData.CardRemove)
         {
-            float progress = 1.0f;
             CardImage.material = dissolveMaterial;
             CardDescription.material = dissolveMaterial;
             CardName.material = dissolveMaterial;
             CardCost.material = dissolveMaterial;
             CardManaCost.material = dissolveMaterial;
             CardOutline.SetActive(false);
-            dissolveMaterial.SetFloat("_Progress", progress);
             isDrag = false;
-            DOTween.To(() => progress, x =>
+            TweenCallback tweenCallback = () =>
             {
-                progress = x;
-                dissolveMaterial.SetFloat("_Progress", progress);
-                if (Mathf.Approximately(progress, 0.0f))
-                {
-                    gameObject.SetActive(false);
-                    OnCancelCardPickup();
-                }
-            }, 0.0f, 1.0f) // 2.0f 秒內從 1.0 到 0.0
-            .SetEase(Ease.OutQuad);
+                gameObject.SetActive(false);
+                OnCancelCardPickup();
+            };
+            BattleManager.Instance.SetDissolveMaterial(dissolveMaterial, 1.0f, 0, tweenCallback);
         }
         else
         {

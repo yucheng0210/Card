@@ -64,8 +64,8 @@ public class DataManager : Singleton<DataManager>
 
     private void Start()
     {
-        StartGame_Default();
-        //StartGame_FightingSpiritEffect();
+        //StartGame_Default();
+        StartGame_FightingSpiritEffect();
         //StartGame_ExtinctionRayEffect();
     }
 
@@ -545,13 +545,14 @@ public class DataManager : Singleton<DataManager>
         PlayerID = 1001;
 
         // Add specific cards
-        int[] cardIds = { 3001, 2002, 2003, 2004, 1010, 1009, 1008 };
+        int[] cardIds = { 3001, 2002, 2003, 2004, 1006, 1010, 1009, 1008 };
 
         for (int i = 0; i < cardIds.Length; i++)
         {
             CardBag.Add(CardList[cardIds[i]].DeepClone());
         }
         PotionBag.Add(PotionList[1001]);
+        PotionBag.Add(PotionList[1002]);
         // Set current player data
         BattleManager.Instance.CurrentPlayerData = PlayerList[PlayerID];
     }

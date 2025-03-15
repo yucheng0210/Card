@@ -6,12 +6,13 @@ using UnityEngine.UI;
 using DG.Tweening;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
-using Unity.VisualScripting;
+//using Unity.VisualScripting;
 using UnityEngine.TextCore.Text;
 using System;
 using UnityEngine.U2D;
 using Cinemachine;
 using Newtonsoft.Json.Linq;
+using PilotoStudio;
 public class BattleManager : Singleton<BattleManager>
 {
     public enum BattleType
@@ -133,16 +134,17 @@ public class BattleManager : Singleton<BattleManager>
                 Cursor.SetCursor(DefaultCursor, DefaultCursorHotSpot, CursorMode.Auto);
                 i = !i;
             }*/
-            /* CharacterData value = CurrentEnemyList.ElementAt(0).Value;
-             TakeDamage(CurrentPlayerData, value, 51, CurrentEnemyList.ElementAt(0).Key, 0);*/
+            /*CharacterData value = CurrentEnemyList.ElementAt(0).Value;
+            TakeDamage(CurrentPlayerData, value, 51, CurrentEnemyList.ElementAt(0).Key, 0);*/
             //EventManager.Instance.DispatchEvent(EventDefinition.eventAfterMove);
             // PlayerMoveCount++;
-            for (int i = 0; i < CurrentEnemyList.Count; i++)
-            {
-                CharacterData value = CurrentEnemyList.ElementAt(i).Value;
-                TakeDamage(CurrentPlayerData, value, 55, CurrentEnemyList.ElementAt(i).Key, 0);
-            }
+            /*for (int i = 0; i < CurrentEnemyList.Count; i++)
+             {
+                 CharacterData value = CurrentEnemyList.ElementAt(i).Value;
+                 TakeDamage(CurrentPlayerData, value, 50, CurrentEnemyList.ElementAt(i).Key, 0);
+             }*/
             TakeDamage(CurrentPlayerData, CurrentPlayerData, 5, CurrentPlayerLocation, 0);
+            playerMoveCount = 5;
             // StartCoroutine(SceneController.Instance.Transition("StartMenu"));
             /*  for (int i = 0; i < CurrentEnemyList.Count; i++)
               {
@@ -334,8 +336,8 @@ public class BattleManager : Singleton<BattleManager>
                 EffectFactory.Instance.CreateEffect(key).ApplyEffect(trapData.TriggerSkillList[key], CurrentPlayerLocation, CurrentPlayerLocation);
                 ShowCharacterStatusClue(CurrentPlayer.StatusClueTrans, clueStrs, waitTime);
             }
-            Animator ani = trapData.TrapTrans.GetComponent<Animator>();
-            ani.SetTrigger("isAttacking");
+            /*Animator ani = trapData.TrapTrans.GetComponent<Animator>();
+            ani.SetTrigger("isAttacking");*/
             TakeDamage(CurrentPlayerData, CurrentPlayerData, trapData.CurrentAttack, CurrentPlayerLocation, 0.12f);
             CurrentTrapList.Remove(CurrentPlayerLocation);
             Destroy(trapData.TrapTrans.gameObject, 1);
@@ -489,10 +491,10 @@ public class BattleManager : Singleton<BattleManager>
             if (CheckPlaceEmpty(newLocation, CheckEmptyType.EnemyAttack))
             {
                 linearAttackList.Add(newLocation);
-                /*if (newLocation == toLocation)
+                if (newLocation == toLocation)
                 {
                     break;
-                }*/
+                }
             }
             else
             {
@@ -989,14 +991,25 @@ public class BattleManager : Singleton<BattleManager>
         }
         EventManager.Instance.DispatchEvent(EventDefinition.eventMove);
     }
-    public void AddTrap(List<string> trapList, int id)
+    public void AddTrap(List<string> trapList, int id, string fromLocation)
     {
         for (int i = 0; i < trapList.Count;)
         {
             int randomIndex = UnityEngine.Random.Range(0, trapList.Count);
             RectTransform trapRect = Instantiate(TrapPrefab, TrapGroupTrans).GetComponent<RectTransform>();
             TrapData trapData = DataManager.Instance.TrapList[id].DeepClone();
-            trapRect.anchoredPosition = GetCheckerboardTrans(trapList[randomIndex]).localPosition;
+            float distance = CalculateDistance(fromLocation, trapList[randomIndex]);
+            int curveHeight = 250;
+            trapRect.localPosition = GetCheckerboardTrans(fromLocation).localPosition;
+            Vector2 startPoint = trapRect.localPosition;
+            Vector2 endPoint = GetCheckerboardTrans(trapList[randomIndex]).localPosition;
+            Vector2 midPoint = new(startPoint.x + distance / 2, startPoint.y + curveHeight);
+            trapRect.GetComponent<Image>().sprite = Resources.Load<Sprite>(trapData.TrapImagePath);
+            Tween moveTween = DOTween.To((t) =>
+            {
+                Vector2 position = UIManager.Instance.GetBezierCurve(startPoint, midPoint, endPoint, t);
+                trapRect.anchoredPosition = position;
+            }, 0, 1, 1.25f).SetEase(Ease.InQuad);
             trapData.CurrentHealth = trapData.MaxHealth;
             trapData.CurrentAttack = trapData.BaseAttack;
             trapData.TrapTrans = trapRect;
@@ -1261,8 +1274,72 @@ public class BattleManager : Singleton<BattleManager>
         int count = percentage >= 0 ? Mathf.RoundToInt(maxCount * (percentage / 100f)) : -1;
         return count;
     }
-    public void CameraImpulse(CinemachineImpulseSource cinemachineImpulseSource)
+    public void SetParticleEffectCoroutine(Vector3 startPos, Vector3 endPos, string particlePath)
     {
-        //cinemachineImpulseSource.GenerateImpulse();
+        StartCoroutine(SetParticleEffect(startPos, endPos, particlePath));
+    }
+    public IEnumerator SetParticleEffect(Animator ani, Vector3 startPos, Vector3 endPos, string particlePath, bool isWaitAnimation)
+    {
+        if (isWaitAnimation)
+        {
+            ani.SetTrigger("isAttacking");
+        }
+        while (isWaitAnimation)
+        {
+            AnimatorStateInfo stateInfo = ani.GetCurrentAnimatorStateInfo(0);
+            if (stateInfo.IsTag("Attack") && stateInfo.normalizedTime >= 0.5f)
+            {
+                break;
+            }
+            yield return null;
+        }
+        ParticleEffectIDCard particleEffect = Resources.Load<ParticleEffectIDCard>(particlePath);
+        switch (particleEffect.MyAttackType)
+        {
+            case ParticleEffectIDCard.AttackType.Melee:
+                Instantiate(particleEffect, endPos, Quaternion.identity);
+                break;
+            case ParticleEffectIDCard.AttackType.LongDistance:
+                ProjectileController projectileController = Instantiate(particleEffect, startPos, Quaternion.identity).GetComponent<ProjectileController>();
+                projectileController.Destination = endPos;
+                Sequence sequence = projectileController.AttackSequence();
+                yield return sequence.WaitForCompletion();
+                break;
+        }
+        GameObject blood = Resources.Load<GameObject>("ParticleEffect/HitBlood");
+        Instantiate(blood, endPos, Quaternion.identity);
+        AudioManager.Instance.SEAudio(particleEffect.SoundIndex);
+    }
+    public IEnumerator SetParticleEffect(Vector3 startPos, Vector3 endPos, string particlePath)
+    {
+        ParticleEffectIDCard particleEffect = Resources.Load<ParticleEffectIDCard>(particlePath);
+        switch (particleEffect.MyAttackType)
+        {
+            case ParticleEffectIDCard.AttackType.Melee:
+                Instantiate(particleEffect, endPos, Quaternion.identity);
+                break;
+            case ParticleEffectIDCard.AttackType.LongDistance:
+                ProjectileController projectileController = Instantiate(particleEffect, startPos, Quaternion.identity).GetComponent<ProjectileController>();
+                projectileController.Destination = endPos;
+                Sequence sequence = projectileController.AttackSequence();
+                yield return sequence.WaitForCompletion();
+                break;
+        }
+        GameObject blood = Resources.Load<GameObject>("ParticleEffect/HitBlood");
+        Instantiate(blood, endPos, Quaternion.identity);
+        AudioManager.Instance.SEAudio(particleEffect.SoundIndex);
+    }
+    public void SetDissolveMaterial(Material dissolveMaterial, float startValue, float endValue, TweenCallback callBackTween)
+    {
+        Sequence sequence = DOTween.Sequence();
+        float progress = startValue;
+        Tween tween = DOTween.To(() => progress, x =>
+        {
+            progress = x;
+            dissolveMaterial.SetFloat("_Progress", progress);
+        }, endValue, 1.0f).SetEase(Ease.OutQuad);
+        sequence.Append(tween).Pause();
+        sequence.AppendCallback(callBackTween);
+        sequence.Play();
     }
 }

@@ -29,5 +29,6 @@ public class UIGameOver : UIBase
         {
             titleImage.sprite = titleSpriteList[1];
         }
+        AudioManager.Instance.SEAudio(8);
     }
 }

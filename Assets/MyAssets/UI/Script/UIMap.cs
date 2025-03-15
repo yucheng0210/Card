@@ -154,19 +154,19 @@ public class UIMap : UIBase
                 switch (key)
                 {
                     case "BATTLE":
-                        /*if (count > 10)
-                        {
-                            currentIndex = hardRandomIndex;
-                        }
-                        else if (count > 5)
-                        {
-                            currentIndex = normalRandomIndex;
-                        }
-                        else
-                        {
-                            currentIndex = simpleRandomIndex;
-                        }*/
-                        currentIndex = 8001;
+                        /* if (count > 10)
+                         {
+                             currentIndex = hardRandomIndex;
+                         }
+                         else if (count > 5)
+                         {
+                             currentIndex = normalRandomIndex;
+                         }
+                         else
+                         {
+                             currentIndex = simpleRandomIndex;
+                         }*/
+                        currentIndex = 8002;
                         break;
                     case "BOSS":
                         currentIndex = Random.Range(2000 + MapManager.Instance.ChapterCount, 2002 + MapManager.Instance.ChapterCount);

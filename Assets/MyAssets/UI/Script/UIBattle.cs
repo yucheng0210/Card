@@ -7,6 +7,8 @@ using DG.Tweening;
 using System.Linq;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
 public class UIBattle : UIBase
 {
@@ -72,6 +74,16 @@ public class UIBattle : UIBase
 
     [SerializeField]
     private float curveHeight;
+    [SerializeField]
+    private CanvasGroup bloodScreenCanvasGroup;
+    [SerializeField]
+    private Volume volume;
+    [SerializeField]
+    private float maxVignetteIntensity;
+    [SerializeField]
+    private float firstBloodScreenDuration;
+    [SerializeField]
+    private float secondBloodScreenDuration;
     [Header("棋盤")]
     [SerializeField]
     private RectTransform checkerboardTrans;
@@ -201,9 +213,9 @@ public class UIBattle : UIBase
         List<EnemyData> moveHistoryList = new();
 
         // 將敵人的攻擊邏輯提取到單獨的方法中
-        yield return ExecuteEnemyActions(currentMinionsList, moveHistoryList);
+        yield return StartCoroutine(ExecuteEnemyActions(currentMinionsList, moveHistoryList));
         yield return new WaitForSecondsRealtime(2);
-        yield return ExecuteEnemyActions(currentEnemyList, moveHistoryList);
+        yield return StartCoroutine(ExecuteEnemyActions(currentEnemyList, moveHistoryList));
         yield return new WaitForSecondsRealtime(2);
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.AfterEnemyAttack);
         yield return null;
@@ -240,7 +252,7 @@ public class UIBattle : UIBase
                     BattleManager.Instance.GetShield(enemyData, enemy.CurrentShieldCount);  // 处理护盾
                     break;
                 case Enemy.ActionType.Effect:
-                    ApplyEffect(enemy, enemyData, location);  // 处理效果
+                    yield return ApplyEffect(enemy, enemyData, location);  // 处理效果
                     break;
             }
             UpdateAttackOrder(enemyData, enemy);  // 更新攻击顺序
@@ -296,39 +308,28 @@ public class UIBattle : UIBase
 
         if (enemy.MySequence == null)
         {
-            enemy.MyAnimator.SetTrigger("isAttacking");
-            while (true)
-            {
-                AnimatorStateInfo stateInfo = enemy.MyAnimator.GetCurrentAnimatorStateInfo(0);
-                if (stateInfo.IsTag("Attack") && stateInfo.normalizedTime >= 0.5f)
-                {
-                    break;
-                }
-                yield return null; // 每幀檢查一次
-            }
             for (int i = 0; i < attackCount; i++)
             {
+                bool isWaitAnimation = i == 0;
+                string particlePath = enemyData.AttackParticleEffectPath;
+                Vector3 playerPos = BattleManager.Instance.PlayerTrans.position;
+                Vector3 destination = new Vector3(playerPos.x - 3, playerPos.y, -1);
+                yield return BattleManager.Instance.SetParticleEffect(enemy.MyAnimator, enemy.transform.position, destination, particlePath, isWaitAnimation);
                 if (enemy.InRange)
                 {
                     BattleManager.Instance.TakeDamage(enemyData, playerData, enemy.CurrentAttackPower, BattleManager.Instance.CurrentPlayerLocation, 0);
                 }
-                string particlePath = enemyData.AttackParticleEffectPath;
-                GameObject particle = Resources.Load<GameObject>(particlePath);
-                Vector3 playerPos = BattleManager.Instance.PlayerTrans.position;
-                Vector3 destination = new Vector3(playerPos.x - 5, playerPos.y, -1);
-                Instantiate(particle, destination, Quaternion.identity);
-                AudioManager.Instance.SEAudio(0);
                 yield return new WaitForSecondsRealtime(0.2f);
             }
         }
         else
         {
-            enemy.MySequence.Play().WaitForCompletion();
+            yield return enemy.MySequence.Play().WaitForCompletion();
         }
     }
 
     // 应用敌人的效果
-    private void ApplyEffect(Enemy enemy, EnemyData enemyData, string location)
+    private IEnumerator ApplyEffect(Enemy enemy, EnemyData enemyData, string location)
     {
         if (enemy.InRange || enemy.NoNeedCheckInRange)
         {
@@ -347,8 +348,8 @@ public class UIBattle : UIBase
             }
             EffectFactory.Instance.CreateEffect(key).ApplyEffect(value, location, enemy.TargetLocation);
             BattleManager.Instance.ShowCharacterStatusClue(enemy.StatusClueTrans, EffectFactory.Instance.CreateEffect(key).SetTitleText(), 0);
-
         }
+        yield return new WaitForSecondsRealtime(3);
     }
 
     // 更新攻击顺序
@@ -621,6 +622,27 @@ public class UIBattle : UIBase
             CheckEnemyInfo();
             RefreshEnemyInfo(defenderLocation);
             RemoveEnemy(defenderLocation);
+        }
+        else
+        {
+            if (volume.profile.TryGet(out Vignette v) && v.intensity.value == 0)
+            {
+                float currentCount = 0.0f;
+                Sequence sequence = DOTween.Sequence();
+                sequence.Append(DOTween.To(() => currentCount, x =>
+                {
+                    currentCount = x;
+                    v.intensity.Override(currentCount);
+                    bloodScreenCanvasGroup.alpha = currentCount;
+                }, maxVignetteIntensity, firstBloodScreenDuration).SetEase(Ease.OutQuad));
+                sequence.Append(DOTween.To(() => currentCount, x =>
+                {
+                    currentCount = x;
+                    v.intensity.Override(currentCount);
+                    bloodScreenCanvasGroup.alpha = currentCount;
+                }, 0f, secondBloodScreenDuration).SetEase(Ease.InQuad));
+                sequence.Play();
+            }
         }
         EventRecover(args);
     }

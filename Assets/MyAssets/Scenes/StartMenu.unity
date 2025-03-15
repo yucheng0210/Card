@@ -3601,6 +3601,55 @@ RectTransform:
   m_AnchoredPosition: {x: 303, y: -336}
   m_SizeDelta: {x: 525, y: 172}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &617491448
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 617491450}
+  - component: {fileID: 617491449}
+  m_Layer: 0
+  m_Name: Global Volume
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &617491449
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 617491448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IsGlobal: 1
+  priority: 0
+  blendDistance: 0
+  weight: 1
+  sharedProfile: {fileID: 11400000, guid: 4c099ba4250549744b25e4c7642384c8, type: 2}
+--- !u!4 &617491450
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 617491448}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 428.02734, y: 494.18237, z: -113.2453}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &619997508
 GameObject:
   m_ObjectHideFlags: 0
@@ -5928,6 +5977,7 @@ GameObject:
   - component: {fileID: 939719989}
   - component: {fileID: 939719991}
   - component: {fileID: 939719992}
+  - component: {fileID: 939719993}
   m_Layer: 5
   m_Name: MainCanvas
   m_TagString: Untagged
@@ -6192,6 +6242,19 @@ MonoBehaviour:
   exitButton: {fileID: 786160550}
   returnButton: {fileID: 588939704}
   showButton: {fileID: 1797501975}
+--- !u!114 &939719993
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 939719984}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09518de6f92debb4ebed7a2190c424c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  screenDamageMat: {fileID: 2100000, guid: 4efc79ca793447f42917b06d62dc9ccf, type: 2}
 --- !u!1 &954749091
 GameObject:
   m_ObjectHideFlags: 0
@@ -7844,6 +7907,13 @@ MonoBehaviour:
   seClipList:
   - {fileID: 8300000, guid: 5f81bdff582c2fc4488e1129bc037245, type: 3}
   - {fileID: 8300000, guid: 66d751a346b52fe46832f46acd0a5145, type: 3}
+  - {fileID: 8300000, guid: 5a9772dffc02bc945b4a50ff72e6b52d, type: 3}
+  - {fileID: 8300000, guid: 360c585cc8ec86b4ba2321c819fe927c, type: 3}
+  - {fileID: 8300000, guid: 6b2f5e232b0be01449b826110c3ad7ec, type: 3}
+  - {fileID: 8300000, guid: add48af912276444981d8afba22b53ef, type: 3}
+  - {fileID: 8300000, guid: b56b588d93cfc6d4981a01d406bc7966, type: 3}
+  - {fileID: 8300000, guid: d64e91cef03af304fa237225b23c5707, type: 3}
+  - {fileID: 8300000, guid: c12e416291a2dfd4a8a091a9e36dee02, type: 3}
   menuEnterClip: {fileID: 0}
   menuExitClip: {fileID: 0}
   hurt: {fileID: 0}

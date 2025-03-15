@@ -10,6 +10,7 @@ public class IncreaseHealth : IEffect
         CharacterData recoverData = BattleManager.Instance.IdentifyCharacter(fromLocation);
         int recoveryAmount = value < 0 ? -value : BattleManager.Instance.GetPercentage(recoverData.MaxHealth, value);
         BattleManager.Instance.Recover(recoverData, recoveryAmount, fromLocation);
+        AudioManager.Instance.SEAudio(2);
     }
 
     public string SetTitleText()
