@@ -8,7 +8,7 @@
 1007,風沙追獵者,230,10,20,EnemyImage/Leopard,4,3,FALSE,Shield=30;Cone=1;Cone=2,EnemyAnimation/Leopard,FuriousEffect=5,0,TRUE,70,Cone=1;Cone=1;ThrowTraps=1002,LeopardMechanismEffect=0,ThrowTraps=1002,FALSE,100,ParticleEffect/Melee/HitScratch_1
 1008,冰角鯨,150,5,15,EnemyImage/IceWhale,2,3,TRUE,StraightCharge=1;VortexMawEffect=2;Surrounding=2;SlowDownEffect=1,EnemyAnimation/IceWhale,DivingEffect=0,0,TRUE,-1,,,,FALSE,60,ParticleEffect/Melee/HitBlue
 1009,雪羽妖鴞,125,10,25,EnemyImage/SnowOwl,2,1,TRUE,Surrounding=1,EnemyAnimation/SnowOwl,PhantomEffect=0,0,TRUE,-1,,,,FALSE,60,ParticleEffect/Melee/HitLine
-1010,冰河君主,350,5,15,EnemyImage/PolarIceBear,2,1,TRUE,Surrounding=5;IncreaseHealth=35,EnemyAnimation/PolarIceBear,PolarIceBearMechanismEffect=0,0,TRUE,-1,,,,FALSE,60,ParticleEffect/Melee/HitScratch_2
+1010,冰河君主,350,5,15,EnemyImage/PolarIceBear,2,1,TRUE,Jump=1;CantMoveEffect=1;Surrounding=5;IncreaseHealth=35,EnemyAnimation/PolarIceBear,PolarIceBearMechanismEffect=0,0,TRUE,-1,,,,FALSE,60,ParticleEffect/Melee/HitScratch_2
 1011,霜塔神使,120,5,20,EnemyImage/PolarIceBearMage,2,4,TRUE,RechargeEffect=1;ThrowExplosion=1,EnemyAnimation/PolarIceBearMage,,0,TRUE,0,RechargeEffect=1;ThrowExplosion=1,PowerBoostEffect=5,Shield=30,FALSE,60,ParticleEffect/Melee/HitScratch_2
 1012,黑龍,999,3,25,EnemyImage/BlackDragon,2,4,TRUE,ThrowTraps=1001;Cone=10;ThrowExplosion=1,EnemyAnimation/BlackDragon,BlackDragonMechanismEffect=0;PowerBoostEffect=1,0,TRUE,-1,Shield=50;CantMoveEffect=1;Cone=1,SafeZoneEffect=0,WeaknessCurseEffect=0,FALSE,200,ParticleEffect/Melee/HitLine
 2005,沙漠利爪,30,5,15,EnemyImage/Dog,2,1,TRUE,Surrounding=1;Surrounding=3;Shield=15,EnemyAnimation/Dog,,0,TRUE,40,SacrificeEffect=0,,Shield=15,TRUE,0,ParticleEffect/Melee/HitScratch_1

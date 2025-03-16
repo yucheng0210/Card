@@ -13,6 +13,7 @@ using UnityEngine.U2D;
 using Cinemachine;
 using Newtonsoft.Json.Linq;
 using PilotoStudio;
+using UnityEngine.Rendering;
 public class BattleManager : Singleton<BattleManager>
 {
     public enum BattleType
@@ -102,6 +103,7 @@ public class BattleManager : Singleton<BattleManager>
     public Texture2D DefaultCursor { get; set; }
     public Vector2 DefaultCursorHotSpot { get; set; }
     public int RoundCount { get; set; }
+    public Volume GlobalVolume { get; set; }
     //bool i = false;
     protected override void Awake()
     {
@@ -138,12 +140,12 @@ public class BattleManager : Singleton<BattleManager>
             TakeDamage(CurrentPlayerData, value, 51, CurrentEnemyList.ElementAt(0).Key, 0);*/
             //EventManager.Instance.DispatchEvent(EventDefinition.eventAfterMove);
             // PlayerMoveCount++;
-            /*for (int i = 0; i < CurrentEnemyList.Count; i++)
-             {
-                 CharacterData value = CurrentEnemyList.ElementAt(i).Value;
-                 TakeDamage(CurrentPlayerData, value, 50, CurrentEnemyList.ElementAt(i).Key, 0);
-             }*/
-            TakeDamage(CurrentPlayerData, CurrentPlayerData, 5, CurrentPlayerLocation, 0);
+            for (int i = 0; i < CurrentEnemyList.Count; i++)
+            {
+                CharacterData value = CurrentEnemyList.ElementAt(i).Value;
+                TakeDamage(CurrentPlayerData, value, 50, CurrentEnemyList.ElementAt(i).Key, 0);
+            }
+            //TakeDamage(CurrentPlayerData, CurrentPlayerData, 5, CurrentPlayerLocation, 0);
             playerMoveCount = 5;
             // StartCoroutine(SceneController.Instance.Transition("StartMenu"));
             /*  for (int i = 0; i < CurrentEnemyList.Count; i++)
@@ -1084,7 +1086,7 @@ public class BattleManager : Singleton<BattleManager>
     }
     public void ShowCharacterStatusClue(Transform trans, string des, float waitTime)
     {
-        StartCoroutine(ShowCharacterStatusClueCoroutine(trans, des, waitTime));
+        //StartCoroutine(ShowCharacterStatusClueCoroutine(trans, des, waitTime));
     }
     private IEnumerator ShowCharacterStatusClueCoroutine(Transform trans, string des, float waitTime)
     {

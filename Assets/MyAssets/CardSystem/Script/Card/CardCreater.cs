@@ -217,7 +217,7 @@ public class CardCreater : MonoBehaviour
     }
     private void EventDrawCard(params object[] args)
     {
-        StartCoroutine(DrawCard((int)args[0]));
+        //StartCoroutine(DrawCard((int)args[0]));
     }
     private void EventUseCard(params object[] args)
     {

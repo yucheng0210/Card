@@ -138,6 +138,7 @@ public class UIBattle : UIBase
 
     private void StartGame()
     {
+        BattleManager.Instance.GlobalVolume = volume;
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
         BattleManager.Instance.EnemyPrefab = enemyPrefab;
         BattleManager.Instance.EnemyTrans = enemyTrans;
@@ -588,8 +589,8 @@ public class UIBattle : UIBase
         speedupButton.onClick.AddListener(Speedup);
         changeTurnButton.onClick.AddListener(ChangeTurn);
         playerMoveButton.onClick.AddListener(PlayerMove);
-        roundTip.GetComponent<Image>().sprite = playerRound;
-        StartCoroutine(UIManager.Instance.FadeOutIn(roundTip, 0.5f, 1, false));
+       /* roundTip.GetComponent<Image>().sprite = playerRound;
+        StartCoroutine(UIManager.Instance.FadeOutIn(roundTip, 0.5f, 1, false));*/
     }
     private void EventDrawCard(params object[] args)
     {

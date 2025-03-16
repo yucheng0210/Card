@@ -7914,6 +7914,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: b56b588d93cfc6d4981a01d406bc7966, type: 3}
   - {fileID: 8300000, guid: d64e91cef03af304fa237225b23c5707, type: 3}
   - {fileID: 8300000, guid: c12e416291a2dfd4a8a091a9e36dee02, type: 3}
+  - {fileID: 8300000, guid: 21702e360173e4a6a96da1479aa82615, type: 3}
   menuEnterClip: {fileID: 0}
   menuExitClip: {fileID: 0}
   hurt: {fileID: 0}

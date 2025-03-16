@@ -18,6 +18,12 @@ public class BlackDragonMechanismEffect : IEffect
         enemyData.DamageLimit = maxDamageCount;
         EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, enemyData, EventTakeDamage);
         enemyData.MaxPassiveSkillsList.Remove(GetType().Name);
+        Vector3 startPos = new Vector3(0, 105, -1);
+        Vector3 endPos = new Vector3(enemy.transform.position.x, enemy.transform.position.y, -1);
+        BattleManager.Instance.SetParticleEffectCoroutine(startPos, endPos, "ParticleEffect/LongDistance/BigFireBall");
+        enemy.EnemyImage.enabled = false;
+        enemy.transform.localScale = new Vector3(3, 3, 3);
+        enemy.Growl();
     }
     private void ThirdStageEnemyTurn(params object[] args)
     {

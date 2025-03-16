@@ -9,11 +9,16 @@ using UnityEngine.EventSystems;
 using UnityEngine.Events;
 using DG.Tweening;
 using Cinemachine;
-
+using UnityEngine.PlayerLoop;
+using UnityEngine.Rendering.Universal;
 public class Enemy : Character
 {
     [SerializeField]
     private Material dissolveMaterial;
+    [SerializeField]
+    private Material speedLineMaterial;
+    [SerializeField]
+    private GameObject shockWavePrefab;
     [SerializeField]
     private Text enemyAttackIntentText;
     [SerializeField]
@@ -35,7 +40,10 @@ public class Enemy : Character
     private Text infoTitle;
     [SerializeField]
     private Text infoDescription;
-    private CinemachineImpulseSource cinemachineImpulseSource;
+    [SerializeField]
+    private CinemachineImpulseSource jumpImpulseSource;
+    [SerializeField]
+    private CinemachineImpulseSource growlImpulseSource;
     public Material DissolveMaterial
     {
         get { return dissolveMaterial; }
@@ -87,16 +95,16 @@ public class Enemy : Character
     }
     private void Start()
     {
-        EnemyOnceBattlePositiveList = new Dictionary<string, int>();
-        currentEnemyList = BattleManager.Instance.CurrentEnemyList;
-        MyEnemyData.CurrentAttackOrderStrs = MyEnemyData.AttackOrderStrs;
-        MyCollider = GetComponent<BoxCollider>();
-        cinemachineImpulseSource = GetComponent<CinemachineImpulseSource>();
-        EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, MyEnemyData, EventPlayerTurn);
-        EventManager.Instance.AddEventRegister(EventDefinition.eventMove, MyEnemyData, EventMove);
-        EventManager.Instance.AddEventRegister(EventDefinition.eventRefreshUI, MyEnemyData, EventRefreshUI);
-        EventManager.Instance.AddEventRegister(EventDefinition.eventEnemyTurn, MyEnemyData, EventEnemyTurn);
-        RefreshAttackIntent();
+        /* EnemyOnceBattlePositiveList = new Dictionary<string, int>();
+         currentEnemyList = BattleManager.Instance.CurrentEnemyList;
+         MyEnemyData.CurrentAttackOrderStrs = MyEnemyData.AttackOrderStrs;
+         MyCollider = GetComponent<BoxCollider>();
+         EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, MyEnemyData, EventPlayerTurn);
+         EventManager.Instance.AddEventRegister(EventDefinition.eventMove, MyEnemyData, EventMove);
+         EventManager.Instance.AddEventRegister(EventDefinition.eventRefreshUI, MyEnemyData, EventRefreshUI);
+         EventManager.Instance.AddEventRegister(EventDefinition.eventEnemyTurn, MyEnemyData, EventEnemyTurn);
+         RefreshAttackIntent();
+         speedLineMaterial.color = new Color(speedLineMaterial.color.r, speedLineMaterial.color.g, speedLineMaterial.color.b, 0);*/
     }
     private void Update()
     {
@@ -296,7 +304,7 @@ public class Enemy : Character
             enemyRect.anchoredPosition = position;
             if (t >= 0.6)
             {
-                cinemachineImpulseSource.GenerateImpulse();
+                jumpImpulseSource.GenerateImpulse();
             }
         }, 0, 1, 1).SetEase(Ease.InQuad);
         MySequence.Append(moveTween).AppendCallback(() =>
@@ -358,6 +366,28 @@ public class Enemy : Character
             //BattleManager.Instance.CameraImpulse(GetComponent<CinemachineImpulseSource>());
         }
         BattleManager.Instance.Replace(currentEnemyList, startLocation, endLocation);
+    }
+    public void Growl()
+    {
+        StartCoroutine(AfterGrowl());
+    }
+    private IEnumerator AfterGrowl()
+    {
+        yield return new WaitForSeconds(0.5f);
+        jumpImpulseSource.GenerateImpulse();
+        enemyImage.enabled = true;
+        yield return new WaitForSeconds(1.5f);
+        if (BattleManager.Instance.GlobalVolume.profile.TryGet(out ChromaticAberration ca))
+        {
+            ca.intensity.Override(1);
+        }
+        AudioManager.Instance.SEAudio(9);
+        speedLineMaterial.color = new Color(speedLineMaterial.color.r, speedLineMaterial.color.g, speedLineMaterial.color.b, 1);
+        growlImpulseSource.GenerateImpulse();
+        Instantiate(shockWavePrefab, transform.position, Quaternion.identity);
+        yield return new WaitForSeconds(3);
+        ca.intensity.Override(0);
+        speedLineMaterial.color = new Color(speedLineMaterial.color.r, speedLineMaterial.color.g, speedLineMaterial.color.b, 0);
     }
     private void EventPlayerTurn(params object[] args)
     {
