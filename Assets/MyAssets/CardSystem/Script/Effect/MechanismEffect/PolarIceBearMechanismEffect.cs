@@ -68,25 +68,26 @@ public class PolarIceBearMechanismEffect : IEffect
             {
                 Transform meleeEnemyTrans = meleeEnemyData.EnemyTrans;
                 Transform longEnemyTrans = longDistanceEnemyData.EnemyTrans;
-                meleeEnemy.EnemyImage.material = meleeEnemy.DissolveMaterial;
+                Material dissolveMaterial = BattleManager.Instance.DissolveMaterial;
+                meleeEnemy.EnemyImage.material =dissolveMaterial;
                 TweenCallback tweenCallback = () =>
                 {
                     TweenCallback endTweenCallback = () => { };
-                    BattleManager.Instance.SetDissolveMaterial(meleeEnemy.DissolveMaterial, 0.0f, 1, endTweenCallback);
+                    BattleManager.Instance.SetDissolveMaterial(dissolveMaterial, 0.0f, 1, endTweenCallback);
                     BattleManager.Instance.ExchangePos(meleeEnemyTrans, currentEnemyList, meleeEnemyLocation, longEnemyTrans, longDistanceEnemyLocation, currentEnemyList);
                     meleeEnemyLocation = BattleManager.Instance.GetEnemyKey(meleeEnemyData);
                     longDistanceEnemyLocation = BattleManager.Instance.GetEnemyKey(longDistanceEnemyData);
                     AudioManager.Instance.SEAudio(5);
                 };
-                BattleManager.Instance.SetDissolveMaterial(meleeEnemy.DissolveMaterial, 1.0f, 0, tweenCallback);
-                longDistanceEnemy.EnemyImage.material = longDistanceEnemy.DissolveMaterial;
+                BattleManager.Instance.SetDissolveMaterial(dissolveMaterial, 1.0f, 0, tweenCallback);
+                longDistanceEnemy.EnemyImage.material = dissolveMaterial;
                 TweenCallback tweenCallback_2 = () =>
                 {
                     TweenCallback endTweenCallback = () => { };
-                    BattleManager.Instance.SetDissolveMaterial(longDistanceEnemy.DissolveMaterial, 0.0f, 1, endTweenCallback);
+                    BattleManager.Instance.SetDissolveMaterial(dissolveMaterial, 0.0f, 1, endTweenCallback);
                     AudioManager.Instance.SEAudio(5);
                 };
-                BattleManager.Instance.SetDissolveMaterial(longDistanceEnemy.DissolveMaterial, 1.0f, 0, tweenCallback_2);
+                BattleManager.Instance.SetDissolveMaterial(dissolveMaterial, 1.0f, 0, tweenCallback_2);
                 meleeEnemy.RefreshAttackIntent();
                 longDistanceEnemy.RefreshAttackIntent();
                 exchangeCount--;

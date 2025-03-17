@@ -93,6 +93,9 @@ public class BattleManager : Singleton<BattleManager>
     public Enemy EnemyPrefab { get; set; }
     public Transform EnemyTrans { get; set; }
     public bool IsDrag { get; set; }
+    public Material DissolveEdgeMaterial { get; set; }
+    public Material DissolveMaterial { get; set; }
+    public Material SpeedLineMaterial { get; set; }
     //棋盤
     public string CurrentPlayerLocation { get; set; }
     public Dictionary<string, Terrain> CurrentTerrainList { get; set; }
@@ -145,8 +148,8 @@ public class BattleManager : Singleton<BattleManager>
                 CharacterData value = CurrentEnemyList.ElementAt(i).Value;
                 TakeDamage(CurrentPlayerData, value, 50, CurrentEnemyList.ElementAt(i).Key, 0);
             }
-            //TakeDamage(CurrentPlayerData, CurrentPlayerData, 5, CurrentPlayerLocation, 0);
-            playerMoveCount = 5;
+            //TakeDamage(CurrentPlayerData, CurrentPlayerData, 50, CurrentPlayerLocation, 0);
+            // playerMoveCount = 5;
             // StartCoroutine(SceneController.Instance.Transition("StartMenu"));
             /*  for (int i = 0; i < CurrentEnemyList.Count; i++)
               {
@@ -173,7 +176,7 @@ public class BattleManager : Singleton<BattleManager>
             yield break;
         }
         int currentDamage = damage * (100 - defender.DamageReduction) / 100 - defender.CurrentShield;
-        if (currentDamage < 0)
+        if (currentDamage < 0 || CurrentOnceBattlePositiveList.ContainsKey("DamageImmunityEffect"))
         {
             currentDamage = 0;
         }
@@ -801,15 +804,15 @@ public class BattleManager : Singleton<BattleManager>
                 {
                     string effectID;
                     int effectCount;
-                    effectID = skill.SkillContent[i].Item1;
-                    effectCount = skill.SkillContent[i].Item2;
+                    effectID = skill.SkillContent.ElementAt(i).Key;
+                    effectCount = skill.SkillContent[effectID];
                     EffectFactory.Instance.CreateEffect(effectID).ApplyEffect(effectCount, CurrentPlayerLocation, CurrentPlayerLocation);
                 }
                 continue;
             }
             for (int i = 0; i < skill.SkillContent.Count; i++)
             {
-                CurrentAbilityList.Add(skill.SkillContent[i].Item1, skill.SkillContent[i].Item2);
+                CurrentAbilityList.Add(skill.SkillContent.ElementAt(i).Key, skill.SkillContent[skill.SkillContent.ElementAt(i).Key]);
             }
         }
         for (int i = 0; i < MapManager.Instance.MapNodes[levelCount][levelID].l.EnemyIDList.Count; i++)
@@ -933,6 +936,7 @@ public class BattleManager : Singleton<BattleManager>
         {
             showMenuStr = "UIGameOver";
             EventManager.Instance.DispatchEvent(EventDefinition.eventGameOver, true);
+            EventManager.Instance.DispatchEvent(EventDefinition.eventReloadGame);
         }
         MapManager.Instance.LevelCount++;
         UIManager.Instance.ShowUI(showMenuStr);
@@ -963,6 +967,10 @@ public class BattleManager : Singleton<BattleManager>
         else
         {
             stateList[stateName] += stateValue;
+        }
+        if (stateList[stateName] <= 0)
+        {
+            stateList.Remove(stateName);
         }
     }
     public void AddMinions(int enemyID, int count, string location)
@@ -1086,7 +1094,7 @@ public class BattleManager : Singleton<BattleManager>
     }
     public void ShowCharacterStatusClue(Transform trans, string des, float waitTime)
     {
-        //StartCoroutine(ShowCharacterStatusClueCoroutine(trans, des, waitTime));
+        StartCoroutine(ShowCharacterStatusClueCoroutine(trans, des, waitTime));
     }
     private IEnumerator ShowCharacterStatusClueCoroutine(Transform trans, string des, float waitTime)
     {

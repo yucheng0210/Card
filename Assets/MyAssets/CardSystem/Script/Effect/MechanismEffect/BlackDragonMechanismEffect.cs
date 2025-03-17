@@ -22,7 +22,7 @@ public class BlackDragonMechanismEffect : IEffect
         Vector3 endPos = new Vector3(enemy.transform.position.x, enemy.transform.position.y, -1);
         BattleManager.Instance.SetParticleEffectCoroutine(startPos, endPos, "ParticleEffect/LongDistance/BigFireBall");
         enemy.EnemyImage.enabled = false;
-        enemy.transform.localScale = new Vector3(3, 3, 3);
+        //enemy.transform.localScale = new Vector3(3, 3, 3);
         enemy.Growl();
     }
     private void ThirdStageEnemyTurn(params object[] args)

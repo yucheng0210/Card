@@ -11,9 +11,9 @@ public class DontDestroy : MonoBehaviour
     }
     private void Start()
     {
-        EventManager.Instance.AddEventRegister(EventDefinition.eventGameOver, EventGameOver);
+        EventManager.Instance.AddEventRegister(EventDefinition.eventReloadGame, EventReloadGame);
     }
-    private void EventGameOver(params object[] args)
+    private void EventReloadGame(params object[] args)
     {
         SceneManager.MoveGameObjectToScene(gameObject, SceneManager.GetActiveScene());
     }

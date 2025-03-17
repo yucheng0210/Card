@@ -436,7 +436,7 @@ public class DataManager : Singleton<DataManager>
                 SkillID = int.Parse(row[0]),
                 SkillName = row[1],
                 SkillDescrption = row[2],
-                SkillContent = new List<(string, int)>(),
+                SkillContent = new Dictionary<string, int>(),
                 SkillType = row[4]
             };
             if (row[3] != "")
@@ -445,12 +445,7 @@ public class DataManager : Singleton<DataManager>
                 for (int j = 0; j < skillEffects.Length; j++)
                 {
                     string[] skillEffect = skillEffects[j].Split('=');
-                    string id;
-                    id = skillEffect[0];
-                    if (int.TryParse(skillEffect[1], out int count))
-                    {
-                        skill.SkillContent.Add(new ValueTuple<string, int>(id, count));
-                    }
+                    skill.SkillContent.Add(skillEffect[0], int.Parse(skillEffect[1]));
                 }
             }
             SkillList.Add(skill.SkillID, skill);
@@ -537,6 +532,7 @@ public class DataManager : Singleton<DataManager>
 
         // Set current player data
         BattleManager.Instance.CurrentPlayerData = PlayerList[PlayerID];
+        BattleManager.Instance.CurrentPlayerData.StartSkillList.Add(2002);
     }
 
     private void StartGame_ExtinctionRayEffect()

@@ -56,13 +56,13 @@ public class AudioManager : Singleton<AudioManager>
     }
     public void BGMAudio(int index)
     {
-        /*if (index < 0 || index >= bgmClipList.Count || BGMSource.clip == bgmClipList[index])
+        if (index < 0 || index >= bgmClipList.Count || BGMSource.clip == bgmClipList[index])
         {
             return;
         }
         BGMSource.Stop();
         BGMSource.clip = bgmClipList[index];
-        BGMSource.Play();*/
+        BGMSource.Play();
     }
     public void SEAudio(int index)
     {

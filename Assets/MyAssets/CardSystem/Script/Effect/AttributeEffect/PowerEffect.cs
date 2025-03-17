@@ -8,6 +8,12 @@ public class PowerEffect : IEffect
     private Enemy enemy;
     public void ApplyEffect(int value, string fromLocation, string toLocation)
     {
+        if (fromLocation == BattleManager.Instance.CurrentPlayerLocation)
+        {
+            BattleManager.Instance.CurrentPlayer.AdditionPower += value;
+            BattleManager.Instance.AddState(BattleManager.Instance.CurrentOnceBattlePositiveList, GetType().Name, value);
+            return;
+        }
         enemyData = (EnemyData)BattleManager.Instance.IdentifyCharacter(fromLocation);
         enemy = enemyData.EnemyTrans.GetComponent<Enemy>();
         enemy.AdditionPower += value;

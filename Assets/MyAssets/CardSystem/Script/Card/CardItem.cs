@@ -11,8 +11,6 @@ using PilotoStudio;
 public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IDragHandler, IEndDragHandler, IPointerDownHandler, IPointerClickHandler
 {
     private int index;
-    [SerializeField]
-    private Material dissolveMaterial;
 
     [SerializeField]
     private Text cardName;
@@ -85,12 +83,12 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         SetCardInfo();
         EventManager.Instance.AddEventRegister(EventDefinition.eventUseCard, RefreshCardOutline);
-        EventManager.Instance.AddEventRegister(EventDefinition.eventGameOver, EventGameOver);
+        EventManager.Instance.AddEventRegister(EventDefinition.eventReloadGame, EventReloadGame);
     }
     private void OnDisable()
     {
         EventManager.Instance.RemoveEventRegister(EventDefinition.eventUseCard, RefreshCardOutline);
-        EventManager.Instance.RemoveEventRegister(EventDefinition.eventGameOver, EventGameOver);
+        EventManager.Instance.RemoveEventRegister(EventDefinition.eventReloadGame, EventReloadGame);
     }
     private void SetCardInfo()
     {
@@ -360,9 +358,10 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             Vector3 destination = new Vector3(enemy.transform.position.x, enemy.transform.position.y, -1);
             yield return BattleManager.Instance.SetParticleEffect(BattleManager.Instance.PlayerAni, startPos, destination, particlePath, true);
         }
-        if (cardData.CardAttack != 0 && cardData.CardType != "詛咒")
+        int currentAttackCount = cardData.CardAttack + BattleManager.Instance.CurrentPlayer.AdditionPower;
+        if (currentAttackCount != 0 && cardData.CardType != "詛咒")
         {
-            BattleManager.Instance.TakeDamage(BattleManager.Instance.CurrentPlayerData, BattleManager.Instance.CurrentEnemyList[target], cardData.CardAttack, target, 0);
+            BattleManager.Instance.TakeDamage(BattleManager.Instance.CurrentPlayerData, BattleManager.Instance.CurrentEnemyList[target], currentAttackCount, target, 0);
         }
         if (!cardData.CardRemove)
         {
@@ -411,6 +410,7 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
         if (cardData.CardRemove)
         {
+            Material dissolveMaterial = BattleManager.Instance.DissolveEdgeMaterial;
             CardImage.material = dissolveMaterial;
             CardDescription.material = dissolveMaterial;
             CardName.material = dissolveMaterial;
@@ -444,7 +444,7 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             UIManager.Instance.ChangeOutline(this, false);
         }
     }
-    private void EventGameOver(params object[] args)
+    private void EventReloadGame(params object[] args)
     {
         Destroy(gameObject);
     }

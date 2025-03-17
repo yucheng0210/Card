@@ -62,8 +62,8 @@ MonoBehaviour:
     m_ImpulseType: 3
     m_DissipationRate: 0.25
     m_RawSignal: {fileID: 11400000, guid: 69ce8388f6785dd4c8c39915efece2f4, type: 2}
-    m_AmplitudeGain: 30
-    m_FrequencyGain: 30
+    m_AmplitudeGain: 2
+    m_FrequencyGain: 2
     m_RepeatMode: 0
     m_Randomize: 1
     m_TimeEnvelope:
@@ -928,8 +928,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   statusClueTrans: {fileID: 2978815105930974279}
   attackStartTrans: {fileID: 4078462931763995783}
-  dissolveMaterial: {fileID: 2100000, guid: 1685d996673db354781f5e0e73db32a8, type: 2}
-  speedLineMaterial: {fileID: 2100000, guid: f6a4f606e013e9841a706f3d8cbc168c, type: 2}
   shockWavePrefab: {fileID: 3408543950459880598, guid: ba94c1311e5e8fb46b4a4df3e23f8406, type: 3}
   enemyAttackIntentText: {fileID: 5132171066686309542}
   enemyImage: {fileID: 6147010633260204934}

@@ -13,10 +13,7 @@ using UnityEngine.PlayerLoop;
 using UnityEngine.Rendering.Universal;
 public class Enemy : Character
 {
-    [SerializeField]
-    private Material dissolveMaterial;
-    [SerializeField]
-    private Material speedLineMaterial;
+
     [SerializeField]
     private GameObject shockWavePrefab;
     [SerializeField]
@@ -44,11 +41,7 @@ public class Enemy : Character
     private CinemachineImpulseSource jumpImpulseSource;
     [SerializeField]
     private CinemachineImpulseSource growlImpulseSource;
-    public Material DissolveMaterial
-    {
-        get { return dissolveMaterial; }
-        set { dissolveMaterial = value; }
-    }
+
     public Text InfoTitle { get { return infoTitle; } set { infoTitle = value; } }
     public Text InfoDescription { get { return infoDescription; } set { infoDescription = value; } }
     public Text EnemyAttackIntentText { get { return enemyAttackIntentText; } set { enemyAttackIntentText = value; } }
@@ -95,16 +88,15 @@ public class Enemy : Character
     }
     private void Start()
     {
-        /* EnemyOnceBattlePositiveList = new Dictionary<string, int>();
-         currentEnemyList = BattleManager.Instance.CurrentEnemyList;
-         MyEnemyData.CurrentAttackOrderStrs = MyEnemyData.AttackOrderStrs;
-         MyCollider = GetComponent<BoxCollider>();
-         EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, MyEnemyData, EventPlayerTurn);
-         EventManager.Instance.AddEventRegister(EventDefinition.eventMove, MyEnemyData, EventMove);
-         EventManager.Instance.AddEventRegister(EventDefinition.eventRefreshUI, MyEnemyData, EventRefreshUI);
-         EventManager.Instance.AddEventRegister(EventDefinition.eventEnemyTurn, MyEnemyData, EventEnemyTurn);
-         RefreshAttackIntent();
-         speedLineMaterial.color = new Color(speedLineMaterial.color.r, speedLineMaterial.color.g, speedLineMaterial.color.b, 0);*/
+        EnemyOnceBattlePositiveList = new Dictionary<string, int>();
+        currentEnemyList = BattleManager.Instance.CurrentEnemyList;
+        MyEnemyData.CurrentAttackOrderStrs = MyEnemyData.AttackOrderStrs;
+        MyCollider = GetComponent<BoxCollider>();
+        EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, MyEnemyData, EventPlayerTurn);
+        EventManager.Instance.AddEventRegister(EventDefinition.eventMove, MyEnemyData, EventMove);
+        EventManager.Instance.AddEventRegister(EventDefinition.eventRefreshUI, MyEnemyData, EventRefreshUI);
+        EventManager.Instance.AddEventRegister(EventDefinition.eventEnemyTurn, MyEnemyData, EventEnemyTurn);
+        RefreshAttackIntent();
     }
     private void Update()
     {
@@ -382,6 +374,7 @@ public class Enemy : Character
             ca.intensity.Override(1);
         }
         AudioManager.Instance.SEAudio(9);
+        Material speedLineMaterial = BattleManager.Instance.SpeedLineMaterial;
         speedLineMaterial.color = new Color(speedLineMaterial.color.r, speedLineMaterial.color.g, speedLineMaterial.color.b, 1);
         growlImpulseSource.GenerateImpulse();
         Instantiate(shockWavePrefab, transform.position, Quaternion.identity);

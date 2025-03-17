@@ -36,6 +36,8 @@ public class UIBattle : UIBase
     [SerializeField]
     private Transform playerMoveGridTrans;
     [SerializeField]
+    private Transform skillStateGroupTrans;
+    [SerializeField]
     private Transform negativeGroupTrans;
     [SerializeField]
     private Transform positiveGroupTrans;
@@ -45,6 +47,12 @@ public class UIBattle : UIBase
     private BattleState negativeRPrefab;
 
     [Header("敵人")]
+    [SerializeField]
+    private Material dissolveEdgeMaterial;
+    [SerializeField]
+    private Material dissolveMaterial;
+    [SerializeField]
+    private Material speedLineMaterial;
     [SerializeField]
     private Enemy enemyPrefab;
 
@@ -138,6 +146,7 @@ public class UIBattle : UIBase
 
     private void StartGame()
     {
+        speedLineMaterial.color = new Color(speedLineMaterial.color.r, speedLineMaterial.color.g, speedLineMaterial.color.b, 0);
         BattleManager.Instance.GlobalVolume = volume;
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
         BattleManager.Instance.EnemyPrefab = enemyPrefab;
@@ -146,6 +155,9 @@ public class UIBattle : UIBase
         BattleManager.Instance.TrapGroupTrans = trapGroupTrans;
         BattleManager.Instance.CheckerboardTrans = checkerboardTrans;
         BattleManager.Instance.CharacterStatusClue = characterStatusClue;
+        BattleManager.Instance.DissolveEdgeMaterial = dissolveEdgeMaterial;
+        BattleManager.Instance.DissolveMaterial = dissolveMaterial;
+        BattleManager.Instance.SpeedLineMaterial = speedLineMaterial;
         Hide();
     }
     private void CheckBattleInfo()
@@ -295,9 +307,9 @@ public class UIBattle : UIBase
             RectTransform emptyPlace = BattleManager.Instance.CheckerboardTrans.GetChild(childCount).GetComponent<RectTransform>();
             SetEnemyMoveRotation(enemyData, enemyImage, location, routeList[k]);
             enemyData.EnemyTrans.DOAnchorPos(emptyPlace.localPosition, 0.5f);  // 移动动画
-            enemy.MyAnimator.SetBool("isRunning", true);
+            /* enemy.MyAnimator.SetBool("isRunning", true);
+             enemy.MyAnimator.SetBool("isRunning", false);*/
             yield return new WaitForSeconds(0.5f);
-            enemy.MyAnimator.SetBool("isRunning", false);
         }
         SetEnemyAttackRotation(enemyData, enemyImage, minLocation);
         BattleManager.Instance.Replace(enemyDict, location, minLocation);
@@ -306,7 +318,6 @@ public class UIBattle : UIBase
     // 处理敌人攻击
     private IEnumerator HandleEnemyAttack(EnemyData enemyData, Enemy enemy, PlayerData playerData, int attackCount)
     {
-
         if (enemy.MySequence == null)
         {
             for (int i = 0; i < attackCount; i++)
@@ -572,8 +583,12 @@ public class UIBattle : UIBase
             yield return null;
         }
         CheckBattleInfo();
-        // 初始化玩家回合
         roundTip.GetComponent<Image>().sprite = playerRound;
+        for (int i = 0; i < BattleManager.Instance.CurrentPlayerData.StartSkillList.Count; i++)
+        {
+            Skill skill = DataManager.Instance.SkillList[BattleManager.Instance.CurrentPlayerData.StartSkillList[i]];
+            UpdateStateUI(skillStateGroupTrans, skill.SkillContent, negativeRPrefab, false, false);
+        }
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Player);
     }
     private void EventBattleInitial(params object[] args)
@@ -589,8 +604,8 @@ public class UIBattle : UIBase
         speedupButton.onClick.AddListener(Speedup);
         changeTurnButton.onClick.AddListener(ChangeTurn);
         playerMoveButton.onClick.AddListener(PlayerMove);
-       /* roundTip.GetComponent<Image>().sprite = playerRound;
-        StartCoroutine(UIManager.Instance.FadeOutIn(roundTip, 0.5f, 1, false));*/
+        roundTip.GetComponent<Image>().sprite = playerRound;
+        StartCoroutine(UIManager.Instance.FadeOutIn(roundTip, 0.5f, 1, false));
     }
     private void EventDrawCard(params object[] args)
     {
@@ -660,7 +675,13 @@ public class UIBattle : UIBase
         Color color = (Color)args[3];
         if (damageStr == "0" && args.Length > 6)
         {
-            if (((CharacterData)args[5]).DamageReduction == 100)
+            if (BattleManager.Instance.CurrentOnceBattlePositiveList.ContainsKey("DamageImmunityEffect"))
+            {
+                BattleManager.Instance.AddState(BattleManager.Instance.CurrentOnceBattlePositiveList, "DamageImmunityEffect", -1);
+                damageStr = "免傷";
+
+            }
+            else if (((CharacterData)args[5]).DamageReduction == 100)
             {
                 damageStr = "免疫";
             }
@@ -709,11 +730,7 @@ public class UIBattle : UIBase
         {
             playerMoveGridTrans.GetChild(i).gameObject.SetActive(i < playerMoveCount);
         }
-
-        // 更新负面状态
         UpdateStateUI(negativeGroupTrans, negativeState, negativeRPrefab, false, true);
-
-        // 更新正面状态
         UpdateStateUI(positiveGroupTrans, positiveList, negativeRPrefab, false, true);
         UpdateStateUI(positiveGroupTrans, oncePositiveList, negativeRPrefab, false, false);
     }

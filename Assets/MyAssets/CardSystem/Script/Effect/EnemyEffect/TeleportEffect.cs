@@ -37,15 +37,16 @@ public class TeleportEffect : IEffect
         BattleManager.Instance.Replace(BattleManager.Instance.CurrentEnemyList, initialLocation, teleportList[randomIndex]);
         int childCount = BattleManager.Instance.GetCheckerboardPoint(teleportList[randomIndex]);
         RectTransform emptyPlace = BattleManager.Instance.CheckerboardTrans.GetChild(childCount).GetComponent<RectTransform>();
-        enemy.EnemyImage.material = enemy.DissolveMaterial;
+        Material dissolveMaterial = BattleManager.Instance.DissolveMaterial;
+        enemy.EnemyImage.material = dissolveMaterial;
         TweenCallback tweenCallback = () =>
         {
             TweenCallback endTweenCallback = () => { };
             BattleManager.Instance.CurrentEnemyList[teleportList[randomIndex]].EnemyTrans.DOAnchorPos(emptyPlace.localPosition, 0);
-            BattleManager.Instance.SetDissolveMaterial(enemy.DissolveMaterial, 0.0f, 1, endTweenCallback);
+            BattleManager.Instance.SetDissolveMaterial(dissolveMaterial, 0.0f, 1, endTweenCallback);
             AudioManager.Instance.SEAudio(5);
         };
-        BattleManager.Instance.SetDissolveMaterial(enemy.DissolveMaterial, 1.0f, 0, tweenCallback);
+        BattleManager.Instance.SetDissolveMaterial(dissolveMaterial, 1.0f, 0, tweenCallback);
         AudioManager.Instance.SEAudio(5);
     }
     private void EventTakeDamage(params object[] args)
