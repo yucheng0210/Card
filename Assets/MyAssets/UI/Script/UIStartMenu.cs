@@ -18,6 +18,7 @@ public class UIStartMenu : UIBase
         base.Start();
         startButton.onClick.AddListener(StartGame);
         exitButton.onClick.AddListener(ExitGame);
+        optionButton.onClick.AddListener(() => UIManager.Instance.UIDict["UIOption"].Show());
         AudioManager.Instance.BGMAudio(0);
     }
     private void StartGame()

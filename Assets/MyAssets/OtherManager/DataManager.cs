@@ -64,8 +64,8 @@ public class DataManager : Singleton<DataManager>
 
     private void Start()
     {
-        //StartGame_Default();
-        StartGame_FightingSpiritEffect();
+        StartGame_Default();
+        //StartGame_FightingSpiritEffect();
         //StartGame_ExtinctionRayEffect();
     }
 
@@ -437,7 +437,10 @@ public class DataManager : Singleton<DataManager>
                 SkillName = row[1],
                 SkillDescrption = row[2],
                 SkillContent = new Dictionary<string, int>(),
-                SkillType = row[4]
+                SkillType = row[4],
+                SkillSprite = Resources.Load<Sprite>(row[5]),
+                IsTalentSkill = bool.Parse(row[6]),
+                TalentAnimatorController = Resources.Load<AnimatorOverrideController>(row[7]),
             };
             if (row[3] != "")
             {
@@ -532,7 +535,6 @@ public class DataManager : Singleton<DataManager>
 
         // Set current player data
         BattleManager.Instance.CurrentPlayerData = PlayerList[PlayerID];
-        BattleManager.Instance.CurrentPlayerData.StartSkillList.Add(2002);
     }
 
     private void StartGame_ExtinctionRayEffect()

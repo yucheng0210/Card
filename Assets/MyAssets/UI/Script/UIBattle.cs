@@ -584,11 +584,7 @@ public class UIBattle : UIBase
         }
         CheckBattleInfo();
         roundTip.GetComponent<Image>().sprite = playerRound;
-        for (int i = 0; i < BattleManager.Instance.CurrentPlayerData.StartSkillList.Count; i++)
-        {
-            Skill skill = DataManager.Instance.SkillList[BattleManager.Instance.CurrentPlayerData.StartSkillList[i]];
-            UpdateStateUI(skillStateGroupTrans, skill.SkillContent, negativeRPrefab, false, false);
-        }
+        UpdateSkillUI(skillStateGroupTrans, BattleManager.Instance.CurrentPlayerData.StartSkillList, negativeRPrefab);
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Player);
     }
     private void EventBattleInitial(params object[] args)
@@ -775,6 +771,42 @@ public class UIBattle : UIBase
             stateImage.sprite = effectSprite;
             infoTitle.text = effect.SetTitleText();
             string descriptionStr = isPassiveEffect ? effect.SetPassiveEffectDescriptionText() : effect.SetDescriptionText();
+            if (descriptionStr.Length > 30)
+            {
+                infoGroupTrans.GetChild(0).GetChild(0).gameObject.SetActive(true);
+                descriptionStr = BattleManager.Instance.AutomaticLineWrapping(descriptionStr, 30);
+            }
+            infoDescription.text = descriptionStr;
+        }
+    }
+    private void UpdateSkillUI(Transform groupTrans, List<int> stateList, BattleState prefab)
+    {
+        for (int i = groupTrans.childCount - 1; i >= 0; i--)
+        {
+            Destroy(groupTrans.GetChild(i).gameObject);
+        }
+        for (int i = 0; i < stateList.Count; i++)
+        {
+            Skill skill = DataManager.Instance.SkillList[stateList[i]];
+            BattleState stateObject = Instantiate(prefab, groupTrans);
+            Image stateImage = stateObject.BattleStateImage;
+            Text stateText = stateObject.BattleStateAmount;
+            Text infoTitle = stateObject.InfoTitle;
+            Text infoDescription = stateObject.InfoDescription;
+            Transform infoGroupTrans = stateObject.InfoGroupTrans;
+            Sprite effectSprite = skill.SkillSprite;
+            if (effectSprite == null)
+            {
+                effectSprite = EffectFactory.Instance.CreateEffect("KnockBackEffect").SetIcon();
+            }
+            EventTrigger eventTrigger = infoGroupTrans.GetComponent<EventTrigger>();
+            UnityAction unityAction_1 = () => { infoGroupTrans.GetChild(0).gameObject.SetActive(true); };
+            UnityAction unityAction_2 = () => { infoGroupTrans.GetChild(0).gameObject.SetActive(false); };
+            BattleManager.Instance.SetEventTrigger(eventTrigger, unityAction_1, unityAction_2);
+            //stateObject.DisableImage.SetActive(value == -1);
+            stateImage.sprite = effectSprite;
+            infoTitle.text = skill.SkillName;
+            string descriptionStr = skill.SkillDescrption;
             if (descriptionStr.Length > 30)
             {
                 infoGroupTrans.GetChild(0).GetChild(0).gameObject.SetActive(true);

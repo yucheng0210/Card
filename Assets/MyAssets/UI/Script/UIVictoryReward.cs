@@ -107,6 +107,20 @@ public class UIVictoryReward : UIBase
         Destroy(moneyReward);
         ReduceCount();
     }
+    private void GetTalentSkillReward(GameObject reward, int skillIndex)
+    {
+        for (int i = 0; i < BattleManager.Instance.CurrentPlayerData.StartSkillList.Count; i++)
+        {
+            int skillID = BattleManager.Instance.CurrentPlayerData.StartSkillList[i];
+            if (DataManager.Instance.SkillList[skillID].IsTalentSkill)
+            {
+                BattleManager.Instance.CurrentPlayerData.StartSkillList.Remove(skillID);
+            }
+        }
+        BattleManager.Instance.CurrentPlayerData.StartSkillList.Add(skillIndex);
+        BattleManager.Instance.PlayerAni.runtimeAnimatorController = DataManager.Instance.SkillList[skillIndex].TalentAnimatorController;
+        Destroy(reward);
+    }
     private void AddCard(int rewardID)
     {
         BattleManager.Instance.AddCard(rewardID);
@@ -160,5 +174,12 @@ public class UIVictoryReward : UIBase
         }
         moneyReward.GetComponentInChildren<Text>().text = "X" + totalMoneyCount.ToString();
         moneyReward.GetComponent<Button>().onClick.AddListener(() => GetDropMoney(moneyReward, totalMoneyCount));
+        if (MapManager.Instance.MapNodes[count][id].l.LevelType == "FINALBOSS")
+        {
+            int randomIndex = Random.Range(2001, 2006);
+            GameObject skillReward = Instantiate(rewardPrefab, rewardGroupTrans);
+            skillReward.GetComponent<Image>().sprite = DataManager.Instance.SkillList[randomIndex].SkillSprite;
+            skillReward.GetComponent<Button>().onClick.AddListener(() => GetTalentSkillReward(skillReward, randomIndex));
+        }
     }
 }

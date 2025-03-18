@@ -166,7 +166,7 @@ public class UIMap : UIBase
                         {
                             currentIndex = simpleRandomIndex;
                         }
-                        currentIndex = 8001;
+                        //currentIndex = 8001;
                         break;
                     case "BOSS":
                         currentIndex = Random.Range(2000 + MapManager.Instance.ChapterCount, 2002 + MapManager.Instance.ChapterCount);

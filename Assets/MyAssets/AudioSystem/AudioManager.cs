@@ -117,8 +117,6 @@ public class AudioManager : Singleton<AudioManager>
         Instance.PlayerSource.Play();
     }
 
-
-
     public void ChanageAudioVolume(string sourceName, float value)
     {
         audioMixer.SetFloat(sourceName, Mathf.Log10(value) * 20);
