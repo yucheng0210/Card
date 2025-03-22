@@ -21930,7 +21930,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 194137554}
   m_Direction: 2
   m_Value: 0.000000035924344
-  m_Size: 0.2411785
+  m_Size: 0.24118002
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -45274,7 +45274,7 @@ MonoBehaviour:
   trapPrefab: {fileID: 3279483545118963417, guid: 59b7783ede668854dade310d14e23d01, type: 3}
   trapGroupTrans: {fileID: 627588289}
   potionGroupTrans: {fileID: 1415866742}
-  potionPrefab: {fileID: 7333642391348528245, guid: cc36005db0df47747bc59aa5c17546e4, type: 3}
+  potionPrefab: {fileID: 7333642391348528245, guid: 85a819803dec32f4ba100b9c903ecd8f, type: 3}
   potionClueMenu: {fileID: 729138225}
 --- !u!114 &2128855930
 MonoBehaviour:

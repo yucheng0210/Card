@@ -51,6 +51,7 @@ public class UIOption : UIBase
                 break;
             case "Level1":
                 StartCoroutine(SceneController.Instance.Transition("StartMenu"));
+                SaveLoadManager.Instance.Save();
                 EventManager.Instance.DispatchEvent(EventDefinition.eventReloadGame);
                 break;
         }

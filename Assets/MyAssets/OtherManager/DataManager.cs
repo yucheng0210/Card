@@ -5,7 +5,7 @@ using System.IO;
 using System;
 using System.Linq;
 
-public class DataManager : Singleton<DataManager>
+public class DataManager : Singleton<DataManager>, ISavable
 {
     private readonly string cardListPath = Application.streamingAssetsPath + "/CARDLIST.csv";
     private readonly string playerListPath = Application.streamingAssetsPath + "/PLAYERLIST.csv";
@@ -37,7 +37,7 @@ public class DataManager : Singleton<DataManager>
     public Dictionary<int, Terrain> TerrainList { get; set; }
     public int PlayerID { get; set; }
     public int MoneyCount { get; set; }
-
+    private float gameTime;
     protected override void Awake()
     {
         base.Awake();
@@ -67,8 +67,12 @@ public class DataManager : Singleton<DataManager>
         StartGame_Default();
         //StartGame_FightingSpiritEffect();
         //StartGame_ExtinctionRayEffect();
+        AddSavableRegister();
     }
-
+    private void Update()
+    {
+        gameTime += Time.unscaledDeltaTime;
+    }
     private void LoadData()
     {
         #region 卡牌列表
@@ -555,4 +559,25 @@ public class DataManager : Singleton<DataManager>
         BattleManager.Instance.CurrentPlayerData = PlayerList[PlayerID];
     }
 
+    public void GenerateGameData(GameSaveData gameSaveData)
+    {
+        gameSaveData.dataName = $"第{MapManager.Instance.ChapterCount}章";
+        gameSaveData.backpack = Backpack;
+        gameSaveData.moneyCount = MoneyCount;
+        gameSaveData.gameTime = gameTime;
+        gameSaveData.currentScene = "Level1";
+    }
+
+    public void RestoreGameData(GameSaveData gameSaveData)
+    {
+        Backpack = gameSaveData.backpack;
+        MoneyCount = gameSaveData.moneyCount;
+        gameTime = gameSaveData.gameTime;
+        StartCoroutine(SceneController.Instance.Transition(gameSaveData.currentScene));
+    }
+
+    public void AddSavableRegister()
+    {
+        SaveLoadManager.Instance.AddRegister(this);
+    }
 }

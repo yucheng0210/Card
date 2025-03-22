@@ -68,9 +68,11 @@ public class SaveOnClicked : MonoBehaviour
         }
         else
         {
-            SaveLoadManager.Instance.Save(saveID);
+           // SaveLoadManager.Instance.Save(saveID);
             if (SceneManager.GetActiveScene().name == "StartMenu")
+            {
                 SaveLoadManager.Instance.Load(saveID);
+            }
             Time.timeScale = 1;
         }
     }

@@ -5,6 +5,7 @@ using UnityEngine;
 public interface ISavable
 {
     void AddSavableRegister();
-    GameSaveData GenerateGameData();
+
+    void GenerateGameData(GameSaveData gameSaveData);
     void RestoreGameData(GameSaveData gameSaveData);
 }

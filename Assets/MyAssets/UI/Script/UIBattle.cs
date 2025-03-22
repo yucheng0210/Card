@@ -469,14 +469,32 @@ public class UIBattle : UIBase
     {
         for (int i = 0; i < potionGroupTrans.childCount; i++)
         {
-            Destroy(potionGroupTrans.GetChild(i).gameObject);
+            potionGroupTrans.GetChild(i).gameObject.SetActive(false);
+            //Destroy(potionGroupTrans.GetChild(i).gameObject);
         }
         for (int i = 0; i < DataManager.Instance.PotionBag.Count; i++)
         {
             int avoidClosure = i;
-            Button potion = Instantiate(potionPrefab, potionGroupTrans);
-            potion.GetComponent<Image>().sprite = Resources.Load<Sprite>(DataManager.Instance.PotionBag[avoidClosure].ItemImagePath);
-            potion.onClick.AddListener(() => UsePotion(DataManager.Instance.PotionBag[avoidClosure].ItemID, avoidClosure));
+            PotionItem potionItem = Instantiate(potionPrefab, potionGroupTrans).GetComponent<PotionItem>();
+            Potion potionData = DataManager.Instance.PotionBag[avoidClosure];
+            Image potionImage = potionItem.GetComponent<Image>();
+            Button potionButton = potionItem.GetComponent<Button>();
+            potionImage.sprite = Resources.Load<Sprite>(potionData.ItemImagePath);
+            potionItem.InfoTitleText.text = potionData.ItemName;
+            potionItem.InfoDescriptionText.text = potionData.ItemInfo;
+            potionButton.onClick.AddListener(() => UsePotion(potionData.ItemID, avoidClosure));
+            potionItem.PriceText.enabled = false;
+            UnityAction unityAction_1 = () =>
+            {
+                potionItem.InfoGameObject.SetActive(true);
+                potionItem.PotionCanvas.overrideSorting = true;
+            };
+            UnityAction unityAction_2 = () =>
+            {
+                potionItem.InfoGameObject.SetActive(false);
+                potionItem.PotionCanvas.overrideSorting = false;
+            };
+            BattleManager.Instance.SetEventTrigger(potionItem.PotionEventTrigger, unityAction_1, unityAction_2);
         }
     }
     private void UsePotion(int itemID, int bagID)
