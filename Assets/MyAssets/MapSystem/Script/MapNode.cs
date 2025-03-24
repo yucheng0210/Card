@@ -11,8 +11,17 @@ public class MapNode : MonoBehaviour
     public bool isUsed = false;
 
     public Level l;
-
-    private void Awake() {
+    public void Reset()
+    {
+        value = 0;
+        left = null;
+        right = null;
+        level = 0;
+        isUsed = false;
+        l = null;
+    }
+    private void Awake()
+    {
         // Debug.Log(gameObject.GetComponent<RectTransform>().localPosition);
     }
 }

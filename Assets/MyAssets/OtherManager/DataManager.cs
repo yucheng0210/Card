@@ -561,19 +561,23 @@ public class DataManager : Singleton<DataManager>, ISavable
 
     public void GenerateGameData(GameSaveData gameSaveData)
     {
-        gameSaveData.dataName = $"第{MapManager.Instance.ChapterCount}章";
-        gameSaveData.backpack = Backpack;
-        gameSaveData.moneyCount = MoneyCount;
-        gameSaveData.gameTime = gameTime;
-        gameSaveData.currentScene = "Level1";
+        gameSaveData.DataName = $"第{MapManager.Instance.ChapterCount}章";
+        gameSaveData.Backpack = Backpack;
+        gameSaveData.CardBag = CardBag;
+        gameSaveData.PotionBag = PotionBag;
+        gameSaveData.MoneyCount = MoneyCount;
+        gameSaveData.GameTime = gameTime;
+        gameSaveData.CurrentScene = "Level1";
     }
 
     public void RestoreGameData(GameSaveData gameSaveData)
     {
-        Backpack = gameSaveData.backpack;
-        MoneyCount = gameSaveData.moneyCount;
-        gameTime = gameSaveData.gameTime;
-        StartCoroutine(SceneController.Instance.Transition(gameSaveData.currentScene));
+        Backpack = gameSaveData.Backpack;
+        MoneyCount = gameSaveData.MoneyCount;
+        gameTime = gameSaveData.GameTime;
+        CardBag = gameSaveData.CardBag;
+        PotionBag = gameSaveData.PotionBag;
+        StartCoroutine(SceneController.Instance.Transition(gameSaveData.CurrentScene));
     }
 
     public void AddSavableRegister()

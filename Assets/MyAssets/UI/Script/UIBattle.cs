@@ -306,10 +306,10 @@ public class UIBattle : UIBase
             int childCount = BattleManager.Instance.GetCheckerboardPoint(routeList[k]);
             RectTransform emptyPlace = BattleManager.Instance.CheckerboardTrans.GetChild(childCount).GetComponent<RectTransform>();
             SetEnemyMoveRotation(enemyData, enemyImage, location, routeList[k]);
-            enemyData.EnemyTrans.DOAnchorPos(emptyPlace.localPosition, 0.5f);  // 移动动画
+            enemyData.EnemyTrans.DOAnchorPos(emptyPlace.localPosition, 0.25f);  // 移动动画
             /* enemy.MyAnimator.SetBool("isRunning", true);
              enemy.MyAnimator.SetBool("isRunning", false);*/
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.25f);
         }
         SetEnemyAttackRotation(enemyData, enemyImage, minLocation);
         BattleManager.Instance.Replace(enemyDict, location, minLocation);
@@ -331,7 +331,7 @@ public class UIBattle : UIBase
                 {
                     BattleManager.Instance.TakeDamage(enemyData, playerData, enemy.CurrentAttackPower, BattleManager.Instance.CurrentPlayerLocation, 0);
                 }
-                yield return new WaitForSecondsRealtime(0.2f);
+                yield return new WaitForSecondsRealtime(0.15f);
             }
         }
         else

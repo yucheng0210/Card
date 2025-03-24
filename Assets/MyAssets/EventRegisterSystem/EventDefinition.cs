@@ -40,5 +40,6 @@ public class EventDefinition
 
     //其他
     public const string eventStartGame = "EVENT_START_GAME";
+    public const string eventSceneLoading = "EVENT_SCENE_LOADING";
     public const string eventDialog = "EVENT_DIALOG";
 }

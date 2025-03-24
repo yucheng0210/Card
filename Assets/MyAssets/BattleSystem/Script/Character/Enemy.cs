@@ -212,21 +212,22 @@ public class Enemy : Character
     }
     private void ActivateEffect(string attackOrder)
     {
+        IEffect effect = EffectFactory.Instance.CreateEffect(attackOrder);
         MyActionType = ActionType.Effect;
-        MyNextAttackActionRangeType = EffectFactory.Instance.CreateEffect(attackOrder).SetEffectAttackType();
-        CurrentActionRange = EffectFactory.Instance.CreateEffect(attackOrder).SetEffectRange();
+        MyNextAttackActionRangeType = effect.SetEffectAttackType();
+        CurrentActionRange = effect.SetEffectRange();
         if (CurrentActionRange <= 0)
         {
             CurrentActionRange = MyEnemyData.AttackRange;
         }
         Image enemyEffectImage = enemyEffect.GetComponent<Image>();
-        Sprite effectSprite = EffectFactory.Instance.CreateEffect(attackOrder).SetIcon();
+        Sprite effectSprite = effect.SetIcon();
         if (effectSprite == null)
         {
             effectSprite = EffectFactory.Instance.CreateEffect("KnockBackEffect").SetIcon();
         }
-        infoTitle.text = "效果";
-        infoDescription.text = "施展未知效果。";
+        infoTitle.text = effect.SetTitleText();
+        infoDescription.text = effect.SetDescriptionText(); ;
         enemyAttackIntentText.enabled = false;
         enemyEffectImage.sprite = effectSprite;
         enemyEffect.SetActive(true);

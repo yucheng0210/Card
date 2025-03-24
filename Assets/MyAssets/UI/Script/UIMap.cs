@@ -13,8 +13,8 @@ public class UIMap : UIBase
     private List<Sprite> mapTypeList = new List<Sprite>();
     [SerializeField]
     private List<Sprite> usedMapTypeList = new List<Sprite>();
-    private DG.Tweening.Sequence[][] effectList;
-    private Button[][] mapList;
+    private DG.Tweening.Sequence[][] effectList = new DG.Tweening.Sequence[0][];
+    private Button[][] mapList = new Button[0][];
     private Dictionary<string, int> levelProbabilities = new Dictionary<string, int>
     {
         { "RECOVER",15 },
@@ -37,6 +37,8 @@ public class UIMap : UIBase
     }
     private void NextChapter(params object[] args)
     {
+        Reset();
+        MapManager.Instance.Init();
         MapManager.Instance.ChapterCount++;
         // 初始化列表
         InitializeLists();
@@ -85,7 +87,6 @@ public class UIMap : UIBase
 
                 // 設置節點的圖像
                 SetNodeImage(i, j);
-
                 // 清理節點
                 CleanupNode(i, j);
             }
@@ -98,16 +99,6 @@ public class UIMap : UIBase
     #region NextChapter
     private void InitializeLists()
     {
-        if (MapManager.Instance.ChapterCount == 2)
-        {
-            for (int i = MapManager.Instance.MapNodes.Length - 1; i >= 0; i--)
-            {
-                for (int j = 0; j < MapManager.Instance.MapNodes[i].Length; j++)
-                {
-                    effectList[i][j].Pause();
-                }
-            }
-        }
         mapList = new Button[MapManager.Instance.MapNodes.Length][];
         effectList = new DG.Tweening.Sequence[MapManager.Instance.MapNodes.Length][];
     }
@@ -216,6 +207,7 @@ public class UIMap : UIBase
 
     private void AnimateButton(int i, int j)
     {
+        //Debug.Log($"{i}/{j}");
         DG.Tweening.Sequence scaleSequence = DOTween.Sequence();
         scaleSequence.Append(mapList[i][j].transform.DOScale(new Vector3(1.25f, 1.25f, 1.25f), 0.5f));
         scaleSequence.Append(mapList[i][j].transform.DOScale(new Vector3(1f, 1f, 1f), 0.5f));
@@ -237,7 +229,7 @@ public class UIMap : UIBase
 
     private void CleanupNode(int i, int j)
     {
-        //Destroy(mapList[i][j].transform.GetChild(0).gameObject);
+        // Destroy(mapList[i][j].transform.GetChild(0).gameObject);
     }
 
     private void SetMapTypeImage(Image mapImage, string mapType, List<Sprite> typeList)
@@ -325,5 +317,39 @@ public class UIMap : UIBase
             MapManager.Instance.MapNodes[count][id].right.l.LevelActive = true;
         }
         BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Explore);
+    }
+    private void Reset()
+    {
+        for (int i = effectList.Length - 1; i >= 0; i--)
+        {
+            for (int j = 0; j < effectList[i].Length; j++)
+            {
+                effectList[i][j].Kill();
+            }
+        }
+        for (int i = mapList.Length - 1; i >= 0; i--)
+        {
+            for (int j = 0; j < mapList[i].Length; j++)
+            {
+                mapList[i][j].onClick.RemoveAllListeners();
+                mapList[i][j].transform.localScale = new Vector3(1, 1, 1);
+            }
+        }
+        MapNode[][] mapNodes = MapManager.Instance.MapNodes;
+        for (int i = 0; i < mapNodes.Length; i++)
+        {
+            if (mapNodes[i] == null)
+            {
+                continue;
+            }
+
+            for (int j = 0; j < mapNodes[i].Length; j++)
+            {
+                if (mapNodes[i][j] != null)
+                {
+                    mapNodes[i][j].Reset();
+                }
+            }
+        }
     }
 }

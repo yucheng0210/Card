@@ -50,7 +50,7 @@ public class MoveEffect : IEffect
         {
             int childCount = BattleManager.Instance.GetCheckerboardPoint(routeList[k]);
             RectTransform emptyPlace = BattleManager.Instance.CheckerboardTrans.GetChild(childCount).GetComponent<RectTransform>();
-            sequence.Append(BattleManager.Instance.PlayerTrans.DOAnchorPos(emptyPlace.localPosition, 0.5f));
+            sequence.Append(BattleManager.Instance.PlayerTrans.DOAnchorPos(emptyPlace.localPosition, 0.25f));
         }
         sequence.OnComplete(() =>
         {

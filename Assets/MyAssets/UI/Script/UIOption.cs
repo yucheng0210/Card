@@ -13,7 +13,12 @@ public class UIOption : UIBase
     private Slider bgmSlider;
     [SerializeField]
     private Slider seSlider;
+    [SerializeField]
+    private Sprite quitSprite;
+    [SerializeField]
+    private Sprite returnStartMenuSprite;
     private static UIOption instance;
+    private bool isStartSceneLoading;
     private void Awake()
     {
         Initialize();
@@ -28,42 +33,79 @@ public class UIOption : UIBase
         }
         SceneManager.sceneLoaded += JoinUIDict;
     }
+    protected override void Start()
+    {
+        base.Start();
+        EventManager.Instance.AddEventRegister(EventDefinition.eventDrawCard, EventDrawCard);
+        EventManager.Instance.AddEventRegister(EventDefinition.eventSceneLoading, EventSceneLoading);
+    }
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape) && BattleManager.Instance.MyBattleType != BattleManager.BattleType.DrawCard)
+        if (Input.GetKeyDown(KeyCode.Escape) && (BattleManager.Instance.MyBattleType != BattleManager.BattleType.DrawCard))
         {
             Show();
+        }
+        if (isStartSceneLoading && UI.activeSelf)
+        {
+            Hide();
+        }
+    }
+    public override void Show()
+    {
+        base.Show();
+        exitButton.onClick.RemoveAllListeners();
+        switch (SceneManager.GetActiveScene().name)
+        {
+            case "StartMenu":
+                exitButton.image.sprite = quitSprite;
+                exitButton.onClick.AddListener(() => Exit(true));
+                break;
+            case "Level1":
+                exitButton.image.sprite = returnStartMenuSprite;
+                exitButton.onClick.AddListener(() => Exit(false));
+                break;
         }
     }
     private void Initialize()
     {
-        exitButton.onClick.AddListener(() => Exit());
         returnButton.onClick.AddListener(Hide);
         bgmSlider.onValueChanged.AddListener((float value) => AudioManager.Instance.ChanageAudioVolume("BGM", value));
         seSlider.onValueChanged.AddListener((float value) => AudioManager.Instance.ChanageAudioVolume("SE", value));
     }
-    private void Exit()
+    private void Exit(bool isInStartMenu)
     {
-        switch (SceneManager.GetActiveScene().name)
+        if (BattleManager.Instance.MyBattleType == BattleManager.BattleType.DrawCard || isStartSceneLoading)
         {
-            case "StartMenu":
-                Application.Quit();
-                break;
-            case "Level1":
-                StartCoroutine(SceneController.Instance.Transition("StartMenu"));
-                SaveLoadManager.Instance.Save();
-                EventManager.Instance.DispatchEvent(EventDefinition.eventReloadGame);
-                break;
+            return;
+        }
+        if (isInStartMenu)
+        {
+            Application.Quit();
+        }
+        else
+        {
+            StartCoroutine(SceneController.Instance.Transition("StartMenu"));
+            SaveLoadManager.Instance.Save();
+            EventManager.Instance.DispatchEvent(EventDefinition.eventReloadGame);
         }
         UI.SetActive(false);
     }
     private void JoinUIDict(Scene scene, LoadSceneMode mode)
     {
+        isStartSceneLoading = false;
         Dictionary<string, UIBase> uiDict = UIManager.Instance.UIDict;
         string typeName = GetType().Name;
         if (!uiDict.ContainsKey(typeName))
         {
             uiDict.Add(typeName, this);
         }
+    }
+    private void EventDrawCard(params object[] args)
+    {
+        Hide();
+    }
+    private void EventSceneLoading(params object[] args)
+    {
+        isStartSceneLoading = (bool)args[0];
     }
 }

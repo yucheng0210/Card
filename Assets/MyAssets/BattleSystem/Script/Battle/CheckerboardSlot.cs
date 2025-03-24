@@ -10,7 +10,11 @@ public class CheckerboardSlot : MonoBehaviour
     private Sprite redClueImage;
     [SerializeField]
     private Image safeZoneImage;
+    [SerializeField]
+    private GameObject attackAimingClue;
     public Sprite BlueClueImage { get { return blueClueImage; } }
     public Sprite RedClueImage { get { return redClueImage; } }
     public Image SafeZoneImage { get { return safeZoneImage; } set { safeZoneImage = value; } }
+    public GameObject AttackAimingClue { get { return attackAimingClue; } set { attackAimingClue = value; } }
 }
+

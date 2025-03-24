@@ -4,9 +4,15 @@ using UnityEngine;
 
 public class GameSaveData
 {
-    public string dataName;
-    public float gameTime;
-    public Dictionary<int, Item> backpack;
-    public int moneyCount;
-    public string currentScene;
+    public string DataName { get; set; }
+    public float GameTime { get; set; }
+    public Dictionary<int, Item> Backpack { get; set; }
+    public List<CardData> CardBag { get; set; }
+    public List<Potion> PotionBag { get; set; }
+    public int MoneyCount { get; set; }
+    public string CurrentScene { get; set; }
+    public int ChapterCount { get; set; }
+    public int LevelCount { get; set; }
+    public int LevelID { get; set; }
+    public int ISeed { get; set; }
 }

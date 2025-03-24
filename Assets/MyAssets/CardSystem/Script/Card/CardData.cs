@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using Newtonsoft.Json;
 public class CardData
 {
     private int cardCost;
@@ -45,6 +45,7 @@ public class CardData
     public int CardBuyPrice { get; set; }
     public bool CardFreeze { get; set; }
     public bool AutoCardRemove { get; set; }
+    [JsonIgnore]
     public CardItem MyCardItem { get; set; }
     public CardData DeepClone()
     {

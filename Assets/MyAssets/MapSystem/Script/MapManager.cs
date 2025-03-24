@@ -1,14 +1,15 @@
 using System;
+using System.Runtime.CompilerServices;
 using Radishmouse;
 using UnityEngine;
 
-public class MapManager : Singleton<MapManager>
+public class MapManager : Singleton<MapManager>, ISavable
 {
     [SerializeField] int maxLevel = 0;
     [SerializeField] int maxCount = 0;
     public int iSeed;
     public System.Random random;
-    MapNode[][] mapNodes;
+    MapNode[][] mapNodes = new MapNode[0][];
     [SerializeField] int leftPadding;
     [SerializeField] int paddingX;
     [SerializeField] int paddingY;
@@ -21,15 +22,22 @@ public class MapManager : Singleton<MapManager>
     public int LevelCount { get; set; }
     public int LevelID { get; set; }
     public int ChapterCount { get; set; }
-    protected override void Awake()
+    /*protected override void Awake()
     {
         base.Awake();
         Init();
-    }
+    }*/
 
-    void Init()
+    public void Init()
     {
         iSeed = UnityEngine.Random.Range(1, 99999);
+        AddSavableRegister();
+        GameSaveData gameSaveData = SaveLoadManager.Instance.GetSaveData();
+        Debug.Log(iSeed);
+        if (gameSaveData != null && SaveLoadManager.Instance.IsLoad)
+        {
+            RestoreGameData(gameSaveData);
+        }
         random = new System.Random(iSeed);
         mapNodes = new MapNode[maxLevel][];
         int count = 0;
@@ -42,12 +50,20 @@ public class MapManager : Singleton<MapManager>
                 mapNodes[i][j].value = count++;
             }
         }
+        DestroyLine();
         CreateMap();
         // LogTrue();
         // SerTree();
         ShowRooms();
         SetLevelsPosition();
         ShowLine();
+    }
+    private void DestroyLine()
+    {
+        for (int i = 0; i < lineGroupTrans.childCount; i++)
+        {
+            Destroy(lineGroupTrans.GetChild(i).gameObject);
+        }
     }
     void CreateMap()
     {
@@ -281,6 +297,27 @@ public class MapManager : Singleton<MapManager>
         ren.thickness = 1;
         ren.material = lineMaterial;
         ren.points = new Vector2[] { fromNode.transform.position, toNode.transform.position };
+    }
+
+    public void AddSavableRegister()
+    {
+        SaveLoadManager.Instance.AddRegister(this);
+    }
+
+    public void GenerateGameData(GameSaveData gameSaveData)
+    {
+        gameSaveData.ChapterCount = ChapterCount;
+        gameSaveData.LevelCount = LevelCount;
+        gameSaveData.LevelID = LevelID;
+        gameSaveData.ISeed = iSeed;
+    }
+
+    public void RestoreGameData(GameSaveData gameSaveData)
+    {
+        ChapterCount = gameSaveData.ChapterCount;
+        LevelCount = gameSaveData.LevelCount;
+        LevelID = gameSaveData.LevelID;
+        iSeed = gameSaveData.ISeed;
     }
 }
 

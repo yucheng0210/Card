@@ -29,6 +29,7 @@ public class UIStartMenu : UIBase
         startButton.onClick.RemoveAllListeners();
         //SceneManager.LoadScene("Level1");
         SaveLoadManager.Instance.CurrentPathID = SaveLoadManager.Instance.GetSaveFileCount();
+        SaveLoadManager.Instance.IsLoad = false;
         StartCoroutine(SceneController.Instance.Transition("Level1"));
     }
     private void ExitGame()
