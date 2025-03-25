@@ -209,14 +209,13 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                 CardRectTransform.DOAnchorPosX(0, moveTime);
             }
             BattleManager.Instance.SwitchHandCardRaycast(false);
+            BattleManager.Instance.InUseCardData = MyCardData;
         }
     }
 
     private void OnCardPickup()
     {
-        Vector2 dragPosition;
-        RectTransform parentRect = transform.parent.GetComponent<RectTransform>();
-        if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(parentRect, Input.mousePosition, Camera.main, out dragPosition))
+        if (!TryGetDragPosition(out Vector2 dragPosition))
         {
             return;
         }
@@ -238,15 +237,23 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         //CardRectTransform.anchoredPosition = CurrentPos;
         CardRectTransform.SetSiblingIndex(index);
         BattleManager.Instance.SwitchHandCardRaycast(true);
+        BattleManager.Instance.InUseCardData = null;
     }
     private void OnEndCardPickup()
     {
         if (isAttackCard)
         {
-            CheckRayToEnemy();
-            return;
+            bool isEnemy = DetectEnemyByRay();
+            if (isEnemy)
+            {
+                string location = BattleManager.Instance.GetEnemyKey(enemy.MyEnemyData);
+                if (GetUseCardCondition() && BattleManager.Instance.CheckEnemyInAttackRange(location, MyCardData.CardAttackDistance))
+                {
+                    StartCoroutine(UseCard(location));
+                }
+            }
         }
-        if (CardRectTransform.anchoredPosition.y >= 400 && GetUseCardCondition())
+        else if (CardRectTransform.anchoredPosition.y >= 400 && GetUseCardCondition())
         {
             StartCoroutine(UseCard("Player"));
         }
@@ -300,34 +307,26 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
          }*/
     }
 
-    private void CheckRayToEnemy()
+    private bool TryGetDragPosition(out Vector2 dragPosition)
+    {
+        RectTransform parentRect = transform.parent.GetComponent<RectTransform>();
+        return RectTransformUtility.ScreenPointToLocalPointInRectangle(parentRect, Input.mousePosition, Camera.main, out dragPosition);
+    }
+
+    private bool DetectEnemyByRay()
     {
         RectTransform attackLineHeadRect = ((UIAttackLine)UIManager.Instance.UIDict[nameof(UIAttackLine)]).HeadHotSpot;
         Vector2 screenPos = RectTransformUtility.WorldToScreenPoint(Camera.main, attackLineHeadRect.position);
-        //Debug.Log(screenPos);
         Ray ray = Camera.main.ScreenPointToRay(screenPos);
         RaycastHit hit;
-        Debug.DrawRay(ray.origin, ray.direction * 10000, Color.red, 10f);
-        if (Physics.Raycast(ray, out hit, 100, LayerMask.GetMask("Enemy")))
+
+        Debug.DrawRay(ray.origin, ray.direction * 100, Color.red, 10f);
+        if (Physics.Raycast(ray, out hit, 100) && hit.transform.TryGetComponent<Enemy>(out Enemy detectedEnemy))
         {
-            enemy = hit.transform.GetComponent<Enemy>();
-            string location = BattleManager.Instance.GetEnemyKey(enemy.MyEnemyData);
-            if (GetUseCardCondition() && CheckEnemyInAttackRange(location))
-            {
-                StartCoroutine(UseCard(location));
-            }
+            enemy = detectedEnemy;
+            return true;
         }
-    }
-    private bool CheckEnemyInAttackRange(string enemyLocation)
-    {
-        string id = BattleManager.Instance.CurrentPlayerLocation;
-        int attackDistance = MyCardData.CardAttackDistance;
-        BattleManager.CheckEmptyType checkEmptyType = BattleManager.CheckEmptyType.PlayerAttack;
-        BattleManager.ActionRangeType actionRangeType = BattleManager.ActionRangeType.Default;
-        // 獲取行動範圍內的空位置列表
-        List<string> emptyPlaceList = BattleManager.Instance.GetActionRangeTypeList(id, attackDistance, checkEmptyType, actionRangeType);
-        // 使用 List.Contains 簡化判斷
-        return emptyPlaceList.Contains(enemyLocation);
+        return false;
     }
 
     private bool GetUseCardCondition()

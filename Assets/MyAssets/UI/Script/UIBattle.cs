@@ -182,13 +182,19 @@ public class UIBattle : UIBase
                 continue;
             }
             EventTrigger eventTrigger = checkerboardTrans.GetChild(i).GetComponent<EventTrigger>();
-            UnityAction unityAction_1 = () => { RefreshEnemyInfo(location); };
+            UnityAction unityAction_1 = () =>
+            {
+                RefreshEnemyInfo(location);
+            };
             UnityAction unityAction_2 = () =>
             {
                 if (BattleManager.Instance.MyBattleType != BattleManager.BattleType.Attack)
                 {
                     return;
                 }
+                EnemyData enemyData = (EnemyData)BattleManager.Instance.IdentifyCharacter(location);
+                Enemy enemy = enemyData.EnemyTrans.GetComponent<Enemy>();
+                enemy.AttackAimingClue.SetActive(false);
                 UIManager.Instance.ClearMoveClue(false);
             };
             BattleManager.Instance.SetEventTrigger(eventTrigger, unityAction_1, unityAction_2);
@@ -208,6 +214,11 @@ public class UIBattle : UIBase
             return;
         }
         Enemy enemy = enemyData.EnemyTrans.GetComponent<Enemy>();
+        CardData cardData = BattleManager.Instance.InUseCardData;
+        if (cardData != null && BattleManager.Instance.CheckEnemyInAttackRange(location, cardData.CardAttackDistance))
+        {
+            enemy.AttackAimingClue.SetActive(true);
+        }
         bool isMove = enemy.MyActionType == Enemy.ActionType.Move;
         UIManager.Instance.ChangeCheckerboardColor(enemy.CurrentActionRangeTypeList, isMove);
         enemyInfo.SetActive(true);

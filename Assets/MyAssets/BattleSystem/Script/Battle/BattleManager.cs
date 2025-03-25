@@ -87,6 +87,7 @@ public class BattleManager : Singleton<BattleManager>
     public PlayerData CurrentPlayerData { get; set; }
     public Player CurrentPlayer { get; set; }
     public Animator PlayerAni { get; set; }
+    public CardData InUseCardData { get; set; }
     //敵人
     public Dictionary<string, EnemyData> CurrentEnemyList { get; set; }
     public Dictionary<string, EnemyData> CurrentMinionsList { get; set; }
@@ -1351,5 +1352,13 @@ public class BattleManager : Singleton<BattleManager>
         sequence.Append(tween).Pause();
         sequence.AppendCallback(callBackTween);
         sequence.Play();
+    }
+    public bool CheckEnemyInAttackRange(string enemyLocation, int attackDistance)
+    {
+        string id = CurrentPlayerLocation;
+        CheckEmptyType checkEmptyType = CheckEmptyType.PlayerAttack;
+        ActionRangeType actionRangeType = ActionRangeType.Default;
+        List<string> emptyPlaceList = GetActionRangeTypeList(id, attackDistance, checkEmptyType, actionRangeType);
+        return emptyPlaceList.Contains(enemyLocation);
     }
 }

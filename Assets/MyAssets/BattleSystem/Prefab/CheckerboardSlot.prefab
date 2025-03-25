@@ -229,7 +229,6 @@ MonoBehaviour:
   blueClueImage: {fileID: 0}
   redClueImage: {fileID: 0}
   safeZoneImage: {fileID: 5240045251222189394}
-  attackAimingClue: {fileID: 4139062423961307820}
 --- !u!1 &5030935145789934657
 GameObject:
   m_ObjectHideFlags: 0

@@ -24,6 +24,8 @@ public class Enemy : Character
     private Animator myAnimator;
     [Header("攻擊意圖")]
     [SerializeField]
+    private GameObject attackAimingClue;
+    [SerializeField]
     private GameObject enemyEffect;
     [SerializeField]
     private GameObject enemyAttack;
@@ -41,9 +43,9 @@ public class Enemy : Character
     private CinemachineImpulseSource jumpImpulseSource;
     [SerializeField]
     private CinemachineImpulseSource growlImpulseSource;
-
     public Text InfoTitle { get { return infoTitle; } set { infoTitle = value; } }
     public Text InfoDescription { get { return infoDescription; } set { infoDescription = value; } }
+    public GameObject AttackAimingClue { get { return attackAimingClue; } set { attackAimingClue = value; } }
     public Text EnemyAttackIntentText { get { return enemyAttackIntentText; } set { enemyAttackIntentText = value; } }
     public Image EnemyImage { get { return enemyImage; } set { enemyImage = value; } }
     public GameObject EnemyEffectImage { get { return enemyEffect; } set { enemyEffect = value; } }

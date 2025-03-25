@@ -170,7 +170,6 @@ public class UIManager : Singleton<UIManager>
             CheckerboardSlot emptySlot = checkerboardTrans.GetComponent<CheckerboardSlot>();
             Image emptyImage = checkerboardTrans.GetComponent<Image>();
             emptyImage.sprite = isMove ? emptySlot.BlueClueImage : emptySlot.RedClueImage;
-            emptySlot.AttackAimingClue.SetActive(!isMove);
             emptyImage.color = color;
         }
     }

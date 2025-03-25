@@ -47,10 +47,14 @@ public class UIExplore : UIBase
         restButton.onClick.AddListener(OpenRestMenu);
         removeCardButton.onClick.AddListener(OpenCardSelection);
         restConfirmButton.onClick.AddListener(OnRestConfirmed);
-        recoverExitButton.onClick.AddListener(() => ExitExplore("UICardMenu"));
         corpseYesButton.onClick.AddListener(() => OnCorpseButtonClicked());
-        corpseNoButton.onClick.AddListener(() => ExitExplore(GetType().Name));
         treasureButton.onClick.AddListener(OnTreasureButtonClicked);
+        corpseNoButton.onClick.AddListener(() => ExitExplore(GetType().Name));
+        recoverExitButton.onClick.AddListener(() =>
+        {
+            ExitExplore("UICardMenu");
+            recoverMenu.SetActive(false);
+        });
         treasureExitButton.onClick.AddListener(() =>
         {
             ExitExplore("UIExplore");
