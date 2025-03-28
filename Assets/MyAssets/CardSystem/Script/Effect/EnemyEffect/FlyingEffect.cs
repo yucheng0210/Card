@@ -19,7 +19,8 @@ public class FlyingEffect : IEffect
     }
     private void EventEnemyTurn(params object[] args)
     {
-        if (reciprocalCount == 0)
+        enemy.EnemyOnceBattlePositiveList[typeName]--;
+        if (enemy.EnemyOnceBattlePositiveList[typeName] == 0)
         {
             enemy.EnemyOnceBattlePositiveList.Remove(typeName);
             enemyData.DodgeChance = 0;
@@ -32,7 +33,7 @@ public class FlyingEffect : IEffect
     }
     public string SetDescriptionText()
     {
-        return "獲得50%的閃避機率。";
+        return "獲得25%的閃避機率。";
     }
 
 }

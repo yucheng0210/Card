@@ -15,4 +15,6 @@ public class GameSaveData
     public int LevelCount { get; set; }
     public int LevelID { get; set; }
     public int ISeed { get; set; }
+    public bool[][] LevelActiveList { get; set; }
+    public List<int> StartSkillList { get; set; }
 }

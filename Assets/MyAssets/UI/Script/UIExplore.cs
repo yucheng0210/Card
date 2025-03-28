@@ -108,17 +108,20 @@ public class UIExplore : UIBase
 
     private void TriggerRandomEvent()
     {
-        int randomIndex = Random.Range(0, 3);
+        int randomIndex = Random.Range(0, 100);
         switch (randomIndex)
         {
-            case 0:
+            case > 50:
                 ShowCorpse();
                 break;
-            case 1:
-                ShowCorpse();
+            case > 30:
+                StartBattle();
                 break;
-            case 2:
-                ShowCorpse();
+            case > 15:
+                OpenRecoverMenu();
+                break;
+            case >= 0:
+                OpenShop();
                 break;
         }
     }

@@ -27,7 +27,7 @@ public class PolarIceBearMechanismEffect : IEffect
         longDistanceEnemy.IsSuspendedAnimation = true;
         EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, meleeEnemyData, EventPlayerTurn);
         EventManager.Instance.AddEventRegister(EventDefinition.eventMove, meleeEnemyData, EventMove);
-        EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, meleeEnemyData, EventTakeDamage);
+        EventManager.Instance.AddEventRegister(EventDefinition.eventTakeDamage, longDistanceEnemyData, EventTakeDamage);
         meleeEnemyData.MaxPassiveSkillsList.Remove(GetType().Name);
     }
     private void EventPlayerTurn(params object[] args)
@@ -44,9 +44,11 @@ public class PolarIceBearMechanismEffect : IEffect
     }
     private void EventTakeDamage(params object[] args)
     {
-        if (meleeEnemyData.CurrentHealth <= 0)
+        if (meleeEnemyData.CurrentHealth <= 0 && longDistanceEnemyData.CurrentHealth <= 0)
         {
-            longDistanceEnemy.IsSuspendedAnimation = false;
+            longDistanceEnemy.IsDeath = false;
+            BattleManager.Instance.TakeDamage(longDistanceEnemyData, longDistanceEnemyData, 0, longDistanceEnemyLocation, 0);
+            //EventManager.Instance.DispatchEvent(EventDefinition.eventBattleWin);
         }
         if (args[5] == longDistanceEnemyData)
         {
@@ -69,7 +71,7 @@ public class PolarIceBearMechanismEffect : IEffect
                 Transform meleeEnemyTrans = meleeEnemyData.EnemyTrans;
                 Transform longEnemyTrans = longDistanceEnemyData.EnemyTrans;
                 Material dissolveMaterial = BattleManager.Instance.DissolveMaterial;
-                meleeEnemy.EnemyImage.material =dissolveMaterial;
+                meleeEnemy.EnemyImage.material = dissolveMaterial;
                 TweenCallback tweenCallback = () =>
                 {
                     TweenCallback endTweenCallback = () => { };

@@ -27,6 +27,8 @@ public class UIPlantationGarden : UIBase
     private List<Button> farmButtonList = new();
     [SerializeField]
     private Button exitButton;
+    [SerializeField]
+    private Transform harvestClueTrans;
     private Dictionary<Button, Item> farmList = new();
     protected override void Start()
     {
@@ -117,7 +119,7 @@ public class UIPlantationGarden : UIBase
         plantPath = plantPath.Substring(0, plantPath.Length - 1);
         plantPath += lastNumber.ToString();
         Sprite plantSprite = Resources.Load<Sprite>(plantPath);
-        Image plantImage = plant.GetComponent<Image>();
+        Image plantImage = plant.transform.GetChild(0).GetComponent<Image>();
         plantImage.sprite = plantSprite;
         plantImage.color = Color.white;
         for (int i = 0; i < farmList.Count; i++)
@@ -131,7 +133,7 @@ public class UIPlantationGarden : UIBase
     }
     private void HarvestListener(Button plant, Item item)
     {
-        Image plantImage = plant.GetComponent<Image>();
+        Image plantImage = plant.transform.GetChild(0).GetComponent<Image>();
         plantImage.color = new(1, 1, 1, 0);
         for (int i = 0; i < farmList.Count; i++)
         {
@@ -141,6 +143,7 @@ public class UIPlantationGarden : UIBase
         int potionID = item.ItemID;
         Potion potion = DataManager.Instance.PotionList[potionID];
         DataManager.Instance.PotionBag.Add(potion);
+        BattleManager.Instance.ShowCharacterStatusClue(harvestClueTrans, $"獲得{potion.ItemName}", 0);
         farmList[plant] = null;
         Cursor.SetCursor(BattleManager.Instance.DefaultCursor, BattleManager.Instance.DefaultCursorHotSpot, CursorMode.Auto);
     }

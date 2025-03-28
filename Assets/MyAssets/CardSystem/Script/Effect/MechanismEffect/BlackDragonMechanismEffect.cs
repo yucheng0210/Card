@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BlackDragonMechanismEffect : IEffect
 {
-    private int maxDamageCount = 250;
+    private int maxDamageCount = 75;
     private string enemyLocation;
     private EnemyData enemyData;
     private Enemy enemy;
@@ -23,7 +23,7 @@ public class BlackDragonMechanismEffect : IEffect
         BattleManager.Instance.SetParticleEffectCoroutine(startPos, endPos, "ParticleEffect/LongDistance/BigFireBall");
         enemy.EnemyImage.enabled = false;
         //enemy.transform.localScale = new Vector3(3, 3, 3);
-        enemy.Growl();
+        enemy.Growl(true);
     }
     private void ThirdStageEnemyTurn(params object[] args)
     {
@@ -51,8 +51,7 @@ public class BlackDragonMechanismEffect : IEffect
     }
     private void ThirdStageStagePlayerTurn(params object[] args)
     {
-        Debug.Log(thirdStageCount);
-        int shieldCount = 75 * (thirdStageCount + 1);
+        int shieldCount = 25 * (thirdStageCount + 1);
         BattleManager.Instance.TemporaryChangeShield(enemy, shieldCount);
         if (thirdStageCount == 3)
         {
@@ -82,20 +81,22 @@ public class BlackDragonMechanismEffect : IEffect
             enemyData.DamageLimit -= (int)args[6];
             switch (enemyData.CurrentHealth)
             {
-                case 749:
+                case 258:
                     if (stageCount == 1)
                     {
                         stageCount++;
-                        BattleManager.Instance.TemporaryChangeEffect(enemy, "FlyingEffect=50", BattleManager.Instance.CurrentPlayerLocation);
+                        enemy.Growl(false);
+                        BattleManager.Instance.TemporaryChangeEffect(enemy, "FlyingEffect=25", BattleManager.Instance.CurrentPlayerLocation);
                         EffectFactory.Instance.CreateEffect("DizzinessEffect").ApplyEffect(0, "", "");
                         BattleManager.Instance.ShowCharacterStatusClue(enemy.StatusClueTrans, "怒吼", 0);
                         enemyData.DamageLimit = maxDamageCount;
                     }
                     break;
-                case 499:
+                case 183:
                     if (stageCount == 2)
                     {
                         stageCount++;
+                        enemy.Growl(false);
                         ThirdStageStagePlayerTurn();
                         EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerTurn, ThirdStageStagePlayerTurn);
                         EventManager.Instance.AddEventRegister(EventDefinition.eventEnemyTurn, ThirdStageEnemyTurn);

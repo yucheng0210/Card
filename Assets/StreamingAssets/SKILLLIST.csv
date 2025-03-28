@@ -1,8 +1,8 @@
 ﻿標籤,名稱,描述,權能,種類,圖片,職業技能,動畫
-1001,魔力的祝福,每回合增加1點魔力。,IncreaseManaEffect=1,回合,SkillImage/King,TRUE,PlayerAnimation/Heroine
+1001,魔力的祝福,每回合增加1點魔力。,IncreaseManaEffect=1,回合,SkillImage/King,FALSE,PlayerAnimation/Heroine
 1002,亡者庇蔭,戰鬥開始恢復1點生命。,IncreaseHealth=-1,回合,SkillImage/King,FALSE,PlayerAnimation/Heroine_King
 2001,王權庇護,戰鬥開始獲得10塊錢。,IncreaseMoneyEffect=10,戰鬥,SkillImage/King,TRUE,PlayerAnimation/Heroine_King
 2002,戰意昂揚,戰鬥開始獲得一層力量。,PowerEffect=1,戰鬥,SkillImage/Warrior,TRUE,PlayerAnimation/Heroine_Warrior
-2003,奇蹟之癒,戰鬥開始恢復10點血量。,IncreaseHealth=-5,戰鬥,SkillImage/Doctor,TRUE,PlayerAnimation/Heroine_Doctor
+2003,奇蹟之癒,戰鬥開始恢復5點血量。,IncreaseHealth=-5,戰鬥,SkillImage/Doctor,TRUE,PlayerAnimation/Heroine_Doctor
 2004,魅惑支配,戰鬥開始獲得一層免傷。,DamageImmunityEffect=1,戰鬥,SkillImage/DemonKing,TRUE,PlayerAnimation/Heroine_DemonKing
 2005,奧術湧流,戰鬥開始獲得10點魔力。,IncreaseManaEffect=10,戰鬥,SkillImage/Magician,TRUE,PlayerAnimation/Heroine_Magician

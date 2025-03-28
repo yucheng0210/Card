@@ -39,9 +39,18 @@ public class UIMap : UIBase
     {
         Reset();
         MapManager.Instance.Init();
-        MapManager.Instance.ChapterCount++;
+        // MapManager.Instance.ChapterCount++;
         // 初始化列表
         InitializeLists();
+        if (MapManager.Instance.ChapterCount == 3)
+        {
+            Level level = DataManager.Instance.LevelTypeList[7003].Clone();
+            MapManager.Instance.MapNodes[0][0].l = level;
+            MapManager.Instance.LevelCount = 0;
+            MapManager.Instance.LevelID = 0;
+            BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Explore);
+            return;
+        }
         // 遍歷每一行節點
         /*if (MapManager.Instance.ChapterCount == 1)
         {
@@ -51,16 +60,7 @@ public class UIMap : UIBase
         {
             MapManager.Instance.LevelCount = 0;
         }*/
-        MapManager.Instance.LevelCount = 0;
-        if (MapManager.Instance.ChapterCount == 3)
-        {
-            Level level = CreateLevel(0, 0, 7003);
-            MapManager.Instance.MapNodes[0][0].l = level;
-            MapManager.Instance.LevelCount = 0;
-            MapManager.Instance.LevelID = 0;
-            BattleManager.Instance.ChangeTurn(BattleManager.BattleType.Explore);
-            return;
-        }
+        //
         for (int i = MapManager.Instance.MapNodes.Length - 1; i >= 0; i--)
         {
             // 初始化每一行的節點數組
@@ -129,17 +129,20 @@ public class UIMap : UIBase
     {
         int currentIndex = 0;
         int cumulativeProbability = 0;
+
         if (count == 14)
         {
-            currentIndex = 7000 + MapManager.Instance.ChapterCount;
-            return currentIndex;
+            return 7000 + MapManager.Instance.ChapterCount;
         }
+
         for (int k = 0; k < levelProbabilities.Count; k++)
         {
             int value = levelProbabilities.ElementAt(k).Value;
             string key = levelProbabilities.ElementAt(k).Key;
-            int randomValue = Random.Range(0, 100);
+
+            int randomValue = MapManager.Instance.random.Next(100); // 改用固定的 random 物件
             cumulativeProbability += value;
+
             if (cumulativeProbability > randomValue)
             {
                 switch (key)
@@ -157,10 +160,9 @@ public class UIMap : UIBase
                         {
                             currentIndex = simpleRandomIndex;
                         }
-                        //currentIndex = 8001;
                         break;
                     case "BOSS":
-                        currentIndex = Random.Range(2000 + MapManager.Instance.ChapterCount, 2002 + MapManager.Instance.ChapterCount);
+                        currentIndex = MapManager.Instance.random.Next(2000 + MapManager.Instance.ChapterCount, 2003 + MapManager.Instance.ChapterCount);
                         break;
                     case "RANDOM":
                         currentIndex = 3001;
@@ -186,7 +188,7 @@ public class UIMap : UIBase
         Level level = DataManager.Instance.LevelTypeList[currentIndex].Clone();
         level.LevelParentList = new List<int>();
         level.LevelID = i * 5 + j;
-        level.LevelActive = false;
+        //level.LevelActive = true;
         if (MapManager.Instance.MapNodes[i][j].left != null)
         {
             level.LevelParentList.Add(MapManager.Instance.MapNodes[i][j].left.l.LevelID);
@@ -194,6 +196,10 @@ public class UIMap : UIBase
         if (MapManager.Instance.MapNodes[i][j].right != null)
         {
             level.LevelParentList.Add(MapManager.Instance.MapNodes[i][j].right.l.LevelID);
+        }
+        if (MapManager.Instance.LevelActiveList != null)
+        {
+            level.LevelActive = MapManager.Instance.LevelActiveList[i][j];
         }
         return level;
     }

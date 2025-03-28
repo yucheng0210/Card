@@ -362,26 +362,30 @@ public class Enemy : Character
         }
         BattleManager.Instance.Replace(currentEnemyList, startLocation, endLocation);
     }
-    public void Growl()
+    public void Growl(bool isWait)
     {
-        StartCoroutine(AfterGrowl());
+        StartCoroutine(AfterGrowl(isWait));
     }
-    private IEnumerator AfterGrowl()
+    private IEnumerator AfterGrowl(bool isWait)
     {
-        yield return new WaitForSeconds(0.5f);
-        jumpImpulseSource.GenerateImpulse();
-        enemyImage.enabled = true;
-        yield return new WaitForSeconds(1.5f);
+        if (isWait)
+        {
+            yield return new WaitForSeconds(0.5f);
+            jumpImpulseSource.GenerateImpulse();
+            enemyImage.enabled = true;
+            yield return new WaitForSeconds(1.5f);
+        }
         if (BattleManager.Instance.GlobalVolume.profile.TryGet(out ChromaticAberration ca))
         {
             ca.intensity.Override(1);
         }
         AudioManager.Instance.SEAudio(9);
         Material speedLineMaterial = BattleManager.Instance.SpeedLineMaterial;
+        Vector3 shockWavePos = new Vector3(transform.position.x, transform.position.y, -1);
         speedLineMaterial.color = new Color(speedLineMaterial.color.r, speedLineMaterial.color.g, speedLineMaterial.color.b, 1);
         growlImpulseSource.GenerateImpulse();
-        Instantiate(shockWavePrefab, transform.position, Quaternion.identity);
-        yield return new WaitForSeconds(3);
+        Instantiate(shockWavePrefab, shockWavePos, Quaternion.identity);
+        yield return new WaitForSeconds(2f);
         ca.intensity.Override(0);
         speedLineMaterial.color = new Color(speedLineMaterial.color.r, speedLineMaterial.color.g, speedLineMaterial.color.b, 0);
     }

@@ -19,6 +19,7 @@ public class MapManager : Singleton<MapManager>, ISavable
     [SerializeField]
     private Material lineMaterial;
     public MapNode[][] MapNodes { get { return mapNodes; } }
+    public bool[][] LevelActiveList { get; set; }
     public int LevelCount { get; set; }
     public int LevelID { get; set; }
     public int ChapterCount { get; set; }
@@ -33,10 +34,15 @@ public class MapManager : Singleton<MapManager>, ISavable
         iSeed = UnityEngine.Random.Range(1, 99999);
         AddSavableRegister();
         GameSaveData gameSaveData = SaveLoadManager.Instance.GetSaveData();
-        Debug.Log(iSeed);
         if (gameSaveData != null && SaveLoadManager.Instance.IsLoad)
         {
+            SaveLoadManager.Instance.IsLoad = false;
             RestoreGameData(gameSaveData);
+        }
+        else
+        {
+            LevelCount = 0;
+            ChapterCount++;
         }
         random = new System.Random(iSeed);
         mapNodes = new MapNode[maxLevel][];
@@ -298,7 +304,6 @@ public class MapManager : Singleton<MapManager>, ISavable
         ren.material = lineMaterial;
         ren.points = new Vector2[] { fromNode.transform.position, toNode.transform.position };
     }
-
     public void AddSavableRegister()
     {
         SaveLoadManager.Instance.AddRegister(this);
@@ -310,6 +315,15 @@ public class MapManager : Singleton<MapManager>, ISavable
         gameSaveData.LevelCount = LevelCount;
         gameSaveData.LevelID = LevelID;
         gameSaveData.ISeed = iSeed;
+        gameSaveData.LevelActiveList = new bool[MapNodes.Length][];
+        for (int i = 0; i < MapNodes.Length; i++)
+        {
+            gameSaveData.LevelActiveList[i] = new bool[MapNodes[i].Length];
+            for (int j = 0; j < MapNodes[i].Length; j++)
+            {
+                gameSaveData.LevelActiveList[i][j] = MapNodes[i][j].l.LevelActive;
+            }
+        }
     }
 
     public void RestoreGameData(GameSaveData gameSaveData)
@@ -318,7 +332,9 @@ public class MapManager : Singleton<MapManager>, ISavable
         LevelCount = gameSaveData.LevelCount;
         LevelID = gameSaveData.LevelID;
         iSeed = gameSaveData.ISeed;
+        LevelActiveList = gameSaveData.LevelActiveList;
     }
+
 }
 
 

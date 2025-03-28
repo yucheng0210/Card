@@ -274,31 +274,23 @@ public class CardCreater : MonoBehaviour
         List<CardData> cardBag = DataManager.Instance.CardBag;
         for (int i = 0; i < handCard.Count; i++)
         {
-            if (handCard[i].CardType == "詛咒")
-            {
-                continue;
-            }
             cardBag.Add(handCard[i]);
         }
         for (int j = 0; j < useCardBag.Count; j++)
         {
-            if (useCardBag[j].CardType == "詛咒")
-            {
-                continue;
-            }
             cardBag.Add(useCardBag[j]);
         }
         for (int j = 0; j < removeCardBag.Count; j++)
         {
-            if (removeCardBag[j].CardType == "詛咒")
-            {
-                continue;
-            }
             cardBag.Add(removeCardBag[j]);
         }
         for (int j = 0; j < cardBag.Count; j++)
         {
             Destroy(cardBag[j].MyCardItem.gameObject);
+            if (cardBag[j].CardType == "詛咒")
+            {
+                cardBag.RemoveAt(j);
+            }
         }
         removeCardBag.Clear();
         useCardBag.Clear();

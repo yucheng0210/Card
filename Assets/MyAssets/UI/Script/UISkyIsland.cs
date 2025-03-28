@@ -15,6 +15,10 @@ public class UISkyIsland : UIBase
     {
         base.Start();
         Initialize();
+        if (MapManager.Instance.LevelCount > 14)
+        {
+            Show();
+        }
     }
     private void Initialize()
     {

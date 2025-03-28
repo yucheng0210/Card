@@ -64,9 +64,9 @@ public class DataManager : Singleton<DataManager>, ISavable
 
     private void Start()
     {
-        StartGame_Default();
+        //StartGame_Default();
         //StartGame_FightingSpiritEffect();
-        //StartGame_ExtinctionRayEffect();
+        StartGame_ExtinctionRayEffect();
         AddSavableRegister();
     }
     private void Update()
@@ -561,13 +561,46 @@ public class DataManager : Singleton<DataManager>, ISavable
 
     public void GenerateGameData(GameSaveData gameSaveData)
     {
+        List<CardData> handCard = HandCard;
+        List<CardData> useCardBag = UsedCardBag;
+        List<CardData> removeCardBag = RemoveCardBag;
+        List<CardData> cardBag = CardBag;
+        for (int i = 0; i < handCard.Count; i++)
+        {
+            if (handCard[i].CardType == "詛咒")
+            {
+                continue;
+            }
+            cardBag.Add(handCard[i]);
+        }
+        for (int j = 0; j < useCardBag.Count; j++)
+        {
+            if (useCardBag[j].CardType == "詛咒")
+            {
+                continue;
+            }
+            cardBag.Add(useCardBag[j]);
+        }
+        for (int j = 0; j < removeCardBag.Count; j++)
+        {
+            if (removeCardBag[j].CardType == "詛咒")
+            {
+                continue;
+            }
+            cardBag.Add(removeCardBag[j]);
+        }
         gameSaveData.DataName = $"第{MapManager.Instance.ChapterCount}章";
+        if (MapManager.Instance.LevelCount > 14)
+        {
+            gameSaveData.DataName = "天空島";
+        }
         gameSaveData.Backpack = Backpack;
         gameSaveData.CardBag = CardBag;
         gameSaveData.PotionBag = PotionBag;
         gameSaveData.MoneyCount = MoneyCount;
         gameSaveData.GameTime = gameTime;
         gameSaveData.CurrentScene = "Level1";
+        gameSaveData.StartSkillList = BattleManager.Instance.CurrentPlayerData.StartSkillList;
     }
 
     public void RestoreGameData(GameSaveData gameSaveData)
@@ -577,6 +610,7 @@ public class DataManager : Singleton<DataManager>, ISavable
         gameTime = gameSaveData.GameTime;
         CardBag = gameSaveData.CardBag;
         PotionBag = gameSaveData.PotionBag;
+        BattleManager.Instance.CurrentPlayerData.StartSkillList = gameSaveData.StartSkillList;
         StartCoroutine(SceneController.Instance.Transition(gameSaveData.CurrentScene));
     }
 

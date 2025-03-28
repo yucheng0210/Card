@@ -146,6 +146,15 @@ public class UIBattle : UIBase
 
     private void StartGame()
     {
+        battleBackground.sprite = battleBackgroundSpriteList[MapManager.Instance.ChapterCount - 1];
+        for (int i = 0; i < BattleManager.Instance.CurrentPlayerData.StartSkillList.Count; i++)
+        {
+            int skillID = BattleManager.Instance.CurrentPlayerData.StartSkillList[i];
+            if (DataManager.Instance.SkillList[skillID].IsTalentSkill)
+            {
+                BattleManager.Instance.PlayerAni.runtimeAnimatorController = DataManager.Instance.SkillList[skillID].TalentAnimatorController;
+            }
+        }
         speedLineMaterial.color = new Color(speedLineMaterial.color.r, speedLineMaterial.color.g, speedLineMaterial.color.b, 0);
         BattleManager.Instance.GlobalVolume = volume;
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
@@ -437,7 +446,7 @@ public class UIBattle : UIBase
                     BattleManager.Instance.CurrentMinionsList.Remove(key);
                 }
                 EventManager.Instance.ClearEvents(enemyData);
-                Destroy(enemyData.EnemyTrans.gameObject, 1.5f);
+                Destroy(enemyData.EnemyTrans.gameObject, 1f);
             }
             enemy.MyCollider.enabled = !enemy.IsSuspendedAnimation;
             enemy.IsDeath = true;

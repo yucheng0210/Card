@@ -177,7 +177,7 @@ public class BattleManager : Singleton<BattleManager>
             yield break;
         }
         int currentDamage = damage * (100 - defender.DamageReduction) / 100 - defender.CurrentShield;
-        if (currentDamage < 0 || CurrentOnceBattlePositiveList.ContainsKey("DamageImmunityEffect"))
+        if (currentDamage < 0 || (CurrentOnceBattlePositiveList.ContainsKey("DamageImmunityEffect") && defender == CurrentPlayerData))
         {
             currentDamage = 0;
         }

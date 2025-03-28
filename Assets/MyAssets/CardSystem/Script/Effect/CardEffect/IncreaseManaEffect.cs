@@ -27,6 +27,6 @@ public class IncreaseManaEffect : IEffect
 
     public string SetTitleText()
     {
-        return "增加魔力。";
+        return "增加魔力";
     }
 }

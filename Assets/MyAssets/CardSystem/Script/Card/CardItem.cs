@@ -7,6 +7,7 @@ using UnityEngine.UI;
 using DG.Tweening;
 
 using PilotoStudio;
+using Unity.VisualScripting;
 
 public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IDragHandler, IEndDragHandler, IPointerDownHandler, IPointerClickHandler
 {
@@ -94,10 +95,13 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         CardName.text = MyCardData.CardName;
         CardDescription.text = MyCardData.CardDescription;
-        CardCost.text = MyCardData.CardCost >= 0 ? MyCardData.CardCost.ToString() : "";
-        CardManaCost.text = MyCardData.CardManaCost.ToString();
         CardRectTransform = transform.GetComponent<RectTransform>();
         CardImage.sprite = Resources.Load<Sprite>(MyCardData.CardImagePath);
+        if (MyCardData.CardType != "詛咒")
+        {
+            CardCost.text = MyCardData.CardCost >= 0 ? MyCardData.CardCost.ToString() : "";
+            CardManaCost.text = MyCardData.CardManaCost.ToString();
+        }
     }
     public void OnPointerEnter(PointerEventData eventData)
     {
@@ -247,9 +251,18 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             if (isEnemy)
             {
                 string location = BattleManager.Instance.GetEnemyKey(enemy.MyEnemyData);
-                if (GetUseCardCondition() && BattleManager.Instance.CheckEnemyInAttackRange(location, MyCardData.CardAttackDistance))
+                bool isInAttackRange = BattleManager.Instance.CheckEnemyInAttackRange(location, MyCardData.CardAttackDistance);
+                if (isInAttackRange)
                 {
-                    StartCoroutine(UseCard(location));
+                    if (GetUseCardCondition())
+                    {
+                        StartCoroutine(UseCard(location));
+                    }
+
+                }
+                else
+                {
+                    BattleManager.Instance.ShowCharacterStatusClue(BattleManager.Instance.CurrentPlayer.StatusClueTrans, "不在攻擊範圍", 0);
                 }
             }
         }
@@ -339,6 +352,10 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         if (!hasEnoughActionPoints)
         {
             BattleManager.Instance.ShowCharacterStatusClue(BattleManager.Instance.CurrentPlayer.StatusClueTrans, "行動力不足", 0);
+        }
+        else if (!hasEnoughMana)
+        {
+            BattleManager.Instance.ShowCharacterStatusClue(BattleManager.Instance.CurrentPlayer.StatusClueTrans, "魔力不足", 0);
         }
         return hasEnoughActionPoints && hasEnoughMana && !isNotInAttackPhase && !isCardCostNegative;
     }
