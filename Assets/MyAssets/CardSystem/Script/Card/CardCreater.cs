@@ -287,7 +287,7 @@ public class CardCreater : MonoBehaviour
         for (int j = 0; j < cardBag.Count; j++)
         {
             Destroy(cardBag[j].MyCardItem.gameObject);
-            if (cardBag[j].CardType == "詛咒")
+            if (cardBag[j].AutoCardExclusion)
             {
                 cardBag.RemoveAt(j);
             }

@@ -99,6 +99,7 @@ public class DataManager : Singleton<DataManager>, ISavable
                 CardBuyPrice = int.Parse(row[15]),
                 CardFreeze = bool.Parse(row[16]),
                 AutoCardRemove = bool.Parse(row[17]),
+                AutoCardExclusion = bool.Parse(row[18]),
                 CardEffectList = new List<(string, int)>()
             };
             if (row[10] != "")

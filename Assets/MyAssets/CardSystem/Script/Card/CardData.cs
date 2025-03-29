@@ -45,6 +45,7 @@ public class CardData
     public int CardBuyPrice { get; set; }
     public bool CardFreeze { get; set; }
     public bool AutoCardRemove { get; set; }
+    public bool AutoCardExclusion { get; set; }
     [JsonIgnore]
     public CardItem MyCardItem { get; set; }
     public CardData DeepClone()

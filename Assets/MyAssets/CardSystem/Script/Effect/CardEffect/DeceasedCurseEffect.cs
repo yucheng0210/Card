@@ -4,24 +4,10 @@ using UnityEngine;
 
 public class DeceasedCurseEffect : IEffect
 {
-    private CardItem cardItem;
     public void ApplyEffect(int value, string fromLocation, string toLocation)
     {
-        cardItem = BattleManager.Instance.AddCard(5004);
-        EventManager.Instance.AddEventRegister(EventDefinition.eventAttack, EventAttack);
-    }
-    private void EventAttack(params object[] args)
-    {
-        List<CardData> handCard = DataManager.Instance.HandCard;
-        if (handCard.Contains(cardItem.MyCardData))
-        {
-            BattleManager.Instance.CurrentPlayerData.MaxHealth--;
-            EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
-        }
-        else
-        {
-            EventManager.Instance.RemoveEventRegister(EventDefinition.eventAttack, EventAttack);
-        }
+        BattleManager.Instance.CurrentPlayerData.MaxHealth -= value;
+        EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }
     public string SetTitleText()
     {
