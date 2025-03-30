@@ -132,6 +132,8 @@ public class UIManager : Singleton<UIManager>
         BattleManager.Instance.CardBagApplyButton.gameObject.SetActive(false);
         ShowUI("UICardMenu");
         Transform cardMenuTrans = BattleManager.Instance.CardMenuTrans;
+        Scrollbar scrollbar = UIDict[nameof(UICardMenu)].UI.GetComponentInChildren<Scrollbar>();
+        scrollbar.value = 1;
         for (int i = 0; i < cardMenuTrans.childCount; i++)
         {
             Destroy(cardMenuTrans.GetChild(i).gameObject);

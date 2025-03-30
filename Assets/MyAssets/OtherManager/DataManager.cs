@@ -111,7 +111,9 @@ public class DataManager : Singleton<DataManager>, ISavable
                     string id;
                     id = cardEffect[0];
                     if (int.TryParse(cardEffect[1], out int count))
+                    {
                         cardData.CardEffectList.Add(new ValueTuple<string, int>(id, count));
+                    }
                 }
             }
             CardList.Add(cardData.CardID, cardData);
@@ -316,7 +318,9 @@ public class DataManager : Singleton<DataManager>, ISavable
                 {
                     string[] rewardID = rewardIDs[j].Split('=');
                     if (int.TryParse(rewardID[0], out int id) && int.TryParse(rewardID[1], out int count))
+                    {
                         level.RewardIDList.Add(new ValueTuple<int, int>(id, count));
+                    }
                 }
             }
             /* level.LevelParentList = new();
@@ -354,10 +358,22 @@ public class DataManager : Singleton<DataManager>, ISavable
                 ItemInfo = row[3],
                 ItemBuyPrice = int.Parse(row[4]),
                 ItemSellPrice = int.Parse(row[5]),
-                ItemEffectName = row[6],
+                ItemEffectList = new Dictionary<string, int>(),
                 ItemRarity = row[7],
                 ItemType = row[8]
             };
+            if (!string.IsNullOrEmpty(row[6]))
+            {
+                string[] itemEffects = row[6].Split(';');
+                for (int j = 0; j < itemEffects.Length; j++)
+                {
+                    string[] effectParts = itemEffects[j].Split('=');
+                    if (effectParts.Length == 2)
+                    {
+                        item.ItemEffectList.Add(effectParts[0], int.Parse(effectParts[1]));
+                    }
+                }
+            }
             ItemList.Add(item.ItemID, item);
         }
         #endregion
@@ -374,18 +390,30 @@ public class DataManager : Singleton<DataManager>, ISavable
                 ItemInfo = row[3],
                 ItemBuyPrice = int.Parse(row[4]),
                 ItemSellPrice = int.Parse(row[5]),
-                ItemEffectName = row[6],
+                ItemEffectList = new Dictionary<string, int>(),
                 ItemRarity = row[7],
                 ItemType = row[8],
                 SynthesisItemList = new List<Item>()
             };
-            if (!string.IsNullOrEmpty(row[9]))
+            /* if (!string.IsNullOrEmpty(row[9]))
+             {
+                 string[] potions = row[9].Split(';');
+                 for (int j = 0; j < potions.Length; j++)
+                 {
+                     Item synthesisItem = ItemList[int.Parse(potions[j])];
+                     item.SynthesisItemList.Add(synthesisItem);
+                 }
+             }*/
+            if (!string.IsNullOrEmpty(row[6]))
             {
-                string[] potions = row[9].Split(';');
-                for (int j = 0; j < potions.Length; j++)
+                string[] itemEffects = row[6].Split(';');
+                for (int j = 0; j < itemEffects.Length; j++)
                 {
-                    Item synthesisItem = ItemList[int.Parse(potions[j])];
-                    item.SynthesisItemList.Add(synthesisItem);
+                    string[] effectParts = itemEffects[j].Split('=');
+                    if (effectParts.Length == 2)
+                    {
+                        item.ItemEffectList.Add(effectParts[0], int.Parse(effectParts[1]));
+                    }
                 }
             }
             PotionList.Add(item.ItemID, item);
@@ -554,8 +582,10 @@ public class DataManager : Singleton<DataManager>, ISavable
         {
             CardBag.Add(CardList[cardIds[i]].DeepClone());
         }
-        PotionBag.Add(PotionList[1001]);
-        PotionBag.Add(PotionList[1002]);
+        PotionBag.Add(PotionList[4001]);
+        PotionBag.Add(PotionList[4001]);
+        PotionBag.Add(PotionList[4001]);
+        PotionBag.Add(PotionList[4001]);
         // Set current player data
         BattleManager.Instance.CurrentPlayerData = PlayerList[PlayerID];
     }

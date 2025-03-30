@@ -25,24 +25,32 @@ public class DiceRollerUI : UIBase
         DoublesBet
     }
     private GambleType currentType;
-    void OnEnable()
+    private void Awake()
     {
-        _diceRoller.OnRoll += HandleRoll;
         showButton.onClick.AddListener(Show);
-        RegisterButtonListeners();
     }
-
     void OnDisable()
     {
         UnregisterButtonListeners();
         _diceRoller.OnRoll -= HandleRoll;
     }
-
+    public override void Show()
+    {
+        base.Show();
+        _diceRoller.OnRoll += HandleRoll;
+        RegisterButtonListeners();
+        //EventManager.Instance.DispatchEvent(EventDefinition.eventDialog, currentDialogID);
+    }
     private void RegisterButtonListeners()
     {
+        title.text = "請選擇賭金";
         betMoneyCount = 0;
         gambleResultsText.text = "";
         currentOdds = 1;
+        betMoneyTrans.gameObject.SetActive(true);
+        gambleTypeTrans.gameObject.SetActive(false);
+        sumBetTrans.gameObject.SetActive(false);
+        doublesBetTrans.gameObject.SetActive(false);
         tenButton.onClick.AddListener(() => BetMoney(10));
         fiftyButton.onClick.AddListener(() => BetMoney(50));
         hundredButton.onClick.AddListener(() => BetMoney(100));
@@ -53,7 +61,7 @@ public class DiceRollerUI : UIBase
         bigButton.onClick.AddListener(() => RollDice("大", 1.5f));
         smallButton.onClick.AddListener(() => RollDice("小", 1.5f));
         yesButton.onClick.AddListener(() => RollDice("True", 5));
-        noButton.onClick.AddListener(() => RollDice("False", 5));
+        noButton.onClick.AddListener(() => RollDice("False", 1.1f));
     }
 
     private void UnregisterButtonListeners()
@@ -69,15 +77,8 @@ public class DiceRollerUI : UIBase
         smallButton.onClick.RemoveAllListeners();
         yesButton.onClick.RemoveAllListeners();
         noButton.onClick.RemoveAllListeners();
-        showButton.onClick.RemoveAllListeners();
+        //showButton.onClick.RemoveAllListeners();
         exitButton.onClick.RemoveAllListeners();
-    }
-
-    public override void Show()
-    {
-        base.Show();
-        title.text = "請選擇賭金";
-        //EventManager.Instance.DispatchEvent(EventDefinition.eventDialog, currentDialogID);
     }
 
     private void HandleRoll(int rollResult)

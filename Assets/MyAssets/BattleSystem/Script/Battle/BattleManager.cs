@@ -867,6 +867,7 @@ public class BattleManager : Singleton<BattleManager>
         RoundCount++;
         CurrentPlayerData.CurrentActionPoint = CurrentPlayerData.MaxActionPoint;
         CurrentPlayerData.CurrentShield = 0;
+        CurrentPlayerData.DamageReduction = 0;
         for (int i = 0; i < CurrentAbilityList.Count; i++)
         {
             string effectID;

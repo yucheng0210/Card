@@ -524,22 +524,25 @@ public class UIBattle : UIBase
             return;
         }
         potionClueMenu.gameObject.SetActive(true);
-        string[] effect = DataManager.Instance.PotionList[itemID].ItemEffectName.Split('=');
-        string effectName = effect[0];
-        int value = int.Parse(effect[1]);
         Button yesButton = potionClueMenu.GetChild(0).GetComponent<Button>();
         Button noButton = potionClueMenu.GetChild(1).GetComponent<Button>();
         yesButton.onClick.RemoveAllListeners();
         noButton.onClick.RemoveAllListeners();
-        yesButton.onClick.AddListener(() => UsePotionEffect(effectName, value, bagID));
+        yesButton.onClick.AddListener(() => UsePotionEffect(itemID, bagID));
         noButton.onClick.AddListener(() => potionClueMenu.gameObject.SetActive(false));
     }
-    private void UsePotionEffect(string effectName, int value, int bagID)
+    private void UsePotionEffect(int potionID, int bagID)
     {
         string playerLocation = BattleManager.Instance.CurrentPlayerLocation;
         Transform statusClueTrans = BattleManager.Instance.CurrentPlayer.StatusClueTrans;
-        EffectFactory.Instance.CreateEffect(effectName).ApplyEffect(value, playerLocation, playerLocation);
-        BattleManager.Instance.ShowCharacterStatusClue(statusClueTrans, EffectFactory.Instance.CreateEffect(effectName).SetTitleText(), 0);
+        for (int i = 0; i < DataManager.Instance.PotionList[potionID].ItemEffectList.Count; i++)
+        {
+            string effectName = DataManager.Instance.PotionList[potionID].ItemEffectList.ElementAt(i).Key;
+            int value = DataManager.Instance.PotionList[potionID].ItemEffectList.ElementAt(i).Value;
+            float waitTime = 0.5f * i;
+            EffectFactory.Instance.CreateEffect(effectName).ApplyEffect(value, playerLocation, playerLocation);
+            BattleManager.Instance.ShowCharacterStatusClue(statusClueTrans, EffectFactory.Instance.CreateEffect(effectName).SetTitleText(), waitTime);
+        }
         DataManager.Instance.PotionBag.RemoveAt(bagID);
         potionClueMenu.gameObject.SetActive(false);
         RefreshPotionBag();

@@ -10,7 +10,7 @@ public class RestorationHealth : IEffect
     {
         typeName = GetType().Name;
         currentPositiveState = BattleManager.Instance.CurrentPositiveState;
-        BattleManager.Instance.AddState(currentPositiveState, typeName, 5);
+        BattleManager.Instance.AddState(currentPositiveState, typeName, value);
         EventManager.Instance.AddEventRegister(EventDefinition.eventEnemyTurn, BattleManager.Instance.CurrentPlayerData, EventEnemyTurn);
         EventManager.Instance.DispatchEvent(EventDefinition.eventRefreshUI);
     }

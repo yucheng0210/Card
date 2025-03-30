@@ -97,7 +97,7 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         CardDescription.text = MyCardData.CardDescription;
         CardRectTransform = transform.GetComponent<RectTransform>();
         CardImage.sprite = Resources.Load<Sprite>(MyCardData.CardImagePath);
-        if (MyCardData.CardType != "詛咒")
+        if (MyCardData.CardCost >= 0)
         {
             CardCost.text = MyCardData.CardCost >= 0 ? MyCardData.CardCost.ToString() : "";
             CardManaCost.text = MyCardData.CardManaCost.ToString();

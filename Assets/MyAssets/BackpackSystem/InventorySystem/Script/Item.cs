@@ -10,7 +10,7 @@ public class Item
     public string ItemInfo { get; set; }
     public int ItemBuyPrice { get; set; }
     public int ItemSellPrice { get; set; }
-    public string ItemEffectName { get; set; }
+    public Dictionary<string, int> ItemEffectList { get; set; }
     public string ItemRarity { get; set; }
     public string ItemType { get; set; }
     public int ItemHeld { get; set; }

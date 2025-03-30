@@ -110,7 +110,7 @@ public class UIExplore : UIBase
     {
         int randomIndex = Random.Range(0, 100);
         ShowCorpse();
-        /*switch (randomIndex)
+        switch (randomIndex)
         {
             case > 50:
                 ShowCorpse();
@@ -124,7 +124,7 @@ public class UIExplore : UIBase
             case >= 0:
                 OpenShop();
                 break;
-        }*/
+        }
     }
 
     private void ShowCorpse()
@@ -146,7 +146,6 @@ public class UIExplore : UIBase
             corpseResult.SetActive(false);
             ExitExplore(GetType().Name);
         };
-        randomEvent = 2;
         switch (randomEvent)
         {
             case 0: // 獲得金幣

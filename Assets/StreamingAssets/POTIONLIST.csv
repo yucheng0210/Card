@@ -1,4 +1,10 @@
-﻿編號,名稱,圖片,資訊,購買價格,出售價值,效果名稱,稀有度,類型,合成素材
+﻿編號,名稱,圖片,資訊,購買價格,出售價值,效果名稱,稀有度,類型,合成列表
 1001,治癒藥水,PotionImage/HealingPotion,立刻恢復20%血量。,60,6,IncreaseHealth=20,普通,藥水,1001
 1002,恢復藥水,PotionImage/RestorationPotion,獲得5層恢復印記。,40,4,RestorationHealth=5,普通,藥水,1002
-1003,金屬化藥水,PotionImage/MetallizationPotion,立刻回復40%血量。,50,5,IncreaseHealth=40,普通,藥水,1003
+1003,魔力藥水,PotionImage/ManaPotion,立刻獲得10點魔力。,40,4,IncreaseManaEffect=10,普通,藥水,1003
+2001,高級恢復藥水,PotionImage/AdvancedRestorationPotion,獲得10層恢復印記。,70,7,RestorationHealth=10,稀有,藥水,2001
+2002,高級治癒藥水,PotionImage/AdvancedHealingPotion,立刻恢復35%血量。,80,8,IncreaseHealth=35,稀有,藥水,2002
+2003,高級魔力藥水,PotionImage/AdvancedManaPotion,立刻獲得25點魔力。,70,7,IncreaseManaEffect=25,稀有,藥水,2003
+3001,萬靈藥水,PotionImage/WanlingPotion,消除所有負面效果。,100,10,ClearNegativeEffect=0,史詩,藥水,3001
+3002,金屬化藥水,PotionImage/MetallizationPotion,免疫90%傷害，持續一回合；無法移動，持續兩個回合。,120,12,SetDamageReductionEffect=90;CantMoveEffect=2,史詩,藥水,3002
+4001,神藥,PotionImage/GodPotion,立刻恢復100%血量，並消除所有負面效果，有機會使用後死亡。,200,20,IncreaseHealth=100;ClearNegativeEffect=0;RandomDeathEffect=33,傳奇,藥水,4001
