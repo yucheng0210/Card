@@ -14,6 +14,7 @@ public class Item
     public string ItemRarity { get; set; }
     public string ItemType { get; set; }
     public int ItemHeld { get; set; }
+    public bool CanUse { get; set; }
     public Item DeepClone()
     {
         Item clone = (Item)this.MemberwiseClone();

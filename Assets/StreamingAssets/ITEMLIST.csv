@@ -1,4 +1,11 @@
-﻿編號,名稱,圖片,資訊,購買價格,出售價值,效果名稱,稀有度,類型
-1001,初階種子,SeedImage/PrimarySeed_0,初階種子。,10,1,IncreaseHealth=41,普通,種子
-1002,高階種子,SeedImage/AdvancedSeed_0,高階種子。,10,1,IncreaseHealth=42,普通,種子
-1003,特階種子,SeedImage/SpecialSeed_0,特階種子。,10,1,IncreaseHealth=43,普通,種子
+﻿編號,名稱,圖片,資訊,購買價格,出售價值,效果名稱,稀有度,類型,可使用
+1001,初階種子,SeedImage/PrimarySeed_0,初階種子。,10,1,IncreaseHealth=41,普通,種子,TRUE
+1002,初階種子,SeedImage/PrimarySeed_0,初階種子。,10,1,IncreaseHealth=41,普通,種子,TRUE
+1003,初階種子,SeedImage/PrimarySeed_0,初階種子。,10,1,IncreaseHealth=41,普通,種子,TRUE
+2001,高階種子,SeedImage/AdvancedSeed_0,高階種子。,10,1,IncreaseHealth=42,普通,種子,TRUE
+2002,高階種子,SeedImage/AdvancedSeed_0,高階種子。,10,1,IncreaseHealth=42,普通,種子,TRUE
+2003,高階種子,SeedImage/AdvancedSeed_0,高階種子。,10,1,IncreaseHealth=42,普通,種子,TRUE
+3001,特階種子,SeedImage/SpecialSeed_0,特階種子。,10,1,IncreaseHealth=43,普通,種子,TRUE
+3002,特階種子,SeedImage/SpecialSeed_0,特階種子。,10,1,IncreaseHealth=43,普通,種子,TRUE
+4001,特階種子,SeedImage/SpecialSeed_0,特階種子。,10,1,IncreaseHealth=43,普通,種子,TRUE
+5001,肥料,SeedImage/Fertilize,特階種子。,25,2,IncreaseHealth=44,普通,種植,FALSE

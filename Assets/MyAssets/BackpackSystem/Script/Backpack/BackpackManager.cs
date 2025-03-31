@@ -7,6 +7,10 @@ public class BackpackManager : Singleton<BackpackManager>
     public void UseItem(int itemIndex)
     {
         Item item = DataManager.Instance.ItemList[itemIndex].DeepClone();
+        if (!item.CanUse)
+        {
+            return;
+        }
         Texture2D texture2D = Resources.Load<Texture2D>(item.ItemImagePath + "Cursor");
         ReduceItem(itemIndex, DataManager.Instance.Backpack);
         Cursor.SetCursor(texture2D, Vector2.zero, CursorMode.Auto);
@@ -35,6 +39,7 @@ public class BackpackManager : Singleton<BackpackManager>
         {
             inventory.Remove(itemIndex);
         }
+        EventManager.Instance.DispatchEvent(EventDefinition.eventAddItemToBag);
         EventManager.Instance.DispatchEvent(EventDefinition.eventRemoveItemToBag);
     }
 

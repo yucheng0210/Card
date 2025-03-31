@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 public class UIShop : UIBase
 {
     [SerializeField]

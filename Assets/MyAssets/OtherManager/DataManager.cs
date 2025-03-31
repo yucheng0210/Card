@@ -360,7 +360,8 @@ public class DataManager : Singleton<DataManager>, ISavable
                 ItemSellPrice = int.Parse(row[5]),
                 ItemEffectList = new Dictionary<string, int>(),
                 ItemRarity = row[7],
-                ItemType = row[8]
+                ItemType = row[8],
+                CanUse = bool.Parse(row[9]),
             };
             if (!string.IsNullOrEmpty(row[6]))
             {
@@ -582,9 +583,9 @@ public class DataManager : Singleton<DataManager>, ISavable
         {
             CardBag.Add(CardList[cardIds[i]].DeepClone());
         }
-        PotionBag.Add(PotionList[4001]);
-        PotionBag.Add(PotionList[4001]);
-        PotionBag.Add(PotionList[4001]);
+        PotionBag.Add(PotionList[2001]);
+        PotionBag.Add(PotionList[2002]);
+        PotionBag.Add(PotionList[3001]);
         PotionBag.Add(PotionList[4001]);
         // Set current player data
         BattleManager.Instance.CurrentPlayerData = PlayerList[PlayerID];

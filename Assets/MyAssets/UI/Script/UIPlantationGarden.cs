@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Video;
 public class UIPlantationGarden : UIBase
 {
     [Header("工具按鈕")]
@@ -30,11 +31,21 @@ public class UIPlantationGarden : UIBase
     [SerializeField]
     private Transform harvestClueTrans;
     private Dictionary<Button, Item> farmList = new();
+    private List<Item> isWateredFarmList = new();
+    private bool isUsingTool;
     protected override void Start()
     {
         base.Start();
         Initialize();
         EventManager.Instance.AddEventRegister(EventDefinition.eventUseItem, EventUseItem);
+        EventManager.Instance.AddEventRegister(EventDefinition.eventAddItemToBag, EventAddItemToBag);
+    }
+    private void Update()
+    {
+        if (Input.GetMouseButtonDown(1) && isUsingTool)
+        {
+            ClearButtonListener();
+        }
     }
     private void Initialize()
     {
@@ -50,6 +61,11 @@ public class UIPlantationGarden : UIBase
     }
     private void Fertilize()
     {
+        if (isUsingTool || !DataManager.Instance.Backpack.ContainsKey(5001))
+        {
+            return;
+        }
+        isUsingTool = true;
         Cursor.SetCursor(fertilizeTexture, Vector2.zero, CursorMode.Auto);
         for (int i = 0; i < farmList.Count; i++)
         {
@@ -57,12 +73,22 @@ public class UIPlantationGarden : UIBase
             Item item = farmList[button];
             if (item != null)
             {
-                button.onClick.AddListener(() => PlantGrowth(item.ItemImagePath, button, item, false));
+                button.onClick.AddListener(() =>
+                {
+                    PlantGrowth(item.ItemImagePath, button, item, false);
+                    BackpackManager.Instance.ReduceItem(5001, DataManager.Instance.Backpack);
+                }
+                );
             }
         }
     }
     private void Watering()
     {
+        if (isUsingTool)
+        {
+            return;
+        }
+        isUsingTool = true;
         Cursor.SetCursor(wateringTexture, Vector2.zero, CursorMode.Auto);
         for (int i = 0; i < farmList.Count; i++)
         {
@@ -70,12 +96,34 @@ public class UIPlantationGarden : UIBase
             Item item = farmList[button];
             if (item != null)
             {
-                button.onClick.AddListener(() => PlantGrowth(item.ItemImagePath, button, item, false));
+                if (isWateredFarmList.Contains(item))
+                {
+                    button.onClick.AddListener(() =>
+                    {
+                        BattleManager.Instance.ShowCharacterStatusClue(harvestClueTrans, "已經澆過水", 0);
+                        ClearButtonListener();
+                    }
+                );
+                }
+                else
+                {
+                    button.onClick.AddListener(() =>
+                    {
+                        isWateredFarmList.Add(item);
+                        PlantGrowth(item.ItemImagePath, button, item, false);
+                    }
+                );
+                }
             }
         }
     }
     private void Harvest()
     {
+        if (isUsingTool)
+        {
+            return;
+        }
+        isUsingTool = true;
         Cursor.SetCursor(harvestTexture, Vector2.zero, CursorMode.Auto);
         for (int i = 0; i < farmList.Count; i++)
         {
@@ -95,6 +143,10 @@ public class UIPlantationGarden : UIBase
     private void EventUseItem(params object[] args)
     {
         Item item = (Item)args[0];
+        if (item.ItemType != "種子")
+        {
+            return;
+        }
         for (int i = 0; i < farmList.Count; i++)
         {
             Button button = farmList.ElementAt(i).Key;
@@ -122,29 +174,33 @@ public class UIPlantationGarden : UIBase
         Image plantImage = plant.transform.GetChild(0).GetComponent<Image>();
         plantImage.sprite = plantSprite;
         plantImage.color = Color.white;
-        for (int i = 0; i < farmList.Count; i++)
-        {
-            Button button = farmList.ElementAt(i).Key;
-            button.onClick.RemoveAllListeners();
-        }
+        ClearButtonListener();
         item.ItemImagePath = plantPath;
         farmList[plant] = item;
-        Cursor.SetCursor(BattleManager.Instance.DefaultCursor, BattleManager.Instance.DefaultCursorHotSpot, CursorMode.Auto);
     }
     private void HarvestListener(Button plant, Item item)
     {
         Image plantImage = plant.transform.GetChild(0).GetComponent<Image>();
         plantImage.color = new(1, 1, 1, 0);
-        for (int i = 0; i < farmList.Count; i++)
-        {
-            Button button = farmList.ElementAt(i).Key;
-            button.onClick.RemoveAllListeners();
-        }
+        ClearButtonListener();
         int potionID = item.ItemID;
         Potion potion = DataManager.Instance.PotionList[potionID];
         DataManager.Instance.PotionBag.Add(potion);
         BattleManager.Instance.ShowCharacterStatusClue(harvestClueTrans, $"獲得{potion.ItemName}", 0);
         farmList[plant] = null;
+    }
+    private void ClearButtonListener()
+    {
+        for (int i = 0; i < farmList.Count; i++)
+        {
+            Button button = farmList.ElementAt(i).Key;
+            button.onClick.RemoveAllListeners();
+        }
         Cursor.SetCursor(BattleManager.Instance.DefaultCursor, BattleManager.Instance.DefaultCursorHotSpot, CursorMode.Auto);
+        isUsingTool = false;
+    }
+    private void EventAddItemToBag(params object[] args)
+    {
+        fertilizeButton.GetComponentInChildren<Text>().text = DataManager.Instance.Backpack.ContainsKey(5001) ? DataManager.Instance.Backpack[5001].ItemHeld.ToString() : "0";
     }
 }
