@@ -577,7 +577,7 @@ public class DataManager : Singleton<DataManager>, ISavable
         PlayerID = 1001;
 
         // Add specific cards
-        int[] cardIds = { 3001, 2002, 2003, 2004, 1006, 1010, 1009, 1008 };
+        int[] cardIds = { 1001, 1001, 1001, 1002, 1002, 1004, 1004, 3001, 2002, 2003, 2004, 1006, 1010, 1009, 1008 };
 
         for (int i = 0; i < cardIds.Length; i++)
         {

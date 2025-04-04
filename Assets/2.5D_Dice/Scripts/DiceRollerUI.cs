@@ -28,16 +28,16 @@ public class DiceRollerUI : UIBase
     private void Awake()
     {
         showButton.onClick.AddListener(Show);
+        _diceRoller.OnRoll += HandleRoll;
     }
     void OnDisable()
     {
         UnregisterButtonListeners();
-        _diceRoller.OnRoll -= HandleRoll;
     }
     public override void Show()
     {
         base.Show();
-        _diceRoller.OnRoll += HandleRoll;
+
         RegisterButtonListeners();
         //EventManager.Instance.DispatchEvent(EventDefinition.eventDialog, currentDialogID);
     }
@@ -106,6 +106,7 @@ public class DiceRollerUI : UIBase
             BattleManager.Instance.NextLevel("DiceRollerUI");
             UIManager.Instance.HideUI("UIShop");
             exitButton.gameObject.SetActive(false);
+            exitButton.onClick.RemoveAllListeners();
         });
     }
 

@@ -221,6 +221,7 @@ public class CardCreater : MonoBehaviour
     }
     private void EventDrawCard(params object[] args)
     {
+        BattleManager.Instance.ChangeTurn(BattleManager.BattleType.UsingEffect);
         StartCoroutine(DrawCard((int)args[0]));
     }
     private void EventUseCard(params object[] args)

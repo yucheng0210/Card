@@ -144,11 +144,11 @@ public class BattleManager : Singleton<BattleManager>
             TakeDamage(CurrentPlayerData, value, 51, CurrentEnemyList.ElementAt(0).Key, 0);*/
             //EventManager.Instance.DispatchEvent(EventDefinition.eventAfterMove);
             // PlayerMoveCount++;
-            /*for (int i = 0; i < CurrentEnemyList.Count; i++)
+            for (int i = 0; i < CurrentEnemyList.Count; i++)
             {
                 CharacterData value = CurrentEnemyList.ElementAt(i).Value;
                 TakeDamage(CurrentPlayerData, value, 50, CurrentEnemyList.ElementAt(i).Key, 0);
-            }*/
+            }
             //TakeDamage(CurrentPlayerData, CurrentPlayerData, 50, CurrentPlayerLocation, 0);
             // playerMoveCount = 5;
             // StartCoroutine(SceneController.Instance.Transition("StartMenu"));
