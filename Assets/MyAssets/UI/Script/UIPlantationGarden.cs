@@ -185,7 +185,7 @@ public class UIPlantationGarden : UIBase
         ClearButtonListener();
         int potionID = item.ItemID;
         Potion potion = DataManager.Instance.PotionList[potionID];
-        DataManager.Instance.PotionBag.Add(potion);
+        BackpackManager.Instance.AddPotion(potionID);
         BattleManager.Instance.ShowCharacterStatusClue(harvestClueTrans, $"獲得{potion.ItemName}", 0);
         farmList[plant] = null;
     }

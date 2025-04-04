@@ -144,11 +144,11 @@ public class BattleManager : Singleton<BattleManager>
             TakeDamage(CurrentPlayerData, value, 51, CurrentEnemyList.ElementAt(0).Key, 0);*/
             //EventManager.Instance.DispatchEvent(EventDefinition.eventAfterMove);
             // PlayerMoveCount++;
-            for (int i = 0; i < CurrentEnemyList.Count; i++)
+            /*for (int i = 0; i < CurrentEnemyList.Count; i++)
             {
                 CharacterData value = CurrentEnemyList.ElementAt(i).Value;
                 TakeDamage(CurrentPlayerData, value, 50, CurrentEnemyList.ElementAt(i).Key, 0);
-            }
+            }*/
             //TakeDamage(CurrentPlayerData, CurrentPlayerData, 50, CurrentPlayerLocation, 0);
             // playerMoveCount = 5;
             // StartCoroutine(SceneController.Instance.Transition("StartMenu"));
@@ -816,10 +816,19 @@ public class BattleManager : Singleton<BattleManager>
                 CurrentAbilityList.Add(skill.SkillContent.ElementAt(i).Key, skill.SkillContent[skill.SkillContent.ElementAt(i).Key]);
             }
         }
+        bool dontRepeat_1004 = false;
         for (int i = 0; i < MapManager.Instance.MapNodes[levelCount][levelID].l.EnemyIDList.Count; i++)
         {
             int enemyID = MapManager.Instance.MapNodes[levelCount][levelID].l.EnemyIDList.ElementAt(i).Value;
             string location = MapManager.Instance.MapNodes[levelCount][levelID].l.EnemyIDList.ElementAt(i).Key;
+            if (enemyID == 1004)
+            {
+                dontRepeat_1004 = true;
+                if (dontRepeat_1004)
+                {
+                    continue;
+                }
+            }
             if (DataManager.Instance.EnemyList[enemyID].IsMinion)
             {
                 CurrentMinionsList.Add(location, DataManager.Instance.EnemyList[enemyID].DeepClone());

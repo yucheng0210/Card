@@ -157,7 +157,7 @@ public class UIShop : UIBase
         DataManager.Instance.MoneyCount -= itemData.ItemBuyPrice;
         if (isPotion)
         {
-            DataManager.Instance.PotionBag.Add((Potion)itemData);
+            BackpackManager.Instance.AddPotion(itemID);
         }
         else
         {

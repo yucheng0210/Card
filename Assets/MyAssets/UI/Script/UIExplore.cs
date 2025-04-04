@@ -179,7 +179,7 @@ public class UIExplore : UIBase
                 Potion potion = potionList.ElementAt(effectValue).Value;
                 unityAction += () =>
                 {
-                    DataManager.Instance.PotionBag.Add(potion);
+                    BackpackManager.Instance.AddPotion(potion.ItemID);
                 };
                 description = $"找到遺留的{potion.ItemName}";
                 break;
@@ -232,7 +232,7 @@ public class UIExplore : UIBase
         Potion potion = potionList.ElementAt(randomIndex).Value;
         openedTreasureBackground.SetActive(true);
         treasureItemImage.sprite = Resources.Load<Sprite>(potion.ItemImagePath);
-        DataManager.Instance.PotionBag.Add(potion);
+        BackpackManager.Instance.AddPotion(potion.ItemID);
         treasureExitButton.gameObject.SetActive(true);
     }
 

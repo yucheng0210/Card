@@ -4,6 +4,15 @@ using UnityEngine;
 
 public class BackpackManager : Singleton<BackpackManager>
 {
+    public void AddPotion(int potionIndex)
+    {
+        List<Potion> potionBag = DataManager.Instance.PotionBag;
+        Dictionary<int, Potion> potionList = DataManager.Instance.PotionList;
+        if (potionBag.Count < 4)
+        {
+            potionBag.Add(potionList[potionIndex]);
+        }
+    }
     public void UseItem(int itemIndex)
     {
         Item item = DataManager.Instance.ItemList[itemIndex].DeepClone();

@@ -104,7 +104,7 @@ public class UIGuild : UIBase
     private void GetPotion(Potion potionItem, Text applyText)
     {
         applyText.text = "已領取";
-        DataManager.Instance.PotionBag.Add(potionItem);
+        BackpackManager.Instance.AddPotion(potionItem.ItemID);
         applyButton.onClick.RemoveAllListeners();
     }
 }
