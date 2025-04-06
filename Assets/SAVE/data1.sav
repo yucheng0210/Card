@@ -248,7 +248,72 @@
       "CardBuyPrice": 50,
       "CardFreeze": false,
       "AutoCardRemove": false
-    }
+    }, {
+      "CardID": 1003,
+      "CardName": "雷擊",
+      "CardType": "攻擊",
+      "CardImagePath": "CardImage/Lightning",
+      "CardCost": 2,
+      "CardAttribute": "無",
+      "CardSpecialEffect": "ParticleEffect/Melee/Lightning",
+      "CardDescription": "造成20點傷害，並造成擊退。",
+      "CardHeld": 0,
+      "CardAttack": 20,
+      "CardShield": 0,
+      "CardEffectList": [
+        {
+          "Item1": "KnockBackEffect",
+          "Item2": 1
+        }
+      ],
+      "CardRarity": "基本",
+      "CardAttackDistance": 1,
+      "CardManaCost": 3,
+      "CardRemove": false,
+      "CardBuyPrice": 50,
+      "CardFreeze": false,
+      "AutoCardRemove": false
+    }, {
+      "CardID": 1001,
+      "CardName": "魔力彈",
+      "CardType": "攻擊",
+      "CardImagePath": "CardImage/MagicBullet",
+      "CardCost": 1,
+      "CardAttribute": "無",
+      "CardSpecialEffect": "ParticleEffect/LongDistance/MagicBullet",
+      "CardDescription": "造成12點傷害。",
+      "CardHeld": 0,
+      "CardAttack": 12,
+      "CardShield": 0,
+      "CardEffectList": [],
+      "CardRarity": "基本",
+      "CardAttackDistance": 2,
+      "CardManaCost": 2,
+      "CardRemove": false,
+      "CardBuyPrice": 50,
+      "CardFreeze": false,
+      "AutoCardRemove": false
+    }, {
+      "CardID": 1001,
+      "CardName": "魔力彈",
+      "CardType": "攻擊",
+      "CardImagePath": "CardImage/MagicBullet",
+      "CardCost": 1,
+      "CardAttribute": "無",
+      "CardSpecialEffect": "ParticleEffect/LongDistance/MagicBullet",
+      "CardDescription": "造成12點傷害。",
+      "CardHeld": 0,
+      "CardAttack": 12,
+      "CardShield": 0,
+      "CardEffectList": [],
+      "CardRarity": "基本",
+      "CardAttackDistance": 2,
+      "CardManaCost": 2,
+      "CardRemove": false,
+      "CardBuyPrice": 50,
+      "CardFreeze": false,
+      "AutoCardRemove": false
+    },
   ],
   "PotionBag": [
     {

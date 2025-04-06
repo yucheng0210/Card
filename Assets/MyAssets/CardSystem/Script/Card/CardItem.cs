@@ -423,7 +423,6 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             EffectFactory.Instance.CreateEffect(effectID).ApplyEffect(effectCount, BattleManager.Instance.CurrentPlayerLocation, target);
             BattleManager.Instance.ShowCharacterStatusClue(statusClueTrans, clueStrs, waitTime);
         }
-
         if (cardData.CardRemove)
         {
             Material dissolveMaterial = BattleManager.Instance.DissolveEdgeMaterial;

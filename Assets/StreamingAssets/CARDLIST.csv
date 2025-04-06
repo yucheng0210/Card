@@ -1,7 +1,7 @@
 ﻿標示,名稱,類型,背景圖路徑,消耗費用,屬性,特效,描述,攻擊,護盾,效果,稀有度,攻擊距離,魔力消耗,是否消耗,購買價格,卡牌凍結,自動消耗,自動排除
-1001,魔力彈,攻擊,CardImage/MagicBullet,1,無,ParticleEffect/LongDistance/MagicBullet,造成12點傷害。,12,0,,基本,2,2,FALSE,50,FALSE,FALSE,FALSE
+1001,魔力彈,攻擊,CardImage/MagicBullet,1,無,ParticleEffect/LongDistance/MagicBullet,造成24點傷害。,24,0,,基本,2,2,FALSE,50,FALSE,FALSE,FALSE
 1002,魔力盾,防禦,CardImage/MagicShield,1,無,,獲得5點護盾。,0,5,,基本,0,2,FALSE,50,FALSE,FALSE,FALSE
-1003,雷擊,攻擊,CardImage/Lightning,2,無,ParticleEffect/Melee/Lightning,造成20點傷害，並造成擊退。,20,0,KnockBackEffect=1,基本,1,3,FALSE,50,FALSE,FALSE,FALSE
+1003,雷擊,攻擊,CardImage/Lightning,2,無,ParticleEffect/Melee/Lightning,造成40點傷害，並造成擊退。,40,0,KnockBackEffect=1,基本,1,3,FALSE,50,FALSE,FALSE,FALSE
 1004,聚魔,增益,CardImage/GatherMagic,0,無,,獲得3點魔力。,0,0,IncreaseManaEffect=3,普通,0,0,FALSE,50,FALSE,FALSE,FALSE
 1005,至尊平A,攻擊,CardImage/NormalAttack,1,無,ParticleEffect/Melee/HitLine,獲得一層戰意，並額外造成等同於戰意層數的傷害。,0,0,FightingSpiritEffect=0,普通,1,0,FALSE,50,FALSE,FALSE,FALSE
 1006,湧泉,能力,CardImage/Spring,1,無,,每回合生成兩點魔力。,0,0,IncreaseManaEffect=2,普通,0,0,TRUE,50,FALSE,FALSE,FALSE
@@ -18,3 +18,4 @@
 5002,寄生孢子,詛咒,CardImage/Curse_2,1,無,,每回合造成最大生命2%的傷害，並回復宿主相等傷害。,0,0,,普通,0,0,TRUE,0,FALSE,FALSE,TRUE
 5003,乏力,詛咒,CardImage/Curse,-1,無,,抽到此卡扣除所有移動點數。,0,0,WeaknessCurseEffect=1,普通,0,0,TRUE,0,FALSE,TRUE,TRUE
 5004,亡者低語,詛咒,CardImage/Curse_2,3,無,,排除此卡扣除3點最大生命。,0,0,DeceasedCurseEffect=0,普通,0,0,TRUE,0,FALSE,FALSE,FALSE
+6001,外掛,技能,CardImage/Curse_2,0,無,,我是外掛。,0,0,PlugInEffect=0,外掛,5,0,FALSE,0,FALSE,FALSE,TRUE

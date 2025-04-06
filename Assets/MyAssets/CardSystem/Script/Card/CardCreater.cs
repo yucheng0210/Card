@@ -54,6 +54,7 @@ public class CardCreater : MonoBehaviour
     {
         List<CardData> cardBag = DataManager.Instance.CardBag;
         BattleManager.Instance.Shuffle(); // 在這之前將卡片順序洗牌
+        cardBag.Insert(0, DataManager.Instance.CardList[6001]);
         for (int i = 0; i < handCardTrans.childCount; i++)
         {
             Destroy(handCardTrans.GetChild(i).gameObject);
