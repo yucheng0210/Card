@@ -54,7 +54,7 @@ public class CardCreater : MonoBehaviour
     {
         List<CardData> cardBag = DataManager.Instance.CardBag;
         BattleManager.Instance.Shuffle(); // 在這之前將卡片順序洗牌
-        cardBag.Insert(0, DataManager.Instance.CardList[6001]);
+        //cardBag.Insert(0, DataManager.Instance.CardList[6001]);
         for (int i = 0; i < handCardTrans.childCount; i++)
         {
             Destroy(handCardTrans.GetChild(i).gameObject);
@@ -145,6 +145,7 @@ public class CardCreater : MonoBehaviour
             CardItem cardItem = handCard[i].MyCardItem;
             RectTransform handCardRect = cardItem.GetComponent<RectTransform>();
             cardItem.transform.SetParent(handCardTrans); // 將卡片設定為手牌的子物件
+            cardItem.transform.DOScale(1f, 0);
             cardItem.CardImage.raycastTarget = false;
             cardItem.gameObject.SetActive(true); // 啟用卡片物件
             cardItem.RefreshCardOutline();
@@ -247,6 +248,7 @@ public class CardCreater : MonoBehaviour
     {
         List<CardData> freezeCardList = new List<CardData>();
         List<CardData> handCard = DataManager.Instance.HandCard;
+        //BattleManager.Instance.SwitchHandCardRaycast(false);
         for (int i = 0; i < handCard.Count; i++)
         {
             if (handCard[i].CardFreeze)
