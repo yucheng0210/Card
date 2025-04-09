@@ -48,6 +48,8 @@ public class PolarIceBearMechanismEffect : IEffect
         {
             longDistanceEnemy.IsDeath = false;
             BattleManager.Instance.TakeDamage(longDistanceEnemyData, longDistanceEnemyData, 0, longDistanceEnemyLocation, 0);
+            EventManager.Instance.RemoveEventRegister(EventDefinition.eventTakeDamage, EventTakeDamage);
+            return;
             //EventManager.Instance.DispatchEvent(EventDefinition.eventBattleWin);
         }
         if (args[5] == longDistanceEnemyData)

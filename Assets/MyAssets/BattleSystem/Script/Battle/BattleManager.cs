@@ -823,10 +823,13 @@ public class BattleManager : Singleton<BattleManager>
             string location = MapManager.Instance.MapNodes[levelCount][levelID].l.EnemyIDList.ElementAt(i).Key;
             if (enemyID == 1004)
             {
-                dontRepeat_1004 = true;
                 if (dontRepeat_1004)
                 {
                     continue;
+                }
+                else
+                {
+                    dontRepeat_1004 = true;
                 }
             }
             if (DataManager.Instance.EnemyList[enemyID].IsMinion)
@@ -842,6 +845,10 @@ public class BattleManager : Singleton<BattleManager>
         {
             int terrainID = MapManager.Instance.MapNodes[levelCount][levelID].l.TerrainIDList.ElementAt(i).Value;
             string locationID = MapManager.Instance.MapNodes[levelCount][levelID].l.TerrainIDList.ElementAt(i).Key;
+            if (MapManager.Instance.ChapterCount == 2)
+            {
+                terrainID = 2001;
+            }
             CurrentTerrainList.Add(locationID, DataManager.Instance.TerrainList[terrainID].Clone());
         }
         RefreshCheckerboardList();

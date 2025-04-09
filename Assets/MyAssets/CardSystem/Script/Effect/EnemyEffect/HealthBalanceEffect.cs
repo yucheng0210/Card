@@ -18,6 +18,7 @@ public class HealthBalanceEffect : IEffect
         fromEnemyData.CurrentHealth -= value;
         toEnemyData.CurrentHealth += value;
         fromEnemy.TargetLocation = toLocation;
+        toEnemy.MyCollider.enabled = true;
         AudioManager.Instance.SEAudio(2);
     }
 

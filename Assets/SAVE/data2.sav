@@ -1,33 +1,38 @@
 {
   "DataName": "天空島",
-  "GameTime": 99.21705,
+  "GameTime": 513.2477,
   "Backpack": {},
   "CardBag": [
     {
-      "CardID": 1006,
-      "CardName": "湧泉",
-      "CardType": "能力",
-      "CardImagePath": "CardImage/Spring",
-      "CardCost": 1,
+      "CardID": 1010,
+      "CardName": "廢棄轉化",
+      "CardType": "技能",
+      "CardImagePath": "CardImage/DiscardConversion",
+      "CardCost": 0,
       "CardAttribute": "無",
       "CardSpecialEffect": "",
-      "CardDescription": "每回合生成兩點魔力。",
+      "CardDescription": "丟棄所有手牌，每丟棄一張獲得3點魔力。",
       "CardHeld": 0,
       "CardAttack": 0,
       "CardShield": 0,
       "CardEffectList": [
         {
           "Item1": "IncreaseManaEffect",
-          "Item2": 2
+          "Item2": -2
+        },
+        {
+          "Item1": "ThrowAwayHandCardEffect",
+          "Item2": 0
         }
       ],
       "CardRarity": "普通",
       "CardAttackDistance": 0,
       "CardManaCost": 0,
-      "CardRemove": true,
+      "CardRemove": false,
       "CardBuyPrice": 50,
       "CardFreeze": false,
-      "AutoCardRemove": false
+      "AutoCardRemove": false,
+      "AutoCardExclusion": false
     },
     {
       "CardID": 1009,
@@ -57,141 +62,79 @@
       "CardRemove": false,
       "CardBuyPrice": 50,
       "CardFreeze": false,
-      "AutoCardRemove": false
+      "AutoCardRemove": false,
+      "AutoCardExclusion": false
     },
     {
-      "CardID": 1008,
-      "CardName": "以一換二",
-      "CardType": "增益",
-      "CardImagePath": "CardImage/DrawCards",
+      "CardID": 1001,
+      "CardName": "魔力彈",
+      "CardType": "攻擊",
+      "CardImagePath": "CardImage/MagicBullet",
       "CardCost": 1,
       "CardAttribute": "無",
-      "CardSpecialEffect": "",
-      "CardDescription": "抽兩張牌。",
+      "CardSpecialEffect": "ParticleEffect/LongDistance/MagicBullet",
+      "CardDescription": "造成24點傷害。",
       "CardHeld": 0,
-      "CardAttack": 0,
+      "CardAttack": 24,
       "CardShield": 0,
-      "CardEffectList": [
-        {
-          "Item1": "DrawCardEffect",
-          "Item2": 2
-        }
-      ],
-      "CardRarity": "普通",
-      "CardAttackDistance": 0,
-      "CardManaCost": 0,
+      "CardEffectList": [],
+      "CardRarity": "基本",
+      "CardAttackDistance": 2,
+      "CardManaCost": 2,
       "CardRemove": false,
       "CardBuyPrice": 50,
       "CardFreeze": false,
-      "AutoCardRemove": false
+      "AutoCardRemove": false,
+      "AutoCardExclusion": false
     },
     {
-      "CardID": 2004,
-      "CardName": "彈回",
-      "CardType": "技能",
-      "CardImagePath": "CardImage/BounceBack",
-      "CardCost": 1,
+      "CardID": 1003,
+      "CardName": "雷擊",
+      "CardType": "攻擊",
+      "CardImagePath": "CardImage/Lightning",
+      "CardCost": 2,
       "CardAttribute": "無",
-      "CardSpecialEffect": "",
-      "CardDescription": "產生5點護盾，並將一張卡牌返回抽卡堆。",
+      "CardSpecialEffect": "ParticleEffect/Melee/Lightning",
+      "CardDescription": "造成40點傷害，並造成擊退。",
       "CardHeld": 0,
-      "CardAttack": 0,
-      "CardShield": 5,
+      "CardAttack": 40,
+      "CardShield": 0,
       "CardEffectList": [
         {
-          "Item1": "ReturnCardBag",
+          "Item1": "KnockBackEffect",
           "Item2": 1
         }
       ],
-      "CardRarity": "稀有",
-      "CardAttackDistance": 0,
-      "CardManaCost": 4,
+      "CardRarity": "基本",
+      "CardAttackDistance": 1,
+      "CardManaCost": 3,
       "CardRemove": false,
       "CardBuyPrice": 50,
       "CardFreeze": false,
-      "AutoCardRemove": false
+      "AutoCardRemove": false,
+      "AutoCardExclusion": false
     },
     {
-      "CardID": 2003,
-      "CardName": "漩渦",
-      "CardType": "技能",
-      "CardImagePath": "CardImage/Swirl",
-      "CardCost": 1,
-      "CardAttribute": "無",
-      "CardSpecialEffect": "",
-      "CardDescription": "獲得本回合內消耗魔力的一半。",
-      "CardHeld": 0,
-      "CardAttack": 0,
-      "CardShield": 0,
-      "CardEffectList": [
-        {
-          "Item1": "IncreaseManaEffect",
-          "Item2": -1
-        }
-      ],
-      "CardRarity": "稀有",
-      "CardAttackDistance": 0,
-      "CardManaCost": 0,
-      "CardRemove": false,
-      "CardBuyPrice": 50,
-      "CardFreeze": false,
-      "AutoCardRemove": false
-    },
-    {
-      "CardID": 3001,
-      "CardName": "火球",
+      "CardID": 1001,
+      "CardName": "魔力彈",
       "CardType": "攻擊",
-      "CardImagePath": "CardImage/FireBall",
+      "CardImagePath": "CardImage/MagicBullet",
       "CardCost": 1,
       "CardAttribute": "無",
-      "CardSpecialEffect": "ParticleEffect/LongDistance/FireBall",
-      "CardDescription": "消耗所有魔力，造成魔力乘以二加上總魔力除以五的平方傷害。",
+      "CardSpecialEffect": "ParticleEffect/LongDistance/MagicBullet",
+      "CardDescription": "造成24點傷害。",
       "CardHeld": 0,
-      "CardAttack": 0,
+      "CardAttack": 24,
       "CardShield": 0,
-      "CardEffectList": [
-        {
-          "Item1": "ExtinctionRayEffect",
-          "Item2": 0
-        }
-      ],
-      "CardRarity": "史詩",
+      "CardEffectList": [],
+      "CardRarity": "基本",
       "CardAttackDistance": 2,
-      "CardManaCost": 0,
+      "CardManaCost": 2,
       "CardRemove": false,
       "CardBuyPrice": 50,
       "CardFreeze": false,
-      "AutoCardRemove": false
-    },
-    {
-      "CardID": 1010,
-      "CardName": "廢棄轉化",
-      "CardType": "技能",
-      "CardImagePath": "CardImage/DiscardConversion",
-      "CardCost": 0,
-      "CardAttribute": "無",
-      "CardSpecialEffect": "",
-      "CardDescription": "丟棄所有手牌，每丟棄一張獲得3點魔力。",
-      "CardHeld": 0,
-      "CardAttack": 0,
-      "CardShield": 0,
-      "CardEffectList": [
-        {
-          "Item1": "IncreaseManaEffect",
-          "Item2": -2
-        },
-        {
-          "Item1": "ThrowAwayHandCardEffect",
-          "Item2": 0
-        }
-      ],
-      "CardRarity": "普通",
-      "CardAttackDistance": 0,
-      "CardManaCost": 0,
-      "CardRemove": false,
-      "CardBuyPrice": 50,
-      "CardFreeze": false,
-      "AutoCardRemove": false
+      "AutoCardRemove": false,
+      "AutoCardExclusion": false
     },
     {
       "CardID": 2002,
@@ -217,28 +160,128 @@
       "CardRemove": true,
       "CardBuyPrice": 50,
       "CardFreeze": false,
-      "AutoCardRemove": false
+      "AutoCardRemove": false,
+      "AutoCardExclusion": false
     },
     {
-      "CardID": 1010,
-      "CardName": "廢棄轉化",
+      "CardID": 2001,
+      "CardName": "魔能增幅",
       "CardType": "技能",
-      "CardImagePath": "CardImage/DiscardConversion",
-      "CardCost": 0,
+      "CardImagePath": "CardImage/Amplify",
+      "CardCost": 1,
       "CardAttribute": "無",
       "CardSpecialEffect": "",
-      "CardDescription": "丟棄所有手牌，每丟棄一張獲得3點魔力。",
+      "CardDescription": "本回合獲得魔力翻倍，並消耗掉此卡。",
       "CardHeld": 0,
       "CardAttack": 0,
       "CardShield": 0,
       "CardEffectList": [
         {
-          "Item1": "IncreaseManaEffect",
-          "Item2": -2
-        },
+          "Item1": "SetManaMultiplierEffect",
+          "Item2": 2
+        }
+      ],
+      "CardRarity": "稀有",
+      "CardAttackDistance": 0,
+      "CardManaCost": 3,
+      "CardRemove": true,
+      "CardBuyPrice": 50,
+      "CardFreeze": false,
+      "AutoCardRemove": false,
+      "AutoCardExclusion": false
+    },
+    {
+      "CardID": 2004,
+      "CardName": "彈回",
+      "CardType": "技能",
+      "CardImagePath": "CardImage/BounceBack",
+      "CardCost": 1,
+      "CardAttribute": "無",
+      "CardSpecialEffect": "",
+      "CardDescription": "產生5點護盾，並將一張卡牌返回抽卡堆。",
+      "CardHeld": 0,
+      "CardAttack": 0,
+      "CardShield": 5,
+      "CardEffectList": [
         {
-          "Item1": "ThrowAwayHandCardEffect",
+          "Item1": "ReturnCardBag",
+          "Item2": 1
+        }
+      ],
+      "CardRarity": "稀有",
+      "CardAttackDistance": 0,
+      "CardManaCost": 4,
+      "CardRemove": false,
+      "CardBuyPrice": 50,
+      "CardFreeze": false,
+      "AutoCardRemove": false,
+      "AutoCardExclusion": false
+    },
+    {
+      "CardID": 1002,
+      "CardName": "魔力盾",
+      "CardType": "防禦",
+      "CardImagePath": "CardImage/MagicShield",
+      "CardCost": 1,
+      "CardAttribute": "無",
+      "CardSpecialEffect": "",
+      "CardDescription": "獲得15點護盾。",
+      "CardHeld": 0,
+      "CardAttack": 0,
+      "CardShield": 15,
+      "CardEffectList": [],
+      "CardRarity": "基本",
+      "CardAttackDistance": 0,
+      "CardManaCost": 2,
+      "CardRemove": false,
+      "CardBuyPrice": 50,
+      "CardFreeze": false,
+      "AutoCardRemove": false,
+      "AutoCardExclusion": false
+    },
+    {
+      "CardID": 3001,
+      "CardName": "火球",
+      "CardType": "攻擊",
+      "CardImagePath": "CardImage/FireBall",
+      "CardCost": 1,
+      "CardAttribute": "無",
+      "CardSpecialEffect": "ParticleEffect/LongDistance/FireBall",
+      "CardDescription": "消耗所有魔力，造成魔力乘以二加上總魔力除以五的平方傷害。",
+      "CardHeld": 0,
+      "CardAttack": 0,
+      "CardShield": 0,
+      "CardEffectList": [
+        {
+          "Item1": "ExtinctionRayEffect",
           "Item2": 0
+        }
+      ],
+      "CardRarity": "史詩",
+      "CardAttackDistance": 2,
+      "CardManaCost": 0,
+      "CardRemove": false,
+      "CardBuyPrice": 50,
+      "CardFreeze": false,
+      "AutoCardRemove": false,
+      "AutoCardExclusion": false
+    },
+    {
+      "CardID": 1008,
+      "CardName": "以一換二",
+      "CardType": "增益",
+      "CardImagePath": "CardImage/DrawCards",
+      "CardCost": 1,
+      "CardAttribute": "無",
+      "CardSpecialEffect": "",
+      "CardDescription": "抽兩張牌。",
+      "CardHeld": 0,
+      "CardAttack": 0,
+      "CardShield": 0,
+      "CardEffectList": [
+        {
+          "Item1": "DrawCardEffect",
+          "Item2": 2
         }
       ],
       "CardRarity": "普通",
@@ -247,255 +290,359 @@
       "CardRemove": false,
       "CardBuyPrice": 50,
       "CardFreeze": false,
-      "AutoCardRemove": false
-    },{
-  "CardID": 1005,
-  "CardName": "至尊平A",
-  "CardType": "攻擊",
-  "CardImagePath": "CardImage/NormalAttack",
-  "CardCost": 1,
-  "CardAttribute": "無",
-  "CardSpecialEffect": "ParticleEffect/Melee/HitLine",
-  "CardDescription": "獲得一層戰意，並額外造成等同於戰意層數的傷害。",
-  "CardHeld": 0,
-  "CardAttack": 0,
-  "CardShield": 0,
-  "CardEffectList": [
+      "AutoCardRemove": false,
+      "AutoCardExclusion": false
+    },
     {
-      "Item1": "FightingSpiritEffect",
-      "Item2": 0
-    }
-  ],
-  "CardRarity": "普通",
-  "CardAttackDistance": 1,
-  "CardManaCost": 0,
-  "CardRemove": false,
-  "CardBuyPrice": 50,
-  "CardFreeze": false,
-  "AutoCardRemove": false
-},
-{
-  "CardID": 1005,
-  "CardName": "至尊平A",
-  "CardType": "攻擊",
-  "CardImagePath": "CardImage/NormalAttack",
-  "CardCost": 1,
-  "CardAttribute": "無",
-  "CardSpecialEffect": "ParticleEffect/Melee/HitLine",
-  "CardDescription": "獲得一層戰意，並額外造成等同於戰意層數的傷害。",
-  "CardHeld": 0,
-  "CardAttack": 0,
-  "CardShield": 0,
-  "CardEffectList": [
+      "CardID": 1008,
+      "CardName": "以一換二",
+      "CardType": "增益",
+      "CardImagePath": "CardImage/DrawCards",
+      "CardCost": 1,
+      "CardAttribute": "無",
+      "CardSpecialEffect": "",
+      "CardDescription": "抽兩張牌。",
+      "CardHeld": 0,
+      "CardAttack": 0,
+      "CardShield": 0,
+      "CardEffectList": [
+        {
+          "Item1": "DrawCardEffect",
+          "Item2": 2
+        }
+      ],
+      "CardRarity": "普通",
+      "CardAttackDistance": 0,
+      "CardManaCost": 0,
+      "CardRemove": false,
+      "CardBuyPrice": 50,
+      "CardFreeze": false,
+      "AutoCardRemove": false,
+      "AutoCardExclusion": false
+    },
     {
-      "Item1": "FightingSpiritEffect",
-      "Item2": 0
-    }
-  ],
-  "CardRarity": "普通",
-  "CardAttackDistance": 1,
-  "CardManaCost": 0,
-  "CardRemove": false,
-  "CardBuyPrice": 50,
-  "CardFreeze": false,
-  "AutoCardRemove": false
-},{
-  "CardID": 1005,
-  "CardName": "至尊平A",
-  "CardType": "攻擊",
-  "CardImagePath": "CardImage/NormalAttack",
-  "CardCost": 1,
-  "CardAttribute": "無",
-  "CardSpecialEffect": "ParticleEffect/Melee/HitLine",
-  "CardDescription": "獲得一層戰意，並額外造成等同於戰意層數的傷害。",
-  "CardHeld": 0,
-  "CardAttack": 0,
-  "CardShield": 0,
-  "CardEffectList": [
+      "CardID": 2003,
+      "CardName": "漩渦",
+      "CardType": "技能",
+      "CardImagePath": "CardImage/Swirl",
+      "CardCost": 1,
+      "CardAttribute": "無",
+      "CardSpecialEffect": "",
+      "CardDescription": "獲得本回合內消耗魔力的一半。",
+      "CardHeld": 0,
+      "CardAttack": 0,
+      "CardShield": 0,
+      "CardEffectList": [
+        {
+          "Item1": "IncreaseManaEffect",
+          "Item2": -1
+        }
+      ],
+      "CardRarity": "稀有",
+      "CardAttackDistance": 0,
+      "CardManaCost": 0,
+      "CardRemove": false,
+      "CardBuyPrice": 50,
+      "CardFreeze": false,
+      "AutoCardRemove": false,
+      "AutoCardExclusion": false
+    },
     {
-      "Item1": "FightingSpiritEffect",
-      "Item2": 0
+      "CardID": 1004,
+      "CardName": "聚魔",
+      "CardType": "增益",
+      "CardImagePath": "CardImage/GatherMagic",
+      "CardCost": 0,
+      "CardAttribute": "無",
+      "CardSpecialEffect": "",
+      "CardDescription": "獲得3點魔力。",
+      "CardHeld": 0,
+      "CardAttack": 0,
+      "CardShield": 0,
+      "CardEffectList": [
+        {
+          "Item1": "IncreaseManaEffect",
+          "Item2": 3
+        }
+      ],
+      "CardRarity": "普通",
+      "CardAttackDistance": 0,
+      "CardManaCost": 0,
+      "CardRemove": false,
+      "CardBuyPrice": 50,
+      "CardFreeze": false,
+      "AutoCardRemove": false,
+      "AutoCardExclusion": false
+    },
+    {
+      "CardID": 1006,
+      "CardName": "湧泉",
+      "CardType": "能力",
+      "CardImagePath": "CardImage/Spring",
+      "CardCost": 1,
+      "CardAttribute": "無",
+      "CardSpecialEffect": "",
+      "CardDescription": "每回合生成兩點魔力。",
+      "CardHeld": 0,
+      "CardAttack": 0,
+      "CardShield": 0,
+      "CardEffectList": [
+        {
+          "Item1": "IncreaseManaEffect",
+          "Item2": 2
+        }
+      ],
+      "CardRarity": "普通",
+      "CardAttackDistance": 0,
+      "CardManaCost": 0,
+      "CardRemove": true,
+      "CardBuyPrice": 50,
+      "CardFreeze": false,
+      "AutoCardRemove": false,
+      "AutoCardExclusion": false
+    },
+    {
+      "CardID": 1004,
+      "CardName": "聚魔",
+      "CardType": "增益",
+      "CardImagePath": "CardImage/GatherMagic",
+      "CardCost": 0,
+      "CardAttribute": "無",
+      "CardSpecialEffect": "",
+      "CardDescription": "獲得3點魔力。",
+      "CardHeld": 0,
+      "CardAttack": 0,
+      "CardShield": 0,
+      "CardEffectList": [
+        {
+          "Item1": "IncreaseManaEffect",
+          "Item2": 3
+        }
+      ],
+      "CardRarity": "普通",
+      "CardAttackDistance": 0,
+      "CardManaCost": 0,
+      "CardRemove": false,
+      "CardBuyPrice": 50,
+      "CardFreeze": false,
+      "AutoCardRemove": false,
+      "AutoCardExclusion": false
+    },
+    {
+      "CardID": 1009,
+      "CardName": "冥想",
+      "CardType": "增益",
+      "CardImagePath": "CardImage/Meditation",
+      "CardCost": 1,
+      "CardAttribute": "無",
+      "CardSpecialEffect": "",
+      "CardDescription": "獲得8點魔力和禁錮。",
+      "CardHeld": 0,
+      "CardAttack": 0,
+      "CardShield": 0,
+      "CardEffectList": [
+        {
+          "Item1": "IncreaseManaEffect",
+          "Item2": 8
+        },
+        {
+          "Item1": "CantMoveEffect",
+          "Item2": 1
+        }
+      ],
+      "CardRarity": "普通",
+      "CardAttackDistance": 0,
+      "CardManaCost": 0,
+      "CardRemove": false,
+      "CardBuyPrice": 50,
+      "CardFreeze": false,
+      "AutoCardRemove": false,
+      "AutoCardExclusion": false
     }
-  ],
-  "CardRarity": "普通",
-  "CardAttackDistance": 1,
-  "CardManaCost": 0,
-  "CardRemove": false,
-  "CardBuyPrice": 50,
-  "CardFreeze": false,
-  "AutoCardRemove": false
-}
-
-
   ],
   "PotionBag": [
     {
-      "SynthesisItemList": [
-        {
-          "ItemID": 1001,
-          "ItemName": "初階種子",
-          "ItemImagePath": "SeedImage/PrimarySeed_0",
-          "ItemInfo": "初階種子。",
-          "ItemBuyPrice": 10,
-          "ItemSellPrice": 1,
-          "ItemEffectName": "IncreaseHealth=41",
-          "ItemRarity": "普通",
-          "ItemType": "種子",
-          "ItemHeld": 0
-        }
-      ],
-      "ItemID": 1001,
-      "ItemName": "治癒藥水",
-      "ItemImagePath": "PotionImage/HealingPotion",
-      "ItemInfo": "立刻恢復20%血量。",
-      "ItemBuyPrice": 60,
-      "ItemSellPrice": 6,
-      "ItemEffectName": "IncreaseHealth=20",
-      "ItemRarity": "普通",
+      "SynthesisItemList": [],
+      "ItemID": 2001,
+      "ItemName": "高級恢復藥水",
+      "ItemImagePath": "PotionImage/AdvancedRestorationPotion",
+      "ItemInfo": "獲得10層恢復印記。",
+      "ItemBuyPrice": 70,
+      "ItemSellPrice": 7,
+      "ItemEffectList": {
+        "RestorationHealth": 10
+      },
+      "ItemRarity": "稀有",
       "ItemType": "藥水",
-      "ItemHeld": 0
+      "ItemHeld": 0,
+      "CanUse": false
     },
     {
-      "SynthesisItemList": [
-        {
-          "ItemID": 1002,
-          "ItemName": "高階種子",
-          "ItemImagePath": "SeedImage/AdvancedSeed_0",
-          "ItemInfo": "高階種子。",
-          "ItemBuyPrice": 10,
-          "ItemSellPrice": 1,
-          "ItemEffectName": "IncreaseHealth=42",
-          "ItemRarity": "普通",
-          "ItemType": "種子",
-          "ItemHeld": 0
-        }
-      ],
-      "ItemID": 1002,
-      "ItemName": "恢復藥水",
-      "ItemImagePath": "PotionImage/RestorationPotion",
-      "ItemInfo": "獲得5層恢復印記。",
-      "ItemBuyPrice": 40,
-      "ItemSellPrice": 4,
-      "ItemEffectName": "RestorationHealth=5",
-      "ItemRarity": "普通",
+      "SynthesisItemList": [],
+      "ItemID": 2002,
+      "ItemName": "高級治癒藥水",
+      "ItemImagePath": "PotionImage/AdvancedHealingPotion",
+      "ItemInfo": "立刻恢復35%血量。",
+      "ItemBuyPrice": 80,
+      "ItemSellPrice": 8,
+      "ItemEffectList": {
+        "IncreaseHealth": 35
+      },
+      "ItemRarity": "稀有",
       "ItemType": "藥水",
-      "ItemHeld": 0
+      "ItemHeld": 0,
+      "CanUse": false
+    },
+    {
+      "SynthesisItemList": [],
+      "ItemID": 3001,
+      "ItemName": "萬靈藥水",
+      "ItemImagePath": "PotionImage/WanlingPotion",
+      "ItemInfo": "消除所有負面效果。",
+      "ItemBuyPrice": 100,
+      "ItemSellPrice": 10,
+      "ItemEffectList": {
+        "ClearNegativeEffect": 0
+      },
+      "ItemRarity": "史詩",
+      "ItemType": "藥水",
+      "ItemHeld": 0,
+      "CanUse": false
+    },
+    {
+      "SynthesisItemList": [],
+      "ItemID": 4001,
+      "ItemName": "神藥",
+      "ItemImagePath": "PotionImage/GodPotion",
+      "ItemInfo": "立刻恢復100%血量，並消除所有負面效果，有機會使用後死亡。",
+      "ItemBuyPrice": 200,
+      "ItemSellPrice": 20,
+      "ItemEffectList": {
+        "IncreaseHealth": 100,
+        "ClearNegativeEffect": 0,
+        "RandomDeathEffect": 33
+      },
+      "ItemRarity": "傳奇",
+      "ItemType": "藥水",
+      "ItemHeld": 0,
+      "CanUse": false
     }
   ],
-  "MoneyCount": 181,
+  "MoneyCount": 837,
   "CurrentScene": "Level1",
   "ChapterCount": 2,
   "LevelCount": 15,
   "LevelID": 2,
-  "ISeed": 91949,
+  "ISeed": 6663,
   "LevelActiveList": [
     [
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    [
+      true,
+      true,
+      false,
+      false,
+      false
+    ],
+    [
+      true,
+      true,
+      false,
+      false,
+      false
+    ],
+    [
       true,
       true,
       true,
+      false,
+      false
+    ],
+    [
       true,
-      true
+      false,
+      true,
+      false,
+      false
     ],
     [
       true,
       true,
       true,
       true,
-      true
+      false
+    ],
+    [
+      false,
+      true,
+      true,
+      true,
+      false
+    ],
+    [
+      true,
+      false,
+      true,
+      false,
+      false
+    ],
+    [
+      false,
+      true,
+      false,
+      false,
+      false
     ],
     [
       true,
       true,
       true,
+      false,
+      false
+    ],
+    [
       true,
-      true
+      true,
+      false,
+      true,
+      false
     ],
     [
       true,
       true,
       true,
-      true,
-      true
+      false,
+      false
     ],
     [
       true,
       true,
       true,
-      true,
-      true
+      false,
+      false
     ],
     [
       true,
       true,
       true,
-      true,
-      true
+      false,
+      false
     ],
     [
+      false,
+      false,
       true,
-      true,
-      true,
-      true,
-      true
-    ],
-    [
-      true,
-      true,
-      true,
-      true,
-      true
-    ],
-    [
-      true,
-      true,
-      true,
-      true,
-      true
-    ],
-    [
-      true,
-      true,
-      true,
-      true,
-      true
-    ],
-    [
-      true,
-      true,
-      true,
-      true,
-      true
-    ],
-    [
-      true,
-      true,
-      true,
-      true,
-      true
-    ],
-    [
-      true,
-      true,
-      true,
-      true,
-      true
-    ],
-    [
-      true,
-      true,
-      true,
-      true,
-      true
-    ],
-    [
-      true,
-      true,
-      true,
-      true,
-      true
+      false,
+      false
     ]
   ],
   "StartSkillList": [
+    1001,
     2004
   ]
 }

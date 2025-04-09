@@ -377,7 +377,7 @@ public class CardItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         int currentAttackCount = cardData.CardAttack + BattleManager.Instance.CurrentPlayer.AdditionPower;
         if (currentAttackCount != 0 && cardData.CardType != "詛咒")
         {
-            BattleManager.Instance.TakeDamage(BattleManager.Instance.CurrentPlayerData, BattleManager.Instance.CurrentEnemyList[target], currentAttackCount, target, 0);
+            BattleManager.Instance.TakeDamage(BattleManager.Instance.CurrentPlayerData, enemy.MyEnemyData, currentAttackCount, target, 0);
         }
         if (!cardData.CardRemove)
         {

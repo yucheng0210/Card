@@ -13,16 +13,18 @@ public class UIMap : UIBase
     private List<Sprite> mapTypeList = new List<Sprite>();
     [SerializeField]
     private List<Sprite> usedMapTypeList = new List<Sprite>();
+    [SerializeField]
+    private ScrollRect scrollRect;
     private DG.Tweening.Sequence[][] effectList = new DG.Tweening.Sequence[0][];
     private Button[][] mapList = new Button[0][];
     private Dictionary<string, int> levelProbabilities = new Dictionary<string, int>
     {
         { "RECOVER",15 },
-        { "BATTLE", 30 },
+        { "BATTLE", 25 },
+        { "BOSS", 15 },
         { "RANDOM", 20 },
         {"TREASURE",10},
         { "SHOP",15 },
-        { "BOSS", 10 },
     };
     protected override void Start()
     {
@@ -52,14 +54,14 @@ public class UIMap : UIBase
             return;
         }
         // 遍歷每一行節點
-        /*if (MapManager.Instance.ChapterCount == 1)
-        {
-            MapManager.Instance.LevelCount = 14;
-        }
-        else
-        {
-            MapManager.Instance.LevelCount = 0;
-        }*/
+        /* if (MapManager.Instance.ChapterCount == 1)
+         {
+             MapManager.Instance.LevelCount = 14;
+         }
+         else
+         {
+             MapManager.Instance.LevelCount = 10;
+         }*/
         //
         for (int i = MapManager.Instance.MapNodes.Length - 1; i >= 0; i--)
         {
@@ -162,7 +164,7 @@ public class UIMap : UIBase
                         }
                         break;
                     case "BOSS":
-                        currentIndex = MapManager.Instance.random.Next(2000 + MapManager.Instance.ChapterCount, 2003 + MapManager.Instance.ChapterCount);
+                        currentIndex = MapManager.Instance.random.Next(1999 + MapManager.Instance.ChapterCount * 2, 2001 + MapManager.Instance.ChapterCount * 2);
                         break;
                     case "RANDOM":
                         currentIndex = 3001;
@@ -326,6 +328,7 @@ public class UIMap : UIBase
     }
     private void Reset()
     {
+        scrollRect.verticalNormalizedPosition = 0f;
         for (int i = effectList.Length - 1; i >= 0; i--)
         {
             for (int j = 0; j < effectList[i].Length; j++)
